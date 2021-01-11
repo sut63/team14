@@ -9,15 +9,19 @@ import (
 
 	"github.com/tanapon395/playlist-video/ent/migrate"
 
-	"github.com/tanapon395/playlist-video/ent/playlist"
-	"github.com/tanapon395/playlist-video/ent/playlist_video"
-	"github.com/tanapon395/playlist-video/ent/resolution"
-	"github.com/tanapon395/playlist-video/ent/user"
-	"github.com/tanapon395/playlist-video/ent/video"
+	"github.com/tanapon395/playlist-video/ent/adminrepair"
+	"github.com/tanapon395/playlist-video/ent/customer"
+	"github.com/tanapon395/playlist-video/ent/department"
+	"github.com/tanapon395/playlist-video/ent/fix"
+	"github.com/tanapon395/playlist-video/ent/gender"
+	"github.com/tanapon395/playlist-video/ent/personal"
+	"github.com/tanapon395/playlist-video/ent/product"
+	"github.com/tanapon395/playlist-video/ent/receipt"
+	"github.com/tanapon395/playlist-video/ent/title"
 
-	"github.com/facebook/ent/dialect"
-	"github.com/facebook/ent/dialect/sql"
-	"github.com/facebook/ent/dialect/sql/sqlgraph"
+	"github.com/facebookincubator/ent/dialect"
+	"github.com/facebookincubator/ent/dialect/sql"
+	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 )
 
 // Client is the client that holds all ent builders.
@@ -25,16 +29,24 @@ type Client struct {
 	config
 	// Schema is the client for creating, migrating and dropping schema.
 	Schema *migrate.Schema
-	// Playlist is the client for interacting with the Playlist builders.
-	Playlist *PlaylistClient
-	// Playlist_Video is the client for interacting with the Playlist_Video builders.
-	Playlist_Video *Playlist_VideoClient
-	// Resolution is the client for interacting with the Resolution builders.
-	Resolution *ResolutionClient
-	// User is the client for interacting with the User builders.
-	User *UserClient
-	// Video is the client for interacting with the Video builders.
-	Video *VideoClient
+	// Adminrepair is the client for interacting with the Adminrepair builders.
+	Adminrepair *AdminrepairClient
+	// Customer is the client for interacting with the Customer builders.
+	Customer *CustomerClient
+	// Department is the client for interacting with the Department builders.
+	Department *DepartmentClient
+	// Fix is the client for interacting with the Fix builders.
+	Fix *FixClient
+	// Gender is the client for interacting with the Gender builders.
+	Gender *GenderClient
+	// Personal is the client for interacting with the Personal builders.
+	Personal *PersonalClient
+	// Product is the client for interacting with the Product builders.
+	Product *ProductClient
+	// Receipt is the client for interacting with the Receipt builders.
+	Receipt *ReceiptClient
+	// Title is the client for interacting with the Title builders.
+	Title *TitleClient
 }
 
 // NewClient creates a new client configured with the given options.
@@ -48,11 +60,15 @@ func NewClient(opts ...Option) *Client {
 
 func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
-	c.Playlist = NewPlaylistClient(c.config)
-	c.Playlist_Video = NewPlaylist_VideoClient(c.config)
-	c.Resolution = NewResolutionClient(c.config)
-	c.User = NewUserClient(c.config)
-	c.Video = NewVideoClient(c.config)
+	c.Adminrepair = NewAdminrepairClient(c.config)
+	c.Customer = NewCustomerClient(c.config)
+	c.Department = NewDepartmentClient(c.config)
+	c.Fix = NewFixClient(c.config)
+	c.Gender = NewGenderClient(c.config)
+	c.Personal = NewPersonalClient(c.config)
+	c.Product = NewProductClient(c.config)
+	c.Receipt = NewReceiptClient(c.config)
+	c.Title = NewTitleClient(c.config)
 }
 
 // Open opens a database/sql.DB specified by the driver name and
@@ -83,13 +99,17 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 	}
 	cfg := config{driver: tx, log: c.log, debug: c.debug, hooks: c.hooks}
 	return &Tx{
-		ctx:            ctx,
-		config:         cfg,
-		Playlist:       NewPlaylistClient(cfg),
-		Playlist_Video: NewPlaylist_VideoClient(cfg),
-		Resolution:     NewResolutionClient(cfg),
-		User:           NewUserClient(cfg),
-		Video:          NewVideoClient(cfg),
+		ctx:         ctx,
+		config:      cfg,
+		Adminrepair: NewAdminrepairClient(cfg),
+		Customer:    NewCustomerClient(cfg),
+		Department:  NewDepartmentClient(cfg),
+		Fix:         NewFixClient(cfg),
+		Gender:      NewGenderClient(cfg),
+		Personal:    NewPersonalClient(cfg),
+		Product:     NewProductClient(cfg),
+		Receipt:     NewReceiptClient(cfg),
+		Title:       NewTitleClient(cfg),
 	}, nil
 }
 
@@ -104,19 +124,23 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 	}
 	cfg := config{driver: &txDriver{tx: tx, drv: c.driver}, log: c.log, debug: c.debug, hooks: c.hooks}
 	return &Tx{
-		config:         cfg,
-		Playlist:       NewPlaylistClient(cfg),
-		Playlist_Video: NewPlaylist_VideoClient(cfg),
-		Resolution:     NewResolutionClient(cfg),
-		User:           NewUserClient(cfg),
-		Video:          NewVideoClient(cfg),
+		config:      cfg,
+		Adminrepair: NewAdminrepairClient(cfg),
+		Customer:    NewCustomerClient(cfg),
+		Department:  NewDepartmentClient(cfg),
+		Fix:         NewFixClient(cfg),
+		Gender:      NewGenderClient(cfg),
+		Personal:    NewPersonalClient(cfg),
+		Product:     NewProductClient(cfg),
+		Receipt:     NewReceiptClient(cfg),
+		Title:       NewTitleClient(cfg),
 	}, nil
 }
 
 // Debug returns a new debug-client. It's used to get verbose logging on specific operations.
 //
 //	client.Debug().
-//		Playlist.
+//		Adminrepair.
 //		Query().
 //		Count(ctx)
 //
@@ -138,345 +162,749 @@ func (c *Client) Close() error {
 // Use adds the mutation hooks to all the entity clients.
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
-	c.Playlist.Use(hooks...)
-	c.Playlist_Video.Use(hooks...)
-	c.Resolution.Use(hooks...)
-	c.User.Use(hooks...)
-	c.Video.Use(hooks...)
+	c.Adminrepair.Use(hooks...)
+	c.Customer.Use(hooks...)
+	c.Department.Use(hooks...)
+	c.Fix.Use(hooks...)
+	c.Gender.Use(hooks...)
+	c.Personal.Use(hooks...)
+	c.Product.Use(hooks...)
+	c.Receipt.Use(hooks...)
+	c.Title.Use(hooks...)
 }
 
-// PlaylistClient is a client for the Playlist schema.
-type PlaylistClient struct {
+// AdminrepairClient is a client for the Adminrepair schema.
+type AdminrepairClient struct {
 	config
 }
 
-// NewPlaylistClient returns a client for the Playlist from the given config.
-func NewPlaylistClient(c config) *PlaylistClient {
-	return &PlaylistClient{config: c}
+// NewAdminrepairClient returns a client for the Adminrepair from the given config.
+func NewAdminrepairClient(c config) *AdminrepairClient {
+	return &AdminrepairClient{config: c}
 }
 
 // Use adds a list of mutation hooks to the hooks stack.
-// A call to `Use(f, g, h)` equals to `playlist.Hooks(f(g(h())))`.
-func (c *PlaylistClient) Use(hooks ...Hook) {
-	c.hooks.Playlist = append(c.hooks.Playlist, hooks...)
+// A call to `Use(f, g, h)` equals to `adminrepair.Hooks(f(g(h())))`.
+func (c *AdminrepairClient) Use(hooks ...Hook) {
+	c.hooks.Adminrepair = append(c.hooks.Adminrepair, hooks...)
 }
 
-// Create returns a create builder for Playlist.
-func (c *PlaylistClient) Create() *PlaylistCreate {
-	mutation := newPlaylistMutation(c.config, OpCreate)
-	return &PlaylistCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Create returns a create builder for Adminrepair.
+func (c *AdminrepairClient) Create() *AdminrepairCreate {
+	mutation := newAdminrepairMutation(c.config, OpCreate)
+	return &AdminrepairCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
-// BulkCreate returns a builder for creating a bulk of Playlist entities.
-func (c *PlaylistClient) CreateBulk(builders ...*PlaylistCreate) *PlaylistCreateBulk {
-	return &PlaylistCreateBulk{config: c.config, builders: builders}
-}
-
-// Update returns an update builder for Playlist.
-func (c *PlaylistClient) Update() *PlaylistUpdate {
-	mutation := newPlaylistMutation(c.config, OpUpdate)
-	return &PlaylistUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Update returns an update builder for Adminrepair.
+func (c *AdminrepairClient) Update() *AdminrepairUpdate {
+	mutation := newAdminrepairMutation(c.config, OpUpdate)
+	return &AdminrepairUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // UpdateOne returns an update builder for the given entity.
-func (c *PlaylistClient) UpdateOne(pl *Playlist) *PlaylistUpdateOne {
-	mutation := newPlaylistMutation(c.config, OpUpdateOne, withPlaylist(pl))
-	return &PlaylistUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+func (c *AdminrepairClient) UpdateOne(a *Adminrepair) *AdminrepairUpdateOne {
+	mutation := newAdminrepairMutation(c.config, OpUpdateOne, withAdminrepair(a))
+	return &AdminrepairUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // UpdateOneID returns an update builder for the given id.
-func (c *PlaylistClient) UpdateOneID(id int) *PlaylistUpdateOne {
-	mutation := newPlaylistMutation(c.config, OpUpdateOne, withPlaylistID(id))
-	return &PlaylistUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+func (c *AdminrepairClient) UpdateOneID(id int) *AdminrepairUpdateOne {
+	mutation := newAdminrepairMutation(c.config, OpUpdateOne, withAdminrepairID(id))
+	return &AdminrepairUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
-// Delete returns a delete builder for Playlist.
-func (c *PlaylistClient) Delete() *PlaylistDelete {
-	mutation := newPlaylistMutation(c.config, OpDelete)
-	return &PlaylistDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Delete returns a delete builder for Adminrepair.
+func (c *AdminrepairClient) Delete() *AdminrepairDelete {
+	mutation := newAdminrepairMutation(c.config, OpDelete)
+	return &AdminrepairDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // DeleteOne returns a delete builder for the given entity.
-func (c *PlaylistClient) DeleteOne(pl *Playlist) *PlaylistDeleteOne {
-	return c.DeleteOneID(pl.ID)
+func (c *AdminrepairClient) DeleteOne(a *Adminrepair) *AdminrepairDeleteOne {
+	return c.DeleteOneID(a.ID)
 }
 
 // DeleteOneID returns a delete builder for the given id.
-func (c *PlaylistClient) DeleteOneID(id int) *PlaylistDeleteOne {
-	builder := c.Delete().Where(playlist.ID(id))
+func (c *AdminrepairClient) DeleteOneID(id int) *AdminrepairDeleteOne {
+	builder := c.Delete().Where(adminrepair.ID(id))
 	builder.mutation.id = &id
 	builder.mutation.op = OpDeleteOne
-	return &PlaylistDeleteOne{builder}
+	return &AdminrepairDeleteOne{builder}
 }
 
-// Query returns a query builder for Playlist.
-func (c *PlaylistClient) Query() *PlaylistQuery {
-	return &PlaylistQuery{config: c.config}
+// Create returns a query builder for Adminrepair.
+func (c *AdminrepairClient) Query() *AdminrepairQuery {
+	return &AdminrepairQuery{config: c.config}
 }
 
-// Get returns a Playlist entity by its id.
-func (c *PlaylistClient) Get(ctx context.Context, id int) (*Playlist, error) {
-	return c.Query().Where(playlist.ID(id)).Only(ctx)
+// Get returns a Adminrepair entity by its id.
+func (c *AdminrepairClient) Get(ctx context.Context, id int) (*Adminrepair, error) {
+	return c.Query().Where(adminrepair.ID(id)).Only(ctx)
 }
 
 // GetX is like Get, but panics if an error occurs.
-func (c *PlaylistClient) GetX(ctx context.Context, id int) *Playlist {
-	pl, err := c.Get(ctx, id)
+func (c *AdminrepairClient) GetX(ctx context.Context, id int) *Adminrepair {
+	a, err := c.Get(ctx, id)
 	if err != nil {
 		panic(err)
 	}
-	return pl
+	return a
 }
 
-// QueryOwner queries the owner edge of a Playlist.
-func (c *PlaylistClient) QueryOwner(pl *Playlist) *UserQuery {
-	query := &UserQuery{config: c.config}
-	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
-		id := pl.ID
-		step := sqlgraph.NewStep(
-			sqlgraph.From(playlist.Table, playlist.FieldID, id),
-			sqlgraph.To(user.Table, user.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, playlist.OwnerTable, playlist.OwnerColumn),
-		)
-		fromV = sqlgraph.Neighbors(pl.driver.Dialect(), step)
-		return fromV, nil
+// Hooks returns the client hooks.
+func (c *AdminrepairClient) Hooks() []Hook {
+	return c.hooks.Adminrepair
+}
+
+// CustomerClient is a client for the Customer schema.
+type CustomerClient struct {
+	config
+}
+
+// NewCustomerClient returns a client for the Customer from the given config.
+func NewCustomerClient(c config) *CustomerClient {
+	return &CustomerClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `customer.Hooks(f(g(h())))`.
+func (c *CustomerClient) Use(hooks ...Hook) {
+	c.hooks.Customer = append(c.hooks.Customer, hooks...)
+}
+
+// Create returns a create builder for Customer.
+func (c *CustomerClient) Create() *CustomerCreate {
+	mutation := newCustomerMutation(c.config, OpCreate)
+	return &CustomerCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Update returns an update builder for Customer.
+func (c *CustomerClient) Update() *CustomerUpdate {
+	mutation := newCustomerMutation(c.config, OpUpdate)
+	return &CustomerUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *CustomerClient) UpdateOne(cu *Customer) *CustomerUpdateOne {
+	mutation := newCustomerMutation(c.config, OpUpdateOne, withCustomer(cu))
+	return &CustomerUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *CustomerClient) UpdateOneID(id int) *CustomerUpdateOne {
+	mutation := newCustomerMutation(c.config, OpUpdateOne, withCustomerID(id))
+	return &CustomerUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for Customer.
+func (c *CustomerClient) Delete() *CustomerDelete {
+	mutation := newCustomerMutation(c.config, OpDelete)
+	return &CustomerDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a delete builder for the given entity.
+func (c *CustomerClient) DeleteOne(cu *Customer) *CustomerDeleteOne {
+	return c.DeleteOneID(cu.ID)
+}
+
+// DeleteOneID returns a delete builder for the given id.
+func (c *CustomerClient) DeleteOneID(id int) *CustomerDeleteOne {
+	builder := c.Delete().Where(customer.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &CustomerDeleteOne{builder}
+}
+
+// Create returns a query builder for Customer.
+func (c *CustomerClient) Query() *CustomerQuery {
+	return &CustomerQuery{config: c.config}
+}
+
+// Get returns a Customer entity by its id.
+func (c *CustomerClient) Get(ctx context.Context, id int) (*Customer, error) {
+	return c.Query().Where(customer.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *CustomerClient) GetX(ctx context.Context, id int) *Customer {
+	cu, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
 	}
-	return query
+	return cu
 }
 
-// QueryPlaylistVideos queries the playlist_videos edge of a Playlist.
-func (c *PlaylistClient) QueryPlaylistVideos(pl *Playlist) *PlaylistVideoQuery {
-	query := &PlaylistVideoQuery{config: c.config}
+// Hooks returns the client hooks.
+func (c *CustomerClient) Hooks() []Hook {
+	return c.hooks.Customer
+}
+
+// DepartmentClient is a client for the Department schema.
+type DepartmentClient struct {
+	config
+}
+
+// NewDepartmentClient returns a client for the Department from the given config.
+func NewDepartmentClient(c config) *DepartmentClient {
+	return &DepartmentClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `department.Hooks(f(g(h())))`.
+func (c *DepartmentClient) Use(hooks ...Hook) {
+	c.hooks.Department = append(c.hooks.Department, hooks...)
+}
+
+// Create returns a create builder for Department.
+func (c *DepartmentClient) Create() *DepartmentCreate {
+	mutation := newDepartmentMutation(c.config, OpCreate)
+	return &DepartmentCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Update returns an update builder for Department.
+func (c *DepartmentClient) Update() *DepartmentUpdate {
+	mutation := newDepartmentMutation(c.config, OpUpdate)
+	return &DepartmentUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *DepartmentClient) UpdateOne(d *Department) *DepartmentUpdateOne {
+	mutation := newDepartmentMutation(c.config, OpUpdateOne, withDepartment(d))
+	return &DepartmentUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *DepartmentClient) UpdateOneID(id int) *DepartmentUpdateOne {
+	mutation := newDepartmentMutation(c.config, OpUpdateOne, withDepartmentID(id))
+	return &DepartmentUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for Department.
+func (c *DepartmentClient) Delete() *DepartmentDelete {
+	mutation := newDepartmentMutation(c.config, OpDelete)
+	return &DepartmentDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a delete builder for the given entity.
+func (c *DepartmentClient) DeleteOne(d *Department) *DepartmentDeleteOne {
+	return c.DeleteOneID(d.ID)
+}
+
+// DeleteOneID returns a delete builder for the given id.
+func (c *DepartmentClient) DeleteOneID(id int) *DepartmentDeleteOne {
+	builder := c.Delete().Where(department.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &DepartmentDeleteOne{builder}
+}
+
+// Create returns a query builder for Department.
+func (c *DepartmentClient) Query() *DepartmentQuery {
+	return &DepartmentQuery{config: c.config}
+}
+
+// Get returns a Department entity by its id.
+func (c *DepartmentClient) Get(ctx context.Context, id int) (*Department, error) {
+	return c.Query().Where(department.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *DepartmentClient) GetX(ctx context.Context, id int) *Department {
+	d, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return d
+}
+
+// QueryPersonal queries the personal edge of a Department.
+func (c *DepartmentClient) QueryPersonal(d *Department) *PersonalQuery {
+	query := &PersonalQuery{config: c.config}
 	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
-		id := pl.ID
+		id := d.ID
 		step := sqlgraph.NewStep(
-			sqlgraph.From(playlist.Table, playlist.FieldID, id),
-			sqlgraph.To(playlist_video.Table, playlist_video.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, playlist.PlaylistVideosTable, playlist.PlaylistVideosColumn),
+			sqlgraph.From(department.Table, department.FieldID, id),
+			sqlgraph.To(personal.Table, personal.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, department.PersonalTable, department.PersonalColumn),
 		)
-		fromV = sqlgraph.Neighbors(pl.driver.Dialect(), step)
+		fromV = sqlgraph.Neighbors(d.driver.Dialect(), step)
 		return fromV, nil
 	}
 	return query
 }
 
 // Hooks returns the client hooks.
-func (c *PlaylistClient) Hooks() []Hook {
-	return c.hooks.Playlist
+func (c *DepartmentClient) Hooks() []Hook {
+	return c.hooks.Department
 }
 
-// Playlist_VideoClient is a client for the Playlist_Video schema.
-type Playlist_VideoClient struct {
+// FixClient is a client for the Fix schema.
+type FixClient struct {
 	config
 }
 
-// NewPlaylist_VideoClient returns a client for the Playlist_Video from the given config.
-func NewPlaylist_VideoClient(c config) *Playlist_VideoClient {
-	return &Playlist_VideoClient{config: c}
+// NewFixClient returns a client for the Fix from the given config.
+func NewFixClient(c config) *FixClient {
+	return &FixClient{config: c}
 }
 
 // Use adds a list of mutation hooks to the hooks stack.
-// A call to `Use(f, g, h)` equals to `playlist_video.Hooks(f(g(h())))`.
-func (c *Playlist_VideoClient) Use(hooks ...Hook) {
-	c.hooks.Playlist_Video = append(c.hooks.Playlist_Video, hooks...)
+// A call to `Use(f, g, h)` equals to `fix.Hooks(f(g(h())))`.
+func (c *FixClient) Use(hooks ...Hook) {
+	c.hooks.Fix = append(c.hooks.Fix, hooks...)
 }
 
-// Create returns a create builder for Playlist_Video.
-func (c *Playlist_VideoClient) Create() *PlaylistVideoCreate {
-	mutation := newPlaylistVideoMutation(c.config, OpCreate)
-	return &PlaylistVideoCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Create returns a create builder for Fix.
+func (c *FixClient) Create() *FixCreate {
+	mutation := newFixMutation(c.config, OpCreate)
+	return &FixCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
-// BulkCreate returns a builder for creating a bulk of Playlist_Video entities.
-func (c *Playlist_VideoClient) CreateBulk(builders ...*PlaylistVideoCreate) *PlaylistVideoCreateBulk {
-	return &PlaylistVideoCreateBulk{config: c.config, builders: builders}
-}
-
-// Update returns an update builder for Playlist_Video.
-func (c *Playlist_VideoClient) Update() *PlaylistVideoUpdate {
-	mutation := newPlaylistVideoMutation(c.config, OpUpdate)
-	return &PlaylistVideoUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Update returns an update builder for Fix.
+func (c *FixClient) Update() *FixUpdate {
+	mutation := newFixMutation(c.config, OpUpdate)
+	return &FixUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // UpdateOne returns an update builder for the given entity.
-func (c *Playlist_VideoClient) UpdateOne(pv *Playlist_Video) *PlaylistVideoUpdateOne {
-	mutation := newPlaylistVideoMutation(c.config, OpUpdateOne, withPlaylist_Video(pv))
-	return &PlaylistVideoUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+func (c *FixClient) UpdateOne(f *Fix) *FixUpdateOne {
+	mutation := newFixMutation(c.config, OpUpdateOne, withFix(f))
+	return &FixUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // UpdateOneID returns an update builder for the given id.
-func (c *Playlist_VideoClient) UpdateOneID(id int) *PlaylistVideoUpdateOne {
-	mutation := newPlaylistVideoMutation(c.config, OpUpdateOne, withPlaylist_VideoID(id))
-	return &PlaylistVideoUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+func (c *FixClient) UpdateOneID(id int) *FixUpdateOne {
+	mutation := newFixMutation(c.config, OpUpdateOne, withFixID(id))
+	return &FixUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
-// Delete returns a delete builder for Playlist_Video.
-func (c *Playlist_VideoClient) Delete() *PlaylistVideoDelete {
-	mutation := newPlaylistVideoMutation(c.config, OpDelete)
-	return &PlaylistVideoDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Delete returns a delete builder for Fix.
+func (c *FixClient) Delete() *FixDelete {
+	mutation := newFixMutation(c.config, OpDelete)
+	return &FixDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // DeleteOne returns a delete builder for the given entity.
-func (c *Playlist_VideoClient) DeleteOne(pv *Playlist_Video) *PlaylistVideoDeleteOne {
-	return c.DeleteOneID(pv.ID)
+func (c *FixClient) DeleteOne(f *Fix) *FixDeleteOne {
+	return c.DeleteOneID(f.ID)
 }
 
 // DeleteOneID returns a delete builder for the given id.
-func (c *Playlist_VideoClient) DeleteOneID(id int) *PlaylistVideoDeleteOne {
-	builder := c.Delete().Where(playlist_video.ID(id))
+func (c *FixClient) DeleteOneID(id int) *FixDeleteOne {
+	builder := c.Delete().Where(fix.ID(id))
 	builder.mutation.id = &id
 	builder.mutation.op = OpDeleteOne
-	return &PlaylistVideoDeleteOne{builder}
+	return &FixDeleteOne{builder}
 }
 
-// Query returns a query builder for Playlist_Video.
-func (c *Playlist_VideoClient) Query() *PlaylistVideoQuery {
-	return &PlaylistVideoQuery{config: c.config}
+// Create returns a query builder for Fix.
+func (c *FixClient) Query() *FixQuery {
+	return &FixQuery{config: c.config}
 }
 
-// Get returns a Playlist_Video entity by its id.
-func (c *Playlist_VideoClient) Get(ctx context.Context, id int) (*Playlist_Video, error) {
-	return c.Query().Where(playlist_video.ID(id)).Only(ctx)
+// Get returns a Fix entity by its id.
+func (c *FixClient) Get(ctx context.Context, id int) (*Fix, error) {
+	return c.Query().Where(fix.ID(id)).Only(ctx)
 }
 
 // GetX is like Get, but panics if an error occurs.
-func (c *Playlist_VideoClient) GetX(ctx context.Context, id int) *Playlist_Video {
-	pv, err := c.Get(ctx, id)
+func (c *FixClient) GetX(ctx context.Context, id int) *Fix {
+	f, err := c.Get(ctx, id)
 	if err != nil {
 		panic(err)
 	}
-	return pv
+	return f
 }
 
-// QueryPlaylist queries the playlist edge of a Playlist_Video.
-func (c *Playlist_VideoClient) QueryPlaylist(pv *Playlist_Video) *PlaylistQuery {
-	query := &PlaylistQuery{config: c.config}
-	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
-		id := pv.ID
-		step := sqlgraph.NewStep(
-			sqlgraph.From(playlist_video.Table, playlist_video.FieldID, id),
-			sqlgraph.To(playlist.Table, playlist.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, playlist_video.PlaylistTable, playlist_video.PlaylistColumn),
-		)
-		fromV = sqlgraph.Neighbors(pv.driver.Dialect(), step)
-		return fromV, nil
+// Hooks returns the client hooks.
+func (c *FixClient) Hooks() []Hook {
+	return c.hooks.Fix
+}
+
+// GenderClient is a client for the Gender schema.
+type GenderClient struct {
+	config
+}
+
+// NewGenderClient returns a client for the Gender from the given config.
+func NewGenderClient(c config) *GenderClient {
+	return &GenderClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `gender.Hooks(f(g(h())))`.
+func (c *GenderClient) Use(hooks ...Hook) {
+	c.hooks.Gender = append(c.hooks.Gender, hooks...)
+}
+
+// Create returns a create builder for Gender.
+func (c *GenderClient) Create() *GenderCreate {
+	mutation := newGenderMutation(c.config, OpCreate)
+	return &GenderCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Update returns an update builder for Gender.
+func (c *GenderClient) Update() *GenderUpdate {
+	mutation := newGenderMutation(c.config, OpUpdate)
+	return &GenderUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *GenderClient) UpdateOne(ge *Gender) *GenderUpdateOne {
+	mutation := newGenderMutation(c.config, OpUpdateOne, withGender(ge))
+	return &GenderUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *GenderClient) UpdateOneID(id int) *GenderUpdateOne {
+	mutation := newGenderMutation(c.config, OpUpdateOne, withGenderID(id))
+	return &GenderUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for Gender.
+func (c *GenderClient) Delete() *GenderDelete {
+	mutation := newGenderMutation(c.config, OpDelete)
+	return &GenderDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a delete builder for the given entity.
+func (c *GenderClient) DeleteOne(ge *Gender) *GenderDeleteOne {
+	return c.DeleteOneID(ge.ID)
+}
+
+// DeleteOneID returns a delete builder for the given id.
+func (c *GenderClient) DeleteOneID(id int) *GenderDeleteOne {
+	builder := c.Delete().Where(gender.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &GenderDeleteOne{builder}
+}
+
+// Create returns a query builder for Gender.
+func (c *GenderClient) Query() *GenderQuery {
+	return &GenderQuery{config: c.config}
+}
+
+// Get returns a Gender entity by its id.
+func (c *GenderClient) Get(ctx context.Context, id int) (*Gender, error) {
+	return c.Query().Where(gender.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *GenderClient) GetX(ctx context.Context, id int) *Gender {
+	ge, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
 	}
-	return query
+	return ge
 }
 
-// QueryVideo queries the video edge of a Playlist_Video.
-func (c *Playlist_VideoClient) QueryVideo(pv *Playlist_Video) *VideoQuery {
-	query := &VideoQuery{config: c.config}
+// QueryPersonal queries the personal edge of a Gender.
+func (c *GenderClient) QueryPersonal(ge *Gender) *PersonalQuery {
+	query := &PersonalQuery{config: c.config}
 	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
-		id := pv.ID
+		id := ge.ID
 		step := sqlgraph.NewStep(
-			sqlgraph.From(playlist_video.Table, playlist_video.FieldID, id),
-			sqlgraph.To(video.Table, video.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, playlist_video.VideoTable, playlist_video.VideoColumn),
+			sqlgraph.From(gender.Table, gender.FieldID, id),
+			sqlgraph.To(personal.Table, personal.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, gender.PersonalTable, gender.PersonalColumn),
 		)
-		fromV = sqlgraph.Neighbors(pv.driver.Dialect(), step)
-		return fromV, nil
-	}
-	return query
-}
-
-// QueryResolution queries the resolution edge of a Playlist_Video.
-func (c *Playlist_VideoClient) QueryResolution(pv *Playlist_Video) *ResolutionQuery {
-	query := &ResolutionQuery{config: c.config}
-	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
-		id := pv.ID
-		step := sqlgraph.NewStep(
-			sqlgraph.From(playlist_video.Table, playlist_video.FieldID, id),
-			sqlgraph.To(resolution.Table, resolution.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, playlist_video.ResolutionTable, playlist_video.ResolutionColumn),
-		)
-		fromV = sqlgraph.Neighbors(pv.driver.Dialect(), step)
+		fromV = sqlgraph.Neighbors(ge.driver.Dialect(), step)
 		return fromV, nil
 	}
 	return query
 }
 
 // Hooks returns the client hooks.
-func (c *Playlist_VideoClient) Hooks() []Hook {
-	return c.hooks.Playlist_Video
+func (c *GenderClient) Hooks() []Hook {
+	return c.hooks.Gender
 }
 
-// ResolutionClient is a client for the Resolution schema.
-type ResolutionClient struct {
+// PersonalClient is a client for the Personal schema.
+type PersonalClient struct {
 	config
 }
 
-// NewResolutionClient returns a client for the Resolution from the given config.
-func NewResolutionClient(c config) *ResolutionClient {
-	return &ResolutionClient{config: c}
+// NewPersonalClient returns a client for the Personal from the given config.
+func NewPersonalClient(c config) *PersonalClient {
+	return &PersonalClient{config: c}
 }
 
 // Use adds a list of mutation hooks to the hooks stack.
-// A call to `Use(f, g, h)` equals to `resolution.Hooks(f(g(h())))`.
-func (c *ResolutionClient) Use(hooks ...Hook) {
-	c.hooks.Resolution = append(c.hooks.Resolution, hooks...)
+// A call to `Use(f, g, h)` equals to `personal.Hooks(f(g(h())))`.
+func (c *PersonalClient) Use(hooks ...Hook) {
+	c.hooks.Personal = append(c.hooks.Personal, hooks...)
 }
 
-// Create returns a create builder for Resolution.
-func (c *ResolutionClient) Create() *ResolutionCreate {
-	mutation := newResolutionMutation(c.config, OpCreate)
-	return &ResolutionCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Create returns a create builder for Personal.
+func (c *PersonalClient) Create() *PersonalCreate {
+	mutation := newPersonalMutation(c.config, OpCreate)
+	return &PersonalCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
-// BulkCreate returns a builder for creating a bulk of Resolution entities.
-func (c *ResolutionClient) CreateBulk(builders ...*ResolutionCreate) *ResolutionCreateBulk {
-	return &ResolutionCreateBulk{config: c.config, builders: builders}
-}
-
-// Update returns an update builder for Resolution.
-func (c *ResolutionClient) Update() *ResolutionUpdate {
-	mutation := newResolutionMutation(c.config, OpUpdate)
-	return &ResolutionUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Update returns an update builder for Personal.
+func (c *PersonalClient) Update() *PersonalUpdate {
+	mutation := newPersonalMutation(c.config, OpUpdate)
+	return &PersonalUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // UpdateOne returns an update builder for the given entity.
-func (c *ResolutionClient) UpdateOne(r *Resolution) *ResolutionUpdateOne {
-	mutation := newResolutionMutation(c.config, OpUpdateOne, withResolution(r))
-	return &ResolutionUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+func (c *PersonalClient) UpdateOne(pe *Personal) *PersonalUpdateOne {
+	mutation := newPersonalMutation(c.config, OpUpdateOne, withPersonal(pe))
+	return &PersonalUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // UpdateOneID returns an update builder for the given id.
-func (c *ResolutionClient) UpdateOneID(id int) *ResolutionUpdateOne {
-	mutation := newResolutionMutation(c.config, OpUpdateOne, withResolutionID(id))
-	return &ResolutionUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+func (c *PersonalClient) UpdateOneID(id int) *PersonalUpdateOne {
+	mutation := newPersonalMutation(c.config, OpUpdateOne, withPersonalID(id))
+	return &PersonalUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
-// Delete returns a delete builder for Resolution.
-func (c *ResolutionClient) Delete() *ResolutionDelete {
-	mutation := newResolutionMutation(c.config, OpDelete)
-	return &ResolutionDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Delete returns a delete builder for Personal.
+func (c *PersonalClient) Delete() *PersonalDelete {
+	mutation := newPersonalMutation(c.config, OpDelete)
+	return &PersonalDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // DeleteOne returns a delete builder for the given entity.
-func (c *ResolutionClient) DeleteOne(r *Resolution) *ResolutionDeleteOne {
+func (c *PersonalClient) DeleteOne(pe *Personal) *PersonalDeleteOne {
+	return c.DeleteOneID(pe.ID)
+}
+
+// DeleteOneID returns a delete builder for the given id.
+func (c *PersonalClient) DeleteOneID(id int) *PersonalDeleteOne {
+	builder := c.Delete().Where(personal.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &PersonalDeleteOne{builder}
+}
+
+// Create returns a query builder for Personal.
+func (c *PersonalClient) Query() *PersonalQuery {
+	return &PersonalQuery{config: c.config}
+}
+
+// Get returns a Personal entity by its id.
+func (c *PersonalClient) Get(ctx context.Context, id int) (*Personal, error) {
+	return c.Query().Where(personal.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *PersonalClient) GetX(ctx context.Context, id int) *Personal {
+	pe, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return pe
+}
+
+// QueryTitle queries the title edge of a Personal.
+func (c *PersonalClient) QueryTitle(pe *Personal) *TitleQuery {
+	query := &TitleQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := pe.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(personal.Table, personal.FieldID, id),
+			sqlgraph.To(title.Table, title.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, personal.TitleTable, personal.TitleColumn),
+		)
+		fromV = sqlgraph.Neighbors(pe.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryDepartment queries the department edge of a Personal.
+func (c *PersonalClient) QueryDepartment(pe *Personal) *DepartmentQuery {
+	query := &DepartmentQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := pe.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(personal.Table, personal.FieldID, id),
+			sqlgraph.To(department.Table, department.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, personal.DepartmentTable, personal.DepartmentColumn),
+		)
+		fromV = sqlgraph.Neighbors(pe.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryGender queries the gender edge of a Personal.
+func (c *PersonalClient) QueryGender(pe *Personal) *GenderQuery {
+	query := &GenderQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := pe.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(personal.Table, personal.FieldID, id),
+			sqlgraph.To(gender.Table, gender.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, personal.GenderTable, personal.GenderColumn),
+		)
+		fromV = sqlgraph.Neighbors(pe.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// Hooks returns the client hooks.
+func (c *PersonalClient) Hooks() []Hook {
+	return c.hooks.Personal
+}
+
+// ProductClient is a client for the Product schema.
+type ProductClient struct {
+	config
+}
+
+// NewProductClient returns a client for the Product from the given config.
+func NewProductClient(c config) *ProductClient {
+	return &ProductClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `product.Hooks(f(g(h())))`.
+func (c *ProductClient) Use(hooks ...Hook) {
+	c.hooks.Product = append(c.hooks.Product, hooks...)
+}
+
+// Create returns a create builder for Product.
+func (c *ProductClient) Create() *ProductCreate {
+	mutation := newProductMutation(c.config, OpCreate)
+	return &ProductCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Update returns an update builder for Product.
+func (c *ProductClient) Update() *ProductUpdate {
+	mutation := newProductMutation(c.config, OpUpdate)
+	return &ProductUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *ProductClient) UpdateOne(pr *Product) *ProductUpdateOne {
+	mutation := newProductMutation(c.config, OpUpdateOne, withProduct(pr))
+	return &ProductUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *ProductClient) UpdateOneID(id int) *ProductUpdateOne {
+	mutation := newProductMutation(c.config, OpUpdateOne, withProductID(id))
+	return &ProductUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for Product.
+func (c *ProductClient) Delete() *ProductDelete {
+	mutation := newProductMutation(c.config, OpDelete)
+	return &ProductDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a delete builder for the given entity.
+func (c *ProductClient) DeleteOne(pr *Product) *ProductDeleteOne {
+	return c.DeleteOneID(pr.ID)
+}
+
+// DeleteOneID returns a delete builder for the given id.
+func (c *ProductClient) DeleteOneID(id int) *ProductDeleteOne {
+	builder := c.Delete().Where(product.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &ProductDeleteOne{builder}
+}
+
+// Create returns a query builder for Product.
+func (c *ProductClient) Query() *ProductQuery {
+	return &ProductQuery{config: c.config}
+}
+
+// Get returns a Product entity by its id.
+func (c *ProductClient) Get(ctx context.Context, id int) (*Product, error) {
+	return c.Query().Where(product.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *ProductClient) GetX(ctx context.Context, id int) *Product {
+	pr, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return pr
+}
+
+// Hooks returns the client hooks.
+func (c *ProductClient) Hooks() []Hook {
+	return c.hooks.Product
+}
+
+// ReceiptClient is a client for the Receipt schema.
+type ReceiptClient struct {
+	config
+}
+
+// NewReceiptClient returns a client for the Receipt from the given config.
+func NewReceiptClient(c config) *ReceiptClient {
+	return &ReceiptClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `receipt.Hooks(f(g(h())))`.
+func (c *ReceiptClient) Use(hooks ...Hook) {
+	c.hooks.Receipt = append(c.hooks.Receipt, hooks...)
+}
+
+// Create returns a create builder for Receipt.
+func (c *ReceiptClient) Create() *ReceiptCreate {
+	mutation := newReceiptMutation(c.config, OpCreate)
+	return &ReceiptCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Update returns an update builder for Receipt.
+func (c *ReceiptClient) Update() *ReceiptUpdate {
+	mutation := newReceiptMutation(c.config, OpUpdate)
+	return &ReceiptUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *ReceiptClient) UpdateOne(r *Receipt) *ReceiptUpdateOne {
+	mutation := newReceiptMutation(c.config, OpUpdateOne, withReceipt(r))
+	return &ReceiptUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *ReceiptClient) UpdateOneID(id int) *ReceiptUpdateOne {
+	mutation := newReceiptMutation(c.config, OpUpdateOne, withReceiptID(id))
+	return &ReceiptUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for Receipt.
+func (c *ReceiptClient) Delete() *ReceiptDelete {
+	mutation := newReceiptMutation(c.config, OpDelete)
+	return &ReceiptDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a delete builder for the given entity.
+func (c *ReceiptClient) DeleteOne(r *Receipt) *ReceiptDeleteOne {
 	return c.DeleteOneID(r.ID)
 }
 
 // DeleteOneID returns a delete builder for the given id.
-func (c *ResolutionClient) DeleteOneID(id int) *ResolutionDeleteOne {
-	builder := c.Delete().Where(resolution.ID(id))
+func (c *ReceiptClient) DeleteOneID(id int) *ReceiptDeleteOne {
+	builder := c.Delete().Where(receipt.ID(id))
 	builder.mutation.id = &id
 	builder.mutation.op = OpDeleteOne
-	return &ResolutionDeleteOne{builder}
+	return &ReceiptDeleteOne{builder}
 }
 
-// Query returns a query builder for Resolution.
-func (c *ResolutionClient) Query() *ResolutionQuery {
-	return &ResolutionQuery{config: c.config}
+// Create returns a query builder for Receipt.
+func (c *ReceiptClient) Query() *ReceiptQuery {
+	return &ReceiptQuery{config: c.config}
 }
 
-// Get returns a Resolution entity by its id.
-func (c *ResolutionClient) Get(ctx context.Context, id int) (*Resolution, error) {
-	return c.Query().Where(resolution.ID(id)).Only(ctx)
+// Get returns a Receipt entity by its id.
+func (c *ReceiptClient) Get(ctx context.Context, id int) (*Receipt, error) {
+	return c.Query().Where(receipt.ID(id)).Only(ctx)
 }
 
 // GetX is like Get, but panics if an error occurs.
-func (c *ResolutionClient) GetX(ctx context.Context, id int) *Resolution {
+func (c *ReceiptClient) GetX(ctx context.Context, id int) *Receipt {
 	r, err := c.Get(ctx, id)
 	if err != nil {
 		panic(err)
@@ -484,263 +912,106 @@ func (c *ResolutionClient) GetX(ctx context.Context, id int) *Resolution {
 	return r
 }
 
-// QueryPlaylistVideos queries the playlist_videos edge of a Resolution.
-func (c *ResolutionClient) QueryPlaylistVideos(r *Resolution) *PlaylistVideoQuery {
-	query := &PlaylistVideoQuery{config: c.config}
-	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
-		id := r.ID
-		step := sqlgraph.NewStep(
-			sqlgraph.From(resolution.Table, resolution.FieldID, id),
-			sqlgraph.To(playlist_video.Table, playlist_video.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, resolution.PlaylistVideosTable, resolution.PlaylistVideosColumn),
-		)
-		fromV = sqlgraph.Neighbors(r.driver.Dialect(), step)
-		return fromV, nil
-	}
-	return query
-}
-
 // Hooks returns the client hooks.
-func (c *ResolutionClient) Hooks() []Hook {
-	return c.hooks.Resolution
+func (c *ReceiptClient) Hooks() []Hook {
+	return c.hooks.Receipt
 }
 
-// UserClient is a client for the User schema.
-type UserClient struct {
+// TitleClient is a client for the Title schema.
+type TitleClient struct {
 	config
 }
 
-// NewUserClient returns a client for the User from the given config.
-func NewUserClient(c config) *UserClient {
-	return &UserClient{config: c}
+// NewTitleClient returns a client for the Title from the given config.
+func NewTitleClient(c config) *TitleClient {
+	return &TitleClient{config: c}
 }
 
 // Use adds a list of mutation hooks to the hooks stack.
-// A call to `Use(f, g, h)` equals to `user.Hooks(f(g(h())))`.
-func (c *UserClient) Use(hooks ...Hook) {
-	c.hooks.User = append(c.hooks.User, hooks...)
+// A call to `Use(f, g, h)` equals to `title.Hooks(f(g(h())))`.
+func (c *TitleClient) Use(hooks ...Hook) {
+	c.hooks.Title = append(c.hooks.Title, hooks...)
 }
 
-// Create returns a create builder for User.
-func (c *UserClient) Create() *UserCreate {
-	mutation := newUserMutation(c.config, OpCreate)
-	return &UserCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Create returns a create builder for Title.
+func (c *TitleClient) Create() *TitleCreate {
+	mutation := newTitleMutation(c.config, OpCreate)
+	return &TitleCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
-// BulkCreate returns a builder for creating a bulk of User entities.
-func (c *UserClient) CreateBulk(builders ...*UserCreate) *UserCreateBulk {
-	return &UserCreateBulk{config: c.config, builders: builders}
-}
-
-// Update returns an update builder for User.
-func (c *UserClient) Update() *UserUpdate {
-	mutation := newUserMutation(c.config, OpUpdate)
-	return &UserUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Update returns an update builder for Title.
+func (c *TitleClient) Update() *TitleUpdate {
+	mutation := newTitleMutation(c.config, OpUpdate)
+	return &TitleUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // UpdateOne returns an update builder for the given entity.
-func (c *UserClient) UpdateOne(u *User) *UserUpdateOne {
-	mutation := newUserMutation(c.config, OpUpdateOne, withUser(u))
-	return &UserUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+func (c *TitleClient) UpdateOne(t *Title) *TitleUpdateOne {
+	mutation := newTitleMutation(c.config, OpUpdateOne, withTitle(t))
+	return &TitleUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // UpdateOneID returns an update builder for the given id.
-func (c *UserClient) UpdateOneID(id int) *UserUpdateOne {
-	mutation := newUserMutation(c.config, OpUpdateOne, withUserID(id))
-	return &UserUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+func (c *TitleClient) UpdateOneID(id int) *TitleUpdateOne {
+	mutation := newTitleMutation(c.config, OpUpdateOne, withTitleID(id))
+	return &TitleUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
-// Delete returns a delete builder for User.
-func (c *UserClient) Delete() *UserDelete {
-	mutation := newUserMutation(c.config, OpDelete)
-	return &UserDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Delete returns a delete builder for Title.
+func (c *TitleClient) Delete() *TitleDelete {
+	mutation := newTitleMutation(c.config, OpDelete)
+	return &TitleDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // DeleteOne returns a delete builder for the given entity.
-func (c *UserClient) DeleteOne(u *User) *UserDeleteOne {
-	return c.DeleteOneID(u.ID)
+func (c *TitleClient) DeleteOne(t *Title) *TitleDeleteOne {
+	return c.DeleteOneID(t.ID)
 }
 
 // DeleteOneID returns a delete builder for the given id.
-func (c *UserClient) DeleteOneID(id int) *UserDeleteOne {
-	builder := c.Delete().Where(user.ID(id))
+func (c *TitleClient) DeleteOneID(id int) *TitleDeleteOne {
+	builder := c.Delete().Where(title.ID(id))
 	builder.mutation.id = &id
 	builder.mutation.op = OpDeleteOne
-	return &UserDeleteOne{builder}
+	return &TitleDeleteOne{builder}
 }
 
-// Query returns a query builder for User.
-func (c *UserClient) Query() *UserQuery {
-	return &UserQuery{config: c.config}
+// Create returns a query builder for Title.
+func (c *TitleClient) Query() *TitleQuery {
+	return &TitleQuery{config: c.config}
 }
 
-// Get returns a User entity by its id.
-func (c *UserClient) Get(ctx context.Context, id int) (*User, error) {
-	return c.Query().Where(user.ID(id)).Only(ctx)
+// Get returns a Title entity by its id.
+func (c *TitleClient) Get(ctx context.Context, id int) (*Title, error) {
+	return c.Query().Where(title.ID(id)).Only(ctx)
 }
 
 // GetX is like Get, but panics if an error occurs.
-func (c *UserClient) GetX(ctx context.Context, id int) *User {
-	u, err := c.Get(ctx, id)
+func (c *TitleClient) GetX(ctx context.Context, id int) *Title {
+	t, err := c.Get(ctx, id)
 	if err != nil {
 		panic(err)
 	}
-	return u
+	return t
 }
 
-// QueryPlaylists queries the playlists edge of a User.
-func (c *UserClient) QueryPlaylists(u *User) *PlaylistQuery {
-	query := &PlaylistQuery{config: c.config}
+// QueryPersonal queries the personal edge of a Title.
+func (c *TitleClient) QueryPersonal(t *Title) *PersonalQuery {
+	query := &PersonalQuery{config: c.config}
 	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
-		id := u.ID
+		id := t.ID
 		step := sqlgraph.NewStep(
-			sqlgraph.From(user.Table, user.FieldID, id),
-			sqlgraph.To(playlist.Table, playlist.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, user.PlaylistsTable, user.PlaylistsColumn),
+			sqlgraph.From(title.Table, title.FieldID, id),
+			sqlgraph.To(personal.Table, personal.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, title.PersonalTable, title.PersonalColumn),
 		)
-		fromV = sqlgraph.Neighbors(u.driver.Dialect(), step)
-		return fromV, nil
-	}
-	return query
-}
-
-// QueryVideos queries the videos edge of a User.
-func (c *UserClient) QueryVideos(u *User) *VideoQuery {
-	query := &VideoQuery{config: c.config}
-	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
-		id := u.ID
-		step := sqlgraph.NewStep(
-			sqlgraph.From(user.Table, user.FieldID, id),
-			sqlgraph.To(video.Table, video.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, user.VideosTable, user.VideosColumn),
-		)
-		fromV = sqlgraph.Neighbors(u.driver.Dialect(), step)
+		fromV = sqlgraph.Neighbors(t.driver.Dialect(), step)
 		return fromV, nil
 	}
 	return query
 }
 
 // Hooks returns the client hooks.
-func (c *UserClient) Hooks() []Hook {
-	return c.hooks.User
-}
-
-// VideoClient is a client for the Video schema.
-type VideoClient struct {
-	config
-}
-
-// NewVideoClient returns a client for the Video from the given config.
-func NewVideoClient(c config) *VideoClient {
-	return &VideoClient{config: c}
-}
-
-// Use adds a list of mutation hooks to the hooks stack.
-// A call to `Use(f, g, h)` equals to `video.Hooks(f(g(h())))`.
-func (c *VideoClient) Use(hooks ...Hook) {
-	c.hooks.Video = append(c.hooks.Video, hooks...)
-}
-
-// Create returns a create builder for Video.
-func (c *VideoClient) Create() *VideoCreate {
-	mutation := newVideoMutation(c.config, OpCreate)
-	return &VideoCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// BulkCreate returns a builder for creating a bulk of Video entities.
-func (c *VideoClient) CreateBulk(builders ...*VideoCreate) *VideoCreateBulk {
-	return &VideoCreateBulk{config: c.config, builders: builders}
-}
-
-// Update returns an update builder for Video.
-func (c *VideoClient) Update() *VideoUpdate {
-	mutation := newVideoMutation(c.config, OpUpdate)
-	return &VideoUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// UpdateOne returns an update builder for the given entity.
-func (c *VideoClient) UpdateOne(v *Video) *VideoUpdateOne {
-	mutation := newVideoMutation(c.config, OpUpdateOne, withVideo(v))
-	return &VideoUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// UpdateOneID returns an update builder for the given id.
-func (c *VideoClient) UpdateOneID(id int) *VideoUpdateOne {
-	mutation := newVideoMutation(c.config, OpUpdateOne, withVideoID(id))
-	return &VideoUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// Delete returns a delete builder for Video.
-func (c *VideoClient) Delete() *VideoDelete {
-	mutation := newVideoMutation(c.config, OpDelete)
-	return &VideoDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// DeleteOne returns a delete builder for the given entity.
-func (c *VideoClient) DeleteOne(v *Video) *VideoDeleteOne {
-	return c.DeleteOneID(v.ID)
-}
-
-// DeleteOneID returns a delete builder for the given id.
-func (c *VideoClient) DeleteOneID(id int) *VideoDeleteOne {
-	builder := c.Delete().Where(video.ID(id))
-	builder.mutation.id = &id
-	builder.mutation.op = OpDeleteOne
-	return &VideoDeleteOne{builder}
-}
-
-// Query returns a query builder for Video.
-func (c *VideoClient) Query() *VideoQuery {
-	return &VideoQuery{config: c.config}
-}
-
-// Get returns a Video entity by its id.
-func (c *VideoClient) Get(ctx context.Context, id int) (*Video, error) {
-	return c.Query().Where(video.ID(id)).Only(ctx)
-}
-
-// GetX is like Get, but panics if an error occurs.
-func (c *VideoClient) GetX(ctx context.Context, id int) *Video {
-	v, err := c.Get(ctx, id)
-	if err != nil {
-		panic(err)
-	}
-	return v
-}
-
-// QueryOwner queries the owner edge of a Video.
-func (c *VideoClient) QueryOwner(v *Video) *UserQuery {
-	query := &UserQuery{config: c.config}
-	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
-		id := v.ID
-		step := sqlgraph.NewStep(
-			sqlgraph.From(video.Table, video.FieldID, id),
-			sqlgraph.To(user.Table, user.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, video.OwnerTable, video.OwnerColumn),
-		)
-		fromV = sqlgraph.Neighbors(v.driver.Dialect(), step)
-		return fromV, nil
-	}
-	return query
-}
-
-// QueryPlaylistVideos queries the playlist_videos edge of a Video.
-func (c *VideoClient) QueryPlaylistVideos(v *Video) *PlaylistVideoQuery {
-	query := &PlaylistVideoQuery{config: c.config}
-	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
-		id := v.ID
-		step := sqlgraph.NewStep(
-			sqlgraph.From(video.Table, video.FieldID, id),
-			sqlgraph.To(playlist_video.Table, playlist_video.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, video.PlaylistVideosTable, video.PlaylistVideosColumn),
-		)
-		fromV = sqlgraph.Neighbors(v.driver.Dialect(), step)
-		return fromV, nil
-	}
-	return query
-}
-
-// Hooks returns the client hooks.
-func (c *VideoClient) Hooks() []Hook {
-	return c.hooks.Video
+func (c *TitleClient) Hooks() []Hook {
+	return c.hooks.Title
 }

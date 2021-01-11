@@ -3,130 +3,157 @@
 package migrate
 
 import (
-	"github.com/facebook/ent/dialect/sql/schema"
-	"github.com/facebook/ent/schema/field"
+	"github.com/facebookincubator/ent/dialect/sql/schema"
+	"github.com/facebookincubator/ent/schema/field"
 )
 
 var (
-	// PlaylistsColumns holds the columns for the "playlists" table.
-	PlaylistsColumns = []*schema.Column{
+	// AdminrepairsColumns holds the columns for the "adminrepairs" table.
+	AdminrepairsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
-		{Name: "title", Type: field.TypeString},
-		{Name: "owner_id", Type: field.TypeInt, Nullable: true},
 	}
-	// PlaylistsTable holds the schema information for the "playlists" table.
-	PlaylistsTable = &schema.Table{
-		Name:       "playlists",
-		Columns:    PlaylistsColumns,
-		PrimaryKey: []*schema.Column{PlaylistsColumns[0]},
-		ForeignKeys: []*schema.ForeignKey{
-			{
-				Symbol:  "playlists_users_playlists",
-				Columns: []*schema.Column{PlaylistsColumns[2]},
-
-				RefColumns: []*schema.Column{UsersColumns[0]},
-				OnDelete:   schema.SetNull,
-			},
-		},
-	}
-	// PlaylistVideosColumns holds the columns for the "playlist_videos" table.
-	PlaylistVideosColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt, Increment: true},
-		{Name: "added_time", Type: field.TypeTime},
-		{Name: "playlist_id", Type: field.TypeInt, Nullable: true},
-		{Name: "resolution_id", Type: field.TypeInt, Nullable: true},
-		{Name: "video_id", Type: field.TypeInt, Nullable: true},
-	}
-	// PlaylistVideosTable holds the schema information for the "playlist_videos" table.
-	PlaylistVideosTable = &schema.Table{
-		Name:       "playlist_videos",
-		Columns:    PlaylistVideosColumns,
-		PrimaryKey: []*schema.Column{PlaylistVideosColumns[0]},
-		ForeignKeys: []*schema.ForeignKey{
-			{
-				Symbol:  "playlist_videos_playlists_playlist_videos",
-				Columns: []*schema.Column{PlaylistVideosColumns[2]},
-
-				RefColumns: []*schema.Column{PlaylistsColumns[0]},
-				OnDelete:   schema.SetNull,
-			},
-			{
-				Symbol:  "playlist_videos_resolutions_playlist_videos",
-				Columns: []*schema.Column{PlaylistVideosColumns[3]},
-
-				RefColumns: []*schema.Column{ResolutionsColumns[0]},
-				OnDelete:   schema.SetNull,
-			},
-			{
-				Symbol:  "playlist_videos_videos_playlist_videos",
-				Columns: []*schema.Column{PlaylistVideosColumns[4]},
-
-				RefColumns: []*schema.Column{VideosColumns[0]},
-				OnDelete:   schema.SetNull,
-			},
-		},
-	}
-	// ResolutionsColumns holds the columns for the "resolutions" table.
-	ResolutionsColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt, Increment: true},
-		{Name: "value", Type: field.TypeInt},
-	}
-	// ResolutionsTable holds the schema information for the "resolutions" table.
-	ResolutionsTable = &schema.Table{
-		Name:        "resolutions",
-		Columns:     ResolutionsColumns,
-		PrimaryKey:  []*schema.Column{ResolutionsColumns[0]},
+	// AdminrepairsTable holds the schema information for the "adminrepairs" table.
+	AdminrepairsTable = &schema.Table{
+		Name:        "adminrepairs",
+		Columns:     AdminrepairsColumns,
+		PrimaryKey:  []*schema.Column{AdminrepairsColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{},
 	}
-	// UsersColumns holds the columns for the "users" table.
-	UsersColumns = []*schema.Column{
+	// CustomersColumns holds the columns for the "customers" table.
+	CustomersColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+	}
+	// CustomersTable holds the schema information for the "customers" table.
+	CustomersTable = &schema.Table{
+		Name:        "customers",
+		Columns:     CustomersColumns,
+		PrimaryKey:  []*schema.Column{CustomersColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{},
+	}
+	// DepartmentsColumns holds the columns for the "departments" table.
+	DepartmentsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "departmentname", Type: field.TypeString, Unique: true},
+	}
+	// DepartmentsTable holds the schema information for the "departments" table.
+	DepartmentsTable = &schema.Table{
+		Name:        "departments",
+		Columns:     DepartmentsColumns,
+		PrimaryKey:  []*schema.Column{DepartmentsColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{},
+	}
+	// FixesColumns holds the columns for the "fixes" table.
+	FixesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+	}
+	// FixesTable holds the schema information for the "fixes" table.
+	FixesTable = &schema.Table{
+		Name:        "fixes",
+		Columns:     FixesColumns,
+		PrimaryKey:  []*schema.Column{FixesColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{},
+	}
+	// GendersColumns holds the columns for the "genders" table.
+	GendersColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "gendername", Type: field.TypeString, Unique: true},
+	}
+	// GendersTable holds the schema information for the "genders" table.
+	GendersTable = &schema.Table{
+		Name:        "genders",
+		Columns:     GendersColumns,
+		PrimaryKey:  []*schema.Column{GendersColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{},
+	}
+	// PersonalsColumns holds the columns for the "personals" table.
+	PersonalsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "name", Type: field.TypeString},
 		{Name: "email", Type: field.TypeString},
+		{Name: "password", Type: field.TypeString},
+		{Name: "department_id", Type: field.TypeInt, Nullable: true},
+		{Name: "gender_id", Type: field.TypeInt, Nullable: true},
+		{Name: "title_id", Type: field.TypeInt, Nullable: true},
 	}
-	// UsersTable holds the schema information for the "users" table.
-	UsersTable = &schema.Table{
-		Name:        "users",
-		Columns:     UsersColumns,
-		PrimaryKey:  []*schema.Column{UsersColumns[0]},
-		ForeignKeys: []*schema.ForeignKey{},
-	}
-	// VideosColumns holds the columns for the "videos" table.
-	VideosColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt, Increment: true},
-		{Name: "name", Type: field.TypeString},
-		{Name: "url", Type: field.TypeString},
-		{Name: "owner_id", Type: field.TypeInt, Nullable: true},
-	}
-	// VideosTable holds the schema information for the "videos" table.
-	VideosTable = &schema.Table{
-		Name:       "videos",
-		Columns:    VideosColumns,
-		PrimaryKey: []*schema.Column{VideosColumns[0]},
+	// PersonalsTable holds the schema information for the "personals" table.
+	PersonalsTable = &schema.Table{
+		Name:       "personals",
+		Columns:    PersonalsColumns,
+		PrimaryKey: []*schema.Column{PersonalsColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{
 			{
-				Symbol:  "videos_users_videos",
-				Columns: []*schema.Column{VideosColumns[3]},
+				Symbol:  "personals_departments_personal",
+				Columns: []*schema.Column{PersonalsColumns[4]},
 
-				RefColumns: []*schema.Column{UsersColumns[0]},
+				RefColumns: []*schema.Column{DepartmentsColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+			{
+				Symbol:  "personals_genders_personal",
+				Columns: []*schema.Column{PersonalsColumns[5]},
+
+				RefColumns: []*schema.Column{GendersColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+			{
+				Symbol:  "personals_titles_personal",
+				Columns: []*schema.Column{PersonalsColumns[6]},
+
+				RefColumns: []*schema.Column{TitlesColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 		},
 	}
+	// ProductsColumns holds the columns for the "products" table.
+	ProductsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+	}
+	// ProductsTable holds the schema information for the "products" table.
+	ProductsTable = &schema.Table{
+		Name:        "products",
+		Columns:     ProductsColumns,
+		PrimaryKey:  []*schema.Column{ProductsColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{},
+	}
+	// ReceiptsColumns holds the columns for the "receipts" table.
+	ReceiptsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+	}
+	// ReceiptsTable holds the schema information for the "receipts" table.
+	ReceiptsTable = &schema.Table{
+		Name:        "receipts",
+		Columns:     ReceiptsColumns,
+		PrimaryKey:  []*schema.Column{ReceiptsColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{},
+	}
+	// TitlesColumns holds the columns for the "titles" table.
+	TitlesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "titlename", Type: field.TypeString, Unique: true},
+	}
+	// TitlesTable holds the schema information for the "titles" table.
+	TitlesTable = &schema.Table{
+		Name:        "titles",
+		Columns:     TitlesColumns,
+		PrimaryKey:  []*schema.Column{TitlesColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{},
+	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
-		PlaylistsTable,
-		PlaylistVideosTable,
-		ResolutionsTable,
-		UsersTable,
-		VideosTable,
+		AdminrepairsTable,
+		CustomersTable,
+		DepartmentsTable,
+		FixesTable,
+		GendersTable,
+		PersonalsTable,
+		ProductsTable,
+		ReceiptsTable,
+		TitlesTable,
 	}
 )
 
 func init() {
-	PlaylistsTable.ForeignKeys[0].RefTable = UsersTable
-	PlaylistVideosTable.ForeignKeys[0].RefTable = PlaylistsTable
-	PlaylistVideosTable.ForeignKeys[1].RefTable = ResolutionsTable
-	PlaylistVideosTable.ForeignKeys[2].RefTable = VideosTable
-	VideosTable.ForeignKeys[0].RefTable = UsersTable
+	PersonalsTable.ForeignKeys[0].RefTable = DepartmentsTable
+	PersonalsTable.ForeignKeys[1].RefTable = GendersTable
+	PersonalsTable.ForeignKeys[2].RefTable = TitlesTable
 }
