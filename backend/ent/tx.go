@@ -6,22 +6,30 @@ import (
 	"context"
 	"sync"
 
-	"github.com/facebook/ent/dialect"
+	"github.com/facebookincubator/ent/dialect"
 )
 
 // Tx is a transactional client that is created by calling Client.Tx().
 type Tx struct {
 	config
-	// Playlist is the client for interacting with the Playlist builders.
-	Playlist *PlaylistClient
-	// Playlist_Video is the client for interacting with the Playlist_Video builders.
-	Playlist_Video *Playlist_VideoClient
-	// Resolution is the client for interacting with the Resolution builders.
-	Resolution *ResolutionClient
-	// User is the client for interacting with the User builders.
-	User *UserClient
-	// Video is the client for interacting with the Video builders.
-	Video *VideoClient
+	// Adminrepair is the client for interacting with the Adminrepair builders.
+	Adminrepair *AdminrepairClient
+	// Customer is the client for interacting with the Customer builders.
+	Customer *CustomerClient
+	// Department is the client for interacting with the Department builders.
+	Department *DepartmentClient
+	// Fix is the client for interacting with the Fix builders.
+	Fix *FixClient
+	// Gender is the client for interacting with the Gender builders.
+	Gender *GenderClient
+	// Personal is the client for interacting with the Personal builders.
+	Personal *PersonalClient
+	// Product is the client for interacting with the Product builders.
+	Product *ProductClient
+	// Receipt is the client for interacting with the Receipt builders.
+	Receipt *ReceiptClient
+	// Title is the client for interacting with the Title builders.
+	Title *TitleClient
 
 	// lazily loaded.
 	client     *Client
@@ -157,11 +165,15 @@ func (tx *Tx) Client() *Client {
 }
 
 func (tx *Tx) init() {
-	tx.Playlist = NewPlaylistClient(tx.config)
-	tx.Playlist_Video = NewPlaylist_VideoClient(tx.config)
-	tx.Resolution = NewResolutionClient(tx.config)
-	tx.User = NewUserClient(tx.config)
-	tx.Video = NewVideoClient(tx.config)
+	tx.Adminrepair = NewAdminrepairClient(tx.config)
+	tx.Customer = NewCustomerClient(tx.config)
+	tx.Department = NewDepartmentClient(tx.config)
+	tx.Fix = NewFixClient(tx.config)
+	tx.Gender = NewGenderClient(tx.config)
+	tx.Personal = NewPersonalClient(tx.config)
+	tx.Product = NewProductClient(tx.config)
+	tx.Receipt = NewReceiptClient(tx.config)
+	tx.Title = NewTitleClient(tx.config)
 }
 
 // txDriver wraps the given dialect.Tx with a nop dialect.Driver implementation.
@@ -171,7 +183,7 @@ func (tx *Tx) init() {
 // of them in order to commit or rollback the transaction.
 //
 // If a closed transaction is embedded in one of the generated entities, and the entity
-// applies a query, for example: Playlist.QueryXXX(), the query will be executed
+// applies a query, for example: Adminrepair.QueryXXX(), the query will be executed
 // through the driver which created this transaction.
 //
 // Note that txDriver is not goroutine safe.

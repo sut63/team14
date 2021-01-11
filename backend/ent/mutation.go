@@ -6,15 +6,13 @@ import (
 	"context"
 	"fmt"
 	"sync"
-	"time"
 
-	"github.com/tanapon395/playlist-video/ent/playlist"
-	"github.com/tanapon395/playlist-video/ent/playlist_video"
-	"github.com/tanapon395/playlist-video/ent/resolution"
-	"github.com/tanapon395/playlist-video/ent/user"
-	"github.com/tanapon395/playlist-video/ent/video"
+	"github.com/tanapon395/playlist-video/ent/department"
+	"github.com/tanapon395/playlist-video/ent/gender"
+	"github.com/tanapon395/playlist-video/ent/personal"
+	"github.com/tanapon395/playlist-video/ent/title"
 
-	"github.com/facebook/ent"
+	"github.com/facebookincubator/ent"
 )
 
 const (
@@ -26,41 +24,40 @@ const (
 	OpUpdateOne = ent.OpUpdateOne
 
 	// Node types.
-	TypePlaylist       = "Playlist"
-	TypePlaylist_Video = "Playlist_Video"
-	TypeResolution     = "Resolution"
-	TypeUser           = "User"
-	TypeVideo          = "Video"
+	TypeAdminrepair = "Adminrepair"
+	TypeCustomer    = "Customer"
+	TypeDepartment  = "Department"
+	TypeFix         = "Fix"
+	TypeGender      = "Gender"
+	TypePersonal    = "Personal"
+	TypeProduct     = "Product"
+	TypeReceipt     = "Receipt"
+	TypeTitle       = "Title"
 )
 
-// PlaylistMutation represents an operation that mutate the Playlists
+// AdminrepairMutation represents an operation that mutate the Adminrepairs
 // nodes in the graph.
-type PlaylistMutation struct {
+type AdminrepairMutation struct {
 	config
-	op                     Op
-	typ                    string
-	id                     *int
-	title                  *string
-	clearedFields          map[string]struct{}
-	owner                  *int
-	clearedowner           bool
-	playlist_videos        map[int]struct{}
-	removedplaylist_videos map[int]struct{}
-	done                   bool
-	oldValue               func(context.Context) (*Playlist, error)
+	op            Op
+	typ           string
+	id            *int
+	clearedFields map[string]struct{}
+	done          bool
+	oldValue      func(context.Context) (*Adminrepair, error)
 }
 
-var _ ent.Mutation = (*PlaylistMutation)(nil)
+var _ ent.Mutation = (*AdminrepairMutation)(nil)
 
-// playlistOption allows to manage the mutation configuration using functional options.
-type playlistOption func(*PlaylistMutation)
+// adminrepairOption allows to manage the mutation configuration using functional options.
+type adminrepairOption func(*AdminrepairMutation)
 
-// newPlaylistMutation creates new mutation for $n.Name.
-func newPlaylistMutation(c config, op Op, opts ...playlistOption) *PlaylistMutation {
-	m := &PlaylistMutation{
+// newAdminrepairMutation creates new mutation for $n.Name.
+func newAdminrepairMutation(c config, op Op, opts ...adminrepairOption) *AdminrepairMutation {
+	m := &AdminrepairMutation{
 		config:        c,
 		op:            op,
-		typ:           TypePlaylist,
+		typ:           TypeAdminrepair,
 		clearedFields: make(map[string]struct{}),
 	}
 	for _, opt := range opts {
@@ -69,20 +66,20 @@ func newPlaylistMutation(c config, op Op, opts ...playlistOption) *PlaylistMutat
 	return m
 }
 
-// withPlaylistID sets the id field of the mutation.
-func withPlaylistID(id int) playlistOption {
-	return func(m *PlaylistMutation) {
+// withAdminrepairID sets the id field of the mutation.
+func withAdminrepairID(id int) adminrepairOption {
+	return func(m *AdminrepairMutation) {
 		var (
 			err   error
 			once  sync.Once
-			value *Playlist
+			value *Adminrepair
 		)
-		m.oldValue = func(ctx context.Context) (*Playlist, error) {
+		m.oldValue = func(ctx context.Context) (*Adminrepair, error) {
 			once.Do(func() {
 				if m.done {
 					err = fmt.Errorf("querying old values post mutation is not allowed")
 				} else {
-					value, err = m.Client().Playlist.Get(ctx, id)
+					value, err = m.Client().Adminrepair.Get(ctx, id)
 				}
 			})
 			return value, err
@@ -91,10 +88,10 @@ func withPlaylistID(id int) playlistOption {
 	}
 }
 
-// withPlaylist sets the old Playlist of the mutation.
-func withPlaylist(node *Playlist) playlistOption {
-	return func(m *PlaylistMutation) {
-		m.oldValue = func(context.Context) (*Playlist, error) {
+// withAdminrepair sets the old Adminrepair of the mutation.
+func withAdminrepair(node *Adminrepair) adminrepairOption {
+	return func(m *AdminrepairMutation) {
+		m.oldValue = func(context.Context) (*Adminrepair, error) {
 			return node, nil
 		}
 		m.id = &node.ID
@@ -103,7 +100,7 @@ func withPlaylist(node *Playlist) playlistOption {
 
 // Client returns a new `ent.Client` from the mutation. If the mutation was
 // executed in a transaction (ent.Tx), a transactional client is returned.
-func (m PlaylistMutation) Client() *Client {
+func (m AdminrepairMutation) Client() *Client {
 	client := &Client{config: m.config}
 	client.init()
 	return client
@@ -111,7 +108,7 @@ func (m PlaylistMutation) Client() *Client {
 
 // Tx returns an `ent.Tx` for mutations that were executed in transactions;
 // it returns an error otherwise.
-func (m PlaylistMutation) Tx() (*Tx, error) {
+func (m AdminrepairMutation) Tx() (*Tx, error) {
 	if _, ok := m.driver.(*txDriver); !ok {
 		return nil, fmt.Errorf("ent: mutation is not running in a transaction")
 	}
@@ -122,148 +119,572 @@ func (m PlaylistMutation) Tx() (*Tx, error) {
 
 // ID returns the id value in the mutation. Note that, the id
 // is available only if it was provided to the builder.
-func (m *PlaylistMutation) ID() (id int, exists bool) {
+func (m *AdminrepairMutation) ID() (id int, exists bool) {
 	if m.id == nil {
 		return
 	}
 	return *m.id, true
 }
 
-// SetTitle sets the title field.
-func (m *PlaylistMutation) SetTitle(s string) {
-	m.title = &s
-}
-
-// Title returns the title value in the mutation.
-func (m *PlaylistMutation) Title() (r string, exists bool) {
-	v := m.title
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldTitle returns the old title value of the Playlist.
-// If the Playlist object wasn't provided to the builder, the object is fetched
-// from the database.
-// An error is returned if the mutation operation is not UpdateOne, or database query fails.
-func (m *PlaylistMutation) OldTitle(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, fmt.Errorf("OldTitle is allowed only on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, fmt.Errorf("OldTitle requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldTitle: %w", err)
-	}
-	return oldValue.Title, nil
-}
-
-// ResetTitle reset all changes of the "title" field.
-func (m *PlaylistMutation) ResetTitle() {
-	m.title = nil
-}
-
-// SetOwnerID sets the owner edge to User by id.
-func (m *PlaylistMutation) SetOwnerID(id int) {
-	m.owner = &id
-}
-
-// ClearOwner clears the owner edge to User.
-func (m *PlaylistMutation) ClearOwner() {
-	m.clearedowner = true
-}
-
-// OwnerCleared returns if the edge owner was cleared.
-func (m *PlaylistMutation) OwnerCleared() bool {
-	return m.clearedowner
-}
-
-// OwnerID returns the owner id in the mutation.
-func (m *PlaylistMutation) OwnerID() (id int, exists bool) {
-	if m.owner != nil {
-		return *m.owner, true
-	}
-	return
-}
-
-// OwnerIDs returns the owner ids in the mutation.
-// Note that ids always returns len(ids) <= 1 for unique edges, and you should use
-// OwnerID instead. It exists only for internal usage by the builders.
-func (m *PlaylistMutation) OwnerIDs() (ids []int) {
-	if id := m.owner; id != nil {
-		ids = append(ids, *id)
-	}
-	return
-}
-
-// ResetOwner reset all changes of the "owner" edge.
-func (m *PlaylistMutation) ResetOwner() {
-	m.owner = nil
-	m.clearedowner = false
-}
-
-// AddPlaylistVideoIDs adds the playlist_videos edge to Playlist_Video by ids.
-func (m *PlaylistMutation) AddPlaylistVideoIDs(ids ...int) {
-	if m.playlist_videos == nil {
-		m.playlist_videos = make(map[int]struct{})
-	}
-	for i := range ids {
-		m.playlist_videos[ids[i]] = struct{}{}
-	}
-}
-
-// RemovePlaylistVideoIDs removes the playlist_videos edge to Playlist_Video by ids.
-func (m *PlaylistMutation) RemovePlaylistVideoIDs(ids ...int) {
-	if m.removedplaylist_videos == nil {
-		m.removedplaylist_videos = make(map[int]struct{})
-	}
-	for i := range ids {
-		m.removedplaylist_videos[ids[i]] = struct{}{}
-	}
-}
-
-// RemovedPlaylistVideos returns the removed ids of playlist_videos.
-func (m *PlaylistMutation) RemovedPlaylistVideosIDs() (ids []int) {
-	for id := range m.removedplaylist_videos {
-		ids = append(ids, id)
-	}
-	return
-}
-
-// PlaylistVideosIDs returns the playlist_videos ids in the mutation.
-func (m *PlaylistMutation) PlaylistVideosIDs() (ids []int) {
-	for id := range m.playlist_videos {
-		ids = append(ids, id)
-	}
-	return
-}
-
-// ResetPlaylistVideos reset all changes of the "playlist_videos" edge.
-func (m *PlaylistMutation) ResetPlaylistVideos() {
-	m.playlist_videos = nil
-	m.removedplaylist_videos = nil
-}
-
 // Op returns the operation name.
-func (m *PlaylistMutation) Op() Op {
+func (m *AdminrepairMutation) Op() Op {
 	return m.op
 }
 
-// Type returns the node type of this mutation (Playlist).
-func (m *PlaylistMutation) Type() string {
+// Type returns the node type of this mutation (Adminrepair).
+func (m *AdminrepairMutation) Type() string {
 	return m.typ
 }
 
 // Fields returns all fields that were changed during
 // this mutation. Note that, in order to get all numeric
 // fields that were in/decremented, call AddedFields().
-func (m *PlaylistMutation) Fields() []string {
+func (m *AdminrepairMutation) Fields() []string {
+	fields := make([]string, 0, 0)
+	return fields
+}
+
+// Field returns the value of a field with the given name.
+// The second boolean value indicates that this field was
+// not set, or was not define in the schema.
+func (m *AdminrepairMutation) Field(name string) (ent.Value, bool) {
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database.
+// An error is returned if the mutation operation is not UpdateOne,
+// or the query to the database was failed.
+func (m *AdminrepairMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	return nil, fmt.Errorf("unknown Adminrepair field %s", name)
+}
+
+// SetField sets the value for the given name. It returns an
+// error if the field is not defined in the schema, or if the
+// type mismatch the field type.
+func (m *AdminrepairMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	}
+	return fmt.Errorf("unknown Adminrepair field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented
+// or decremented during this mutation.
+func (m *AdminrepairMutation) AddedFields() []string {
+	return nil
+}
+
+// AddedField returns the numeric value that was in/decremented
+// from a field with the given name. The second value indicates
+// that this field was not set, or was not define in the schema.
+func (m *AdminrepairMutation) AddedField(name string) (ent.Value, bool) {
+	return nil, false
+}
+
+// AddField adds the value for the given name. It returns an
+// error if the field is not defined in the schema, or if the
+// type mismatch the field type.
+func (m *AdminrepairMutation) AddField(name string, value ent.Value) error {
+	return fmt.Errorf("unknown Adminrepair numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared
+// during this mutation.
+func (m *AdminrepairMutation) ClearedFields() []string {
+	return nil
+}
+
+// FieldCleared returns a boolean indicates if this field was
+// cleared in this mutation.
+func (m *AdminrepairMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value for the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *AdminrepairMutation) ClearField(name string) error {
+	return fmt.Errorf("unknown Adminrepair nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation regarding the
+// given field name. It returns an error if the field is not
+// defined in the schema.
+func (m *AdminrepairMutation) ResetField(name string) error {
+	return fmt.Errorf("unknown Adminrepair field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this
+// mutation.
+func (m *AdminrepairMutation) AddedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// AddedIDs returns all ids (to other nodes) that were added for
+// the given edge name.
+func (m *AdminrepairMutation) AddedIDs(name string) []ent.Value {
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this
+// mutation.
+func (m *AdminrepairMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// RemovedIDs returns all ids (to other nodes) that were removed for
+// the given edge name.
+func (m *AdminrepairMutation) RemovedIDs(name string) []ent.Value {
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this
+// mutation.
+func (m *AdminrepairMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// EdgeCleared returns a boolean indicates if this edge was
+// cleared in this mutation.
+func (m *AdminrepairMutation) EdgeCleared(name string) bool {
+	return false
+}
+
+// ClearEdge clears the value for the given name. It returns an
+// error if the edge name is not defined in the schema.
+func (m *AdminrepairMutation) ClearEdge(name string) error {
+	return fmt.Errorf("unknown Adminrepair unique edge %s", name)
+}
+
+// ResetEdge resets all changes in the mutation regarding the
+// given edge name. It returns an error if the edge is not
+// defined in the schema.
+func (m *AdminrepairMutation) ResetEdge(name string) error {
+	return fmt.Errorf("unknown Adminrepair edge %s", name)
+}
+
+// CustomerMutation represents an operation that mutate the Customers
+// nodes in the graph.
+type CustomerMutation struct {
+	config
+	op            Op
+	typ           string
+	id            *int
+	clearedFields map[string]struct{}
+	done          bool
+	oldValue      func(context.Context) (*Customer, error)
+}
+
+var _ ent.Mutation = (*CustomerMutation)(nil)
+
+// customerOption allows to manage the mutation configuration using functional options.
+type customerOption func(*CustomerMutation)
+
+// newCustomerMutation creates new mutation for $n.Name.
+func newCustomerMutation(c config, op Op, opts ...customerOption) *CustomerMutation {
+	m := &CustomerMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeCustomer,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withCustomerID sets the id field of the mutation.
+func withCustomerID(id int) customerOption {
+	return func(m *CustomerMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *Customer
+		)
+		m.oldValue = func(ctx context.Context) (*Customer, error) {
+			once.Do(func() {
+				if m.done {
+					err = fmt.Errorf("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().Customer.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withCustomer sets the old Customer of the mutation.
+func withCustomer(node *Customer) customerOption {
+	return func(m *CustomerMutation) {
+		m.oldValue = func(context.Context) (*Customer, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m CustomerMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m CustomerMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, fmt.Errorf("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// ID returns the id value in the mutation. Note that, the id
+// is available only if it was provided to the builder.
+func (m *CustomerMutation) ID() (id int, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// Op returns the operation name.
+func (m *CustomerMutation) Op() Op {
+	return m.op
+}
+
+// Type returns the node type of this mutation (Customer).
+func (m *CustomerMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during
+// this mutation. Note that, in order to get all numeric
+// fields that were in/decremented, call AddedFields().
+func (m *CustomerMutation) Fields() []string {
+	fields := make([]string, 0, 0)
+	return fields
+}
+
+// Field returns the value of a field with the given name.
+// The second boolean value indicates that this field was
+// not set, or was not define in the schema.
+func (m *CustomerMutation) Field(name string) (ent.Value, bool) {
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database.
+// An error is returned if the mutation operation is not UpdateOne,
+// or the query to the database was failed.
+func (m *CustomerMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	return nil, fmt.Errorf("unknown Customer field %s", name)
+}
+
+// SetField sets the value for the given name. It returns an
+// error if the field is not defined in the schema, or if the
+// type mismatch the field type.
+func (m *CustomerMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	}
+	return fmt.Errorf("unknown Customer field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented
+// or decremented during this mutation.
+func (m *CustomerMutation) AddedFields() []string {
+	return nil
+}
+
+// AddedField returns the numeric value that was in/decremented
+// from a field with the given name. The second value indicates
+// that this field was not set, or was not define in the schema.
+func (m *CustomerMutation) AddedField(name string) (ent.Value, bool) {
+	return nil, false
+}
+
+// AddField adds the value for the given name. It returns an
+// error if the field is not defined in the schema, or if the
+// type mismatch the field type.
+func (m *CustomerMutation) AddField(name string, value ent.Value) error {
+	return fmt.Errorf("unknown Customer numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared
+// during this mutation.
+func (m *CustomerMutation) ClearedFields() []string {
+	return nil
+}
+
+// FieldCleared returns a boolean indicates if this field was
+// cleared in this mutation.
+func (m *CustomerMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value for the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *CustomerMutation) ClearField(name string) error {
+	return fmt.Errorf("unknown Customer nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation regarding the
+// given field name. It returns an error if the field is not
+// defined in the schema.
+func (m *CustomerMutation) ResetField(name string) error {
+	return fmt.Errorf("unknown Customer field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this
+// mutation.
+func (m *CustomerMutation) AddedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// AddedIDs returns all ids (to other nodes) that were added for
+// the given edge name.
+func (m *CustomerMutation) AddedIDs(name string) []ent.Value {
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this
+// mutation.
+func (m *CustomerMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// RemovedIDs returns all ids (to other nodes) that were removed for
+// the given edge name.
+func (m *CustomerMutation) RemovedIDs(name string) []ent.Value {
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this
+// mutation.
+func (m *CustomerMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// EdgeCleared returns a boolean indicates if this edge was
+// cleared in this mutation.
+func (m *CustomerMutation) EdgeCleared(name string) bool {
+	return false
+}
+
+// ClearEdge clears the value for the given name. It returns an
+// error if the edge name is not defined in the schema.
+func (m *CustomerMutation) ClearEdge(name string) error {
+	return fmt.Errorf("unknown Customer unique edge %s", name)
+}
+
+// ResetEdge resets all changes in the mutation regarding the
+// given edge name. It returns an error if the edge is not
+// defined in the schema.
+func (m *CustomerMutation) ResetEdge(name string) error {
+	return fmt.Errorf("unknown Customer edge %s", name)
+}
+
+// DepartmentMutation represents an operation that mutate the Departments
+// nodes in the graph.
+type DepartmentMutation struct {
+	config
+	op              Op
+	typ             string
+	id              *int
+	_Departmentname *string
+	clearedFields   map[string]struct{}
+	personal        map[int]struct{}
+	removedpersonal map[int]struct{}
+	done            bool
+	oldValue        func(context.Context) (*Department, error)
+}
+
+var _ ent.Mutation = (*DepartmentMutation)(nil)
+
+// departmentOption allows to manage the mutation configuration using functional options.
+type departmentOption func(*DepartmentMutation)
+
+// newDepartmentMutation creates new mutation for $n.Name.
+func newDepartmentMutation(c config, op Op, opts ...departmentOption) *DepartmentMutation {
+	m := &DepartmentMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeDepartment,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withDepartmentID sets the id field of the mutation.
+func withDepartmentID(id int) departmentOption {
+	return func(m *DepartmentMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *Department
+		)
+		m.oldValue = func(ctx context.Context) (*Department, error) {
+			once.Do(func() {
+				if m.done {
+					err = fmt.Errorf("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().Department.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withDepartment sets the old Department of the mutation.
+func withDepartment(node *Department) departmentOption {
+	return func(m *DepartmentMutation) {
+		m.oldValue = func(context.Context) (*Department, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m DepartmentMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m DepartmentMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, fmt.Errorf("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// ID returns the id value in the mutation. Note that, the id
+// is available only if it was provided to the builder.
+func (m *DepartmentMutation) ID() (id int, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// SetDepartmentname sets the Departmentname field.
+func (m *DepartmentMutation) SetDepartmentname(s string) {
+	m._Departmentname = &s
+}
+
+// Departmentname returns the Departmentname value in the mutation.
+func (m *DepartmentMutation) Departmentname() (r string, exists bool) {
+	v := m._Departmentname
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDepartmentname returns the old Departmentname value of the Department.
+// If the Department object wasn't provided to the builder, the object is fetched
+// from the database.
+// An error is returned if the mutation operation is not UpdateOne, or database query fails.
+func (m *DepartmentMutation) OldDepartmentname(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldDepartmentname is allowed only on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldDepartmentname requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDepartmentname: %w", err)
+	}
+	return oldValue.Departmentname, nil
+}
+
+// ResetDepartmentname reset all changes of the "Departmentname" field.
+func (m *DepartmentMutation) ResetDepartmentname() {
+	m._Departmentname = nil
+}
+
+// AddPersonalIDs adds the personal edge to Personal by ids.
+func (m *DepartmentMutation) AddPersonalIDs(ids ...int) {
+	if m.personal == nil {
+		m.personal = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.personal[ids[i]] = struct{}{}
+	}
+}
+
+// RemovePersonalIDs removes the personal edge to Personal by ids.
+func (m *DepartmentMutation) RemovePersonalIDs(ids ...int) {
+	if m.removedpersonal == nil {
+		m.removedpersonal = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.removedpersonal[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedPersonal returns the removed ids of personal.
+func (m *DepartmentMutation) RemovedPersonalIDs() (ids []int) {
+	for id := range m.removedpersonal {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// PersonalIDs returns the personal ids in the mutation.
+func (m *DepartmentMutation) PersonalIDs() (ids []int) {
+	for id := range m.personal {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetPersonal reset all changes of the "personal" edge.
+func (m *DepartmentMutation) ResetPersonal() {
+	m.personal = nil
+	m.removedpersonal = nil
+}
+
+// Op returns the operation name.
+func (m *DepartmentMutation) Op() Op {
+	return m.op
+}
+
+// Type returns the node type of this mutation (Department).
+func (m *DepartmentMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during
+// this mutation. Note that, in order to get all numeric
+// fields that were in/decremented, call AddedFields().
+func (m *DepartmentMutation) Fields() []string {
 	fields := make([]string, 0, 1)
-	if m.title != nil {
-		fields = append(fields, playlist.FieldTitle)
+	if m._Departmentname != nil {
+		fields = append(fields, department.FieldDepartmentname)
 	}
 	return fields
 }
@@ -271,10 +692,10 @@ func (m *PlaylistMutation) Fields() []string {
 // Field returns the value of a field with the given name.
 // The second boolean value indicates that this field was
 // not set, or was not define in the schema.
-func (m *PlaylistMutation) Field(name string) (ent.Value, bool) {
+func (m *DepartmentMutation) Field(name string) (ent.Value, bool) {
 	switch name {
-	case playlist.FieldTitle:
-		return m.Title()
+	case department.FieldDepartmentname:
+		return m.Departmentname()
 	}
 	return nil, false
 }
@@ -282,107 +703,100 @@ func (m *PlaylistMutation) Field(name string) (ent.Value, bool) {
 // OldField returns the old value of the field from the database.
 // An error is returned if the mutation operation is not UpdateOne,
 // or the query to the database was failed.
-func (m *PlaylistMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+func (m *DepartmentMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
 	switch name {
-	case playlist.FieldTitle:
-		return m.OldTitle(ctx)
+	case department.FieldDepartmentname:
+		return m.OldDepartmentname(ctx)
 	}
-	return nil, fmt.Errorf("unknown Playlist field %s", name)
+	return nil, fmt.Errorf("unknown Department field %s", name)
 }
 
 // SetField sets the value for the given name. It returns an
 // error if the field is not defined in the schema, or if the
 // type mismatch the field type.
-func (m *PlaylistMutation) SetField(name string, value ent.Value) error {
+func (m *DepartmentMutation) SetField(name string, value ent.Value) error {
 	switch name {
-	case playlist.FieldTitle:
+	case department.FieldDepartmentname:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetTitle(v)
+		m.SetDepartmentname(v)
 		return nil
 	}
-	return fmt.Errorf("unknown Playlist field %s", name)
+	return fmt.Errorf("unknown Department field %s", name)
 }
 
 // AddedFields returns all numeric fields that were incremented
 // or decremented during this mutation.
-func (m *PlaylistMutation) AddedFields() []string {
+func (m *DepartmentMutation) AddedFields() []string {
 	return nil
 }
 
 // AddedField returns the numeric value that was in/decremented
 // from a field with the given name. The second value indicates
 // that this field was not set, or was not define in the schema.
-func (m *PlaylistMutation) AddedField(name string) (ent.Value, bool) {
+func (m *DepartmentMutation) AddedField(name string) (ent.Value, bool) {
 	return nil, false
 }
 
 // AddField adds the value for the given name. It returns an
 // error if the field is not defined in the schema, or if the
 // type mismatch the field type.
-func (m *PlaylistMutation) AddField(name string, value ent.Value) error {
+func (m *DepartmentMutation) AddField(name string, value ent.Value) error {
 	switch name {
 	}
-	return fmt.Errorf("unknown Playlist numeric field %s", name)
+	return fmt.Errorf("unknown Department numeric field %s", name)
 }
 
 // ClearedFields returns all nullable fields that were cleared
 // during this mutation.
-func (m *PlaylistMutation) ClearedFields() []string {
+func (m *DepartmentMutation) ClearedFields() []string {
 	return nil
 }
 
 // FieldCleared returns a boolean indicates if this field was
 // cleared in this mutation.
-func (m *PlaylistMutation) FieldCleared(name string) bool {
+func (m *DepartmentMutation) FieldCleared(name string) bool {
 	_, ok := m.clearedFields[name]
 	return ok
 }
 
 // ClearField clears the value for the given name. It returns an
 // error if the field is not defined in the schema.
-func (m *PlaylistMutation) ClearField(name string) error {
-	return fmt.Errorf("unknown Playlist nullable field %s", name)
+func (m *DepartmentMutation) ClearField(name string) error {
+	return fmt.Errorf("unknown Department nullable field %s", name)
 }
 
 // ResetField resets all changes in the mutation regarding the
 // given field name. It returns an error if the field is not
 // defined in the schema.
-func (m *PlaylistMutation) ResetField(name string) error {
+func (m *DepartmentMutation) ResetField(name string) error {
 	switch name {
-	case playlist.FieldTitle:
-		m.ResetTitle()
+	case department.FieldDepartmentname:
+		m.ResetDepartmentname()
 		return nil
 	}
-	return fmt.Errorf("unknown Playlist field %s", name)
+	return fmt.Errorf("unknown Department field %s", name)
 }
 
 // AddedEdges returns all edge names that were set/added in this
 // mutation.
-func (m *PlaylistMutation) AddedEdges() []string {
-	edges := make([]string, 0, 2)
-	if m.owner != nil {
-		edges = append(edges, playlist.EdgeOwner)
-	}
-	if m.playlist_videos != nil {
-		edges = append(edges, playlist.EdgePlaylistVideos)
+func (m *DepartmentMutation) AddedEdges() []string {
+	edges := make([]string, 0, 1)
+	if m.personal != nil {
+		edges = append(edges, department.EdgePersonal)
 	}
 	return edges
 }
 
 // AddedIDs returns all ids (to other nodes) that were added for
 // the given edge name.
-func (m *PlaylistMutation) AddedIDs(name string) []ent.Value {
+func (m *DepartmentMutation) AddedIDs(name string) []ent.Value {
 	switch name {
-	case playlist.EdgeOwner:
-		if id := m.owner; id != nil {
-			return []ent.Value{*id}
-		}
-	case playlist.EdgePlaylistVideos:
-		ids := make([]ent.Value, 0, len(m.playlist_videos))
-		for id := range m.playlist_videos {
+	case department.EdgePersonal:
+		ids := make([]ent.Value, 0, len(m.personal))
+		for id := range m.personal {
 			ids = append(ids, id)
 		}
 		return ids
@@ -392,21 +806,21 @@ func (m *PlaylistMutation) AddedIDs(name string) []ent.Value {
 
 // RemovedEdges returns all edge names that were removed in this
 // mutation.
-func (m *PlaylistMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 2)
-	if m.removedplaylist_videos != nil {
-		edges = append(edges, playlist.EdgePlaylistVideos)
+func (m *DepartmentMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 1)
+	if m.removedpersonal != nil {
+		edges = append(edges, department.EdgePersonal)
 	}
 	return edges
 }
 
 // RemovedIDs returns all ids (to other nodes) that were removed for
 // the given edge name.
-func (m *PlaylistMutation) RemovedIDs(name string) []ent.Value {
+func (m *DepartmentMutation) RemovedIDs(name string) []ent.Value {
 	switch name {
-	case playlist.EdgePlaylistVideos:
-		ids := make([]ent.Value, 0, len(m.removedplaylist_videos))
-		for id := range m.removedplaylist_videos {
+	case department.EdgePersonal:
+		ids := make([]ent.Value, 0, len(m.removedpersonal))
+		for id := range m.removedpersonal {
 			ids = append(ids, id)
 		}
 		return ids
@@ -416,80 +830,669 @@ func (m *PlaylistMutation) RemovedIDs(name string) []ent.Value {
 
 // ClearedEdges returns all edge names that were cleared in this
 // mutation.
-func (m *PlaylistMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 2)
-	if m.clearedowner {
-		edges = append(edges, playlist.EdgeOwner)
-	}
+func (m *DepartmentMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 1)
 	return edges
 }
 
 // EdgeCleared returns a boolean indicates if this edge was
 // cleared in this mutation.
-func (m *PlaylistMutation) EdgeCleared(name string) bool {
+func (m *DepartmentMutation) EdgeCleared(name string) bool {
 	switch name {
-	case playlist.EdgeOwner:
-		return m.clearedowner
 	}
 	return false
 }
 
 // ClearEdge clears the value for the given name. It returns an
 // error if the edge name is not defined in the schema.
-func (m *PlaylistMutation) ClearEdge(name string) error {
+func (m *DepartmentMutation) ClearEdge(name string) error {
 	switch name {
-	case playlist.EdgeOwner:
-		m.ClearOwner()
-		return nil
 	}
-	return fmt.Errorf("unknown Playlist unique edge %s", name)
+	return fmt.Errorf("unknown Department unique edge %s", name)
 }
 
 // ResetEdge resets all changes in the mutation regarding the
 // given edge name. It returns an error if the edge is not
 // defined in the schema.
-func (m *PlaylistMutation) ResetEdge(name string) error {
+func (m *DepartmentMutation) ResetEdge(name string) error {
 	switch name {
-	case playlist.EdgeOwner:
-		m.ResetOwner()
-		return nil
-	case playlist.EdgePlaylistVideos:
-		m.ResetPlaylistVideos()
+	case department.EdgePersonal:
+		m.ResetPersonal()
 		return nil
 	}
-	return fmt.Errorf("unknown Playlist edge %s", name)
+	return fmt.Errorf("unknown Department edge %s", name)
 }
 
-// PlaylistVideoMutation represents an operation that mutate the Playlist_Videos
+// FixMutation represents an operation that mutate the Fixes
 // nodes in the graph.
-type PlaylistVideoMutation struct {
+type FixMutation struct {
+	config
+	op            Op
+	typ           string
+	id            *int
+	clearedFields map[string]struct{}
+	done          bool
+	oldValue      func(context.Context) (*Fix, error)
+}
+
+var _ ent.Mutation = (*FixMutation)(nil)
+
+// fixOption allows to manage the mutation configuration using functional options.
+type fixOption func(*FixMutation)
+
+// newFixMutation creates new mutation for $n.Name.
+func newFixMutation(c config, op Op, opts ...fixOption) *FixMutation {
+	m := &FixMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeFix,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withFixID sets the id field of the mutation.
+func withFixID(id int) fixOption {
+	return func(m *FixMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *Fix
+		)
+		m.oldValue = func(ctx context.Context) (*Fix, error) {
+			once.Do(func() {
+				if m.done {
+					err = fmt.Errorf("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().Fix.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withFix sets the old Fix of the mutation.
+func withFix(node *Fix) fixOption {
+	return func(m *FixMutation) {
+		m.oldValue = func(context.Context) (*Fix, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m FixMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m FixMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, fmt.Errorf("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// ID returns the id value in the mutation. Note that, the id
+// is available only if it was provided to the builder.
+func (m *FixMutation) ID() (id int, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// Op returns the operation name.
+func (m *FixMutation) Op() Op {
+	return m.op
+}
+
+// Type returns the node type of this mutation (Fix).
+func (m *FixMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during
+// this mutation. Note that, in order to get all numeric
+// fields that were in/decremented, call AddedFields().
+func (m *FixMutation) Fields() []string {
+	fields := make([]string, 0, 0)
+	return fields
+}
+
+// Field returns the value of a field with the given name.
+// The second boolean value indicates that this field was
+// not set, or was not define in the schema.
+func (m *FixMutation) Field(name string) (ent.Value, bool) {
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database.
+// An error is returned if the mutation operation is not UpdateOne,
+// or the query to the database was failed.
+func (m *FixMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	return nil, fmt.Errorf("unknown Fix field %s", name)
+}
+
+// SetField sets the value for the given name. It returns an
+// error if the field is not defined in the schema, or if the
+// type mismatch the field type.
+func (m *FixMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	}
+	return fmt.Errorf("unknown Fix field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented
+// or decremented during this mutation.
+func (m *FixMutation) AddedFields() []string {
+	return nil
+}
+
+// AddedField returns the numeric value that was in/decremented
+// from a field with the given name. The second value indicates
+// that this field was not set, or was not define in the schema.
+func (m *FixMutation) AddedField(name string) (ent.Value, bool) {
+	return nil, false
+}
+
+// AddField adds the value for the given name. It returns an
+// error if the field is not defined in the schema, or if the
+// type mismatch the field type.
+func (m *FixMutation) AddField(name string, value ent.Value) error {
+	return fmt.Errorf("unknown Fix numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared
+// during this mutation.
+func (m *FixMutation) ClearedFields() []string {
+	return nil
+}
+
+// FieldCleared returns a boolean indicates if this field was
+// cleared in this mutation.
+func (m *FixMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value for the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *FixMutation) ClearField(name string) error {
+	return fmt.Errorf("unknown Fix nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation regarding the
+// given field name. It returns an error if the field is not
+// defined in the schema.
+func (m *FixMutation) ResetField(name string) error {
+	return fmt.Errorf("unknown Fix field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this
+// mutation.
+func (m *FixMutation) AddedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// AddedIDs returns all ids (to other nodes) that were added for
+// the given edge name.
+func (m *FixMutation) AddedIDs(name string) []ent.Value {
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this
+// mutation.
+func (m *FixMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// RemovedIDs returns all ids (to other nodes) that were removed for
+// the given edge name.
+func (m *FixMutation) RemovedIDs(name string) []ent.Value {
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this
+// mutation.
+func (m *FixMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// EdgeCleared returns a boolean indicates if this edge was
+// cleared in this mutation.
+func (m *FixMutation) EdgeCleared(name string) bool {
+	return false
+}
+
+// ClearEdge clears the value for the given name. It returns an
+// error if the edge name is not defined in the schema.
+func (m *FixMutation) ClearEdge(name string) error {
+	return fmt.Errorf("unknown Fix unique edge %s", name)
+}
+
+// ResetEdge resets all changes in the mutation regarding the
+// given edge name. It returns an error if the edge is not
+// defined in the schema.
+func (m *FixMutation) ResetEdge(name string) error {
+	return fmt.Errorf("unknown Fix edge %s", name)
+}
+
+// GenderMutation represents an operation that mutate the Genders
+// nodes in the graph.
+type GenderMutation struct {
+	config
+	op              Op
+	typ             string
+	id              *int
+	_Gendername     *string
+	clearedFields   map[string]struct{}
+	personal        map[int]struct{}
+	removedpersonal map[int]struct{}
+	done            bool
+	oldValue        func(context.Context) (*Gender, error)
+}
+
+var _ ent.Mutation = (*GenderMutation)(nil)
+
+// genderOption allows to manage the mutation configuration using functional options.
+type genderOption func(*GenderMutation)
+
+// newGenderMutation creates new mutation for $n.Name.
+func newGenderMutation(c config, op Op, opts ...genderOption) *GenderMutation {
+	m := &GenderMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeGender,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withGenderID sets the id field of the mutation.
+func withGenderID(id int) genderOption {
+	return func(m *GenderMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *Gender
+		)
+		m.oldValue = func(ctx context.Context) (*Gender, error) {
+			once.Do(func() {
+				if m.done {
+					err = fmt.Errorf("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().Gender.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withGender sets the old Gender of the mutation.
+func withGender(node *Gender) genderOption {
+	return func(m *GenderMutation) {
+		m.oldValue = func(context.Context) (*Gender, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m GenderMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m GenderMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, fmt.Errorf("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// ID returns the id value in the mutation. Note that, the id
+// is available only if it was provided to the builder.
+func (m *GenderMutation) ID() (id int, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// SetGendername sets the Gendername field.
+func (m *GenderMutation) SetGendername(s string) {
+	m._Gendername = &s
+}
+
+// Gendername returns the Gendername value in the mutation.
+func (m *GenderMutation) Gendername() (r string, exists bool) {
+	v := m._Gendername
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldGendername returns the old Gendername value of the Gender.
+// If the Gender object wasn't provided to the builder, the object is fetched
+// from the database.
+// An error is returned if the mutation operation is not UpdateOne, or database query fails.
+func (m *GenderMutation) OldGendername(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldGendername is allowed only on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldGendername requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldGendername: %w", err)
+	}
+	return oldValue.Gendername, nil
+}
+
+// ResetGendername reset all changes of the "Gendername" field.
+func (m *GenderMutation) ResetGendername() {
+	m._Gendername = nil
+}
+
+// AddPersonalIDs adds the personal edge to Personal by ids.
+func (m *GenderMutation) AddPersonalIDs(ids ...int) {
+	if m.personal == nil {
+		m.personal = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.personal[ids[i]] = struct{}{}
+	}
+}
+
+// RemovePersonalIDs removes the personal edge to Personal by ids.
+func (m *GenderMutation) RemovePersonalIDs(ids ...int) {
+	if m.removedpersonal == nil {
+		m.removedpersonal = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.removedpersonal[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedPersonal returns the removed ids of personal.
+func (m *GenderMutation) RemovedPersonalIDs() (ids []int) {
+	for id := range m.removedpersonal {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// PersonalIDs returns the personal ids in the mutation.
+func (m *GenderMutation) PersonalIDs() (ids []int) {
+	for id := range m.personal {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetPersonal reset all changes of the "personal" edge.
+func (m *GenderMutation) ResetPersonal() {
+	m.personal = nil
+	m.removedpersonal = nil
+}
+
+// Op returns the operation name.
+func (m *GenderMutation) Op() Op {
+	return m.op
+}
+
+// Type returns the node type of this mutation (Gender).
+func (m *GenderMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during
+// this mutation. Note that, in order to get all numeric
+// fields that were in/decremented, call AddedFields().
+func (m *GenderMutation) Fields() []string {
+	fields := make([]string, 0, 1)
+	if m._Gendername != nil {
+		fields = append(fields, gender.FieldGendername)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name.
+// The second boolean value indicates that this field was
+// not set, or was not define in the schema.
+func (m *GenderMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case gender.FieldGendername:
+		return m.Gendername()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database.
+// An error is returned if the mutation operation is not UpdateOne,
+// or the query to the database was failed.
+func (m *GenderMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case gender.FieldGendername:
+		return m.OldGendername(ctx)
+	}
+	return nil, fmt.Errorf("unknown Gender field %s", name)
+}
+
+// SetField sets the value for the given name. It returns an
+// error if the field is not defined in the schema, or if the
+// type mismatch the field type.
+func (m *GenderMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case gender.FieldGendername:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetGendername(v)
+		return nil
+	}
+	return fmt.Errorf("unknown Gender field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented
+// or decremented during this mutation.
+func (m *GenderMutation) AddedFields() []string {
+	return nil
+}
+
+// AddedField returns the numeric value that was in/decremented
+// from a field with the given name. The second value indicates
+// that this field was not set, or was not define in the schema.
+func (m *GenderMutation) AddedField(name string) (ent.Value, bool) {
+	return nil, false
+}
+
+// AddField adds the value for the given name. It returns an
+// error if the field is not defined in the schema, or if the
+// type mismatch the field type.
+func (m *GenderMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	}
+	return fmt.Errorf("unknown Gender numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared
+// during this mutation.
+func (m *GenderMutation) ClearedFields() []string {
+	return nil
+}
+
+// FieldCleared returns a boolean indicates if this field was
+// cleared in this mutation.
+func (m *GenderMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value for the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *GenderMutation) ClearField(name string) error {
+	return fmt.Errorf("unknown Gender nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation regarding the
+// given field name. It returns an error if the field is not
+// defined in the schema.
+func (m *GenderMutation) ResetField(name string) error {
+	switch name {
+	case gender.FieldGendername:
+		m.ResetGendername()
+		return nil
+	}
+	return fmt.Errorf("unknown Gender field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this
+// mutation.
+func (m *GenderMutation) AddedEdges() []string {
+	edges := make([]string, 0, 1)
+	if m.personal != nil {
+		edges = append(edges, gender.EdgePersonal)
+	}
+	return edges
+}
+
+// AddedIDs returns all ids (to other nodes) that were added for
+// the given edge name.
+func (m *GenderMutation) AddedIDs(name string) []ent.Value {
+	switch name {
+	case gender.EdgePersonal:
+		ids := make([]ent.Value, 0, len(m.personal))
+		for id := range m.personal {
+			ids = append(ids, id)
+		}
+		return ids
+	}
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this
+// mutation.
+func (m *GenderMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 1)
+	if m.removedpersonal != nil {
+		edges = append(edges, gender.EdgePersonal)
+	}
+	return edges
+}
+
+// RemovedIDs returns all ids (to other nodes) that were removed for
+// the given edge name.
+func (m *GenderMutation) RemovedIDs(name string) []ent.Value {
+	switch name {
+	case gender.EdgePersonal:
+		ids := make([]ent.Value, 0, len(m.removedpersonal))
+		for id := range m.removedpersonal {
+			ids = append(ids, id)
+		}
+		return ids
+	}
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this
+// mutation.
+func (m *GenderMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 1)
+	return edges
+}
+
+// EdgeCleared returns a boolean indicates if this edge was
+// cleared in this mutation.
+func (m *GenderMutation) EdgeCleared(name string) bool {
+	switch name {
+	}
+	return false
+}
+
+// ClearEdge clears the value for the given name. It returns an
+// error if the edge name is not defined in the schema.
+func (m *GenderMutation) ClearEdge(name string) error {
+	switch name {
+	}
+	return fmt.Errorf("unknown Gender unique edge %s", name)
+}
+
+// ResetEdge resets all changes in the mutation regarding the
+// given edge name. It returns an error if the edge is not
+// defined in the schema.
+func (m *GenderMutation) ResetEdge(name string) error {
+	switch name {
+	case gender.EdgePersonal:
+		m.ResetPersonal()
+		return nil
+	}
+	return fmt.Errorf("unknown Gender edge %s", name)
+}
+
+// PersonalMutation represents an operation that mutate the Personals
+// nodes in the graph.
+type PersonalMutation struct {
 	config
 	op                Op
 	typ               string
 	id                *int
-	added_time        *time.Time
+	_Name             *string
+	_Email            *string
+	_Password         *string
 	clearedFields     map[string]struct{}
-	playlist          *int
-	clearedplaylist   bool
-	video             *int
-	clearedvideo      bool
-	resolution        *int
-	clearedresolution bool
+	title             *int
+	clearedtitle      bool
+	department        *int
+	cleareddepartment bool
+	gender            *int
+	clearedgender     bool
 	done              bool
-	oldValue          func(context.Context) (*Playlist_Video, error)
+	oldValue          func(context.Context) (*Personal, error)
 }
 
-var _ ent.Mutation = (*PlaylistVideoMutation)(nil)
+var _ ent.Mutation = (*PersonalMutation)(nil)
 
-// playlistVideoOption allows to manage the mutation configuration using functional options.
-type playlistVideoOption func(*PlaylistVideoMutation)
+// personalOption allows to manage the mutation configuration using functional options.
+type personalOption func(*PersonalMutation)
 
-// newPlaylistVideoMutation creates new mutation for $n.Name.
-func newPlaylistVideoMutation(c config, op Op, opts ...playlistVideoOption) *PlaylistVideoMutation {
-	m := &PlaylistVideoMutation{
+// newPersonalMutation creates new mutation for $n.Name.
+func newPersonalMutation(c config, op Op, opts ...personalOption) *PersonalMutation {
+	m := &PersonalMutation{
 		config:        c,
 		op:            op,
-		typ:           TypePlaylist_Video,
+		typ:           TypePersonal,
 		clearedFields: make(map[string]struct{}),
 	}
 	for _, opt := range opts {
@@ -498,20 +1501,20 @@ func newPlaylistVideoMutation(c config, op Op, opts ...playlistVideoOption) *Pla
 	return m
 }
 
-// withPlaylist_VideoID sets the id field of the mutation.
-func withPlaylist_VideoID(id int) playlistVideoOption {
-	return func(m *PlaylistVideoMutation) {
+// withPersonalID sets the id field of the mutation.
+func withPersonalID(id int) personalOption {
+	return func(m *PersonalMutation) {
 		var (
 			err   error
 			once  sync.Once
-			value *Playlist_Video
+			value *Personal
 		)
-		m.oldValue = func(ctx context.Context) (*Playlist_Video, error) {
+		m.oldValue = func(ctx context.Context) (*Personal, error) {
 			once.Do(func() {
 				if m.done {
 					err = fmt.Errorf("querying old values post mutation is not allowed")
 				} else {
-					value, err = m.Client().Playlist_Video.Get(ctx, id)
+					value, err = m.Client().Personal.Get(ctx, id)
 				}
 			})
 			return value, err
@@ -520,10 +1523,10 @@ func withPlaylist_VideoID(id int) playlistVideoOption {
 	}
 }
 
-// withPlaylist_Video sets the old Playlist_Video of the mutation.
-func withPlaylist_Video(node *Playlist_Video) playlistVideoOption {
-	return func(m *PlaylistVideoMutation) {
-		m.oldValue = func(context.Context) (*Playlist_Video, error) {
+// withPersonal sets the old Personal of the mutation.
+func withPersonal(node *Personal) personalOption {
+	return func(m *PersonalMutation) {
+		m.oldValue = func(context.Context) (*Personal, error) {
 			return node, nil
 		}
 		m.id = &node.ID
@@ -532,7 +1535,7 @@ func withPlaylist_Video(node *Playlist_Video) playlistVideoOption {
 
 // Client returns a new `ent.Client` from the mutation. If the mutation was
 // executed in a transaction (ent.Tx), a transactional client is returned.
-func (m PlaylistVideoMutation) Client() *Client {
+func (m PersonalMutation) Client() *Client {
 	client := &Client{config: m.config}
 	client.init()
 	return client
@@ -540,7 +1543,7 @@ func (m PlaylistVideoMutation) Client() *Client {
 
 // Tx returns an `ent.Tx` for mutations that were executed in transactions;
 // it returns an error otherwise.
-func (m PlaylistVideoMutation) Tx() (*Tx, error) {
+func (m PersonalMutation) Tx() (*Tx, error) {
 	if _, ok := m.driver.(*txDriver); !ok {
 		return nil, fmt.Errorf("ent: mutation is not running in a transaction")
 	}
@@ -551,915 +1554,32 @@ func (m PlaylistVideoMutation) Tx() (*Tx, error) {
 
 // ID returns the id value in the mutation. Note that, the id
 // is available only if it was provided to the builder.
-func (m *PlaylistVideoMutation) ID() (id int, exists bool) {
+func (m *PersonalMutation) ID() (id int, exists bool) {
 	if m.id == nil {
 		return
 	}
 	return *m.id, true
 }
 
-// SetAddedTime sets the added_time field.
-func (m *PlaylistVideoMutation) SetAddedTime(t time.Time) {
-	m.added_time = &t
+// SetName sets the Name field.
+func (m *PersonalMutation) SetName(s string) {
+	m._Name = &s
 }
 
-// AddedTime returns the added_time value in the mutation.
-func (m *PlaylistVideoMutation) AddedTime() (r time.Time, exists bool) {
-	v := m.added_time
+// Name returns the Name value in the mutation.
+func (m *PersonalMutation) Name() (r string, exists bool) {
+	v := m._Name
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldAddedTime returns the old added_time value of the Playlist_Video.
-// If the Playlist_Video object wasn't provided to the builder, the object is fetched
+// OldName returns the old Name value of the Personal.
+// If the Personal object wasn't provided to the builder, the object is fetched
 // from the database.
 // An error is returned if the mutation operation is not UpdateOne, or database query fails.
-func (m *PlaylistVideoMutation) OldAddedTime(ctx context.Context) (v time.Time, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, fmt.Errorf("OldAddedTime is allowed only on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, fmt.Errorf("OldAddedTime requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldAddedTime: %w", err)
-	}
-	return oldValue.AddedTime, nil
-}
-
-// ResetAddedTime reset all changes of the "added_time" field.
-func (m *PlaylistVideoMutation) ResetAddedTime() {
-	m.added_time = nil
-}
-
-// SetPlaylistID sets the playlist edge to Playlist by id.
-func (m *PlaylistVideoMutation) SetPlaylistID(id int) {
-	m.playlist = &id
-}
-
-// ClearPlaylist clears the playlist edge to Playlist.
-func (m *PlaylistVideoMutation) ClearPlaylist() {
-	m.clearedplaylist = true
-}
-
-// PlaylistCleared returns if the edge playlist was cleared.
-func (m *PlaylistVideoMutation) PlaylistCleared() bool {
-	return m.clearedplaylist
-}
-
-// PlaylistID returns the playlist id in the mutation.
-func (m *PlaylistVideoMutation) PlaylistID() (id int, exists bool) {
-	if m.playlist != nil {
-		return *m.playlist, true
-	}
-	return
-}
-
-// PlaylistIDs returns the playlist ids in the mutation.
-// Note that ids always returns len(ids) <= 1 for unique edges, and you should use
-// PlaylistID instead. It exists only for internal usage by the builders.
-func (m *PlaylistVideoMutation) PlaylistIDs() (ids []int) {
-	if id := m.playlist; id != nil {
-		ids = append(ids, *id)
-	}
-	return
-}
-
-// ResetPlaylist reset all changes of the "playlist" edge.
-func (m *PlaylistVideoMutation) ResetPlaylist() {
-	m.playlist = nil
-	m.clearedplaylist = false
-}
-
-// SetVideoID sets the video edge to Video by id.
-func (m *PlaylistVideoMutation) SetVideoID(id int) {
-	m.video = &id
-}
-
-// ClearVideo clears the video edge to Video.
-func (m *PlaylistVideoMutation) ClearVideo() {
-	m.clearedvideo = true
-}
-
-// VideoCleared returns if the edge video was cleared.
-func (m *PlaylistVideoMutation) VideoCleared() bool {
-	return m.clearedvideo
-}
-
-// VideoID returns the video id in the mutation.
-func (m *PlaylistVideoMutation) VideoID() (id int, exists bool) {
-	if m.video != nil {
-		return *m.video, true
-	}
-	return
-}
-
-// VideoIDs returns the video ids in the mutation.
-// Note that ids always returns len(ids) <= 1 for unique edges, and you should use
-// VideoID instead. It exists only for internal usage by the builders.
-func (m *PlaylistVideoMutation) VideoIDs() (ids []int) {
-	if id := m.video; id != nil {
-		ids = append(ids, *id)
-	}
-	return
-}
-
-// ResetVideo reset all changes of the "video" edge.
-func (m *PlaylistVideoMutation) ResetVideo() {
-	m.video = nil
-	m.clearedvideo = false
-}
-
-// SetResolutionID sets the resolution edge to Resolution by id.
-func (m *PlaylistVideoMutation) SetResolutionID(id int) {
-	m.resolution = &id
-}
-
-// ClearResolution clears the resolution edge to Resolution.
-func (m *PlaylistVideoMutation) ClearResolution() {
-	m.clearedresolution = true
-}
-
-// ResolutionCleared returns if the edge resolution was cleared.
-func (m *PlaylistVideoMutation) ResolutionCleared() bool {
-	return m.clearedresolution
-}
-
-// ResolutionID returns the resolution id in the mutation.
-func (m *PlaylistVideoMutation) ResolutionID() (id int, exists bool) {
-	if m.resolution != nil {
-		return *m.resolution, true
-	}
-	return
-}
-
-// ResolutionIDs returns the resolution ids in the mutation.
-// Note that ids always returns len(ids) <= 1 for unique edges, and you should use
-// ResolutionID instead. It exists only for internal usage by the builders.
-func (m *PlaylistVideoMutation) ResolutionIDs() (ids []int) {
-	if id := m.resolution; id != nil {
-		ids = append(ids, *id)
-	}
-	return
-}
-
-// ResetResolution reset all changes of the "resolution" edge.
-func (m *PlaylistVideoMutation) ResetResolution() {
-	m.resolution = nil
-	m.clearedresolution = false
-}
-
-// Op returns the operation name.
-func (m *PlaylistVideoMutation) Op() Op {
-	return m.op
-}
-
-// Type returns the node type of this mutation (Playlist_Video).
-func (m *PlaylistVideoMutation) Type() string {
-	return m.typ
-}
-
-// Fields returns all fields that were changed during
-// this mutation. Note that, in order to get all numeric
-// fields that were in/decremented, call AddedFields().
-func (m *PlaylistVideoMutation) Fields() []string {
-	fields := make([]string, 0, 1)
-	if m.added_time != nil {
-		fields = append(fields, playlist_video.FieldAddedTime)
-	}
-	return fields
-}
-
-// Field returns the value of a field with the given name.
-// The second boolean value indicates that this field was
-// not set, or was not define in the schema.
-func (m *PlaylistVideoMutation) Field(name string) (ent.Value, bool) {
-	switch name {
-	case playlist_video.FieldAddedTime:
-		return m.AddedTime()
-	}
-	return nil, false
-}
-
-// OldField returns the old value of the field from the database.
-// An error is returned if the mutation operation is not UpdateOne,
-// or the query to the database was failed.
-func (m *PlaylistVideoMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
-	switch name {
-	case playlist_video.FieldAddedTime:
-		return m.OldAddedTime(ctx)
-	}
-	return nil, fmt.Errorf("unknown Playlist_Video field %s", name)
-}
-
-// SetField sets the value for the given name. It returns an
-// error if the field is not defined in the schema, or if the
-// type mismatch the field type.
-func (m *PlaylistVideoMutation) SetField(name string, value ent.Value) error {
-	switch name {
-	case playlist_video.FieldAddedTime:
-		v, ok := value.(time.Time)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetAddedTime(v)
-		return nil
-	}
-	return fmt.Errorf("unknown Playlist_Video field %s", name)
-}
-
-// AddedFields returns all numeric fields that were incremented
-// or decremented during this mutation.
-func (m *PlaylistVideoMutation) AddedFields() []string {
-	return nil
-}
-
-// AddedField returns the numeric value that was in/decremented
-// from a field with the given name. The second value indicates
-// that this field was not set, or was not define in the schema.
-func (m *PlaylistVideoMutation) AddedField(name string) (ent.Value, bool) {
-	return nil, false
-}
-
-// AddField adds the value for the given name. It returns an
-// error if the field is not defined in the schema, or if the
-// type mismatch the field type.
-func (m *PlaylistVideoMutation) AddField(name string, value ent.Value) error {
-	switch name {
-	}
-	return fmt.Errorf("unknown Playlist_Video numeric field %s", name)
-}
-
-// ClearedFields returns all nullable fields that were cleared
-// during this mutation.
-func (m *PlaylistVideoMutation) ClearedFields() []string {
-	return nil
-}
-
-// FieldCleared returns a boolean indicates if this field was
-// cleared in this mutation.
-func (m *PlaylistVideoMutation) FieldCleared(name string) bool {
-	_, ok := m.clearedFields[name]
-	return ok
-}
-
-// ClearField clears the value for the given name. It returns an
-// error if the field is not defined in the schema.
-func (m *PlaylistVideoMutation) ClearField(name string) error {
-	return fmt.Errorf("unknown Playlist_Video nullable field %s", name)
-}
-
-// ResetField resets all changes in the mutation regarding the
-// given field name. It returns an error if the field is not
-// defined in the schema.
-func (m *PlaylistVideoMutation) ResetField(name string) error {
-	switch name {
-	case playlist_video.FieldAddedTime:
-		m.ResetAddedTime()
-		return nil
-	}
-	return fmt.Errorf("unknown Playlist_Video field %s", name)
-}
-
-// AddedEdges returns all edge names that were set/added in this
-// mutation.
-func (m *PlaylistVideoMutation) AddedEdges() []string {
-	edges := make([]string, 0, 3)
-	if m.playlist != nil {
-		edges = append(edges, playlist_video.EdgePlaylist)
-	}
-	if m.video != nil {
-		edges = append(edges, playlist_video.EdgeVideo)
-	}
-	if m.resolution != nil {
-		edges = append(edges, playlist_video.EdgeResolution)
-	}
-	return edges
-}
-
-// AddedIDs returns all ids (to other nodes) that were added for
-// the given edge name.
-func (m *PlaylistVideoMutation) AddedIDs(name string) []ent.Value {
-	switch name {
-	case playlist_video.EdgePlaylist:
-		if id := m.playlist; id != nil {
-			return []ent.Value{*id}
-		}
-	case playlist_video.EdgeVideo:
-		if id := m.video; id != nil {
-			return []ent.Value{*id}
-		}
-	case playlist_video.EdgeResolution:
-		if id := m.resolution; id != nil {
-			return []ent.Value{*id}
-		}
-	}
-	return nil
-}
-
-// RemovedEdges returns all edge names that were removed in this
-// mutation.
-func (m *PlaylistVideoMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 3)
-	return edges
-}
-
-// RemovedIDs returns all ids (to other nodes) that were removed for
-// the given edge name.
-func (m *PlaylistVideoMutation) RemovedIDs(name string) []ent.Value {
-	switch name {
-	}
-	return nil
-}
-
-// ClearedEdges returns all edge names that were cleared in this
-// mutation.
-func (m *PlaylistVideoMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 3)
-	if m.clearedplaylist {
-		edges = append(edges, playlist_video.EdgePlaylist)
-	}
-	if m.clearedvideo {
-		edges = append(edges, playlist_video.EdgeVideo)
-	}
-	if m.clearedresolution {
-		edges = append(edges, playlist_video.EdgeResolution)
-	}
-	return edges
-}
-
-// EdgeCleared returns a boolean indicates if this edge was
-// cleared in this mutation.
-func (m *PlaylistVideoMutation) EdgeCleared(name string) bool {
-	switch name {
-	case playlist_video.EdgePlaylist:
-		return m.clearedplaylist
-	case playlist_video.EdgeVideo:
-		return m.clearedvideo
-	case playlist_video.EdgeResolution:
-		return m.clearedresolution
-	}
-	return false
-}
-
-// ClearEdge clears the value for the given name. It returns an
-// error if the edge name is not defined in the schema.
-func (m *PlaylistVideoMutation) ClearEdge(name string) error {
-	switch name {
-	case playlist_video.EdgePlaylist:
-		m.ClearPlaylist()
-		return nil
-	case playlist_video.EdgeVideo:
-		m.ClearVideo()
-		return nil
-	case playlist_video.EdgeResolution:
-		m.ClearResolution()
-		return nil
-	}
-	return fmt.Errorf("unknown Playlist_Video unique edge %s", name)
-}
-
-// ResetEdge resets all changes in the mutation regarding the
-// given edge name. It returns an error if the edge is not
-// defined in the schema.
-func (m *PlaylistVideoMutation) ResetEdge(name string) error {
-	switch name {
-	case playlist_video.EdgePlaylist:
-		m.ResetPlaylist()
-		return nil
-	case playlist_video.EdgeVideo:
-		m.ResetVideo()
-		return nil
-	case playlist_video.EdgeResolution:
-		m.ResetResolution()
-		return nil
-	}
-	return fmt.Errorf("unknown Playlist_Video edge %s", name)
-}
-
-// ResolutionMutation represents an operation that mutate the Resolutions
-// nodes in the graph.
-type ResolutionMutation struct {
-	config
-	op                     Op
-	typ                    string
-	id                     *int
-	value                  *int
-	addvalue               *int
-	clearedFields          map[string]struct{}
-	playlist_videos        map[int]struct{}
-	removedplaylist_videos map[int]struct{}
-	done                   bool
-	oldValue               func(context.Context) (*Resolution, error)
-}
-
-var _ ent.Mutation = (*ResolutionMutation)(nil)
-
-// resolutionOption allows to manage the mutation configuration using functional options.
-type resolutionOption func(*ResolutionMutation)
-
-// newResolutionMutation creates new mutation for $n.Name.
-func newResolutionMutation(c config, op Op, opts ...resolutionOption) *ResolutionMutation {
-	m := &ResolutionMutation{
-		config:        c,
-		op:            op,
-		typ:           TypeResolution,
-		clearedFields: make(map[string]struct{}),
-	}
-	for _, opt := range opts {
-		opt(m)
-	}
-	return m
-}
-
-// withResolutionID sets the id field of the mutation.
-func withResolutionID(id int) resolutionOption {
-	return func(m *ResolutionMutation) {
-		var (
-			err   error
-			once  sync.Once
-			value *Resolution
-		)
-		m.oldValue = func(ctx context.Context) (*Resolution, error) {
-			once.Do(func() {
-				if m.done {
-					err = fmt.Errorf("querying old values post mutation is not allowed")
-				} else {
-					value, err = m.Client().Resolution.Get(ctx, id)
-				}
-			})
-			return value, err
-		}
-		m.id = &id
-	}
-}
-
-// withResolution sets the old Resolution of the mutation.
-func withResolution(node *Resolution) resolutionOption {
-	return func(m *ResolutionMutation) {
-		m.oldValue = func(context.Context) (*Resolution, error) {
-			return node, nil
-		}
-		m.id = &node.ID
-	}
-}
-
-// Client returns a new `ent.Client` from the mutation. If the mutation was
-// executed in a transaction (ent.Tx), a transactional client is returned.
-func (m ResolutionMutation) Client() *Client {
-	client := &Client{config: m.config}
-	client.init()
-	return client
-}
-
-// Tx returns an `ent.Tx` for mutations that were executed in transactions;
-// it returns an error otherwise.
-func (m ResolutionMutation) Tx() (*Tx, error) {
-	if _, ok := m.driver.(*txDriver); !ok {
-		return nil, fmt.Errorf("ent: mutation is not running in a transaction")
-	}
-	tx := &Tx{config: m.config}
-	tx.init()
-	return tx, nil
-}
-
-// ID returns the id value in the mutation. Note that, the id
-// is available only if it was provided to the builder.
-func (m *ResolutionMutation) ID() (id int, exists bool) {
-	if m.id == nil {
-		return
-	}
-	return *m.id, true
-}
-
-// SetValue sets the value field.
-func (m *ResolutionMutation) SetValue(i int) {
-	m.value = &i
-	m.addvalue = nil
-}
-
-// Value returns the value value in the mutation.
-func (m *ResolutionMutation) Value() (r int, exists bool) {
-	v := m.value
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldValue returns the old value value of the Resolution.
-// If the Resolution object wasn't provided to the builder, the object is fetched
-// from the database.
-// An error is returned if the mutation operation is not UpdateOne, or database query fails.
-func (m *ResolutionMutation) OldValue(ctx context.Context) (v int, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, fmt.Errorf("OldValue is allowed only on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, fmt.Errorf("OldValue requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldValue: %w", err)
-	}
-	return oldValue.Value, nil
-}
-
-// AddValue adds i to value.
-func (m *ResolutionMutation) AddValue(i int) {
-	if m.addvalue != nil {
-		*m.addvalue += i
-	} else {
-		m.addvalue = &i
-	}
-}
-
-// AddedValue returns the value that was added to the value field in this mutation.
-func (m *ResolutionMutation) AddedValue() (r int, exists bool) {
-	v := m.addvalue
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// ResetValue reset all changes of the "value" field.
-func (m *ResolutionMutation) ResetValue() {
-	m.value = nil
-	m.addvalue = nil
-}
-
-// AddPlaylistVideoIDs adds the playlist_videos edge to Playlist_Video by ids.
-func (m *ResolutionMutation) AddPlaylistVideoIDs(ids ...int) {
-	if m.playlist_videos == nil {
-		m.playlist_videos = make(map[int]struct{})
-	}
-	for i := range ids {
-		m.playlist_videos[ids[i]] = struct{}{}
-	}
-}
-
-// RemovePlaylistVideoIDs removes the playlist_videos edge to Playlist_Video by ids.
-func (m *ResolutionMutation) RemovePlaylistVideoIDs(ids ...int) {
-	if m.removedplaylist_videos == nil {
-		m.removedplaylist_videos = make(map[int]struct{})
-	}
-	for i := range ids {
-		m.removedplaylist_videos[ids[i]] = struct{}{}
-	}
-}
-
-// RemovedPlaylistVideos returns the removed ids of playlist_videos.
-func (m *ResolutionMutation) RemovedPlaylistVideosIDs() (ids []int) {
-	for id := range m.removedplaylist_videos {
-		ids = append(ids, id)
-	}
-	return
-}
-
-// PlaylistVideosIDs returns the playlist_videos ids in the mutation.
-func (m *ResolutionMutation) PlaylistVideosIDs() (ids []int) {
-	for id := range m.playlist_videos {
-		ids = append(ids, id)
-	}
-	return
-}
-
-// ResetPlaylistVideos reset all changes of the "playlist_videos" edge.
-func (m *ResolutionMutation) ResetPlaylistVideos() {
-	m.playlist_videos = nil
-	m.removedplaylist_videos = nil
-}
-
-// Op returns the operation name.
-func (m *ResolutionMutation) Op() Op {
-	return m.op
-}
-
-// Type returns the node type of this mutation (Resolution).
-func (m *ResolutionMutation) Type() string {
-	return m.typ
-}
-
-// Fields returns all fields that were changed during
-// this mutation. Note that, in order to get all numeric
-// fields that were in/decremented, call AddedFields().
-func (m *ResolutionMutation) Fields() []string {
-	fields := make([]string, 0, 1)
-	if m.value != nil {
-		fields = append(fields, resolution.FieldValue)
-	}
-	return fields
-}
-
-// Field returns the value of a field with the given name.
-// The second boolean value indicates that this field was
-// not set, or was not define in the schema.
-func (m *ResolutionMutation) Field(name string) (ent.Value, bool) {
-	switch name {
-	case resolution.FieldValue:
-		return m.Value()
-	}
-	return nil, false
-}
-
-// OldField returns the old value of the field from the database.
-// An error is returned if the mutation operation is not UpdateOne,
-// or the query to the database was failed.
-func (m *ResolutionMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
-	switch name {
-	case resolution.FieldValue:
-		return m.OldValue(ctx)
-	}
-	return nil, fmt.Errorf("unknown Resolution field %s", name)
-}
-
-// SetField sets the value for the given name. It returns an
-// error if the field is not defined in the schema, or if the
-// type mismatch the field type.
-func (m *ResolutionMutation) SetField(name string, value ent.Value) error {
-	switch name {
-	case resolution.FieldValue:
-		v, ok := value.(int)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetValue(v)
-		return nil
-	}
-	return fmt.Errorf("unknown Resolution field %s", name)
-}
-
-// AddedFields returns all numeric fields that were incremented
-// or decremented during this mutation.
-func (m *ResolutionMutation) AddedFields() []string {
-	var fields []string
-	if m.addvalue != nil {
-		fields = append(fields, resolution.FieldValue)
-	}
-	return fields
-}
-
-// AddedField returns the numeric value that was in/decremented
-// from a field with the given name. The second value indicates
-// that this field was not set, or was not define in the schema.
-func (m *ResolutionMutation) AddedField(name string) (ent.Value, bool) {
-	switch name {
-	case resolution.FieldValue:
-		return m.AddedValue()
-	}
-	return nil, false
-}
-
-// AddField adds the value for the given name. It returns an
-// error if the field is not defined in the schema, or if the
-// type mismatch the field type.
-func (m *ResolutionMutation) AddField(name string, value ent.Value) error {
-	switch name {
-	case resolution.FieldValue:
-		v, ok := value.(int)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddValue(v)
-		return nil
-	}
-	return fmt.Errorf("unknown Resolution numeric field %s", name)
-}
-
-// ClearedFields returns all nullable fields that were cleared
-// during this mutation.
-func (m *ResolutionMutation) ClearedFields() []string {
-	return nil
-}
-
-// FieldCleared returns a boolean indicates if this field was
-// cleared in this mutation.
-func (m *ResolutionMutation) FieldCleared(name string) bool {
-	_, ok := m.clearedFields[name]
-	return ok
-}
-
-// ClearField clears the value for the given name. It returns an
-// error if the field is not defined in the schema.
-func (m *ResolutionMutation) ClearField(name string) error {
-	return fmt.Errorf("unknown Resolution nullable field %s", name)
-}
-
-// ResetField resets all changes in the mutation regarding the
-// given field name. It returns an error if the field is not
-// defined in the schema.
-func (m *ResolutionMutation) ResetField(name string) error {
-	switch name {
-	case resolution.FieldValue:
-		m.ResetValue()
-		return nil
-	}
-	return fmt.Errorf("unknown Resolution field %s", name)
-}
-
-// AddedEdges returns all edge names that were set/added in this
-// mutation.
-func (m *ResolutionMutation) AddedEdges() []string {
-	edges := make([]string, 0, 1)
-	if m.playlist_videos != nil {
-		edges = append(edges, resolution.EdgePlaylistVideos)
-	}
-	return edges
-}
-
-// AddedIDs returns all ids (to other nodes) that were added for
-// the given edge name.
-func (m *ResolutionMutation) AddedIDs(name string) []ent.Value {
-	switch name {
-	case resolution.EdgePlaylistVideos:
-		ids := make([]ent.Value, 0, len(m.playlist_videos))
-		for id := range m.playlist_videos {
-			ids = append(ids, id)
-		}
-		return ids
-	}
-	return nil
-}
-
-// RemovedEdges returns all edge names that were removed in this
-// mutation.
-func (m *ResolutionMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 1)
-	if m.removedplaylist_videos != nil {
-		edges = append(edges, resolution.EdgePlaylistVideos)
-	}
-	return edges
-}
-
-// RemovedIDs returns all ids (to other nodes) that were removed for
-// the given edge name.
-func (m *ResolutionMutation) RemovedIDs(name string) []ent.Value {
-	switch name {
-	case resolution.EdgePlaylistVideos:
-		ids := make([]ent.Value, 0, len(m.removedplaylist_videos))
-		for id := range m.removedplaylist_videos {
-			ids = append(ids, id)
-		}
-		return ids
-	}
-	return nil
-}
-
-// ClearedEdges returns all edge names that were cleared in this
-// mutation.
-func (m *ResolutionMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 1)
-	return edges
-}
-
-// EdgeCleared returns a boolean indicates if this edge was
-// cleared in this mutation.
-func (m *ResolutionMutation) EdgeCleared(name string) bool {
-	switch name {
-	}
-	return false
-}
-
-// ClearEdge clears the value for the given name. It returns an
-// error if the edge name is not defined in the schema.
-func (m *ResolutionMutation) ClearEdge(name string) error {
-	switch name {
-	}
-	return fmt.Errorf("unknown Resolution unique edge %s", name)
-}
-
-// ResetEdge resets all changes in the mutation regarding the
-// given edge name. It returns an error if the edge is not
-// defined in the schema.
-func (m *ResolutionMutation) ResetEdge(name string) error {
-	switch name {
-	case resolution.EdgePlaylistVideos:
-		m.ResetPlaylistVideos()
-		return nil
-	}
-	return fmt.Errorf("unknown Resolution edge %s", name)
-}
-
-// UserMutation represents an operation that mutate the Users
-// nodes in the graph.
-type UserMutation struct {
-	config
-	op               Op
-	typ              string
-	id               *int
-	name             *string
-	email            *string
-	clearedFields    map[string]struct{}
-	playlists        map[int]struct{}
-	removedplaylists map[int]struct{}
-	videos           map[int]struct{}
-	removedvideos    map[int]struct{}
-	done             bool
-	oldValue         func(context.Context) (*User, error)
-}
-
-var _ ent.Mutation = (*UserMutation)(nil)
-
-// userOption allows to manage the mutation configuration using functional options.
-type userOption func(*UserMutation)
-
-// newUserMutation creates new mutation for $n.Name.
-func newUserMutation(c config, op Op, opts ...userOption) *UserMutation {
-	m := &UserMutation{
-		config:        c,
-		op:            op,
-		typ:           TypeUser,
-		clearedFields: make(map[string]struct{}),
-	}
-	for _, opt := range opts {
-		opt(m)
-	}
-	return m
-}
-
-// withUserID sets the id field of the mutation.
-func withUserID(id int) userOption {
-	return func(m *UserMutation) {
-		var (
-			err   error
-			once  sync.Once
-			value *User
-		)
-		m.oldValue = func(ctx context.Context) (*User, error) {
-			once.Do(func() {
-				if m.done {
-					err = fmt.Errorf("querying old values post mutation is not allowed")
-				} else {
-					value, err = m.Client().User.Get(ctx, id)
-				}
-			})
-			return value, err
-		}
-		m.id = &id
-	}
-}
-
-// withUser sets the old User of the mutation.
-func withUser(node *User) userOption {
-	return func(m *UserMutation) {
-		m.oldValue = func(context.Context) (*User, error) {
-			return node, nil
-		}
-		m.id = &node.ID
-	}
-}
-
-// Client returns a new `ent.Client` from the mutation. If the mutation was
-// executed in a transaction (ent.Tx), a transactional client is returned.
-func (m UserMutation) Client() *Client {
-	client := &Client{config: m.config}
-	client.init()
-	return client
-}
-
-// Tx returns an `ent.Tx` for mutations that were executed in transactions;
-// it returns an error otherwise.
-func (m UserMutation) Tx() (*Tx, error) {
-	if _, ok := m.driver.(*txDriver); !ok {
-		return nil, fmt.Errorf("ent: mutation is not running in a transaction")
-	}
-	tx := &Tx{config: m.config}
-	tx.init()
-	return tx, nil
-}
-
-// ID returns the id value in the mutation. Note that, the id
-// is available only if it was provided to the builder.
-func (m *UserMutation) ID() (id int, exists bool) {
-	if m.id == nil {
-		return
-	}
-	return *m.id, true
-}
-
-// SetName sets the name field.
-func (m *UserMutation) SetName(s string) {
-	m.name = &s
-}
-
-// Name returns the name value in the mutation.
-func (m *UserMutation) Name() (r string, exists bool) {
-	v := m.name
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldName returns the old name value of the User.
-// If the User object wasn't provided to the builder, the object is fetched
-// from the database.
-// An error is returned if the mutation operation is not UpdateOne, or database query fails.
-func (m *UserMutation) OldName(ctx context.Context) (v string, err error) {
+func (m *PersonalMutation) OldName(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, fmt.Errorf("OldName is allowed only on UpdateOne operations")
 	}
@@ -1473,30 +1593,30 @@ func (m *UserMutation) OldName(ctx context.Context) (v string, err error) {
 	return oldValue.Name, nil
 }
 
-// ResetName reset all changes of the "name" field.
-func (m *UserMutation) ResetName() {
-	m.name = nil
+// ResetName reset all changes of the "Name" field.
+func (m *PersonalMutation) ResetName() {
+	m._Name = nil
 }
 
-// SetEmail sets the email field.
-func (m *UserMutation) SetEmail(s string) {
-	m.email = &s
+// SetEmail sets the Email field.
+func (m *PersonalMutation) SetEmail(s string) {
+	m._Email = &s
 }
 
-// Email returns the email value in the mutation.
-func (m *UserMutation) Email() (r string, exists bool) {
-	v := m.email
+// Email returns the Email value in the mutation.
+func (m *PersonalMutation) Email() (r string, exists bool) {
+	v := m._Email
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldEmail returns the old email value of the User.
-// If the User object wasn't provided to the builder, the object is fetched
+// OldEmail returns the old Email value of the Personal.
+// If the Personal object wasn't provided to the builder, the object is fetched
 // from the database.
 // An error is returned if the mutation operation is not UpdateOne, or database query fails.
-func (m *UserMutation) OldEmail(ctx context.Context) (v string, err error) {
+func (m *PersonalMutation) OldEmail(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, fmt.Errorf("OldEmail is allowed only on UpdateOne operations")
 	}
@@ -1510,115 +1630,188 @@ func (m *UserMutation) OldEmail(ctx context.Context) (v string, err error) {
 	return oldValue.Email, nil
 }
 
-// ResetEmail reset all changes of the "email" field.
-func (m *UserMutation) ResetEmail() {
-	m.email = nil
+// ResetEmail reset all changes of the "Email" field.
+func (m *PersonalMutation) ResetEmail() {
+	m._Email = nil
 }
 
-// AddPlaylistIDs adds the playlists edge to Playlist by ids.
-func (m *UserMutation) AddPlaylistIDs(ids ...int) {
-	if m.playlists == nil {
-		m.playlists = make(map[int]struct{})
-	}
-	for i := range ids {
-		m.playlists[ids[i]] = struct{}{}
-	}
+// SetPassword sets the Password field.
+func (m *PersonalMutation) SetPassword(s string) {
+	m._Password = &s
 }
 
-// RemovePlaylistIDs removes the playlists edge to Playlist by ids.
-func (m *UserMutation) RemovePlaylistIDs(ids ...int) {
-	if m.removedplaylists == nil {
-		m.removedplaylists = make(map[int]struct{})
+// Password returns the Password value in the mutation.
+func (m *PersonalMutation) Password() (r string, exists bool) {
+	v := m._Password
+	if v == nil {
+		return
 	}
-	for i := range ids {
-		m.removedplaylists[ids[i]] = struct{}{}
-	}
+	return *v, true
 }
 
-// RemovedPlaylists returns the removed ids of playlists.
-func (m *UserMutation) RemovedPlaylistsIDs() (ids []int) {
-	for id := range m.removedplaylists {
-		ids = append(ids, id)
+// OldPassword returns the old Password value of the Personal.
+// If the Personal object wasn't provided to the builder, the object is fetched
+// from the database.
+// An error is returned if the mutation operation is not UpdateOne, or database query fails.
+func (m *PersonalMutation) OldPassword(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldPassword is allowed only on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldPassword requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldPassword: %w", err)
+	}
+	return oldValue.Password, nil
+}
+
+// ResetPassword reset all changes of the "Password" field.
+func (m *PersonalMutation) ResetPassword() {
+	m._Password = nil
+}
+
+// SetTitleID sets the title edge to Title by id.
+func (m *PersonalMutation) SetTitleID(id int) {
+	m.title = &id
+}
+
+// ClearTitle clears the title edge to Title.
+func (m *PersonalMutation) ClearTitle() {
+	m.clearedtitle = true
+}
+
+// TitleCleared returns if the edge title was cleared.
+func (m *PersonalMutation) TitleCleared() bool {
+	return m.clearedtitle
+}
+
+// TitleID returns the title id in the mutation.
+func (m *PersonalMutation) TitleID() (id int, exists bool) {
+	if m.title != nil {
+		return *m.title, true
 	}
 	return
 }
 
-// PlaylistsIDs returns the playlists ids in the mutation.
-func (m *UserMutation) PlaylistsIDs() (ids []int) {
-	for id := range m.playlists {
-		ids = append(ids, id)
+// TitleIDs returns the title ids in the mutation.
+// Note that ids always returns len(ids) <= 1 for unique edges, and you should use
+// TitleID instead. It exists only for internal usage by the builders.
+func (m *PersonalMutation) TitleIDs() (ids []int) {
+	if id := m.title; id != nil {
+		ids = append(ids, *id)
 	}
 	return
 }
 
-// ResetPlaylists reset all changes of the "playlists" edge.
-func (m *UserMutation) ResetPlaylists() {
-	m.playlists = nil
-	m.removedplaylists = nil
+// ResetTitle reset all changes of the "title" edge.
+func (m *PersonalMutation) ResetTitle() {
+	m.title = nil
+	m.clearedtitle = false
 }
 
-// AddVideoIDs adds the videos edge to Video by ids.
-func (m *UserMutation) AddVideoIDs(ids ...int) {
-	if m.videos == nil {
-		m.videos = make(map[int]struct{})
-	}
-	for i := range ids {
-		m.videos[ids[i]] = struct{}{}
-	}
+// SetDepartmentID sets the department edge to Department by id.
+func (m *PersonalMutation) SetDepartmentID(id int) {
+	m.department = &id
 }
 
-// RemoveVideoIDs removes the videos edge to Video by ids.
-func (m *UserMutation) RemoveVideoIDs(ids ...int) {
-	if m.removedvideos == nil {
-		m.removedvideos = make(map[int]struct{})
-	}
-	for i := range ids {
-		m.removedvideos[ids[i]] = struct{}{}
-	}
+// ClearDepartment clears the department edge to Department.
+func (m *PersonalMutation) ClearDepartment() {
+	m.cleareddepartment = true
 }
 
-// RemovedVideos returns the removed ids of videos.
-func (m *UserMutation) RemovedVideosIDs() (ids []int) {
-	for id := range m.removedvideos {
-		ids = append(ids, id)
+// DepartmentCleared returns if the edge department was cleared.
+func (m *PersonalMutation) DepartmentCleared() bool {
+	return m.cleareddepartment
+}
+
+// DepartmentID returns the department id in the mutation.
+func (m *PersonalMutation) DepartmentID() (id int, exists bool) {
+	if m.department != nil {
+		return *m.department, true
 	}
 	return
 }
 
-// VideosIDs returns the videos ids in the mutation.
-func (m *UserMutation) VideosIDs() (ids []int) {
-	for id := range m.videos {
-		ids = append(ids, id)
+// DepartmentIDs returns the department ids in the mutation.
+// Note that ids always returns len(ids) <= 1 for unique edges, and you should use
+// DepartmentID instead. It exists only for internal usage by the builders.
+func (m *PersonalMutation) DepartmentIDs() (ids []int) {
+	if id := m.department; id != nil {
+		ids = append(ids, *id)
 	}
 	return
 }
 
-// ResetVideos reset all changes of the "videos" edge.
-func (m *UserMutation) ResetVideos() {
-	m.videos = nil
-	m.removedvideos = nil
+// ResetDepartment reset all changes of the "department" edge.
+func (m *PersonalMutation) ResetDepartment() {
+	m.department = nil
+	m.cleareddepartment = false
+}
+
+// SetGenderID sets the gender edge to Gender by id.
+func (m *PersonalMutation) SetGenderID(id int) {
+	m.gender = &id
+}
+
+// ClearGender clears the gender edge to Gender.
+func (m *PersonalMutation) ClearGender() {
+	m.clearedgender = true
+}
+
+// GenderCleared returns if the edge gender was cleared.
+func (m *PersonalMutation) GenderCleared() bool {
+	return m.clearedgender
+}
+
+// GenderID returns the gender id in the mutation.
+func (m *PersonalMutation) GenderID() (id int, exists bool) {
+	if m.gender != nil {
+		return *m.gender, true
+	}
+	return
+}
+
+// GenderIDs returns the gender ids in the mutation.
+// Note that ids always returns len(ids) <= 1 for unique edges, and you should use
+// GenderID instead. It exists only for internal usage by the builders.
+func (m *PersonalMutation) GenderIDs() (ids []int) {
+	if id := m.gender; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetGender reset all changes of the "gender" edge.
+func (m *PersonalMutation) ResetGender() {
+	m.gender = nil
+	m.clearedgender = false
 }
 
 // Op returns the operation name.
-func (m *UserMutation) Op() Op {
+func (m *PersonalMutation) Op() Op {
 	return m.op
 }
 
-// Type returns the node type of this mutation (User).
-func (m *UserMutation) Type() string {
+// Type returns the node type of this mutation (Personal).
+func (m *PersonalMutation) Type() string {
 	return m.typ
 }
 
 // Fields returns all fields that were changed during
 // this mutation. Note that, in order to get all numeric
 // fields that were in/decremented, call AddedFields().
-func (m *UserMutation) Fields() []string {
-	fields := make([]string, 0, 2)
-	if m.name != nil {
-		fields = append(fields, user.FieldName)
+func (m *PersonalMutation) Fields() []string {
+	fields := make([]string, 0, 3)
+	if m._Name != nil {
+		fields = append(fields, personal.FieldName)
 	}
-	if m.email != nil {
-		fields = append(fields, user.FieldEmail)
+	if m._Email != nil {
+		fields = append(fields, personal.FieldEmail)
+	}
+	if m._Password != nil {
+		fields = append(fields, personal.FieldPassword)
 	}
 	return fields
 }
@@ -1626,12 +1819,14 @@ func (m *UserMutation) Fields() []string {
 // Field returns the value of a field with the given name.
 // The second boolean value indicates that this field was
 // not set, or was not define in the schema.
-func (m *UserMutation) Field(name string) (ent.Value, bool) {
+func (m *PersonalMutation) Field(name string) (ent.Value, bool) {
 	switch name {
-	case user.FieldName:
+	case personal.FieldName:
 		return m.Name()
-	case user.FieldEmail:
+	case personal.FieldEmail:
 		return m.Email()
+	case personal.FieldPassword:
+		return m.Password()
 	}
 	return nil, false
 }
@@ -1639,228 +1834,246 @@ func (m *UserMutation) Field(name string) (ent.Value, bool) {
 // OldField returns the old value of the field from the database.
 // An error is returned if the mutation operation is not UpdateOne,
 // or the query to the database was failed.
-func (m *UserMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+func (m *PersonalMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
 	switch name {
-	case user.FieldName:
+	case personal.FieldName:
 		return m.OldName(ctx)
-	case user.FieldEmail:
+	case personal.FieldEmail:
 		return m.OldEmail(ctx)
+	case personal.FieldPassword:
+		return m.OldPassword(ctx)
 	}
-	return nil, fmt.Errorf("unknown User field %s", name)
+	return nil, fmt.Errorf("unknown Personal field %s", name)
 }
 
 // SetField sets the value for the given name. It returns an
 // error if the field is not defined in the schema, or if the
 // type mismatch the field type.
-func (m *UserMutation) SetField(name string, value ent.Value) error {
+func (m *PersonalMutation) SetField(name string, value ent.Value) error {
 	switch name {
-	case user.FieldName:
+	case personal.FieldName:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetName(v)
 		return nil
-	case user.FieldEmail:
+	case personal.FieldEmail:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetEmail(v)
 		return nil
+	case personal.FieldPassword:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetPassword(v)
+		return nil
 	}
-	return fmt.Errorf("unknown User field %s", name)
+	return fmt.Errorf("unknown Personal field %s", name)
 }
 
 // AddedFields returns all numeric fields that were incremented
 // or decremented during this mutation.
-func (m *UserMutation) AddedFields() []string {
+func (m *PersonalMutation) AddedFields() []string {
 	return nil
 }
 
 // AddedField returns the numeric value that was in/decremented
 // from a field with the given name. The second value indicates
 // that this field was not set, or was not define in the schema.
-func (m *UserMutation) AddedField(name string) (ent.Value, bool) {
+func (m *PersonalMutation) AddedField(name string) (ent.Value, bool) {
 	return nil, false
 }
 
 // AddField adds the value for the given name. It returns an
 // error if the field is not defined in the schema, or if the
 // type mismatch the field type.
-func (m *UserMutation) AddField(name string, value ent.Value) error {
+func (m *PersonalMutation) AddField(name string, value ent.Value) error {
 	switch name {
 	}
-	return fmt.Errorf("unknown User numeric field %s", name)
+	return fmt.Errorf("unknown Personal numeric field %s", name)
 }
 
 // ClearedFields returns all nullable fields that were cleared
 // during this mutation.
-func (m *UserMutation) ClearedFields() []string {
+func (m *PersonalMutation) ClearedFields() []string {
 	return nil
 }
 
 // FieldCleared returns a boolean indicates if this field was
 // cleared in this mutation.
-func (m *UserMutation) FieldCleared(name string) bool {
+func (m *PersonalMutation) FieldCleared(name string) bool {
 	_, ok := m.clearedFields[name]
 	return ok
 }
 
 // ClearField clears the value for the given name. It returns an
 // error if the field is not defined in the schema.
-func (m *UserMutation) ClearField(name string) error {
-	return fmt.Errorf("unknown User nullable field %s", name)
+func (m *PersonalMutation) ClearField(name string) error {
+	return fmt.Errorf("unknown Personal nullable field %s", name)
 }
 
 // ResetField resets all changes in the mutation regarding the
 // given field name. It returns an error if the field is not
 // defined in the schema.
-func (m *UserMutation) ResetField(name string) error {
+func (m *PersonalMutation) ResetField(name string) error {
 	switch name {
-	case user.FieldName:
+	case personal.FieldName:
 		m.ResetName()
 		return nil
-	case user.FieldEmail:
+	case personal.FieldEmail:
 		m.ResetEmail()
 		return nil
+	case personal.FieldPassword:
+		m.ResetPassword()
+		return nil
 	}
-	return fmt.Errorf("unknown User field %s", name)
+	return fmt.Errorf("unknown Personal field %s", name)
 }
 
 // AddedEdges returns all edge names that were set/added in this
 // mutation.
-func (m *UserMutation) AddedEdges() []string {
-	edges := make([]string, 0, 2)
-	if m.playlists != nil {
-		edges = append(edges, user.EdgePlaylists)
+func (m *PersonalMutation) AddedEdges() []string {
+	edges := make([]string, 0, 3)
+	if m.title != nil {
+		edges = append(edges, personal.EdgeTitle)
 	}
-	if m.videos != nil {
-		edges = append(edges, user.EdgeVideos)
+	if m.department != nil {
+		edges = append(edges, personal.EdgeDepartment)
+	}
+	if m.gender != nil {
+		edges = append(edges, personal.EdgeGender)
 	}
 	return edges
 }
 
 // AddedIDs returns all ids (to other nodes) that were added for
 // the given edge name.
-func (m *UserMutation) AddedIDs(name string) []ent.Value {
+func (m *PersonalMutation) AddedIDs(name string) []ent.Value {
 	switch name {
-	case user.EdgePlaylists:
-		ids := make([]ent.Value, 0, len(m.playlists))
-		for id := range m.playlists {
-			ids = append(ids, id)
+	case personal.EdgeTitle:
+		if id := m.title; id != nil {
+			return []ent.Value{*id}
 		}
-		return ids
-	case user.EdgeVideos:
-		ids := make([]ent.Value, 0, len(m.videos))
-		for id := range m.videos {
-			ids = append(ids, id)
+	case personal.EdgeDepartment:
+		if id := m.department; id != nil {
+			return []ent.Value{*id}
 		}
-		return ids
+	case personal.EdgeGender:
+		if id := m.gender; id != nil {
+			return []ent.Value{*id}
+		}
 	}
 	return nil
 }
 
 // RemovedEdges returns all edge names that were removed in this
 // mutation.
-func (m *UserMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 2)
-	if m.removedplaylists != nil {
-		edges = append(edges, user.EdgePlaylists)
-	}
-	if m.removedvideos != nil {
-		edges = append(edges, user.EdgeVideos)
-	}
+func (m *PersonalMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 3)
 	return edges
 }
 
 // RemovedIDs returns all ids (to other nodes) that were removed for
 // the given edge name.
-func (m *UserMutation) RemovedIDs(name string) []ent.Value {
+func (m *PersonalMutation) RemovedIDs(name string) []ent.Value {
 	switch name {
-	case user.EdgePlaylists:
-		ids := make([]ent.Value, 0, len(m.removedplaylists))
-		for id := range m.removedplaylists {
-			ids = append(ids, id)
-		}
-		return ids
-	case user.EdgeVideos:
-		ids := make([]ent.Value, 0, len(m.removedvideos))
-		for id := range m.removedvideos {
-			ids = append(ids, id)
-		}
-		return ids
 	}
 	return nil
 }
 
 // ClearedEdges returns all edge names that were cleared in this
 // mutation.
-func (m *UserMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 2)
+func (m *PersonalMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 3)
+	if m.clearedtitle {
+		edges = append(edges, personal.EdgeTitle)
+	}
+	if m.cleareddepartment {
+		edges = append(edges, personal.EdgeDepartment)
+	}
+	if m.clearedgender {
+		edges = append(edges, personal.EdgeGender)
+	}
 	return edges
 }
 
 // EdgeCleared returns a boolean indicates if this edge was
 // cleared in this mutation.
-func (m *UserMutation) EdgeCleared(name string) bool {
+func (m *PersonalMutation) EdgeCleared(name string) bool {
 	switch name {
+	case personal.EdgeTitle:
+		return m.clearedtitle
+	case personal.EdgeDepartment:
+		return m.cleareddepartment
+	case personal.EdgeGender:
+		return m.clearedgender
 	}
 	return false
 }
 
 // ClearEdge clears the value for the given name. It returns an
 // error if the edge name is not defined in the schema.
-func (m *UserMutation) ClearEdge(name string) error {
+func (m *PersonalMutation) ClearEdge(name string) error {
 	switch name {
+	case personal.EdgeTitle:
+		m.ClearTitle()
+		return nil
+	case personal.EdgeDepartment:
+		m.ClearDepartment()
+		return nil
+	case personal.EdgeGender:
+		m.ClearGender()
+		return nil
 	}
-	return fmt.Errorf("unknown User unique edge %s", name)
+	return fmt.Errorf("unknown Personal unique edge %s", name)
 }
 
 // ResetEdge resets all changes in the mutation regarding the
 // given edge name. It returns an error if the edge is not
 // defined in the schema.
-func (m *UserMutation) ResetEdge(name string) error {
+func (m *PersonalMutation) ResetEdge(name string) error {
 	switch name {
-	case user.EdgePlaylists:
-		m.ResetPlaylists()
+	case personal.EdgeTitle:
+		m.ResetTitle()
 		return nil
-	case user.EdgeVideos:
-		m.ResetVideos()
+	case personal.EdgeDepartment:
+		m.ResetDepartment()
+		return nil
+	case personal.EdgeGender:
+		m.ResetGender()
 		return nil
 	}
-	return fmt.Errorf("unknown User edge %s", name)
+	return fmt.Errorf("unknown Personal edge %s", name)
 }
 
-// VideoMutation represents an operation that mutate the Videos
+// ProductMutation represents an operation that mutate the Products
 // nodes in the graph.
-type VideoMutation struct {
+type ProductMutation struct {
 	config
-	op                     Op
-	typ                    string
-	id                     *int
-	name                   *string
-	url                    *string
-	clearedFields          map[string]struct{}
-	owner                  *int
-	clearedowner           bool
-	playlist_videos        map[int]struct{}
-	removedplaylist_videos map[int]struct{}
-	done                   bool
-	oldValue               func(context.Context) (*Video, error)
+	op            Op
+	typ           string
+	id            *int
+	clearedFields map[string]struct{}
+	done          bool
+	oldValue      func(context.Context) (*Product, error)
 }
 
-var _ ent.Mutation = (*VideoMutation)(nil)
+var _ ent.Mutation = (*ProductMutation)(nil)
 
-// videoOption allows to manage the mutation configuration using functional options.
-type videoOption func(*VideoMutation)
+// productOption allows to manage the mutation configuration using functional options.
+type productOption func(*ProductMutation)
 
-// newVideoMutation creates new mutation for $n.Name.
-func newVideoMutation(c config, op Op, opts ...videoOption) *VideoMutation {
-	m := &VideoMutation{
+// newProductMutation creates new mutation for $n.Name.
+func newProductMutation(c config, op Op, opts ...productOption) *ProductMutation {
+	m := &ProductMutation{
 		config:        c,
 		op:            op,
-		typ:           TypeVideo,
+		typ:           TypeProduct,
 		clearedFields: make(map[string]struct{}),
 	}
 	for _, opt := range opts {
@@ -1869,20 +2082,20 @@ func newVideoMutation(c config, op Op, opts ...videoOption) *VideoMutation {
 	return m
 }
 
-// withVideoID sets the id field of the mutation.
-func withVideoID(id int) videoOption {
-	return func(m *VideoMutation) {
+// withProductID sets the id field of the mutation.
+func withProductID(id int) productOption {
+	return func(m *ProductMutation) {
 		var (
 			err   error
 			once  sync.Once
-			value *Video
+			value *Product
 		)
-		m.oldValue = func(ctx context.Context) (*Video, error) {
+		m.oldValue = func(ctx context.Context) (*Product, error) {
 			once.Do(func() {
 				if m.done {
 					err = fmt.Errorf("querying old values post mutation is not allowed")
 				} else {
-					value, err = m.Client().Video.Get(ctx, id)
+					value, err = m.Client().Product.Get(ctx, id)
 				}
 			})
 			return value, err
@@ -1891,10 +2104,10 @@ func withVideoID(id int) videoOption {
 	}
 }
 
-// withVideo sets the old Video of the mutation.
-func withVideo(node *Video) videoOption {
-	return func(m *VideoMutation) {
-		m.oldValue = func(context.Context) (*Video, error) {
+// withProduct sets the old Product of the mutation.
+func withProduct(node *Product) productOption {
+	return func(m *ProductMutation) {
+		m.oldValue = func(context.Context) (*Product, error) {
 			return node, nil
 		}
 		m.id = &node.ID
@@ -1903,7 +2116,7 @@ func withVideo(node *Video) videoOption {
 
 // Client returns a new `ent.Client` from the mutation. If the mutation was
 // executed in a transaction (ent.Tx), a transactional client is returned.
-func (m VideoMutation) Client() *Client {
+func (m ProductMutation) Client() *Client {
 	client := &Client{config: m.config}
 	client.init()
 	return client
@@ -1911,7 +2124,7 @@ func (m VideoMutation) Client() *Client {
 
 // Tx returns an `ent.Tx` for mutations that were executed in transactions;
 // it returns an error otherwise.
-func (m VideoMutation) Tx() (*Tx, error) {
+func (m ProductMutation) Tx() (*Tx, error) {
 	if _, ok := m.driver.(*txDriver); !ok {
 		return nil, fmt.Errorf("ent: mutation is not running in a transaction")
 	}
@@ -1922,188 +2135,572 @@ func (m VideoMutation) Tx() (*Tx, error) {
 
 // ID returns the id value in the mutation. Note that, the id
 // is available only if it was provided to the builder.
-func (m *VideoMutation) ID() (id int, exists bool) {
+func (m *ProductMutation) ID() (id int, exists bool) {
 	if m.id == nil {
 		return
 	}
 	return *m.id, true
 }
 
-// SetName sets the name field.
-func (m *VideoMutation) SetName(s string) {
-	m.name = &s
-}
-
-// Name returns the name value in the mutation.
-func (m *VideoMutation) Name() (r string, exists bool) {
-	v := m.name
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldName returns the old name value of the Video.
-// If the Video object wasn't provided to the builder, the object is fetched
-// from the database.
-// An error is returned if the mutation operation is not UpdateOne, or database query fails.
-func (m *VideoMutation) OldName(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, fmt.Errorf("OldName is allowed only on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, fmt.Errorf("OldName requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldName: %w", err)
-	}
-	return oldValue.Name, nil
-}
-
-// ResetName reset all changes of the "name" field.
-func (m *VideoMutation) ResetName() {
-	m.name = nil
-}
-
-// SetURL sets the url field.
-func (m *VideoMutation) SetURL(s string) {
-	m.url = &s
-}
-
-// URL returns the url value in the mutation.
-func (m *VideoMutation) URL() (r string, exists bool) {
-	v := m.url
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldURL returns the old url value of the Video.
-// If the Video object wasn't provided to the builder, the object is fetched
-// from the database.
-// An error is returned if the mutation operation is not UpdateOne, or database query fails.
-func (m *VideoMutation) OldURL(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, fmt.Errorf("OldURL is allowed only on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, fmt.Errorf("OldURL requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldURL: %w", err)
-	}
-	return oldValue.URL, nil
-}
-
-// ResetURL reset all changes of the "url" field.
-func (m *VideoMutation) ResetURL() {
-	m.url = nil
-}
-
-// SetOwnerID sets the owner edge to User by id.
-func (m *VideoMutation) SetOwnerID(id int) {
-	m.owner = &id
-}
-
-// ClearOwner clears the owner edge to User.
-func (m *VideoMutation) ClearOwner() {
-	m.clearedowner = true
-}
-
-// OwnerCleared returns if the edge owner was cleared.
-func (m *VideoMutation) OwnerCleared() bool {
-	return m.clearedowner
-}
-
-// OwnerID returns the owner id in the mutation.
-func (m *VideoMutation) OwnerID() (id int, exists bool) {
-	if m.owner != nil {
-		return *m.owner, true
-	}
-	return
-}
-
-// OwnerIDs returns the owner ids in the mutation.
-// Note that ids always returns len(ids) <= 1 for unique edges, and you should use
-// OwnerID instead. It exists only for internal usage by the builders.
-func (m *VideoMutation) OwnerIDs() (ids []int) {
-	if id := m.owner; id != nil {
-		ids = append(ids, *id)
-	}
-	return
-}
-
-// ResetOwner reset all changes of the "owner" edge.
-func (m *VideoMutation) ResetOwner() {
-	m.owner = nil
-	m.clearedowner = false
-}
-
-// AddPlaylistVideoIDs adds the playlist_videos edge to Playlist_Video by ids.
-func (m *VideoMutation) AddPlaylistVideoIDs(ids ...int) {
-	if m.playlist_videos == nil {
-		m.playlist_videos = make(map[int]struct{})
-	}
-	for i := range ids {
-		m.playlist_videos[ids[i]] = struct{}{}
-	}
-}
-
-// RemovePlaylistVideoIDs removes the playlist_videos edge to Playlist_Video by ids.
-func (m *VideoMutation) RemovePlaylistVideoIDs(ids ...int) {
-	if m.removedplaylist_videos == nil {
-		m.removedplaylist_videos = make(map[int]struct{})
-	}
-	for i := range ids {
-		m.removedplaylist_videos[ids[i]] = struct{}{}
-	}
-}
-
-// RemovedPlaylistVideos returns the removed ids of playlist_videos.
-func (m *VideoMutation) RemovedPlaylistVideosIDs() (ids []int) {
-	for id := range m.removedplaylist_videos {
-		ids = append(ids, id)
-	}
-	return
-}
-
-// PlaylistVideosIDs returns the playlist_videos ids in the mutation.
-func (m *VideoMutation) PlaylistVideosIDs() (ids []int) {
-	for id := range m.playlist_videos {
-		ids = append(ids, id)
-	}
-	return
-}
-
-// ResetPlaylistVideos reset all changes of the "playlist_videos" edge.
-func (m *VideoMutation) ResetPlaylistVideos() {
-	m.playlist_videos = nil
-	m.removedplaylist_videos = nil
-}
-
 // Op returns the operation name.
-func (m *VideoMutation) Op() Op {
+func (m *ProductMutation) Op() Op {
 	return m.op
 }
 
-// Type returns the node type of this mutation (Video).
-func (m *VideoMutation) Type() string {
+// Type returns the node type of this mutation (Product).
+func (m *ProductMutation) Type() string {
 	return m.typ
 }
 
 // Fields returns all fields that were changed during
 // this mutation. Note that, in order to get all numeric
 // fields that were in/decremented, call AddedFields().
-func (m *VideoMutation) Fields() []string {
-	fields := make([]string, 0, 2)
-	if m.name != nil {
-		fields = append(fields, video.FieldName)
+func (m *ProductMutation) Fields() []string {
+	fields := make([]string, 0, 0)
+	return fields
+}
+
+// Field returns the value of a field with the given name.
+// The second boolean value indicates that this field was
+// not set, or was not define in the schema.
+func (m *ProductMutation) Field(name string) (ent.Value, bool) {
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database.
+// An error is returned if the mutation operation is not UpdateOne,
+// or the query to the database was failed.
+func (m *ProductMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	return nil, fmt.Errorf("unknown Product field %s", name)
+}
+
+// SetField sets the value for the given name. It returns an
+// error if the field is not defined in the schema, or if the
+// type mismatch the field type.
+func (m *ProductMutation) SetField(name string, value ent.Value) error {
+	switch name {
 	}
-	if m.url != nil {
-		fields = append(fields, video.FieldURL)
+	return fmt.Errorf("unknown Product field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented
+// or decremented during this mutation.
+func (m *ProductMutation) AddedFields() []string {
+	return nil
+}
+
+// AddedField returns the numeric value that was in/decremented
+// from a field with the given name. The second value indicates
+// that this field was not set, or was not define in the schema.
+func (m *ProductMutation) AddedField(name string) (ent.Value, bool) {
+	return nil, false
+}
+
+// AddField adds the value for the given name. It returns an
+// error if the field is not defined in the schema, or if the
+// type mismatch the field type.
+func (m *ProductMutation) AddField(name string, value ent.Value) error {
+	return fmt.Errorf("unknown Product numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared
+// during this mutation.
+func (m *ProductMutation) ClearedFields() []string {
+	return nil
+}
+
+// FieldCleared returns a boolean indicates if this field was
+// cleared in this mutation.
+func (m *ProductMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value for the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *ProductMutation) ClearField(name string) error {
+	return fmt.Errorf("unknown Product nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation regarding the
+// given field name. It returns an error if the field is not
+// defined in the schema.
+func (m *ProductMutation) ResetField(name string) error {
+	return fmt.Errorf("unknown Product field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this
+// mutation.
+func (m *ProductMutation) AddedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// AddedIDs returns all ids (to other nodes) that were added for
+// the given edge name.
+func (m *ProductMutation) AddedIDs(name string) []ent.Value {
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this
+// mutation.
+func (m *ProductMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// RemovedIDs returns all ids (to other nodes) that were removed for
+// the given edge name.
+func (m *ProductMutation) RemovedIDs(name string) []ent.Value {
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this
+// mutation.
+func (m *ProductMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// EdgeCleared returns a boolean indicates if this edge was
+// cleared in this mutation.
+func (m *ProductMutation) EdgeCleared(name string) bool {
+	return false
+}
+
+// ClearEdge clears the value for the given name. It returns an
+// error if the edge name is not defined in the schema.
+func (m *ProductMutation) ClearEdge(name string) error {
+	return fmt.Errorf("unknown Product unique edge %s", name)
+}
+
+// ResetEdge resets all changes in the mutation regarding the
+// given edge name. It returns an error if the edge is not
+// defined in the schema.
+func (m *ProductMutation) ResetEdge(name string) error {
+	return fmt.Errorf("unknown Product edge %s", name)
+}
+
+// ReceiptMutation represents an operation that mutate the Receipts
+// nodes in the graph.
+type ReceiptMutation struct {
+	config
+	op            Op
+	typ           string
+	id            *int
+	clearedFields map[string]struct{}
+	done          bool
+	oldValue      func(context.Context) (*Receipt, error)
+}
+
+var _ ent.Mutation = (*ReceiptMutation)(nil)
+
+// receiptOption allows to manage the mutation configuration using functional options.
+type receiptOption func(*ReceiptMutation)
+
+// newReceiptMutation creates new mutation for $n.Name.
+func newReceiptMutation(c config, op Op, opts ...receiptOption) *ReceiptMutation {
+	m := &ReceiptMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeReceipt,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withReceiptID sets the id field of the mutation.
+func withReceiptID(id int) receiptOption {
+	return func(m *ReceiptMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *Receipt
+		)
+		m.oldValue = func(ctx context.Context) (*Receipt, error) {
+			once.Do(func() {
+				if m.done {
+					err = fmt.Errorf("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().Receipt.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withReceipt sets the old Receipt of the mutation.
+func withReceipt(node *Receipt) receiptOption {
+	return func(m *ReceiptMutation) {
+		m.oldValue = func(context.Context) (*Receipt, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m ReceiptMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m ReceiptMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, fmt.Errorf("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// ID returns the id value in the mutation. Note that, the id
+// is available only if it was provided to the builder.
+func (m *ReceiptMutation) ID() (id int, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// Op returns the operation name.
+func (m *ReceiptMutation) Op() Op {
+	return m.op
+}
+
+// Type returns the node type of this mutation (Receipt).
+func (m *ReceiptMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during
+// this mutation. Note that, in order to get all numeric
+// fields that were in/decremented, call AddedFields().
+func (m *ReceiptMutation) Fields() []string {
+	fields := make([]string, 0, 0)
+	return fields
+}
+
+// Field returns the value of a field with the given name.
+// The second boolean value indicates that this field was
+// not set, or was not define in the schema.
+func (m *ReceiptMutation) Field(name string) (ent.Value, bool) {
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database.
+// An error is returned if the mutation operation is not UpdateOne,
+// or the query to the database was failed.
+func (m *ReceiptMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	return nil, fmt.Errorf("unknown Receipt field %s", name)
+}
+
+// SetField sets the value for the given name. It returns an
+// error if the field is not defined in the schema, or if the
+// type mismatch the field type.
+func (m *ReceiptMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	}
+	return fmt.Errorf("unknown Receipt field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented
+// or decremented during this mutation.
+func (m *ReceiptMutation) AddedFields() []string {
+	return nil
+}
+
+// AddedField returns the numeric value that was in/decremented
+// from a field with the given name. The second value indicates
+// that this field was not set, or was not define in the schema.
+func (m *ReceiptMutation) AddedField(name string) (ent.Value, bool) {
+	return nil, false
+}
+
+// AddField adds the value for the given name. It returns an
+// error if the field is not defined in the schema, or if the
+// type mismatch the field type.
+func (m *ReceiptMutation) AddField(name string, value ent.Value) error {
+	return fmt.Errorf("unknown Receipt numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared
+// during this mutation.
+func (m *ReceiptMutation) ClearedFields() []string {
+	return nil
+}
+
+// FieldCleared returns a boolean indicates if this field was
+// cleared in this mutation.
+func (m *ReceiptMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value for the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *ReceiptMutation) ClearField(name string) error {
+	return fmt.Errorf("unknown Receipt nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation regarding the
+// given field name. It returns an error if the field is not
+// defined in the schema.
+func (m *ReceiptMutation) ResetField(name string) error {
+	return fmt.Errorf("unknown Receipt field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this
+// mutation.
+func (m *ReceiptMutation) AddedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// AddedIDs returns all ids (to other nodes) that were added for
+// the given edge name.
+func (m *ReceiptMutation) AddedIDs(name string) []ent.Value {
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this
+// mutation.
+func (m *ReceiptMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// RemovedIDs returns all ids (to other nodes) that were removed for
+// the given edge name.
+func (m *ReceiptMutation) RemovedIDs(name string) []ent.Value {
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this
+// mutation.
+func (m *ReceiptMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// EdgeCleared returns a boolean indicates if this edge was
+// cleared in this mutation.
+func (m *ReceiptMutation) EdgeCleared(name string) bool {
+	return false
+}
+
+// ClearEdge clears the value for the given name. It returns an
+// error if the edge name is not defined in the schema.
+func (m *ReceiptMutation) ClearEdge(name string) error {
+	return fmt.Errorf("unknown Receipt unique edge %s", name)
+}
+
+// ResetEdge resets all changes in the mutation regarding the
+// given edge name. It returns an error if the edge is not
+// defined in the schema.
+func (m *ReceiptMutation) ResetEdge(name string) error {
+	return fmt.Errorf("unknown Receipt edge %s", name)
+}
+
+// TitleMutation represents an operation that mutate the Titles
+// nodes in the graph.
+type TitleMutation struct {
+	config
+	op              Op
+	typ             string
+	id              *int
+	titlename       *string
+	clearedFields   map[string]struct{}
+	personal        map[int]struct{}
+	removedpersonal map[int]struct{}
+	done            bool
+	oldValue        func(context.Context) (*Title, error)
+}
+
+var _ ent.Mutation = (*TitleMutation)(nil)
+
+// titleOption allows to manage the mutation configuration using functional options.
+type titleOption func(*TitleMutation)
+
+// newTitleMutation creates new mutation for $n.Name.
+func newTitleMutation(c config, op Op, opts ...titleOption) *TitleMutation {
+	m := &TitleMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeTitle,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withTitleID sets the id field of the mutation.
+func withTitleID(id int) titleOption {
+	return func(m *TitleMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *Title
+		)
+		m.oldValue = func(ctx context.Context) (*Title, error) {
+			once.Do(func() {
+				if m.done {
+					err = fmt.Errorf("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().Title.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withTitle sets the old Title of the mutation.
+func withTitle(node *Title) titleOption {
+	return func(m *TitleMutation) {
+		m.oldValue = func(context.Context) (*Title, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m TitleMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m TitleMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, fmt.Errorf("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// ID returns the id value in the mutation. Note that, the id
+// is available only if it was provided to the builder.
+func (m *TitleMutation) ID() (id int, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// SetTitlename sets the titlename field.
+func (m *TitleMutation) SetTitlename(s string) {
+	m.titlename = &s
+}
+
+// Titlename returns the titlename value in the mutation.
+func (m *TitleMutation) Titlename() (r string, exists bool) {
+	v := m.titlename
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldTitlename returns the old titlename value of the Title.
+// If the Title object wasn't provided to the builder, the object is fetched
+// from the database.
+// An error is returned if the mutation operation is not UpdateOne, or database query fails.
+func (m *TitleMutation) OldTitlename(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldTitlename is allowed only on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldTitlename requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldTitlename: %w", err)
+	}
+	return oldValue.Titlename, nil
+}
+
+// ResetTitlename reset all changes of the "titlename" field.
+func (m *TitleMutation) ResetTitlename() {
+	m.titlename = nil
+}
+
+// AddPersonalIDs adds the personal edge to Personal by ids.
+func (m *TitleMutation) AddPersonalIDs(ids ...int) {
+	if m.personal == nil {
+		m.personal = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.personal[ids[i]] = struct{}{}
+	}
+}
+
+// RemovePersonalIDs removes the personal edge to Personal by ids.
+func (m *TitleMutation) RemovePersonalIDs(ids ...int) {
+	if m.removedpersonal == nil {
+		m.removedpersonal = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.removedpersonal[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedPersonal returns the removed ids of personal.
+func (m *TitleMutation) RemovedPersonalIDs() (ids []int) {
+	for id := range m.removedpersonal {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// PersonalIDs returns the personal ids in the mutation.
+func (m *TitleMutation) PersonalIDs() (ids []int) {
+	for id := range m.personal {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetPersonal reset all changes of the "personal" edge.
+func (m *TitleMutation) ResetPersonal() {
+	m.personal = nil
+	m.removedpersonal = nil
+}
+
+// Op returns the operation name.
+func (m *TitleMutation) Op() Op {
+	return m.op
+}
+
+// Type returns the node type of this mutation (Title).
+func (m *TitleMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during
+// this mutation. Note that, in order to get all numeric
+// fields that were in/decremented, call AddedFields().
+func (m *TitleMutation) Fields() []string {
+	fields := make([]string, 0, 1)
+	if m.titlename != nil {
+		fields = append(fields, title.FieldTitlename)
 	}
 	return fields
 }
@@ -2111,12 +2708,10 @@ func (m *VideoMutation) Fields() []string {
 // Field returns the value of a field with the given name.
 // The second boolean value indicates that this field was
 // not set, or was not define in the schema.
-func (m *VideoMutation) Field(name string) (ent.Value, bool) {
+func (m *TitleMutation) Field(name string) (ent.Value, bool) {
 	switch name {
-	case video.FieldName:
-		return m.Name()
-	case video.FieldURL:
-		return m.URL()
+	case title.FieldTitlename:
+		return m.Titlename()
 	}
 	return nil, false
 }
@@ -2124,119 +2719,100 @@ func (m *VideoMutation) Field(name string) (ent.Value, bool) {
 // OldField returns the old value of the field from the database.
 // An error is returned if the mutation operation is not UpdateOne,
 // or the query to the database was failed.
-func (m *VideoMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+func (m *TitleMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
 	switch name {
-	case video.FieldName:
-		return m.OldName(ctx)
-	case video.FieldURL:
-		return m.OldURL(ctx)
+	case title.FieldTitlename:
+		return m.OldTitlename(ctx)
 	}
-	return nil, fmt.Errorf("unknown Video field %s", name)
+	return nil, fmt.Errorf("unknown Title field %s", name)
 }
 
 // SetField sets the value for the given name. It returns an
 // error if the field is not defined in the schema, or if the
 // type mismatch the field type.
-func (m *VideoMutation) SetField(name string, value ent.Value) error {
+func (m *TitleMutation) SetField(name string, value ent.Value) error {
 	switch name {
-	case video.FieldName:
+	case title.FieldTitlename:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetName(v)
-		return nil
-	case video.FieldURL:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetURL(v)
+		m.SetTitlename(v)
 		return nil
 	}
-	return fmt.Errorf("unknown Video field %s", name)
+	return fmt.Errorf("unknown Title field %s", name)
 }
 
 // AddedFields returns all numeric fields that were incremented
 // or decremented during this mutation.
-func (m *VideoMutation) AddedFields() []string {
+func (m *TitleMutation) AddedFields() []string {
 	return nil
 }
 
 // AddedField returns the numeric value that was in/decremented
 // from a field with the given name. The second value indicates
 // that this field was not set, or was not define in the schema.
-func (m *VideoMutation) AddedField(name string) (ent.Value, bool) {
+func (m *TitleMutation) AddedField(name string) (ent.Value, bool) {
 	return nil, false
 }
 
 // AddField adds the value for the given name. It returns an
 // error if the field is not defined in the schema, or if the
 // type mismatch the field type.
-func (m *VideoMutation) AddField(name string, value ent.Value) error {
+func (m *TitleMutation) AddField(name string, value ent.Value) error {
 	switch name {
 	}
-	return fmt.Errorf("unknown Video numeric field %s", name)
+	return fmt.Errorf("unknown Title numeric field %s", name)
 }
 
 // ClearedFields returns all nullable fields that were cleared
 // during this mutation.
-func (m *VideoMutation) ClearedFields() []string {
+func (m *TitleMutation) ClearedFields() []string {
 	return nil
 }
 
 // FieldCleared returns a boolean indicates if this field was
 // cleared in this mutation.
-func (m *VideoMutation) FieldCleared(name string) bool {
+func (m *TitleMutation) FieldCleared(name string) bool {
 	_, ok := m.clearedFields[name]
 	return ok
 }
 
 // ClearField clears the value for the given name. It returns an
 // error if the field is not defined in the schema.
-func (m *VideoMutation) ClearField(name string) error {
-	return fmt.Errorf("unknown Video nullable field %s", name)
+func (m *TitleMutation) ClearField(name string) error {
+	return fmt.Errorf("unknown Title nullable field %s", name)
 }
 
 // ResetField resets all changes in the mutation regarding the
 // given field name. It returns an error if the field is not
 // defined in the schema.
-func (m *VideoMutation) ResetField(name string) error {
+func (m *TitleMutation) ResetField(name string) error {
 	switch name {
-	case video.FieldName:
-		m.ResetName()
-		return nil
-	case video.FieldURL:
-		m.ResetURL()
+	case title.FieldTitlename:
+		m.ResetTitlename()
 		return nil
 	}
-	return fmt.Errorf("unknown Video field %s", name)
+	return fmt.Errorf("unknown Title field %s", name)
 }
 
 // AddedEdges returns all edge names that were set/added in this
 // mutation.
-func (m *VideoMutation) AddedEdges() []string {
-	edges := make([]string, 0, 2)
-	if m.owner != nil {
-		edges = append(edges, video.EdgeOwner)
-	}
-	if m.playlist_videos != nil {
-		edges = append(edges, video.EdgePlaylistVideos)
+func (m *TitleMutation) AddedEdges() []string {
+	edges := make([]string, 0, 1)
+	if m.personal != nil {
+		edges = append(edges, title.EdgePersonal)
 	}
 	return edges
 }
 
 // AddedIDs returns all ids (to other nodes) that were added for
 // the given edge name.
-func (m *VideoMutation) AddedIDs(name string) []ent.Value {
+func (m *TitleMutation) AddedIDs(name string) []ent.Value {
 	switch name {
-	case video.EdgeOwner:
-		if id := m.owner; id != nil {
-			return []ent.Value{*id}
-		}
-	case video.EdgePlaylistVideos:
-		ids := make([]ent.Value, 0, len(m.playlist_videos))
-		for id := range m.playlist_videos {
+	case title.EdgePersonal:
+		ids := make([]ent.Value, 0, len(m.personal))
+		for id := range m.personal {
 			ids = append(ids, id)
 		}
 		return ids
@@ -2246,21 +2822,21 @@ func (m *VideoMutation) AddedIDs(name string) []ent.Value {
 
 // RemovedEdges returns all edge names that were removed in this
 // mutation.
-func (m *VideoMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 2)
-	if m.removedplaylist_videos != nil {
-		edges = append(edges, video.EdgePlaylistVideos)
+func (m *TitleMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 1)
+	if m.removedpersonal != nil {
+		edges = append(edges, title.EdgePersonal)
 	}
 	return edges
 }
 
 // RemovedIDs returns all ids (to other nodes) that were removed for
 // the given edge name.
-func (m *VideoMutation) RemovedIDs(name string) []ent.Value {
+func (m *TitleMutation) RemovedIDs(name string) []ent.Value {
 	switch name {
-	case video.EdgePlaylistVideos:
-		ids := make([]ent.Value, 0, len(m.removedplaylist_videos))
-		for id := range m.removedplaylist_videos {
+	case title.EdgePersonal:
+		ids := make([]ent.Value, 0, len(m.removedpersonal))
+		for id := range m.removedpersonal {
 			ids = append(ids, id)
 		}
 		return ids
@@ -2270,46 +2846,35 @@ func (m *VideoMutation) RemovedIDs(name string) []ent.Value {
 
 // ClearedEdges returns all edge names that were cleared in this
 // mutation.
-func (m *VideoMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 2)
-	if m.clearedowner {
-		edges = append(edges, video.EdgeOwner)
-	}
+func (m *TitleMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 1)
 	return edges
 }
 
 // EdgeCleared returns a boolean indicates if this edge was
 // cleared in this mutation.
-func (m *VideoMutation) EdgeCleared(name string) bool {
+func (m *TitleMutation) EdgeCleared(name string) bool {
 	switch name {
-	case video.EdgeOwner:
-		return m.clearedowner
 	}
 	return false
 }
 
 // ClearEdge clears the value for the given name. It returns an
 // error if the edge name is not defined in the schema.
-func (m *VideoMutation) ClearEdge(name string) error {
+func (m *TitleMutation) ClearEdge(name string) error {
 	switch name {
-	case video.EdgeOwner:
-		m.ClearOwner()
-		return nil
 	}
-	return fmt.Errorf("unknown Video unique edge %s", name)
+	return fmt.Errorf("unknown Title unique edge %s", name)
 }
 
 // ResetEdge resets all changes in the mutation regarding the
 // given edge name. It returns an error if the edge is not
 // defined in the schema.
-func (m *VideoMutation) ResetEdge(name string) error {
+func (m *TitleMutation) ResetEdge(name string) error {
 	switch name {
-	case video.EdgeOwner:
-		m.ResetOwner()
-		return nil
-	case video.EdgePlaylistVideos:
-		m.ResetPlaylistVideos()
+	case title.EdgePersonal:
+		m.ResetPersonal()
 		return nil
 	}
-	return fmt.Errorf("unknown Video edge %s", name)
+	return fmt.Errorf("unknown Title edge %s", name)
 }

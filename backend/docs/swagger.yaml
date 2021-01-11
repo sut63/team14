@@ -1,144 +1,135 @@
 basePath: /api/v1
 definitions:
-  ent.Playlist:
+  controllers.Department:
     properties:
-      edges:
-        $ref: '#/definitions/ent.PlaylistEdges'
-        description: |-
-          Edges holds the relations/edges for other nodes in the graph.
-          The values are being populated by the PlaylistQuery when eager-loading is set.
-        type: object
-      id:
-        description: ID of the ent.
-        type: integer
-      title:
-        description: Title holds the value of the "title" field.
+      departmentname:
         type: string
     type: object
-  ent.Playlist_Video:
+  controllers.Gender:
     properties:
-      added_time:
-        description: AddedTime holds the value of the "added_time" field.
+      gendername:
         type: string
-      edges:
-        $ref: '#/definitions/ent.Playlist_VideoEdges'
-        description: |-
-          Edges holds the relations/edges for other nodes in the graph.
-          The values are being populated by the Playlist_VideoQuery when eager-loading is set.
-        type: object
-      id:
-        description: ID of the ent.
+    type: object
+  controllers.Personal:
+    properties:
+      department:
         type: integer
-    type: object
-  ent.Playlist_VideoEdges:
-    properties:
-      playlist:
-        $ref: '#/definitions/ent.Playlist'
-        description: Playlist holds the value of the playlist edge.
-        type: object
-      resolution:
-        $ref: '#/definitions/ent.Resolution'
-        description: Resolution holds the value of the resolution edge.
-        type: object
-      video:
-        $ref: '#/definitions/ent.Video'
-        description: Video holds the value of the video edge.
-        type: object
-    type: object
-  ent.PlaylistEdges:
-    properties:
-      owner:
-        $ref: '#/definitions/ent.User'
-        description: Owner holds the value of the owner edge.
-        type: object
-      playlistVideos:
-        description: PlaylistVideos holds the value of the playlist_videos edge.
-        items:
-          $ref: '#/definitions/ent.Playlist_Video'
-        type: array
-    type: object
-  ent.Resolution:
-    properties:
-      edges:
-        $ref: '#/definitions/ent.ResolutionEdges'
-        description: |-
-          Edges holds the relations/edges for other nodes in the graph.
-          The values are being populated by the ResolutionQuery when eager-loading is set.
-        type: object
-      id:
-        description: ID of the ent.
-        type: integer
-      value:
-        description: Value holds the value of the "value" field.
-        type: integer
-    type: object
-  ent.ResolutionEdges:
-    properties:
-      playlistVideos:
-        description: PlaylistVideos holds the value of the playlist_videos edge.
-        items:
-          $ref: '#/definitions/ent.Playlist_Video'
-        type: array
-    type: object
-  ent.User:
-    properties:
-      edges:
-        $ref: '#/definitions/ent.UserEdges'
-        description: |-
-          Edges holds the relations/edges for other nodes in the graph.
-          The values are being populated by the UserQuery when eager-loading is set.
-        type: object
       email:
-        description: Email holds the value of the "email" field.
         type: string
-      id:
-        description: ID of the ent.
+      gender:
         type: integer
       name:
-        description: Name holds the value of the "name" field.
         type: string
+      password:
+        type: string
+      title:
+        type: integer
     type: object
-  ent.UserEdges:
-    properties:
-      playlists:
-        description: Playlists holds the value of the playlists edge.
-        items:
-          $ref: '#/definitions/ent.Playlist'
-        type: array
-      videos:
-        description: Videos holds the value of the videos edge.
-        items:
-          $ref: '#/definitions/ent.Video'
-        type: array
+  controllers.Title:
     type: object
-  ent.Video:
+  ent.Department:
     properties:
+      Departmentname:
+        description: Departmentname holds the value of the "Departmentname" field.
+        type: string
       edges:
-        $ref: '#/definitions/ent.VideoEdges'
+        $ref: '#/definitions/ent.DepartmentEdges'
         description: |-
           Edges holds the relations/edges for other nodes in the graph.
-          The values are being populated by the VideoQuery when eager-loading is set.
+          The values are being populated by the DepartmentQuery when eager-loading is set.
         type: object
       id:
         description: ID of the ent.
         type: integer
-      name:
-        description: Name holds the value of the "name" field.
+    type: object
+  ent.DepartmentEdges:
+    properties:
+      personal:
+        description: Personal holds the value of the personal edge.
+        items:
+          $ref: '#/definitions/ent.Personal'
+        type: array
+    type: object
+  ent.Gender:
+    properties:
+      Gendername:
+        description: Gendername holds the value of the "Gendername" field.
         type: string
-      url:
-        description: URL holds the value of the "url" field.
+      edges:
+        $ref: '#/definitions/ent.GenderEdges'
+        description: |-
+          Edges holds the relations/edges for other nodes in the graph.
+          The values are being populated by the GenderQuery when eager-loading is set.
+        type: object
+      id:
+        description: ID of the ent.
+        type: integer
+    type: object
+  ent.GenderEdges:
+    properties:
+      personal:
+        description: Personal holds the value of the personal edge.
+        items:
+          $ref: '#/definitions/ent.Personal'
+        type: array
+    type: object
+  ent.Personal:
+    properties:
+      Email:
+        description: Email holds the value of the "Email" field.
+        type: string
+      Name:
+        description: Name holds the value of the "Name" field.
+        type: string
+      Password:
+        description: Password holds the value of the "Password" field.
+        type: string
+      edges:
+        $ref: '#/definitions/ent.PersonalEdges'
+        description: |-
+          Edges holds the relations/edges for other nodes in the graph.
+          The values are being populated by the PersonalQuery when eager-loading is set.
+        type: object
+      id:
+        description: ID of the ent.
+        type: integer
+    type: object
+  ent.PersonalEdges:
+    properties:
+      department:
+        $ref: '#/definitions/ent.Department'
+        description: Department holds the value of the department edge.
+        type: object
+      gender:
+        $ref: '#/definitions/ent.Gender'
+        description: Gender holds the value of the gender edge.
+        type: object
+      title:
+        $ref: '#/definitions/ent.Title'
+        description: Title holds the value of the title edge.
+        type: object
+    type: object
+  ent.Title:
+    properties:
+      edges:
+        $ref: '#/definitions/ent.TitleEdges'
+        description: |-
+          Edges holds the relations/edges for other nodes in the graph.
+          The values are being populated by the TitleQuery when eager-loading is set.
+        type: object
+      id:
+        description: ID of the ent.
+        type: integer
+      titlename:
+        description: Titlename holds the value of the "titlename" field.
         type: string
     type: object
-  ent.VideoEdges:
+  ent.TitleEdges:
     properties:
-      owner:
-        $ref: '#/definitions/ent.User'
-        description: Owner holds the value of the owner edge.
-        type: object
-      playlistVideos:
-        description: PlaylistVideos holds the value of the playlist_videos edge.
+      personal:
+        description: Personal holds the value of the personal edge.
         items:
-          $ref: '#/definitions/ent.Playlist_Video'
+          $ref: '#/definitions/ent.Personal'
         type: array
     type: object
   gin.H:
@@ -158,10 +149,10 @@ info:
   title: SUT SA Example API Playlist Vidoe
   version: "1.0"
 paths:
-  /playlist-videos:
+  /departments:
     get:
-      description: list playlist-video entities
-      operationId: list-playlist-video
+      description: list department entities
+      operationId: list-department
       parameters:
       - description: Limit
         in: query
@@ -178,7 +169,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/ent.Playlist_Video'
+              $ref: '#/definitions/ent.Department'
             type: array
         "400":
           description: Bad Request
@@ -188,26 +179,26 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/gin.H'
-      summary: List playlist-video entities
+      summary: List department entities
     post:
       consumes:
       - application/json
-      description: Create playlist-video
-      operationId: create-playlist-video
+      description: Create departmnet
+      operationId: create-departmnet
       parameters:
-      - description: Playlist_Video entity
+      - description: Department entity
         in: body
-        name: playlist-video
+        name: departmnet
         required: true
         schema:
-          $ref: '#/definitions/ent.Playlist_Video'
+          $ref: '#/definitions/controllers.Department'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/ent.Playlist_Video'
+            $ref: '#/definitions/controllers.Department'
         "400":
           description: Bad Request
           schema:
@@ -216,72 +207,13 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/gin.H'
-      summary: Create playlist-video
-  /playlists:
+      summary: Create departmnet
+  /departments/{id}:
     get:
-      description: list playlist entities
-      operationId: list-playlist
+      description: get department by ID
+      operationId: get-department
       parameters:
-      - description: Limit
-        in: query
-        name: limit
-        type: integer
-      - description: Offset
-        in: query
-        name: offset
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/ent.Playlist'
-            type: array
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/gin.H'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/gin.H'
-      summary: List playlist entities
-    post:
-      consumes:
-      - application/json
-      description: Create playlist
-      operationId: create-playlist
-      parameters:
-      - description: Playlist entity
-        in: body
-        name: playlist
-        required: true
-        schema:
-          $ref: '#/definitions/ent.Playlist'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/ent.Playlist'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/gin.H'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/gin.H'
-      summary: Create playlist
-  /playlists/{id}:
-    get:
-      description: get playlist by ID
-      operationId: get-playlist
-      parameters:
-      - description: Playlist ID
+      - description: Department ID
         in: path
         name: id
         required: true
@@ -292,7 +224,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/ent.Playlist'
+            $ref: '#/definitions/ent.Department'
         "400":
           description: Bad Request
           schema:
@@ -305,11 +237,11 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/gin.H'
-      summary: Get a playlist entity by ID
-  /resolutions:
+      summary: Get a department entity by ID
+  /genders:
     get:
-      description: list resolution entities
-      operationId: list-resolution
+      description: list gender entities
+      operationId: list-gender
       parameters:
       - description: Limit
         in: query
@@ -326,7 +258,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/ent.Resolution'
+              $ref: '#/definitions/ent.Gender'
             type: array
         "400":
           description: Bad Request
@@ -336,26 +268,26 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/gin.H'
-      summary: List resolution entities
+      summary: List gender entities
     post:
       consumes:
       - application/json
-      description: Create resolution
-      operationId: create-resolution
+      description: Create gender
+      operationId: create-gender
       parameters:
-      - description: Resolution entity
+      - description: Gender entity
         in: body
-        name: resolution
+        name: gender
         required: true
         schema:
-          $ref: '#/definitions/ent.Resolution'
+          $ref: '#/definitions/controllers.Gender'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/ent.Resolution'
+            $ref: '#/definitions/controllers.Gender'
         "400":
           description: Bad Request
           schema:
@@ -364,13 +296,13 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/gin.H'
-      summary: Create resolution
-  /resolutions/{id}:
+      summary: Create gender
+  /genders/{id}:
     get:
-      description: get resolution by ID
-      operationId: get-resolution
+      description: get gender by ID
+      operationId: get-gender
       parameters:
-      - description: Resolution ID
+      - description: Gender ID
         in: path
         name: id
         required: true
@@ -381,7 +313,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/ent.Resolution'
+            $ref: '#/definitions/ent.Gender'
         "400":
           description: Bad Request
           schema:
@@ -394,11 +326,11 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/gin.H'
-      summary: Get a resolution entity by ID
-  /users:
+      summary: Get a gender entity by ID
+  /personals:
     get:
-      description: list user entities
-      operationId: list-user
+      description: list personal entities
+      operationId: list-personal
       parameters:
       - description: Limit
         in: query
@@ -415,7 +347,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/ent.User'
+              $ref: '#/definitions/ent.Personal'
             type: array
         "400":
           description: Bad Request
@@ -425,26 +357,26 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/gin.H'
-      summary: List user entities
+      summary: List personal entities
     post:
       consumes:
       - application/json
-      description: Create user
-      operationId: create-user
+      description: Create personal
+      operationId: create-personal
       parameters:
-      - description: User entity
+      - description: Personal entity
         in: body
-        name: user
+        name: personal
         required: true
         schema:
-          $ref: '#/definitions/ent.User'
+          $ref: '#/definitions/controllers.Personal'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/ent.User'
+            $ref: '#/definitions/controllers.Personal'
         "400":
           description: Bad Request
           schema:
@@ -453,13 +385,13 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/gin.H'
-      summary: Create user
-  /users/{id}:
+      summary: Create personal
+  /personals/{id}:
     delete:
-      description: get user by ID
-      operationId: delete-user
+      description: get personal by ID
+      operationId: delete-personal
       parameters:
-      - description: User ID
+      - description: Personal ID
         in: path
         name: id
         required: true
@@ -483,73 +415,11 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/gin.H'
-      summary: Delete a user entity by ID
+      summary: Delete a personal entity by ID
+  /titles:
     get:
-      description: get user by ID
-      operationId: get-user
-      parameters:
-      - description: User ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/ent.User'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/gin.H'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/gin.H'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/gin.H'
-      summary: Get a user entity by ID
-    put:
-      consumes:
-      - application/json
-      description: update user by ID
-      operationId: update-user
-      parameters:
-      - description: User ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: User entity
-        in: body
-        name: user
-        required: true
-        schema:
-          $ref: '#/definitions/ent.User'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/ent.User'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/gin.H'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/gin.H'
-      summary: Update a user entity by ID
-  /videos:
-    get:
-      description: list video entities
-      operationId: list-video
+      description: list title entities
+      operationId: list-title
       parameters:
       - description: Limit
         in: query
@@ -566,7 +436,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/ent.Video'
+              $ref: '#/definitions/ent.Title'
             type: array
         "400":
           description: Bad Request
@@ -576,26 +446,26 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/gin.H'
-      summary: List video entities
+      summary: List title entities
     post:
       consumes:
       - application/json
-      description: Create video
-      operationId: create-video
+      description: Create title
+      operationId: create-title
       parameters:
-      - description: Video entity
+      - description: Title entity
         in: body
-        name: video
+        name: title
         required: true
         schema:
-          $ref: '#/definitions/ent.Video'
+          $ref: '#/definitions/controllers.Title'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/ent.Video'
+            $ref: '#/definitions/controllers.Title'
         "400":
           description: Bad Request
           schema:
@@ -604,42 +474,13 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/gin.H'
-      summary: Create video
-  /videos/{id}:
-    delete:
-      description: get video by ID
-      operationId: delete-video
-      parameters:
-      - description: Video ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/gin.H'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/gin.H'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/gin.H'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/gin.H'
-      summary: Delete a video entity by ID
+      summary: Create title
+  /titles/{id}:
     get:
-      description: get video by ID
-      operationId: get-video
+      description: get title by ID
+      operationId: get-title
       parameters:
-      - description: Video ID
+      - description: Title ID
         in: path
         name: id
         required: true
@@ -650,7 +491,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/ent.Video'
+            $ref: '#/definitions/ent.Title'
         "400":
           description: Bad Request
           schema:
@@ -663,40 +504,7 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/gin.H'
-      summary: Get a video entity by ID
-    put:
-      consumes:
-      - application/json
-      description: update video by ID
-      operationId: update-video
-      parameters:
-      - description: Video ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: Video entity
-        in: body
-        name: video
-        required: true
-        schema:
-          $ref: '#/definitions/ent.Video'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/ent.Video'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/gin.H'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/gin.H'
-      summary: Update a video entity by ID
+      summary: Get a title entity by ID
 securityDefinitions:
   ApiKeyAuth:
     in: header
@@ -712,6 +520,7 @@ securityDefinitions:
     tokenUrl: https://example.com/oauth/token
     type: oauth2
   OAuth2Application:
+    authorizationUrl: ""
     flow: application
     scopes:
       admin: ' Grants read and write access to administrative information'
@@ -726,6 +535,7 @@ securityDefinitions:
       write: ' Grants write access'
     type: oauth2
   OAuth2Password:
+    authorizationUrl: ""
     flow: password
     scopes:
       admin: ' Grants read and write access to administrative information'

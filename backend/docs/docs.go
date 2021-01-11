@@ -33,14 +33,14 @@ var doc = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/playlist-videos": {
+        "/departments": {
             "get": {
-                "description": "list playlist-video entities",
+                "description": "list department entities",
                 "produces": [
                     "application/json"
                 ],
-                "summary": "List playlist-video entities",
-                "operationId": "list-playlist-video",
+                "summary": "List department entities",
+                "operationId": "list-department",
                 "parameters": [
                     {
                         "type": "integer",
@@ -61,7 +61,7 @@ var doc = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/ent.Playlist_Video"
+                                "$ref": "#/definitions/ent.Department"
                             }
                         }
                     },
@@ -80,23 +80,23 @@ var doc = `{
                 }
             },
             "post": {
-                "description": "Create playlist-video",
+                "description": "Create departmnet",
                 "consumes": [
                     "application/json"
                 ],
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Create playlist-video",
-                "operationId": "create-playlist-video",
+                "summary": "Create departmnet",
+                "operationId": "create-departmnet",
                 "parameters": [
                     {
-                        "description": "Playlist_Video entity",
-                        "name": "playlist-video",
+                        "description": "Department entity",
+                        "name": "departmnet",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/ent.Playlist_Video"
+                            "$ref": "#/definitions/controllers.Department"
                         }
                     }
                 ],
@@ -104,7 +104,7 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/ent.Playlist_Video"
+                            "$ref": "#/definitions/controllers.Department"
                         }
                     },
                     "400": {
@@ -122,107 +122,18 @@ var doc = `{
                 }
             }
         },
-        "/playlists": {
+        "/departments/{id}": {
             "get": {
-                "description": "list playlist entities",
+                "description": "get department by ID",
                 "produces": [
                     "application/json"
                 ],
-                "summary": "List playlist entities",
-                "operationId": "list-playlist",
+                "summary": "Get a department entity by ID",
+                "operationId": "get-department",
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Limit",
-                        "name": "limit",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "Offset",
-                        "name": "offset",
-                        "in": "query"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/ent.Playlist"
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    }
-                }
-            },
-            "post": {
-                "description": "Create playlist",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Create playlist",
-                "operationId": "create-playlist",
-                "parameters": [
-                    {
-                        "description": "Playlist entity",
-                        "name": "playlist",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/ent.Playlist"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/ent.Playlist"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    }
-                }
-            }
-        },
-        "/playlists/{id}": {
-            "get": {
-                "description": "get playlist by ID",
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Get a playlist entity by ID",
-                "operationId": "get-playlist",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Playlist ID",
+                        "description": "Department ID",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -232,7 +143,7 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/ent.Playlist"
+                            "$ref": "#/definitions/ent.Department"
                         }
                     },
                     "400": {
@@ -256,14 +167,14 @@ var doc = `{
                 }
             }
         },
-        "/resolutions": {
+        "/genders": {
             "get": {
-                "description": "list resolution entities",
+                "description": "list gender entities",
                 "produces": [
                     "application/json"
                 ],
-                "summary": "List resolution entities",
-                "operationId": "list-resolution",
+                "summary": "List gender entities",
+                "operationId": "list-gender",
                 "parameters": [
                     {
                         "type": "integer",
@@ -284,7 +195,7 @@ var doc = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/ent.Resolution"
+                                "$ref": "#/definitions/ent.Gender"
                             }
                         }
                     },
@@ -303,23 +214,23 @@ var doc = `{
                 }
             },
             "post": {
-                "description": "Create resolution",
+                "description": "Create gender",
                 "consumes": [
                     "application/json"
                 ],
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Create resolution",
-                "operationId": "create-resolution",
+                "summary": "Create gender",
+                "operationId": "create-gender",
                 "parameters": [
                     {
-                        "description": "Resolution entity",
-                        "name": "resolution",
+                        "description": "Gender entity",
+                        "name": "gender",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/ent.Resolution"
+                            "$ref": "#/definitions/controllers.Gender"
                         }
                     }
                 ],
@@ -327,7 +238,7 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/ent.Resolution"
+                            "$ref": "#/definitions/controllers.Gender"
                         }
                     },
                     "400": {
@@ -345,18 +256,18 @@ var doc = `{
                 }
             }
         },
-        "/resolutions/{id}": {
+        "/genders/{id}": {
             "get": {
-                "description": "get resolution by ID",
+                "description": "get gender by ID",
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Get a resolution entity by ID",
-                "operationId": "get-resolution",
+                "summary": "Get a gender entity by ID",
+                "operationId": "get-gender",
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Resolution ID",
+                        "description": "Gender ID",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -366,7 +277,7 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/ent.Resolution"
+                            "$ref": "#/definitions/ent.Gender"
                         }
                     },
                     "400": {
@@ -390,14 +301,14 @@ var doc = `{
                 }
             }
         },
-        "/users": {
+        "/personals": {
             "get": {
-                "description": "list user entities",
+                "description": "list personal entities",
                 "produces": [
                     "application/json"
                 ],
-                "summary": "List user entities",
-                "operationId": "list-user",
+                "summary": "List personal entities",
+                "operationId": "list-personal",
                 "parameters": [
                     {
                         "type": "integer",
@@ -418,7 +329,7 @@ var doc = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/ent.User"
+                                "$ref": "#/definitions/ent.Personal"
                             }
                         }
                     },
@@ -437,23 +348,23 @@ var doc = `{
                 }
             },
             "post": {
-                "description": "Create user",
+                "description": "Create personal",
                 "consumes": [
                     "application/json"
                 ],
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Create user",
-                "operationId": "create-user",
+                "summary": "Create personal",
+                "operationId": "create-personal",
                 "parameters": [
                     {
-                        "description": "User entity",
-                        "name": "user",
+                        "description": "Personal entity",
+                        "name": "personal",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/ent.User"
+                            "$ref": "#/definitions/controllers.Personal"
                         }
                     }
                 ],
@@ -461,7 +372,7 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/ent.User"
+                            "$ref": "#/definitions/controllers.Personal"
                         }
                     },
                     "400": {
@@ -479,110 +390,18 @@ var doc = `{
                 }
             }
         },
-        "/users/{id}": {
-            "get": {
-                "description": "get user by ID",
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Get a user entity by ID",
-                "operationId": "get-user",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "User ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/ent.User"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    }
-                }
-            },
-            "put": {
-                "description": "update user by ID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Update a user entity by ID",
-                "operationId": "update-user",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "User ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "User entity",
-                        "name": "user",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/ent.User"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/ent.User"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    }
-                }
-            },
+        "/personals/{id}": {
             "delete": {
-                "description": "get user by ID",
+                "description": "get personal by ID",
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Delete a user entity by ID",
-                "operationId": "delete-user",
+                "summary": "Delete a personal entity by ID",
+                "operationId": "delete-personal",
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "User ID",
+                        "description": "Personal ID",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -616,14 +435,14 @@ var doc = `{
                 }
             }
         },
-        "/videos": {
+        "/titles": {
             "get": {
-                "description": "list video entities",
+                "description": "list title entities",
                 "produces": [
                     "application/json"
                 ],
-                "summary": "List video entities",
-                "operationId": "list-video",
+                "summary": "List title entities",
+                "operationId": "list-title",
                 "parameters": [
                     {
                         "type": "integer",
@@ -644,7 +463,7 @@ var doc = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/ent.Video"
+                                "$ref": "#/definitions/ent.Title"
                             }
                         }
                     },
@@ -663,23 +482,23 @@ var doc = `{
                 }
             },
             "post": {
-                "description": "Create video",
+                "description": "Create title",
                 "consumes": [
                     "application/json"
                 ],
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Create video",
-                "operationId": "create-video",
+                "summary": "Create title",
+                "operationId": "create-title",
                 "parameters": [
                     {
-                        "description": "Video entity",
-                        "name": "video",
+                        "description": "Title entity",
+                        "name": "title",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/ent.Video"
+                            "$ref": "#/definitions/controllers.Title"
                         }
                     }
                 ],
@@ -687,7 +506,7 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/ent.Video"
+                            "$ref": "#/definitions/controllers.Title"
                         }
                     },
                     "400": {
@@ -705,18 +524,18 @@ var doc = `{
                 }
             }
         },
-        "/videos/{id}": {
+        "/titles/{id}": {
             "get": {
-                "description": "get video by ID",
+                "description": "get title by ID",
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Get a video entity by ID",
-                "operationId": "get-video",
+                "summary": "Get a title entity by ID",
+                "operationId": "get-title",
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Video ID",
+                        "description": "Title ID",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -726,99 +545,7 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/ent.Video"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    }
-                }
-            },
-            "put": {
-                "description": "update video by ID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Update a video entity by ID",
-                "operationId": "update-video",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Video ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "Video entity",
-                        "name": "video",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/ent.Video"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/ent.Video"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "description": "get video by ID",
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Delete a video entity by ID",
-                "operationId": "delete-video",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Video ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
+                            "$ref": "#/definitions/ent.Title"
                         }
                     },
                     "400": {
@@ -844,185 +571,180 @@ var doc = `{
         }
     },
     "definitions": {
-        "ent.Playlist": {
+        "controllers.Department": {
             "type": "object",
             "properties": {
-                "edges": {
-                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the PlaylistQuery when eager-loading is set.",
-                    "type": "object",
-                    "$ref": "#/definitions/ent.PlaylistEdges"
-                },
-                "id": {
-                    "description": "ID of the ent.",
-                    "type": "integer"
-                },
-                "title": {
-                    "description": "Title holds the value of the \"title\" field.",
+                "departmentname": {
                     "type": "string"
                 }
             }
         },
-        "ent.PlaylistEdges": {
+        "controllers.Gender": {
             "type": "object",
             "properties": {
-                "owner": {
-                    "description": "Owner holds the value of the owner edge.",
-                    "type": "object",
-                    "$ref": "#/definitions/ent.User"
-                },
-                "playlistVideos": {
-                    "description": "PlaylistVideos holds the value of the playlist_videos edge.",
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/ent.Playlist_Video"
-                    }
-                }
-            }
-        },
-        "ent.Playlist_Video": {
-            "type": "object",
-            "properties": {
-                "added_time": {
-                    "description": "AddedTime holds the value of the \"added_time\" field.",
+                "gendername": {
                     "type": "string"
-                },
-                "edges": {
-                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the Playlist_VideoQuery when eager-loading is set.",
-                    "type": "object",
-                    "$ref": "#/definitions/ent.Playlist_VideoEdges"
-                },
-                "id": {
-                    "description": "ID of the ent.",
+                }
+            }
+        },
+        "controllers.Personal": {
+            "type": "object",
+            "properties": {
+                "department": {
                     "type": "integer"
-                }
-            }
-        },
-        "ent.Playlist_VideoEdges": {
-            "type": "object",
-            "properties": {
-                "playlist": {
-                    "description": "Playlist holds the value of the playlist edge.",
-                    "type": "object",
-                    "$ref": "#/definitions/ent.Playlist"
-                },
-                "resolution": {
-                    "description": "Resolution holds the value of the resolution edge.",
-                    "type": "object",
-                    "$ref": "#/definitions/ent.Resolution"
-                },
-                "video": {
-                    "description": "Video holds the value of the video edge.",
-                    "type": "object",
-                    "$ref": "#/definitions/ent.Video"
-                }
-            }
-        },
-        "ent.Resolution": {
-            "type": "object",
-            "properties": {
-                "edges": {
-                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the ResolutionQuery when eager-loading is set.",
-                    "type": "object",
-                    "$ref": "#/definitions/ent.ResolutionEdges"
-                },
-                "id": {
-                    "description": "ID of the ent.",
-                    "type": "integer"
-                },
-                "value": {
-                    "description": "Value holds the value of the \"value\" field.",
-                    "type": "integer"
-                }
-            }
-        },
-        "ent.ResolutionEdges": {
-            "type": "object",
-            "properties": {
-                "playlistVideos": {
-                    "description": "PlaylistVideos holds the value of the playlist_videos edge.",
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/ent.Playlist_Video"
-                    }
-                }
-            }
-        },
-        "ent.User": {
-            "type": "object",
-            "properties": {
-                "edges": {
-                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the UserQuery when eager-loading is set.",
-                    "type": "object",
-                    "$ref": "#/definitions/ent.UserEdges"
                 },
                 "email": {
-                    "description": "Email holds the value of the \"email\" field.",
                     "type": "string"
+                },
+                "gender": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "integer"
+                }
+            }
+        },
+        "controllers.Title": {
+            "type": "object"
+        },
+        "ent.Department": {
+            "type": "object",
+            "properties": {
+                "Departmentname": {
+                    "description": "Departmentname holds the value of the \"Departmentname\" field.",
+                    "type": "string"
+                },
+                "edges": {
+                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the DepartmentQuery when eager-loading is set.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.DepartmentEdges"
                 },
                 "id": {
                     "description": "ID of the ent.",
                     "type": "integer"
-                },
-                "name": {
-                    "description": "Name holds the value of the \"name\" field.",
-                    "type": "string"
                 }
             }
         },
-        "ent.UserEdges": {
+        "ent.DepartmentEdges": {
             "type": "object",
             "properties": {
-                "playlists": {
-                    "description": "Playlists holds the value of the playlists edge.",
+                "personal": {
+                    "description": "Personal holds the value of the personal edge.",
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/ent.Playlist"
-                    }
-                },
-                "videos": {
-                    "description": "Videos holds the value of the videos edge.",
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/ent.Video"
+                        "$ref": "#/definitions/ent.Personal"
                     }
                 }
             }
         },
-        "ent.Video": {
+        "ent.Gender": {
+            "type": "object",
+            "properties": {
+                "Gendername": {
+                    "description": "Gendername holds the value of the \"Gendername\" field.",
+                    "type": "string"
+                },
+                "edges": {
+                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the GenderQuery when eager-loading is set.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.GenderEdges"
+                },
+                "id": {
+                    "description": "ID of the ent.",
+                    "type": "integer"
+                }
+            }
+        },
+        "ent.GenderEdges": {
+            "type": "object",
+            "properties": {
+                "personal": {
+                    "description": "Personal holds the value of the personal edge.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.Personal"
+                    }
+                }
+            }
+        },
+        "ent.Personal": {
+            "type": "object",
+            "properties": {
+                "Email": {
+                    "description": "Email holds the value of the \"Email\" field.",
+                    "type": "string"
+                },
+                "Name": {
+                    "description": "Name holds the value of the \"Name\" field.",
+                    "type": "string"
+                },
+                "Password": {
+                    "description": "Password holds the value of the \"Password\" field.",
+                    "type": "string"
+                },
+                "edges": {
+                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the PersonalQuery when eager-loading is set.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.PersonalEdges"
+                },
+                "id": {
+                    "description": "ID of the ent.",
+                    "type": "integer"
+                }
+            }
+        },
+        "ent.PersonalEdges": {
+            "type": "object",
+            "properties": {
+                "department": {
+                    "description": "Department holds the value of the department edge.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.Department"
+                },
+                "gender": {
+                    "description": "Gender holds the value of the gender edge.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.Gender"
+                },
+                "title": {
+                    "description": "Title holds the value of the title edge.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.Title"
+                }
+            }
+        },
+        "ent.Title": {
             "type": "object",
             "properties": {
                 "edges": {
-                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the VideoQuery when eager-loading is set.",
+                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the TitleQuery when eager-loading is set.",
                     "type": "object",
-                    "$ref": "#/definitions/ent.VideoEdges"
+                    "$ref": "#/definitions/ent.TitleEdges"
                 },
                 "id": {
                     "description": "ID of the ent.",
                     "type": "integer"
                 },
-                "name": {
-                    "description": "Name holds the value of the \"name\" field.",
-                    "type": "string"
-                },
-                "url": {
-                    "description": "URL holds the value of the \"url\" field.",
+                "titlename": {
+                    "description": "Titlename holds the value of the \"titlename\" field.",
                     "type": "string"
                 }
             }
         },
-        "ent.VideoEdges": {
+        "ent.TitleEdges": {
             "type": "object",
             "properties": {
-                "owner": {
-                    "description": "Owner holds the value of the owner edge.",
-                    "type": "object",
-                    "$ref": "#/definitions/ent.User"
-                },
-                "playlistVideos": {
-                    "description": "PlaylistVideos holds the value of the playlist_videos edge.",
+                "personal": {
+                    "description": "Personal holds the value of the personal edge.",
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/ent.Playlist_Video"
+                        "$ref": "#/definitions/ent.Personal"
                     }
                 }
             }
@@ -1053,6 +775,7 @@ var doc = `{
         "OAuth2Application": {
             "type": "oauth2",
             "flow": "application",
+            "authorizationUrl": "",
             "tokenUrl": "https://example.com/oauth/token",
             "scopes": {
                 "admin": " Grants read and write access to administrative information",
@@ -1071,6 +794,7 @@ var doc = `{
         "OAuth2Password": {
             "type": "oauth2",
             "flow": "password",
+            "authorizationUrl": "",
             "tokenUrl": "https://example.com/oauth/token",
             "scopes": {
                 "admin": " Grants read and write access to administrative information",
