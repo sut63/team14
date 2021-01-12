@@ -19,6 +19,18 @@ var (
 		PrimaryKey:  []*schema.Column{AdminrepairsColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{},
 	}
+	// BrandsColumns holds the columns for the "brands" table.
+	BrandsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "brandname", Type: field.TypeString, Unique: true},
+	}
+	// BrandsTable holds the schema information for the "brands" table.
+	BrandsTable = &schema.Table{
+		Name:        "brands",
+		Columns:     BrandsColumns,
+		PrimaryKey:  []*schema.Column{BrandsColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{},
+	}
 	// CustomersColumns holds the columns for the "customers" table.
 	CustomersColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
@@ -143,13 +155,41 @@ var (
 	// ProductsColumns holds the columns for the "products" table.
 	ProductsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "productname", Type: field.TypeString},
+		{Name: "numberofproduct", Type: field.TypeString},
+		{Name: "price", Type: field.TypeString},
+		{Name: "Brand", Type: field.TypeInt, Nullable: true},
+		{Name: "Personal", Type: field.TypeInt, Nullable: true},
+		{Name: "Typeproduct", Type: field.TypeInt, Nullable: true},
 	}
 	// ProductsTable holds the schema information for the "products" table.
 	ProductsTable = &schema.Table{
-		Name:        "products",
-		Columns:     ProductsColumns,
-		PrimaryKey:  []*schema.Column{ProductsColumns[0]},
-		ForeignKeys: []*schema.ForeignKey{},
+		Name:       "products",
+		Columns:    ProductsColumns,
+		PrimaryKey: []*schema.Column{ProductsColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:  "products_brands_product",
+				Columns: []*schema.Column{ProductsColumns[4]},
+
+				RefColumns: []*schema.Column{BrandsColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+			{
+				Symbol:  "products_personals_product",
+				Columns: []*schema.Column{ProductsColumns[5]},
+
+				RefColumns: []*schema.Column{PersonalsColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+			{
+				Symbol:  "products_typeproducts_product",
+				Columns: []*schema.Column{ProductsColumns[6]},
+
+				RefColumns: []*schema.Column{TypeproductsColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+		},
 	}
 	// ReceiptsColumns holds the columns for the "receipts" table.
 	ReceiptsColumns = []*schema.Column{
@@ -174,9 +214,22 @@ var (
 		PrimaryKey:  []*schema.Column{TitlesColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{},
 	}
+	// TypeproductsColumns holds the columns for the "typeproducts" table.
+	TypeproductsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "typeproductname", Type: field.TypeString, Unique: true},
+	}
+	// TypeproductsTable holds the schema information for the "typeproducts" table.
+	TypeproductsTable = &schema.Table{
+		Name:        "typeproducts",
+		Columns:     TypeproductsColumns,
+		PrimaryKey:  []*schema.Column{TypeproductsColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{},
+	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
 		AdminrepairsTable,
+		BrandsTable,
 		CustomersTable,
 		DepartmentsTable,
 		FixesTable,
@@ -185,6 +238,7 @@ var (
 		ProductsTable,
 		ReceiptsTable,
 		TitlesTable,
+		TypeproductsTable,
 	}
 )
 
@@ -196,4 +250,7 @@ func init() {
 	PersonalsTable.ForeignKeys[0].RefTable = DepartmentsTable
 	PersonalsTable.ForeignKeys[1].RefTable = GendersTable
 	PersonalsTable.ForeignKeys[2].RefTable = TitlesTable
+	ProductsTable.ForeignKeys[0].RefTable = BrandsTable
+	ProductsTable.ForeignKeys[1].RefTable = PersonalsTable
+	ProductsTable.ForeignKeys[2].RefTable = TypeproductsTable
 }

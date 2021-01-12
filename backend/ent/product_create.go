@@ -4,11 +4,15 @@ package ent
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
+	"github.com/tanapon395/playlist-video/ent/brand"
+	"github.com/tanapon395/playlist-video/ent/personal"
 	"github.com/tanapon395/playlist-video/ent/product"
+	"github.com/tanapon395/playlist-video/ent/typeproduct"
 )
 
 // ProductCreate is the builder for creating a Product entity.
@@ -18,6 +22,81 @@ type ProductCreate struct {
 	hooks    []Hook
 }
 
+// SetProductname sets the Productname field.
+func (pc *ProductCreate) SetProductname(s string) *ProductCreate {
+	pc.mutation.SetProductname(s)
+	return pc
+}
+
+// SetNumberofproduct sets the Numberofproduct field.
+func (pc *ProductCreate) SetNumberofproduct(s string) *ProductCreate {
+	pc.mutation.SetNumberofproduct(s)
+	return pc
+}
+
+// SetPrice sets the Price field.
+func (pc *ProductCreate) SetPrice(s string) *ProductCreate {
+	pc.mutation.SetPrice(s)
+	return pc
+}
+
+// SetBrandID sets the brand edge to Brand by id.
+func (pc *ProductCreate) SetBrandID(id int) *ProductCreate {
+	pc.mutation.SetBrandID(id)
+	return pc
+}
+
+// SetNillableBrandID sets the brand edge to Brand by id if the given value is not nil.
+func (pc *ProductCreate) SetNillableBrandID(id *int) *ProductCreate {
+	if id != nil {
+		pc = pc.SetBrandID(*id)
+	}
+	return pc
+}
+
+// SetBrand sets the brand edge to Brand.
+func (pc *ProductCreate) SetBrand(b *Brand) *ProductCreate {
+	return pc.SetBrandID(b.ID)
+}
+
+// SetTypeproductID sets the typeproduct edge to Typeproduct by id.
+func (pc *ProductCreate) SetTypeproductID(id int) *ProductCreate {
+	pc.mutation.SetTypeproductID(id)
+	return pc
+}
+
+// SetNillableTypeproductID sets the typeproduct edge to Typeproduct by id if the given value is not nil.
+func (pc *ProductCreate) SetNillableTypeproductID(id *int) *ProductCreate {
+	if id != nil {
+		pc = pc.SetTypeproductID(*id)
+	}
+	return pc
+}
+
+// SetTypeproduct sets the typeproduct edge to Typeproduct.
+func (pc *ProductCreate) SetTypeproduct(t *Typeproduct) *ProductCreate {
+	return pc.SetTypeproductID(t.ID)
+}
+
+// SetPersonalID sets the personal edge to Personal by id.
+func (pc *ProductCreate) SetPersonalID(id int) *ProductCreate {
+	pc.mutation.SetPersonalID(id)
+	return pc
+}
+
+// SetNillablePersonalID sets the personal edge to Personal by id if the given value is not nil.
+func (pc *ProductCreate) SetNillablePersonalID(id *int) *ProductCreate {
+	if id != nil {
+		pc = pc.SetPersonalID(*id)
+	}
+	return pc
+}
+
+// SetPersonal sets the personal edge to Personal.
+func (pc *ProductCreate) SetPersonal(p *Personal) *ProductCreate {
+	return pc.SetPersonalID(p.ID)
+}
+
 // Mutation returns the ProductMutation object of the builder.
 func (pc *ProductCreate) Mutation() *ProductMutation {
 	return pc.mutation
@@ -25,6 +104,30 @@ func (pc *ProductCreate) Mutation() *ProductMutation {
 
 // Save creates the Product in the database.
 func (pc *ProductCreate) Save(ctx context.Context) (*Product, error) {
+	if _, ok := pc.mutation.Productname(); !ok {
+		return nil, &ValidationError{Name: "Productname", err: errors.New("ent: missing required field \"Productname\"")}
+	}
+	if v, ok := pc.mutation.Productname(); ok {
+		if err := product.ProductnameValidator(v); err != nil {
+			return nil, &ValidationError{Name: "Productname", err: fmt.Errorf("ent: validator failed for field \"Productname\": %w", err)}
+		}
+	}
+	if _, ok := pc.mutation.Numberofproduct(); !ok {
+		return nil, &ValidationError{Name: "Numberofproduct", err: errors.New("ent: missing required field \"Numberofproduct\"")}
+	}
+	if v, ok := pc.mutation.Numberofproduct(); ok {
+		if err := product.NumberofproductValidator(v); err != nil {
+			return nil, &ValidationError{Name: "Numberofproduct", err: fmt.Errorf("ent: validator failed for field \"Numberofproduct\": %w", err)}
+		}
+	}
+	if _, ok := pc.mutation.Price(); !ok {
+		return nil, &ValidationError{Name: "Price", err: errors.New("ent: missing required field \"Price\"")}
+	}
+	if v, ok := pc.mutation.Price(); ok {
+		if err := product.PriceValidator(v); err != nil {
+			return nil, &ValidationError{Name: "Price", err: fmt.Errorf("ent: validator failed for field \"Price\": %w", err)}
+		}
+	}
 	var (
 		err  error
 		node *Product
@@ -85,5 +188,86 @@ func (pc *ProductCreate) createSpec() (*Product, *sqlgraph.CreateSpec) {
 			},
 		}
 	)
+	if value, ok := pc.mutation.Productname(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: product.FieldProductname,
+		})
+		pr.Productname = value
+	}
+	if value, ok := pc.mutation.Numberofproduct(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: product.FieldNumberofproduct,
+		})
+		pr.Numberofproduct = value
+	}
+	if value, ok := pc.mutation.Price(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: product.FieldPrice,
+		})
+		pr.Price = value
+	}
+	if nodes := pc.mutation.BrandIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   product.BrandTable,
+			Columns: []string{product.BrandColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: brand.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := pc.mutation.TypeproductIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   product.TypeproductTable,
+			Columns: []string{product.TypeproductColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: typeproduct.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := pc.mutation.PersonalIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   product.PersonalTable,
+			Columns: []string{product.PersonalColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: personal.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
 	return pr, _spec
 }

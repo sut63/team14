@@ -40,7 +40,45 @@ definitions:
       title:
         type: integer
     type: object
+  controllers.Product:
+    properties:
+      brand:
+        type: integer
+      numberofproduct:
+        type: string
+      personal:
+        type: integer
+      price:
+        type: string
+      productname:
+        type: string
+      typeproduct:
+        type: integer
+    type: object
   controllers.Title:
+    type: object
+  ent.Brand:
+    properties:
+      Brandname:
+        description: Brandname holds the value of the "Brandname" field.
+        type: string
+      edges:
+        $ref: '#/definitions/ent.BrandEdges'
+        description: |-
+          Edges holds the relations/edges for other nodes in the graph.
+          The values are being populated by the BrandQuery when eager-loading is set.
+        type: object
+      id:
+        description: ID of the ent.
+        type: integer
+    type: object
+  ent.BrandEdges:
+    properties:
+      product:
+        description: Product holds the value of the product edge.
+        items:
+          $ref: '#/definitions/ent.Product'
+        type: array
     type: object
   ent.Customer:
     properties:
@@ -170,9 +208,56 @@ definitions:
         $ref: '#/definitions/ent.Gender'
         description: Gender holds the value of the gender edge.
         type: object
+      product:
+        description: Product holds the value of the product edge.
+        items:
+          $ref: '#/definitions/ent.Product'
+        type: array
       title:
         $ref: '#/definitions/ent.Title'
         description: Title holds the value of the title edge.
+        type: object
+    type: object
+  ent.Product:
+    properties:
+      Numberofproduct:
+        description: Numberofproduct holds the value of the "Numberofproduct" field.
+        type: string
+      Price:
+        description: Price holds the value of the "Price" field.
+        type: string
+      Productname:
+        description: Productname holds the value of the "Productname" field.
+        type: string
+      brand:
+        type: integer
+      edges:
+        $ref: '#/definitions/ent.ProductEdges'
+        description: |-
+          Edges holds the relations/edges for other nodes in the graph.
+          The values are being populated by the ProductQuery when eager-loading is set.
+        type: object
+      id:
+        description: ID of the ent.
+        type: integer
+      personal:
+        type: integer
+      typeproduct:
+        type: integer
+    type: object
+  ent.ProductEdges:
+    properties:
+      brand:
+        $ref: '#/definitions/ent.Brand'
+        description: Brand holds the value of the brand edge.
+        type: object
+      personal:
+        $ref: '#/definitions/ent.Personal'
+        description: Personal holds the value of the personal edge.
+        type: object
+      typeproduct:
+        $ref: '#/definitions/ent.Typeproduct'
+        description: Typeproduct holds the value of the typeproduct edge.
         type: object
     type: object
   ent.Title:
@@ -203,6 +288,29 @@ definitions:
           $ref: '#/definitions/ent.Personal'
         type: array
     type: object
+  ent.Typeproduct:
+    properties:
+      Typeproductname:
+        description: Typeproductname holds the value of the "Typeproductname" field.
+        type: string
+      edges:
+        $ref: '#/definitions/ent.TypeproductEdges'
+        description: |-
+          Edges holds the relations/edges for other nodes in the graph.
+          The values are being populated by the TypeproductQuery when eager-loading is set.
+        type: object
+      id:
+        description: ID of the ent.
+        type: integer
+    type: object
+  ent.TypeproductEdges:
+    properties:
+      product:
+        description: Product holds the value of the product edge.
+        items:
+          $ref: '#/definitions/ent.Product'
+        type: array
+    type: object
   gin.H:
     additionalProperties: true
     type: object
@@ -220,6 +328,125 @@ info:
   title: SUT SA Example API Playlist Vidoe
   version: "1.0"
 paths:
+  /brand/{id}:
+    delete:
+      description: get brand by ID
+      operationId: delete-brand
+      parameters:
+      - description: Brand ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Delete a brand entity by ID
+  /brands:
+    get:
+      description: list brand entities
+      operationId: list-brand
+      parameters:
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      - description: Offset
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/ent.Brand'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: List brand entities
+    post:
+      consumes:
+      - application/json
+      description: Create brand
+      operationId: create-brand
+      parameters:
+      - description: Brand entity
+        in: body
+        name: brand
+        required: true
+        schema:
+          $ref: '#/definitions/ent.Brand'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.Brand'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Create brand
+  /brands/{id}:
+    get:
+      description: get brand by ID
+      operationId: get-brand
+      parameters:
+      - description: Brand ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.Brand'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Get a brand entity by ID
   /customers:
     get:
       description: list customer entities
@@ -576,6 +803,95 @@ paths:
           schema:
             $ref: '#/definitions/gin.H'
       summary: Delete a personal entity by ID
+  /products:
+    get:
+      description: list product entities
+      operationId: list-product
+      parameters:
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      - description: Offset
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/ent.Product'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: List product entities
+    post:
+      consumes:
+      - application/json
+      description: Create product
+      operationId: create-product
+      parameters:
+      - description: Product entity
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.Product'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.Product'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Create product
+  /products/{id}:
+    delete:
+      description: get product by ID
+      operationId: delete-product
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Delete a product entity by ID
   /titles:
     get:
       description: list title entities
@@ -665,6 +981,125 @@ paths:
           schema:
             $ref: '#/definitions/gin.H'
       summary: Get a title entity by ID
+  /typeproduct/{id}:
+    delete:
+      description: get typeproduct by ID
+      operationId: delete-typeproduct
+      parameters:
+      - description: Typeproduct ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Delete a typeproduct entity by ID
+  /typeproducts:
+    get:
+      description: list typeproduct entities
+      operationId: list-typeproduct
+      parameters:
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      - description: Offset
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/ent.Typeproduct'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: List typeproduct entities
+    post:
+      consumes:
+      - application/json
+      description: Create typeproduct
+      operationId: create-typeproduct
+      parameters:
+      - description: typeproduct entity
+        in: body
+        name: typeproduct
+        required: true
+        schema:
+          $ref: '#/definitions/ent.Typeproduct'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.Typeproduct'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Create typeproduct
+  /typeproducts/{id}:
+    get:
+      description: get typeproduct by ID
+      operationId: get-typeproduct
+      parameters:
+      - description: Typeproduct ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.Typeproduct'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Get a typeproduct entity by ID
 securityDefinitions:
   ApiKeyAuth:
     in: header

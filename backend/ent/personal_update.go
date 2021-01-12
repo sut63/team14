@@ -14,6 +14,7 @@ import (
 	"github.com/tanapon395/playlist-video/ent/gender"
 	"github.com/tanapon395/playlist-video/ent/personal"
 	"github.com/tanapon395/playlist-video/ent/predicate"
+	"github.com/tanapon395/playlist-video/ent/product"
 	"github.com/tanapon395/playlist-video/ent/title"
 )
 
@@ -121,6 +122,21 @@ func (pu *PersonalUpdate) SetGender(g *Gender) *PersonalUpdate {
 	return pu.SetGenderID(g.ID)
 }
 
+// AddProductIDs adds the product edge to Product by ids.
+func (pu *PersonalUpdate) AddProductIDs(ids ...int) *PersonalUpdate {
+	pu.mutation.AddProductIDs(ids...)
+	return pu
+}
+
+// AddProduct adds the product edges to Product.
+func (pu *PersonalUpdate) AddProduct(p ...*Product) *PersonalUpdate {
+	ids := make([]int, len(p))
+	for i := range p {
+		ids[i] = p[i].ID
+	}
+	return pu.AddProductIDs(ids...)
+}
+
 // Mutation returns the PersonalMutation object of the builder.
 func (pu *PersonalUpdate) Mutation() *PersonalMutation {
 	return pu.mutation
@@ -157,6 +173,21 @@ func (pu *PersonalUpdate) ClearDepartment() *PersonalUpdate {
 func (pu *PersonalUpdate) ClearGender() *PersonalUpdate {
 	pu.mutation.ClearGender()
 	return pu
+}
+
+// RemoveProductIDs removes the product edge to Product by ids.
+func (pu *PersonalUpdate) RemoveProductIDs(ids ...int) *PersonalUpdate {
+	pu.mutation.RemoveProductIDs(ids...)
+	return pu
+}
+
+// RemoveProduct removes product edges to Product.
+func (pu *PersonalUpdate) RemoveProduct(p ...*Product) *PersonalUpdate {
+	ids := make([]int, len(p))
+	for i := range p {
+		ids[i] = p[i].ID
+	}
+	return pu.RemoveProductIDs(ids...)
 }
 
 // Save executes the query and returns the number of rows/vertices matched by this operation.
@@ -393,6 +424,44 @@ func (pu *PersonalUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	if nodes := pu.mutation.RemovedProductIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   personal.ProductTable,
+			Columns: []string{personal.ProductColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: product.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := pu.mutation.ProductIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   personal.ProductTable,
+			Columns: []string{personal.ProductColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: product.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, pu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{personal.Label}
@@ -501,6 +570,21 @@ func (puo *PersonalUpdateOne) SetGender(g *Gender) *PersonalUpdateOne {
 	return puo.SetGenderID(g.ID)
 }
 
+// AddProductIDs adds the product edge to Product by ids.
+func (puo *PersonalUpdateOne) AddProductIDs(ids ...int) *PersonalUpdateOne {
+	puo.mutation.AddProductIDs(ids...)
+	return puo
+}
+
+// AddProduct adds the product edges to Product.
+func (puo *PersonalUpdateOne) AddProduct(p ...*Product) *PersonalUpdateOne {
+	ids := make([]int, len(p))
+	for i := range p {
+		ids[i] = p[i].ID
+	}
+	return puo.AddProductIDs(ids...)
+}
+
 // Mutation returns the PersonalMutation object of the builder.
 func (puo *PersonalUpdateOne) Mutation() *PersonalMutation {
 	return puo.mutation
@@ -537,6 +621,21 @@ func (puo *PersonalUpdateOne) ClearDepartment() *PersonalUpdateOne {
 func (puo *PersonalUpdateOne) ClearGender() *PersonalUpdateOne {
 	puo.mutation.ClearGender()
 	return puo
+}
+
+// RemoveProductIDs removes the product edge to Product by ids.
+func (puo *PersonalUpdateOne) RemoveProductIDs(ids ...int) *PersonalUpdateOne {
+	puo.mutation.RemoveProductIDs(ids...)
+	return puo
+}
+
+// RemoveProduct removes product edges to Product.
+func (puo *PersonalUpdateOne) RemoveProduct(p ...*Product) *PersonalUpdateOne {
+	ids := make([]int, len(p))
+	for i := range p {
+		ids[i] = p[i].ID
+	}
+	return puo.RemoveProductIDs(ids...)
 }
 
 // Save executes the query and returns the updated entity.
@@ -763,6 +862,44 @@ func (puo *PersonalUpdateOne) sqlSave(ctx context.Context) (pe *Personal, err er
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: gender.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if nodes := puo.mutation.RemovedProductIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   personal.ProductTable,
+			Columns: []string{personal.ProductColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: product.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := puo.mutation.ProductIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   personal.ProductTable,
+			Columns: []string{personal.ProductColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: product.FieldID,
 				},
 			},
 		}

@@ -4,6 +4,7 @@ package product
 
 import (
 	"github.com/facebookincubator/ent/dialect/sql"
+	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/tanapon395/playlist-video/ent/predicate"
 )
 
@@ -87,6 +88,444 @@ func IDLT(id int) predicate.Product {
 func IDLTE(id int) predicate.Product {
 	return predicate.Product(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldID), id))
+	})
+}
+
+// Productname applies equality check predicate on the "Productname" field. It's identical to ProductnameEQ.
+func Productname(v string) predicate.Product {
+	return predicate.Product(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldProductname), v))
+	})
+}
+
+// Numberofproduct applies equality check predicate on the "Numberofproduct" field. It's identical to NumberofproductEQ.
+func Numberofproduct(v string) predicate.Product {
+	return predicate.Product(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldNumberofproduct), v))
+	})
+}
+
+// Price applies equality check predicate on the "Price" field. It's identical to PriceEQ.
+func Price(v string) predicate.Product {
+	return predicate.Product(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldPrice), v))
+	})
+}
+
+// ProductnameEQ applies the EQ predicate on the "Productname" field.
+func ProductnameEQ(v string) predicate.Product {
+	return predicate.Product(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldProductname), v))
+	})
+}
+
+// ProductnameNEQ applies the NEQ predicate on the "Productname" field.
+func ProductnameNEQ(v string) predicate.Product {
+	return predicate.Product(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldProductname), v))
+	})
+}
+
+// ProductnameIn applies the In predicate on the "Productname" field.
+func ProductnameIn(vs ...string) predicate.Product {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Product(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldProductname), v...))
+	})
+}
+
+// ProductnameNotIn applies the NotIn predicate on the "Productname" field.
+func ProductnameNotIn(vs ...string) predicate.Product {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Product(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldProductname), v...))
+	})
+}
+
+// ProductnameGT applies the GT predicate on the "Productname" field.
+func ProductnameGT(v string) predicate.Product {
+	return predicate.Product(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldProductname), v))
+	})
+}
+
+// ProductnameGTE applies the GTE predicate on the "Productname" field.
+func ProductnameGTE(v string) predicate.Product {
+	return predicate.Product(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldProductname), v))
+	})
+}
+
+// ProductnameLT applies the LT predicate on the "Productname" field.
+func ProductnameLT(v string) predicate.Product {
+	return predicate.Product(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldProductname), v))
+	})
+}
+
+// ProductnameLTE applies the LTE predicate on the "Productname" field.
+func ProductnameLTE(v string) predicate.Product {
+	return predicate.Product(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldProductname), v))
+	})
+}
+
+// ProductnameContains applies the Contains predicate on the "Productname" field.
+func ProductnameContains(v string) predicate.Product {
+	return predicate.Product(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldProductname), v))
+	})
+}
+
+// ProductnameHasPrefix applies the HasPrefix predicate on the "Productname" field.
+func ProductnameHasPrefix(v string) predicate.Product {
+	return predicate.Product(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldProductname), v))
+	})
+}
+
+// ProductnameHasSuffix applies the HasSuffix predicate on the "Productname" field.
+func ProductnameHasSuffix(v string) predicate.Product {
+	return predicate.Product(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldProductname), v))
+	})
+}
+
+// ProductnameEqualFold applies the EqualFold predicate on the "Productname" field.
+func ProductnameEqualFold(v string) predicate.Product {
+	return predicate.Product(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldProductname), v))
+	})
+}
+
+// ProductnameContainsFold applies the ContainsFold predicate on the "Productname" field.
+func ProductnameContainsFold(v string) predicate.Product {
+	return predicate.Product(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldProductname), v))
+	})
+}
+
+// NumberofproductEQ applies the EQ predicate on the "Numberofproduct" field.
+func NumberofproductEQ(v string) predicate.Product {
+	return predicate.Product(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldNumberofproduct), v))
+	})
+}
+
+// NumberofproductNEQ applies the NEQ predicate on the "Numberofproduct" field.
+func NumberofproductNEQ(v string) predicate.Product {
+	return predicate.Product(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldNumberofproduct), v))
+	})
+}
+
+// NumberofproductIn applies the In predicate on the "Numberofproduct" field.
+func NumberofproductIn(vs ...string) predicate.Product {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Product(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldNumberofproduct), v...))
+	})
+}
+
+// NumberofproductNotIn applies the NotIn predicate on the "Numberofproduct" field.
+func NumberofproductNotIn(vs ...string) predicate.Product {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Product(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldNumberofproduct), v...))
+	})
+}
+
+// NumberofproductGT applies the GT predicate on the "Numberofproduct" field.
+func NumberofproductGT(v string) predicate.Product {
+	return predicate.Product(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldNumberofproduct), v))
+	})
+}
+
+// NumberofproductGTE applies the GTE predicate on the "Numberofproduct" field.
+func NumberofproductGTE(v string) predicate.Product {
+	return predicate.Product(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldNumberofproduct), v))
+	})
+}
+
+// NumberofproductLT applies the LT predicate on the "Numberofproduct" field.
+func NumberofproductLT(v string) predicate.Product {
+	return predicate.Product(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldNumberofproduct), v))
+	})
+}
+
+// NumberofproductLTE applies the LTE predicate on the "Numberofproduct" field.
+func NumberofproductLTE(v string) predicate.Product {
+	return predicate.Product(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldNumberofproduct), v))
+	})
+}
+
+// NumberofproductContains applies the Contains predicate on the "Numberofproduct" field.
+func NumberofproductContains(v string) predicate.Product {
+	return predicate.Product(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldNumberofproduct), v))
+	})
+}
+
+// NumberofproductHasPrefix applies the HasPrefix predicate on the "Numberofproduct" field.
+func NumberofproductHasPrefix(v string) predicate.Product {
+	return predicate.Product(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldNumberofproduct), v))
+	})
+}
+
+// NumberofproductHasSuffix applies the HasSuffix predicate on the "Numberofproduct" field.
+func NumberofproductHasSuffix(v string) predicate.Product {
+	return predicate.Product(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldNumberofproduct), v))
+	})
+}
+
+// NumberofproductEqualFold applies the EqualFold predicate on the "Numberofproduct" field.
+func NumberofproductEqualFold(v string) predicate.Product {
+	return predicate.Product(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldNumberofproduct), v))
+	})
+}
+
+// NumberofproductContainsFold applies the ContainsFold predicate on the "Numberofproduct" field.
+func NumberofproductContainsFold(v string) predicate.Product {
+	return predicate.Product(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldNumberofproduct), v))
+	})
+}
+
+// PriceEQ applies the EQ predicate on the "Price" field.
+func PriceEQ(v string) predicate.Product {
+	return predicate.Product(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldPrice), v))
+	})
+}
+
+// PriceNEQ applies the NEQ predicate on the "Price" field.
+func PriceNEQ(v string) predicate.Product {
+	return predicate.Product(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldPrice), v))
+	})
+}
+
+// PriceIn applies the In predicate on the "Price" field.
+func PriceIn(vs ...string) predicate.Product {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Product(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldPrice), v...))
+	})
+}
+
+// PriceNotIn applies the NotIn predicate on the "Price" field.
+func PriceNotIn(vs ...string) predicate.Product {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Product(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldPrice), v...))
+	})
+}
+
+// PriceGT applies the GT predicate on the "Price" field.
+func PriceGT(v string) predicate.Product {
+	return predicate.Product(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldPrice), v))
+	})
+}
+
+// PriceGTE applies the GTE predicate on the "Price" field.
+func PriceGTE(v string) predicate.Product {
+	return predicate.Product(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldPrice), v))
+	})
+}
+
+// PriceLT applies the LT predicate on the "Price" field.
+func PriceLT(v string) predicate.Product {
+	return predicate.Product(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldPrice), v))
+	})
+}
+
+// PriceLTE applies the LTE predicate on the "Price" field.
+func PriceLTE(v string) predicate.Product {
+	return predicate.Product(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldPrice), v))
+	})
+}
+
+// PriceContains applies the Contains predicate on the "Price" field.
+func PriceContains(v string) predicate.Product {
+	return predicate.Product(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldPrice), v))
+	})
+}
+
+// PriceHasPrefix applies the HasPrefix predicate on the "Price" field.
+func PriceHasPrefix(v string) predicate.Product {
+	return predicate.Product(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldPrice), v))
+	})
+}
+
+// PriceHasSuffix applies the HasSuffix predicate on the "Price" field.
+func PriceHasSuffix(v string) predicate.Product {
+	return predicate.Product(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldPrice), v))
+	})
+}
+
+// PriceEqualFold applies the EqualFold predicate on the "Price" field.
+func PriceEqualFold(v string) predicate.Product {
+	return predicate.Product(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldPrice), v))
+	})
+}
+
+// PriceContainsFold applies the ContainsFold predicate on the "Price" field.
+func PriceContainsFold(v string) predicate.Product {
+	return predicate.Product(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldPrice), v))
+	})
+}
+
+// HasBrand applies the HasEdge predicate on the "brand" edge.
+func HasBrand() predicate.Product {
+	return predicate.Product(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(BrandTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, BrandTable, BrandColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasBrandWith applies the HasEdge predicate on the "brand" edge with a given conditions (other predicates).
+func HasBrandWith(preds ...predicate.Brand) predicate.Product {
+	return predicate.Product(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(BrandInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, BrandTable, BrandColumn),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
+// HasTypeproduct applies the HasEdge predicate on the "typeproduct" edge.
+func HasTypeproduct() predicate.Product {
+	return predicate.Product(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(TypeproductTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, TypeproductTable, TypeproductColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasTypeproductWith applies the HasEdge predicate on the "typeproduct" edge with a given conditions (other predicates).
+func HasTypeproductWith(preds ...predicate.Typeproduct) predicate.Product {
+	return predicate.Product(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(TypeproductInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, TypeproductTable, TypeproductColumn),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
+// HasPersonal applies the HasEdge predicate on the "personal" edge.
+func HasPersonal() predicate.Product {
+	return predicate.Product(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(PersonalTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, PersonalTable, PersonalColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasPersonalWith applies the HasEdge predicate on the "personal" edge with a given conditions (other predicates).
+func HasPersonalWith(preds ...predicate.Personal) predicate.Product {
+	return predicate.Product(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(PersonalInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, PersonalTable, PersonalColumn),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
 	})
 }
 

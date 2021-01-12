@@ -14,6 +14,8 @@ type Tx struct {
 	config
 	// Adminrepair is the client for interacting with the Adminrepair builders.
 	Adminrepair *AdminrepairClient
+	// Brand is the client for interacting with the Brand builders.
+	Brand *BrandClient
 	// Customer is the client for interacting with the Customer builders.
 	Customer *CustomerClient
 	// Department is the client for interacting with the Department builders.
@@ -30,6 +32,8 @@ type Tx struct {
 	Receipt *ReceiptClient
 	// Title is the client for interacting with the Title builders.
 	Title *TitleClient
+	// Typeproduct is the client for interacting with the Typeproduct builders.
+	Typeproduct *TypeproductClient
 
 	// lazily loaded.
 	client     *Client
@@ -166,6 +170,7 @@ func (tx *Tx) Client() *Client {
 
 func (tx *Tx) init() {
 	tx.Adminrepair = NewAdminrepairClient(tx.config)
+	tx.Brand = NewBrandClient(tx.config)
 	tx.Customer = NewCustomerClient(tx.config)
 	tx.Department = NewDepartmentClient(tx.config)
 	tx.Fix = NewFixClient(tx.config)
@@ -174,6 +179,7 @@ func (tx *Tx) init() {
 	tx.Product = NewProductClient(tx.config)
 	tx.Receipt = NewReceiptClient(tx.config)
 	tx.Title = NewTitleClient(tx.config)
+	tx.Typeproduct = NewTypeproductClient(tx.config)
 }
 
 // txDriver wraps the given dialect.Tx with a nop dialect.Driver implementation.

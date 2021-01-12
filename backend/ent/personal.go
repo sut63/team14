@@ -42,9 +42,11 @@ type PersonalEdges struct {
 	Department *Department
 	// Gender holds the value of the gender edge.
 	Gender *Gender
+	// Product holds the value of the product edge.
+	Product []*Product
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [4]bool
+	loadedTypes [5]bool
 }
 
 // CustomerOrErr returns the Customer value or an error if the edge
@@ -96,6 +98,15 @@ func (e PersonalEdges) GenderOrErr() (*Gender, error) {
 		return e.Gender, nil
 	}
 	return nil, &NotLoadedError{edge: "gender"}
+}
+
+// ProductOrErr returns the Product value or an error if the edge
+// was not loaded in eager-loading.
+func (e PersonalEdges) ProductOrErr() ([]*Product, error) {
+	if e.loadedTypes[4] {
+		return e.Product, nil
+	}
+	return nil, &NotLoadedError{edge: "product"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -186,6 +197,11 @@ func (pe *Personal) QueryDepartment() *DepartmentQuery {
 // QueryGender queries the gender edge of the Personal.
 func (pe *Personal) QueryGender() *GenderQuery {
 	return (&PersonalClient{config: pe.config}).QueryGender(pe)
+}
+
+// QueryProduct queries the product edge of the Personal.
+func (pe *Personal) QueryProduct() *ProductQuery {
+	return (&PersonalClient{config: pe.config}).QueryProduct(pe)
 }
 
 // Update returns a builder for updating this Personal.

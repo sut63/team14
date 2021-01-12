@@ -22,6 +22,19 @@ func (f AdminrepairFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value,
 	return f(ctx, mv)
 }
 
+// The BrandFunc type is an adapter to allow the use of ordinary
+// function as Brand mutator.
+type BrandFunc func(context.Context, *ent.BrandMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f BrandFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.BrandMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.BrandMutation", m)
+	}
+	return f(ctx, mv)
+}
+
 // The CustomerFunc type is an adapter to allow the use of ordinary
 // function as Customer mutator.
 type CustomerFunc func(context.Context, *ent.CustomerMutation) (ent.Value, error)
@@ -122,6 +135,19 @@ func (f TitleFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error
 	mv, ok := m.(*ent.TitleMutation)
 	if !ok {
 		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.TitleMutation", m)
+	}
+	return f(ctx, mv)
+}
+
+// The TypeproductFunc type is an adapter to allow the use of ordinary
+// function as Typeproduct mutator.
+type TypeproductFunc func(context.Context, *ent.TypeproductMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f TypeproductFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.TypeproductMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.TypeproductMutation", m)
 	}
 	return f(ctx, mv)
 }

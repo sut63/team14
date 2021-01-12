@@ -11,8 +11,11 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
+	"github.com/tanapon395/playlist-video/ent/brand"
+	"github.com/tanapon395/playlist-video/ent/personal"
 	"github.com/tanapon395/playlist-video/ent/predicate"
 	"github.com/tanapon395/playlist-video/ent/product"
+	"github.com/tanapon395/playlist-video/ent/typeproduct"
 )
 
 // ProductQuery is the builder for querying Product entities.
@@ -23,6 +26,11 @@ type ProductQuery struct {
 	order      []OrderFunc
 	unique     []string
 	predicates []predicate.Product
+	// eager-loading edges.
+	withBrand       *BrandQuery
+	withTypeproduct *TypeproductQuery
+	withPersonal    *PersonalQuery
+	withFKs         bool
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -50,6 +58,60 @@ func (pq *ProductQuery) Offset(offset int) *ProductQuery {
 func (pq *ProductQuery) Order(o ...OrderFunc) *ProductQuery {
 	pq.order = append(pq.order, o...)
 	return pq
+}
+
+// QueryBrand chains the current query on the brand edge.
+func (pq *ProductQuery) QueryBrand() *BrandQuery {
+	query := &BrandQuery{config: pq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := pq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(product.Table, product.FieldID, pq.sqlQuery()),
+			sqlgraph.To(brand.Table, brand.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, product.BrandTable, product.BrandColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(pq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryTypeproduct chains the current query on the typeproduct edge.
+func (pq *ProductQuery) QueryTypeproduct() *TypeproductQuery {
+	query := &TypeproductQuery{config: pq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := pq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(product.Table, product.FieldID, pq.sqlQuery()),
+			sqlgraph.To(typeproduct.Table, typeproduct.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, product.TypeproductTable, product.TypeproductColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(pq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryPersonal chains the current query on the personal edge.
+func (pq *ProductQuery) QueryPersonal() *PersonalQuery {
+	query := &PersonalQuery{config: pq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := pq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(product.Table, product.FieldID, pq.sqlQuery()),
+			sqlgraph.To(personal.Table, personal.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, product.PersonalTable, product.PersonalColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(pq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
 }
 
 // First returns the first Product entity in the query. Returns *NotFoundError when no product was found.
@@ -231,8 +293,54 @@ func (pq *ProductQuery) Clone() *ProductQuery {
 	}
 }
 
+//  WithBrand tells the query-builder to eager-loads the nodes that are connected to
+// the "brand" edge. The optional arguments used to configure the query builder of the edge.
+func (pq *ProductQuery) WithBrand(opts ...func(*BrandQuery)) *ProductQuery {
+	query := &BrandQuery{config: pq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	pq.withBrand = query
+	return pq
+}
+
+//  WithTypeproduct tells the query-builder to eager-loads the nodes that are connected to
+// the "typeproduct" edge. The optional arguments used to configure the query builder of the edge.
+func (pq *ProductQuery) WithTypeproduct(opts ...func(*TypeproductQuery)) *ProductQuery {
+	query := &TypeproductQuery{config: pq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	pq.withTypeproduct = query
+	return pq
+}
+
+//  WithPersonal tells the query-builder to eager-loads the nodes that are connected to
+// the "personal" edge. The optional arguments used to configure the query builder of the edge.
+func (pq *ProductQuery) WithPersonal(opts ...func(*PersonalQuery)) *ProductQuery {
+	query := &PersonalQuery{config: pq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	pq.withPersonal = query
+	return pq
+}
+
 // GroupBy used to group vertices by one or more fields/columns.
 // It is often used with aggregate functions, like: count, max, mean, min, sum.
+//
+// Example:
+//
+//	var v []struct {
+//		Productname string `json:"Productname,omitempty"`
+//		Count int `json:"count,omitempty"`
+//	}
+//
+//	client.Product.Query().
+//		GroupBy(product.FieldProductname).
+//		Aggregate(ent.Count()).
+//		Scan(ctx, &v)
+//
 func (pq *ProductQuery) GroupBy(field string, fields ...string) *ProductGroupBy {
 	group := &ProductGroupBy{config: pq.config}
 	group.fields = append([]string{field}, fields...)
@@ -246,6 +354,17 @@ func (pq *ProductQuery) GroupBy(field string, fields ...string) *ProductGroupBy 
 }
 
 // Select one or more fields from the given query.
+//
+// Example:
+//
+//	var v []struct {
+//		Productname string `json:"Productname,omitempty"`
+//	}
+//
+//	client.Product.Query().
+//		Select(product.FieldProductname).
+//		Scan(ctx, &v)
+//
 func (pq *ProductQuery) Select(field string, fields ...string) *ProductSelect {
 	selector := &ProductSelect{config: pq.config}
 	selector.fields = append([]string{field}, fields...)
@@ -271,13 +390,28 @@ func (pq *ProductQuery) prepareQuery(ctx context.Context) error {
 
 func (pq *ProductQuery) sqlAll(ctx context.Context) ([]*Product, error) {
 	var (
-		nodes = []*Product{}
-		_spec = pq.querySpec()
+		nodes       = []*Product{}
+		withFKs     = pq.withFKs
+		_spec       = pq.querySpec()
+		loadedTypes = [3]bool{
+			pq.withBrand != nil,
+			pq.withTypeproduct != nil,
+			pq.withPersonal != nil,
+		}
 	)
+	if pq.withBrand != nil || pq.withTypeproduct != nil || pq.withPersonal != nil {
+		withFKs = true
+	}
+	if withFKs {
+		_spec.Node.Columns = append(_spec.Node.Columns, product.ForeignKeys...)
+	}
 	_spec.ScanValues = func() []interface{} {
 		node := &Product{config: pq.config}
 		nodes = append(nodes, node)
 		values := node.scanValues()
+		if withFKs {
+			values = append(values, node.fkValues()...)
+		}
 		return values
 	}
 	_spec.Assign = func(values ...interface{}) error {
@@ -285,6 +419,7 @@ func (pq *ProductQuery) sqlAll(ctx context.Context) ([]*Product, error) {
 			return fmt.Errorf("ent: Assign called without calling ScanValues")
 		}
 		node := nodes[len(nodes)-1]
+		node.Edges.loadedTypes = loadedTypes
 		return node.assignValues(values...)
 	}
 	if err := sqlgraph.QueryNodes(ctx, pq.driver, _spec); err != nil {
@@ -293,6 +428,82 @@ func (pq *ProductQuery) sqlAll(ctx context.Context) ([]*Product, error) {
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
+
+	if query := pq.withBrand; query != nil {
+		ids := make([]int, 0, len(nodes))
+		nodeids := make(map[int][]*Product)
+		for i := range nodes {
+			if fk := nodes[i].Brand; fk != nil {
+				ids = append(ids, *fk)
+				nodeids[*fk] = append(nodeids[*fk], nodes[i])
+			}
+		}
+		query.Where(brand.IDIn(ids...))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			nodes, ok := nodeids[n.ID]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "Brand" returned %v`, n.ID)
+			}
+			for i := range nodes {
+				nodes[i].Edges.Brand = n
+			}
+		}
+	}
+
+	if query := pq.withTypeproduct; query != nil {
+		ids := make([]int, 0, len(nodes))
+		nodeids := make(map[int][]*Product)
+		for i := range nodes {
+			if fk := nodes[i].Typeproduct; fk != nil {
+				ids = append(ids, *fk)
+				nodeids[*fk] = append(nodeids[*fk], nodes[i])
+			}
+		}
+		query.Where(typeproduct.IDIn(ids...))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			nodes, ok := nodeids[n.ID]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "Typeproduct" returned %v`, n.ID)
+			}
+			for i := range nodes {
+				nodes[i].Edges.Typeproduct = n
+			}
+		}
+	}
+
+	if query := pq.withPersonal; query != nil {
+		ids := make([]int, 0, len(nodes))
+		nodeids := make(map[int][]*Product)
+		for i := range nodes {
+			if fk := nodes[i].Personal; fk != nil {
+				ids = append(ids, *fk)
+				nodeids[*fk] = append(nodeids[*fk], nodes[i])
+			}
+		}
+		query.Where(personal.IDIn(ids...))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			nodes, ok := nodeids[n.ID]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "Personal" returned %v`, n.ID)
+			}
+			for i := range nodes {
+				nodes[i].Edges.Personal = n
+			}
+		}
+	}
+
 	return nodes, nil
 }
 

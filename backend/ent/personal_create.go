@@ -13,6 +13,7 @@ import (
 	"github.com/tanapon395/playlist-video/ent/department"
 	"github.com/tanapon395/playlist-video/ent/gender"
 	"github.com/tanapon395/playlist-video/ent/personal"
+	"github.com/tanapon395/playlist-video/ent/product"
 	"github.com/tanapon395/playlist-video/ent/title"
 )
 
@@ -111,6 +112,21 @@ func (pc *PersonalCreate) SetNillableGenderID(id *int) *PersonalCreate {
 // SetGender sets the gender edge to Gender.
 func (pc *PersonalCreate) SetGender(g *Gender) *PersonalCreate {
 	return pc.SetGenderID(g.ID)
+}
+
+// AddProductIDs adds the product edge to Product by ids.
+func (pc *PersonalCreate) AddProductIDs(ids ...int) *PersonalCreate {
+	pc.mutation.AddProductIDs(ids...)
+	return pc
+}
+
+// AddProduct adds the product edges to Product.
+func (pc *PersonalCreate) AddProduct(p ...*Product) *PersonalCreate {
+	ids := make([]int, len(p))
+	for i := range p {
+		ids[i] = p[i].ID
+	}
+	return pc.AddProductIDs(ids...)
 }
 
 // Mutation returns the PersonalMutation object of the builder.
@@ -281,6 +297,25 @@ func (pc *PersonalCreate) createSpec() (*Personal, *sqlgraph.CreateSpec) {
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: gender.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := pc.mutation.ProductIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   personal.ProductTable,
+			Columns: []string{personal.ProductColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: product.FieldID,
 				},
 			},
 		}

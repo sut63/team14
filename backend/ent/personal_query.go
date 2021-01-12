@@ -17,6 +17,7 @@ import (
 	"github.com/tanapon395/playlist-video/ent/gender"
 	"github.com/tanapon395/playlist-video/ent/personal"
 	"github.com/tanapon395/playlist-video/ent/predicate"
+	"github.com/tanapon395/playlist-video/ent/product"
 	"github.com/tanapon395/playlist-video/ent/title"
 )
 
@@ -33,6 +34,7 @@ type PersonalQuery struct {
 	withTitle      *TitleQuery
 	withDepartment *DepartmentQuery
 	withGender     *GenderQuery
+	withProduct    *ProductQuery
 	withFKs        bool
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
@@ -128,6 +130,24 @@ func (pq *PersonalQuery) QueryGender() *GenderQuery {
 			sqlgraph.From(personal.Table, personal.FieldID, pq.sqlQuery()),
 			sqlgraph.To(gender.Table, gender.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, true, personal.GenderTable, personal.GenderColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(pq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryProduct chains the current query on the product edge.
+func (pq *PersonalQuery) QueryProduct() *ProductQuery {
+	query := &ProductQuery{config: pq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := pq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(personal.Table, personal.FieldID, pq.sqlQuery()),
+			sqlgraph.To(product.Table, product.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, personal.ProductTable, personal.ProductColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(pq.driver.Dialect(), step)
 		return fromU, nil
@@ -358,6 +378,17 @@ func (pq *PersonalQuery) WithGender(opts ...func(*GenderQuery)) *PersonalQuery {
 	return pq
 }
 
+//  WithProduct tells the query-builder to eager-loads the nodes that are connected to
+// the "product" edge. The optional arguments used to configure the query builder of the edge.
+func (pq *PersonalQuery) WithProduct(opts ...func(*ProductQuery)) *PersonalQuery {
+	query := &ProductQuery{config: pq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	pq.withProduct = query
+	return pq
+}
+
 // GroupBy used to group vertices by one or more fields/columns.
 // It is often used with aggregate functions, like: count, max, mean, min, sum.
 //
@@ -425,11 +456,12 @@ func (pq *PersonalQuery) sqlAll(ctx context.Context) ([]*Personal, error) {
 		nodes       = []*Personal{}
 		withFKs     = pq.withFKs
 		_spec       = pq.querySpec()
-		loadedTypes = [4]bool{
+		loadedTypes = [5]bool{
 			pq.withCustomer != nil,
 			pq.withTitle != nil,
 			pq.withDepartment != nil,
 			pq.withGender != nil,
+			pq.withProduct != nil,
 		}
 	)
 	if pq.withTitle != nil || pq.withDepartment != nil || pq.withGender != nil {
@@ -562,6 +594,34 @@ func (pq *PersonalQuery) sqlAll(ctx context.Context) ([]*Personal, error) {
 			for i := range nodes {
 				nodes[i].Edges.Gender = n
 			}
+		}
+	}
+
+	if query := pq.withProduct; query != nil {
+		fks := make([]driver.Value, 0, len(nodes))
+		nodeids := make(map[int]*Personal)
+		for i := range nodes {
+			fks = append(fks, nodes[i].ID)
+			nodeids[nodes[i].ID] = nodes[i]
+		}
+		query.withFKs = true
+		query.Where(predicate.Product(func(s *sql.Selector) {
+			s.Where(sql.InValues(personal.ProductColumn, fks...))
+		}))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			fk := n.Personal
+			if fk == nil {
+				return nil, fmt.Errorf(`foreign-key "Personal" is nil for node %v`, n.ID)
+			}
+			node, ok := nodeids[*fk]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "Personal" returned %v for node %v`, *fk, n.ID)
+			}
+			node.Edges.Product = append(node.Edges.Product, n)
 		}
 	}
 

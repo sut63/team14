@@ -18,6 +18,185 @@
     "host": "localhost:8080",
     "basePath": "/api/v1",
     "paths": {
+        "/brand/{id}": {
+            "delete": {
+                "description": "get brand by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Delete a brand entity by ID",
+                "operationId": "delete-brand",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Brand ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/brands": {
+            "get": {
+                "description": "list brand entities",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "List brand entities",
+                "operationId": "list-brand",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Limit",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Offset",
+                        "name": "offset",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ent.Brand"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create brand",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create brand",
+                "operationId": "create-brand",
+                "parameters": [
+                    {
+                        "description": "Brand entity",
+                        "name": "brand",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/ent.Brand"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.Brand"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/brands/{id}": {
+            "get": {
+                "description": "get brand by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get a brand entity by ID",
+                "operationId": "get-brand",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Brand ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.Brand"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
         "/customers": {
             "get": {
                 "description": "list customer entities",
@@ -554,6 +733,140 @@
                 }
             }
         },
+        "/products": {
+            "get": {
+                "description": "list product entities",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "List product entities",
+                "operationId": "list-product",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Limit",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Offset",
+                        "name": "offset",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ent.Product"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create product",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create product",
+                "operationId": "create-product",
+                "parameters": [
+                    {
+                        "description": "Product entity",
+                        "name": "product",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.Product"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.Product"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/products/{id}": {
+            "delete": {
+                "description": "get product by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Delete a product entity by ID",
+                "operationId": "delete-product",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Product ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
         "/titles": {
             "get": {
                 "description": "list title entities",
@@ -687,6 +1000,185 @@
                     }
                 }
             }
+        },
+        "/typeproduct/{id}": {
+            "delete": {
+                "description": "get typeproduct by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Delete a typeproduct entity by ID",
+                "operationId": "delete-typeproduct",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Typeproduct ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/typeproducts": {
+            "get": {
+                "description": "list typeproduct entities",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "List typeproduct entities",
+                "operationId": "list-typeproduct",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Limit",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Offset",
+                        "name": "offset",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ent.Typeproduct"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create typeproduct",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create typeproduct",
+                "operationId": "create-typeproduct",
+                "parameters": [
+                    {
+                        "description": "typeproduct entity",
+                        "name": "typeproduct",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/ent.Typeproduct"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.Typeproduct"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/typeproducts/{id}": {
+            "get": {
+                "description": "get typeproduct by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get a typeproduct entity by ID",
+                "operationId": "get-typeproduct",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Typeproduct ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.Typeproduct"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -752,8 +1244,61 @@
                 }
             }
         },
+        "controllers.Product": {
+            "type": "object",
+            "properties": {
+                "brand": {
+                    "type": "integer"
+                },
+                "numberofproduct": {
+                    "type": "string"
+                },
+                "personal": {
+                    "type": "integer"
+                },
+                "price": {
+                    "type": "string"
+                },
+                "productname": {
+                    "type": "string"
+                },
+                "typeproduct": {
+                    "type": "integer"
+                }
+            }
+        },
         "controllers.Title": {
             "type": "object"
+        },
+        "ent.Brand": {
+            "type": "object",
+            "properties": {
+                "Brandname": {
+                    "description": "Brandname holds the value of the \"Brandname\" field.",
+                    "type": "string"
+                },
+                "edges": {
+                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the BrandQuery when eager-loading is set.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.BrandEdges"
+                },
+                "id": {
+                    "description": "ID of the ent.",
+                    "type": "integer"
+                }
+            }
+        },
+        "ent.BrandEdges": {
+            "type": "object",
+            "properties": {
+                "product": {
+                    "description": "Product holds the value of the product edge.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.Product"
+                    }
+                }
+            }
         },
         "ent.Customer": {
             "type": "object",
@@ -921,10 +1466,72 @@
                     "type": "object",
                     "$ref": "#/definitions/ent.Gender"
                 },
+                "product": {
+                    "description": "Product holds the value of the product edge.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.Product"
+                    }
+                },
                 "title": {
                     "description": "Title holds the value of the title edge.",
                     "type": "object",
                     "$ref": "#/definitions/ent.Title"
+                }
+            }
+        },
+        "ent.Product": {
+            "type": "object",
+            "properties": {
+                "Numberofproduct": {
+                    "description": "Numberofproduct holds the value of the \"Numberofproduct\" field.",
+                    "type": "string"
+                },
+                "Price": {
+                    "description": "Price holds the value of the \"Price\" field.",
+                    "type": "string"
+                },
+                "Productname": {
+                    "description": "Productname holds the value of the \"Productname\" field.",
+                    "type": "string"
+                },
+                "brand": {
+                    "type": "integer"
+                },
+                "edges": {
+                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the ProductQuery when eager-loading is set.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.ProductEdges"
+                },
+                "id": {
+                    "description": "ID of the ent.",
+                    "type": "integer"
+                },
+                "personal": {
+                    "type": "integer"
+                },
+                "typeproduct": {
+                    "type": "integer"
+                }
+            }
+        },
+        "ent.ProductEdges": {
+            "type": "object",
+            "properties": {
+                "brand": {
+                    "description": "Brand holds the value of the brand edge.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.Brand"
+                },
+                "personal": {
+                    "description": "Personal holds the value of the personal edge.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.Personal"
+                },
+                "typeproduct": {
+                    "description": "Typeproduct holds the value of the typeproduct edge.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.Typeproduct"
                 }
             }
         },
@@ -961,6 +1568,36 @@
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/ent.Personal"
+                    }
+                }
+            }
+        },
+        "ent.Typeproduct": {
+            "type": "object",
+            "properties": {
+                "Typeproductname": {
+                    "description": "Typeproductname holds the value of the \"Typeproductname\" field.",
+                    "type": "string"
+                },
+                "edges": {
+                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the TypeproductQuery when eager-loading is set.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.TypeproductEdges"
+                },
+                "id": {
+                    "description": "ID of the ent.",
+                    "type": "integer"
+                }
+            }
+        },
+        "ent.TypeproductEdges": {
+            "type": "object",
+            "properties": {
+                "product": {
+                    "description": "Product holds the value of the product edge.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.Product"
                     }
                 }
             }

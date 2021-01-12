@@ -1,6 +1,10 @@
 package schema
 
-import "github.com/facebookincubator/ent"
+import (
+	"github.com/facebookincubator/ent"
+	"github.com/facebookincubator/ent/schema/edge"
+	"github.com/facebookincubator/ent/schema/field"
+)
 
 // Product holds the schema definition for the Product entity.
 type Product struct {
@@ -9,10 +13,21 @@ type Product struct {
 
 // Fields of the Product.
 func (Product) Fields() []ent.Field {
-	return nil
+	return []ent.Field{
+		field.String("Productname").
+				NotEmpty(),
+		field.String("Numberofproduct").
+				NotEmpty(),
+		field.String("Price").
+				NotEmpty(),
+	}
 }
 
 // Edges of the Product.
 func (Product) Edges() []ent.Edge {
-	return nil
+	return []ent.Edge{
+		edge.From("brand", Brand.Type).Ref("product").Unique(),
+		edge.From("typeproduct", Typeproduct.Type).Ref("product").Unique(),
+		edge.From("personal", Personal.Type).Ref("product").Unique(),
+	}
 }

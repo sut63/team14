@@ -234,6 +234,30 @@ func (f AdminrepairMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mut
 	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.AdminrepairMutation", m)
 }
 
+// The BrandQueryRuleFunc type is an adapter to allow the use of ordinary
+// functions as a query rule.
+type BrandQueryRuleFunc func(context.Context, *ent.BrandQuery) error
+
+// EvalQuery return f(ctx, q).
+func (f BrandQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.BrandQuery); ok {
+		return f(ctx, q)
+	}
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.BrandQuery", q)
+}
+
+// The BrandMutationRuleFunc type is an adapter to allow the use of ordinary
+// functions as a mutation rule.
+type BrandMutationRuleFunc func(context.Context, *ent.BrandMutation) error
+
+// EvalMutation calls f(ctx, m).
+func (f BrandMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.BrandMutation); ok {
+		return f(ctx, m)
+	}
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.BrandMutation", m)
+}
+
 // The CustomerQueryRuleFunc type is an adapter to allow the use of ordinary
 // functions as a query rule.
 type CustomerQueryRuleFunc func(context.Context, *ent.CustomerQuery) error
@@ -424,4 +448,28 @@ func (f TitleMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation)
 		return f(ctx, m)
 	}
 	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.TitleMutation", m)
+}
+
+// The TypeproductQueryRuleFunc type is an adapter to allow the use of ordinary
+// functions as a query rule.
+type TypeproductQueryRuleFunc func(context.Context, *ent.TypeproductQuery) error
+
+// EvalQuery return f(ctx, q).
+func (f TypeproductQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.TypeproductQuery); ok {
+		return f(ctx, q)
+	}
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.TypeproductQuery", q)
+}
+
+// The TypeproductMutationRuleFunc type is an adapter to allow the use of ordinary
+// functions as a mutation rule.
+type TypeproductMutationRuleFunc func(context.Context, *ent.TypeproductMutation) error
+
+// EvalMutation calls f(ctx, m).
+func (f TypeproductMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.TypeproductMutation); ok {
+		return f(ctx, m)
+	}
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.TypeproductMutation", m)
 }
