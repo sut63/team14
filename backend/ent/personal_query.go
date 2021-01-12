@@ -4,6 +4,7 @@ package ent
 
 import (
 	"context"
+	"database/sql/driver"
 	"errors"
 	"fmt"
 	"math"
@@ -11,6 +12,7 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
+	"github.com/tanapon395/playlist-video/ent/customer"
 	"github.com/tanapon395/playlist-video/ent/department"
 	"github.com/tanapon395/playlist-video/ent/gender"
 	"github.com/tanapon395/playlist-video/ent/personal"
@@ -27,6 +29,7 @@ type PersonalQuery struct {
 	unique     []string
 	predicates []predicate.Personal
 	// eager-loading edges.
+	withCustomer   *CustomerQuery
 	withTitle      *TitleQuery
 	withDepartment *DepartmentQuery
 	withGender     *GenderQuery
@@ -58,6 +61,24 @@ func (pq *PersonalQuery) Offset(offset int) *PersonalQuery {
 func (pq *PersonalQuery) Order(o ...OrderFunc) *PersonalQuery {
 	pq.order = append(pq.order, o...)
 	return pq
+}
+
+// QueryCustomer chains the current query on the customer edge.
+func (pq *PersonalQuery) QueryCustomer() *CustomerQuery {
+	query := &CustomerQuery{config: pq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := pq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(personal.Table, personal.FieldID, pq.sqlQuery()),
+			sqlgraph.To(customer.Table, customer.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, personal.CustomerTable, personal.CustomerColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(pq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
 }
 
 // QueryTitle chains the current query on the title edge.
@@ -293,6 +314,17 @@ func (pq *PersonalQuery) Clone() *PersonalQuery {
 	}
 }
 
+//  WithCustomer tells the query-builder to eager-loads the nodes that are connected to
+// the "customer" edge. The optional arguments used to configure the query builder of the edge.
+func (pq *PersonalQuery) WithCustomer(opts ...func(*CustomerQuery)) *PersonalQuery {
+	query := &CustomerQuery{config: pq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	pq.withCustomer = query
+	return pq
+}
+
 //  WithTitle tells the query-builder to eager-loads the nodes that are connected to
 // the "title" edge. The optional arguments used to configure the query builder of the edge.
 func (pq *PersonalQuery) WithTitle(opts ...func(*TitleQuery)) *PersonalQuery {
@@ -393,7 +425,8 @@ func (pq *PersonalQuery) sqlAll(ctx context.Context) ([]*Personal, error) {
 		nodes       = []*Personal{}
 		withFKs     = pq.withFKs
 		_spec       = pq.querySpec()
-		loadedTypes = [3]bool{
+		loadedTypes = [4]bool{
+			pq.withCustomer != nil,
 			pq.withTitle != nil,
 			pq.withDepartment != nil,
 			pq.withGender != nil,
@@ -427,6 +460,34 @@ func (pq *PersonalQuery) sqlAll(ctx context.Context) ([]*Personal, error) {
 	}
 	if len(nodes) == 0 {
 		return nodes, nil
+	}
+
+	if query := pq.withCustomer; query != nil {
+		fks := make([]driver.Value, 0, len(nodes))
+		nodeids := make(map[int]*Personal)
+		for i := range nodes {
+			fks = append(fks, nodes[i].ID)
+			nodeids[nodes[i].ID] = nodes[i]
+		}
+		query.withFKs = true
+		query.Where(predicate.Customer(func(s *sql.Selector) {
+			s.Where(sql.InValues(personal.CustomerColumn, fks...))
+		}))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			fk := n.personal_id
+			if fk == nil {
+				return nil, fmt.Errorf(`foreign-key "personal_id" is nil for node %v`, n.ID)
+			}
+			node, ok := nodeids[*fk]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "personal_id" returned %v for node %v`, *fk, n.ID)
+			}
+			node.Edges.Customer = append(node.Edges.Customer, n)
+		}
 	}
 
 	if query := pq.withTitle; query != nil {

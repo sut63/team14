@@ -103,6 +103,7 @@ func main() {
 	controllers.NewTitleController(v1, client)
 	controllers.NewDepartmentController(v1, client)
 	controllers.NewGenderController(v1, client)
+	controllers.NewCustomerController(v1, client)
 
 	//Set Title Data
 	titles := []string{"นาย", "นาง", "นางสาว", "ไม่ระบุ"}

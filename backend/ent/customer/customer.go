@@ -7,12 +7,57 @@ const (
 	Label = "customer"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
+	// FieldCustomername holds the string denoting the customername field in the database.
+	FieldCustomername = "customername"
+	// FieldAddress holds the string denoting the address field in the database.
+	FieldAddress = "address"
+	// FieldPhonenumber holds the string denoting the phonenumber field in the database.
+	FieldPhonenumber = "phonenumber"
+
+	// EdgeGender holds the string denoting the gender edge name in mutations.
+	EdgeGender = "gender"
+	// EdgePersonal holds the string denoting the personal edge name in mutations.
+	EdgePersonal = "personal"
+	// EdgeTitle holds the string denoting the title edge name in mutations.
+	EdgeTitle = "title"
 
 	// Table holds the table name of the customer in the database.
 	Table = "customers"
+	// GenderTable is the table the holds the gender relation/edge.
+	GenderTable = "customers"
+	// GenderInverseTable is the table name for the Gender entity.
+	// It exists in this package in order to avoid circular dependency with the "gender" package.
+	GenderInverseTable = "genders"
+	// GenderColumn is the table column denoting the gender relation/edge.
+	GenderColumn = "gender_id"
+	// PersonalTable is the table the holds the personal relation/edge.
+	PersonalTable = "customers"
+	// PersonalInverseTable is the table name for the Personal entity.
+	// It exists in this package in order to avoid circular dependency with the "personal" package.
+	PersonalInverseTable = "personals"
+	// PersonalColumn is the table column denoting the personal relation/edge.
+	PersonalColumn = "personal_id"
+	// TitleTable is the table the holds the title relation/edge.
+	TitleTable = "customers"
+	// TitleInverseTable is the table name for the Title entity.
+	// It exists in this package in order to avoid circular dependency with the "title" package.
+	TitleInverseTable = "titles"
+	// TitleColumn is the table column denoting the title relation/edge.
+	TitleColumn = "title_id"
 )
 
 // Columns holds all SQL columns for customer fields.
 var Columns = []string{
 	FieldID,
+	FieldCustomername,
+	FieldAddress,
+	FieldPhonenumber,
+}
+
+// ForeignKeys holds the SQL foreign-keys that are owned by the Customer type.
+var ForeignKeys = []string{
+	"department_id",
+	"gender_id",
+	"personal_id",
+	"title_id",
 }

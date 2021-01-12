@@ -1,5 +1,20 @@
 basePath: /api/v1
 definitions:
+  controllers.Customer:
+    properties:
+      address:
+        type: string
+      customername:
+        type: string
+      gender:
+        type: integer
+      personal:
+        type: integer
+      phonenumber:
+        type: string
+      title:
+        type: integer
+    type: object
   controllers.Department:
     properties:
       departmentname:
@@ -27,6 +42,42 @@ definitions:
     type: object
   controllers.Title:
     type: object
+  ent.Customer:
+    properties:
+      Address:
+        description: Address holds the value of the "Address" field.
+        type: string
+      Customername:
+        description: Customername holds the value of the "Customername" field.
+        type: string
+      Phonenumber:
+        description: Phonenumber holds the value of the "Phonenumber" field.
+        type: string
+      edges:
+        $ref: '#/definitions/ent.CustomerEdges'
+        description: |-
+          Edges holds the relations/edges for other nodes in the graph.
+          The values are being populated by the CustomerQuery when eager-loading is set.
+        type: object
+      id:
+        description: ID of the ent.
+        type: integer
+    type: object
+  ent.CustomerEdges:
+    properties:
+      gender:
+        $ref: '#/definitions/ent.Gender'
+        description: Gender holds the value of the gender edge.
+        type: object
+      personal:
+        $ref: '#/definitions/ent.Personal'
+        description: Personal holds the value of the personal edge.
+        type: object
+      title:
+        $ref: '#/definitions/ent.Title'
+        description: Title holds the value of the title edge.
+        type: object
+    type: object
   ent.Department:
     properties:
       Departmentname:
@@ -44,6 +95,11 @@ definitions:
     type: object
   ent.DepartmentEdges:
     properties:
+      customer:
+        description: Customer holds the value of the customer edge.
+        items:
+          $ref: '#/definitions/ent.Customer'
+        type: array
       personal:
         description: Personal holds the value of the personal edge.
         items:
@@ -67,6 +123,11 @@ definitions:
     type: object
   ent.GenderEdges:
     properties:
+      customer:
+        description: Customer holds the value of the customer edge.
+        items:
+          $ref: '#/definitions/ent.Customer'
+        type: array
       personal:
         description: Personal holds the value of the personal edge.
         items:
@@ -96,6 +157,11 @@ definitions:
     type: object
   ent.PersonalEdges:
     properties:
+      customer:
+        description: Customer holds the value of the customer edge.
+        items:
+          $ref: '#/definitions/ent.Customer'
+        type: array
       department:
         $ref: '#/definitions/ent.Department'
         description: Department holds the value of the department edge.
@@ -126,6 +192,11 @@ definitions:
     type: object
   ent.TitleEdges:
     properties:
+      customer:
+        description: Customer holds the value of the customer edge.
+        items:
+          $ref: '#/definitions/ent.Customer'
+        type: array
       personal:
         description: Personal holds the value of the personal edge.
         items:
@@ -149,6 +220,95 @@ info:
   title: SUT SA Example API Playlist Vidoe
   version: "1.0"
 paths:
+  /customers:
+    get:
+      description: list customer entities
+      operationId: list-customer
+      parameters:
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      - description: Offset
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/ent.Customer'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: List customer entities
+    post:
+      consumes:
+      - application/json
+      description: Create customer
+      operationId: create-customer
+      parameters:
+      - description: Customer entity
+        in: body
+        name: customer
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.Customer'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.Customer'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Create customer
+  /customers/{id}:
+    delete:
+      description: get customer by ID
+      operationId: delete-customer
+      parameters:
+      - description: Customer ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Delete a customer entity by ID
   /departments:
     get:
       description: list department entities

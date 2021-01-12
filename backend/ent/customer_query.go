@@ -12,7 +12,10 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
 	"github.com/tanapon395/playlist-video/ent/customer"
+	"github.com/tanapon395/playlist-video/ent/gender"
+	"github.com/tanapon395/playlist-video/ent/personal"
 	"github.com/tanapon395/playlist-video/ent/predicate"
+	"github.com/tanapon395/playlist-video/ent/title"
 )
 
 // CustomerQuery is the builder for querying Customer entities.
@@ -23,6 +26,11 @@ type CustomerQuery struct {
 	order      []OrderFunc
 	unique     []string
 	predicates []predicate.Customer
+	// eager-loading edges.
+	withGender   *GenderQuery
+	withPersonal *PersonalQuery
+	withTitle    *TitleQuery
+	withFKs      bool
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -50,6 +58,60 @@ func (cq *CustomerQuery) Offset(offset int) *CustomerQuery {
 func (cq *CustomerQuery) Order(o ...OrderFunc) *CustomerQuery {
 	cq.order = append(cq.order, o...)
 	return cq
+}
+
+// QueryGender chains the current query on the gender edge.
+func (cq *CustomerQuery) QueryGender() *GenderQuery {
+	query := &GenderQuery{config: cq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := cq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(customer.Table, customer.FieldID, cq.sqlQuery()),
+			sqlgraph.To(gender.Table, gender.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, customer.GenderTable, customer.GenderColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(cq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryPersonal chains the current query on the personal edge.
+func (cq *CustomerQuery) QueryPersonal() *PersonalQuery {
+	query := &PersonalQuery{config: cq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := cq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(customer.Table, customer.FieldID, cq.sqlQuery()),
+			sqlgraph.To(personal.Table, personal.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, customer.PersonalTable, customer.PersonalColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(cq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryTitle chains the current query on the title edge.
+func (cq *CustomerQuery) QueryTitle() *TitleQuery {
+	query := &TitleQuery{config: cq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := cq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(customer.Table, customer.FieldID, cq.sqlQuery()),
+			sqlgraph.To(title.Table, title.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, customer.TitleTable, customer.TitleColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(cq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
 }
 
 // First returns the first Customer entity in the query. Returns *NotFoundError when no customer was found.
@@ -231,8 +293,54 @@ func (cq *CustomerQuery) Clone() *CustomerQuery {
 	}
 }
 
+//  WithGender tells the query-builder to eager-loads the nodes that are connected to
+// the "gender" edge. The optional arguments used to configure the query builder of the edge.
+func (cq *CustomerQuery) WithGender(opts ...func(*GenderQuery)) *CustomerQuery {
+	query := &GenderQuery{config: cq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	cq.withGender = query
+	return cq
+}
+
+//  WithPersonal tells the query-builder to eager-loads the nodes that are connected to
+// the "personal" edge. The optional arguments used to configure the query builder of the edge.
+func (cq *CustomerQuery) WithPersonal(opts ...func(*PersonalQuery)) *CustomerQuery {
+	query := &PersonalQuery{config: cq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	cq.withPersonal = query
+	return cq
+}
+
+//  WithTitle tells the query-builder to eager-loads the nodes that are connected to
+// the "title" edge. The optional arguments used to configure the query builder of the edge.
+func (cq *CustomerQuery) WithTitle(opts ...func(*TitleQuery)) *CustomerQuery {
+	query := &TitleQuery{config: cq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	cq.withTitle = query
+	return cq
+}
+
 // GroupBy used to group vertices by one or more fields/columns.
 // It is often used with aggregate functions, like: count, max, mean, min, sum.
+//
+// Example:
+//
+//	var v []struct {
+//		Customername string `json:"Customername,omitempty"`
+//		Count int `json:"count,omitempty"`
+//	}
+//
+//	client.Customer.Query().
+//		GroupBy(customer.FieldCustomername).
+//		Aggregate(ent.Count()).
+//		Scan(ctx, &v)
+//
 func (cq *CustomerQuery) GroupBy(field string, fields ...string) *CustomerGroupBy {
 	group := &CustomerGroupBy{config: cq.config}
 	group.fields = append([]string{field}, fields...)
@@ -246,6 +354,17 @@ func (cq *CustomerQuery) GroupBy(field string, fields ...string) *CustomerGroupB
 }
 
 // Select one or more fields from the given query.
+//
+// Example:
+//
+//	var v []struct {
+//		Customername string `json:"Customername,omitempty"`
+//	}
+//
+//	client.Customer.Query().
+//		Select(customer.FieldCustomername).
+//		Scan(ctx, &v)
+//
 func (cq *CustomerQuery) Select(field string, fields ...string) *CustomerSelect {
 	selector := &CustomerSelect{config: cq.config}
 	selector.fields = append([]string{field}, fields...)
@@ -271,13 +390,28 @@ func (cq *CustomerQuery) prepareQuery(ctx context.Context) error {
 
 func (cq *CustomerQuery) sqlAll(ctx context.Context) ([]*Customer, error) {
 	var (
-		nodes = []*Customer{}
-		_spec = cq.querySpec()
+		nodes       = []*Customer{}
+		withFKs     = cq.withFKs
+		_spec       = cq.querySpec()
+		loadedTypes = [3]bool{
+			cq.withGender != nil,
+			cq.withPersonal != nil,
+			cq.withTitle != nil,
+		}
 	)
+	if cq.withGender != nil || cq.withPersonal != nil || cq.withTitle != nil {
+		withFKs = true
+	}
+	if withFKs {
+		_spec.Node.Columns = append(_spec.Node.Columns, customer.ForeignKeys...)
+	}
 	_spec.ScanValues = func() []interface{} {
 		node := &Customer{config: cq.config}
 		nodes = append(nodes, node)
 		values := node.scanValues()
+		if withFKs {
+			values = append(values, node.fkValues()...)
+		}
 		return values
 	}
 	_spec.Assign = func(values ...interface{}) error {
@@ -285,6 +419,7 @@ func (cq *CustomerQuery) sqlAll(ctx context.Context) ([]*Customer, error) {
 			return fmt.Errorf("ent: Assign called without calling ScanValues")
 		}
 		node := nodes[len(nodes)-1]
+		node.Edges.loadedTypes = loadedTypes
 		return node.assignValues(values...)
 	}
 	if err := sqlgraph.QueryNodes(ctx, cq.driver, _spec); err != nil {
@@ -293,6 +428,82 @@ func (cq *CustomerQuery) sqlAll(ctx context.Context) ([]*Customer, error) {
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
+
+	if query := cq.withGender; query != nil {
+		ids := make([]int, 0, len(nodes))
+		nodeids := make(map[int][]*Customer)
+		for i := range nodes {
+			if fk := nodes[i].gender_id; fk != nil {
+				ids = append(ids, *fk)
+				nodeids[*fk] = append(nodeids[*fk], nodes[i])
+			}
+		}
+		query.Where(gender.IDIn(ids...))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			nodes, ok := nodeids[n.ID]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "gender_id" returned %v`, n.ID)
+			}
+			for i := range nodes {
+				nodes[i].Edges.Gender = n
+			}
+		}
+	}
+
+	if query := cq.withPersonal; query != nil {
+		ids := make([]int, 0, len(nodes))
+		nodeids := make(map[int][]*Customer)
+		for i := range nodes {
+			if fk := nodes[i].personal_id; fk != nil {
+				ids = append(ids, *fk)
+				nodeids[*fk] = append(nodeids[*fk], nodes[i])
+			}
+		}
+		query.Where(personal.IDIn(ids...))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			nodes, ok := nodeids[n.ID]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "personal_id" returned %v`, n.ID)
+			}
+			for i := range nodes {
+				nodes[i].Edges.Personal = n
+			}
+		}
+	}
+
+	if query := cq.withTitle; query != nil {
+		ids := make([]int, 0, len(nodes))
+		nodeids := make(map[int][]*Customer)
+		for i := range nodes {
+			if fk := nodes[i].title_id; fk != nil {
+				ids = append(ids, *fk)
+				nodeids[*fk] = append(nodeids[*fk], nodes[i])
+			}
+		}
+		query.Where(title.IDIn(ids...))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			nodes, ok := nodeids[n.ID]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "title_id" returned %v`, n.ID)
+			}
+			for i := range nodes {
+				nodes[i].Edges.Title = n
+			}
+		}
+	}
+
 	return nodes, nil
 }
 

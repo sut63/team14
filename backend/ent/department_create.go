@@ -9,6 +9,7 @@ import (
 
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
+	"github.com/tanapon395/playlist-video/ent/customer"
 	"github.com/tanapon395/playlist-video/ent/department"
 	"github.com/tanapon395/playlist-video/ent/personal"
 )
@@ -39,6 +40,21 @@ func (dc *DepartmentCreate) AddPersonal(p ...*Personal) *DepartmentCreate {
 		ids[i] = p[i].ID
 	}
 	return dc.AddPersonalIDs(ids...)
+}
+
+// AddCustomerIDs adds the customer edge to Customer by ids.
+func (dc *DepartmentCreate) AddCustomerIDs(ids ...int) *DepartmentCreate {
+	dc.mutation.AddCustomerIDs(ids...)
+	return dc
+}
+
+// AddCustomer adds the customer edges to Customer.
+func (dc *DepartmentCreate) AddCustomer(c ...*Customer) *DepartmentCreate {
+	ids := make([]int, len(c))
+	for i := range c {
+		ids[i] = c[i].ID
+	}
+	return dc.AddCustomerIDs(ids...)
 }
 
 // Mutation returns the DepartmentMutation object of the builder.
@@ -130,6 +146,25 @@ func (dc *DepartmentCreate) createSpec() (*Department, *sqlgraph.CreateSpec) {
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: personal.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := dc.mutation.CustomerIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   department.CustomerTable,
+			Columns: []string{department.CustomerColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: customer.FieldID,
 				},
 			},
 		}

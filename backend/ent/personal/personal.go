@@ -14,6 +14,8 @@ const (
 	// FieldPassword holds the string denoting the password field in the database.
 	FieldPassword = "password"
 
+	// EdgeCustomer holds the string denoting the customer edge name in mutations.
+	EdgeCustomer = "customer"
 	// EdgeTitle holds the string denoting the title edge name in mutations.
 	EdgeTitle = "title"
 	// EdgeDepartment holds the string denoting the department edge name in mutations.
@@ -23,6 +25,13 @@ const (
 
 	// Table holds the table name of the personal in the database.
 	Table = "personals"
+	// CustomerTable is the table the holds the customer relation/edge.
+	CustomerTable = "customers"
+	// CustomerInverseTable is the table name for the Customer entity.
+	// It exists in this package in order to avoid circular dependency with the "customer" package.
+	CustomerInverseTable = "customers"
+	// CustomerColumn is the table column denoting the customer relation/edge.
+	CustomerColumn = "personal_id"
 	// TitleTable is the table the holds the title relation/edge.
 	TitleTable = "personals"
 	// TitleInverseTable is the table name for the Title entity.

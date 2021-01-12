@@ -9,6 +9,7 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
+	"github.com/tanapon395/playlist-video/ent/customer"
 	"github.com/tanapon395/playlist-video/ent/personal"
 	"github.com/tanapon395/playlist-video/ent/predicate"
 	"github.com/tanapon395/playlist-video/ent/title"
@@ -49,6 +50,21 @@ func (tu *TitleUpdate) AddPersonal(p ...*Personal) *TitleUpdate {
 	return tu.AddPersonalIDs(ids...)
 }
 
+// AddCustomerIDs adds the customer edge to Customer by ids.
+func (tu *TitleUpdate) AddCustomerIDs(ids ...int) *TitleUpdate {
+	tu.mutation.AddCustomerIDs(ids...)
+	return tu
+}
+
+// AddCustomer adds the customer edges to Customer.
+func (tu *TitleUpdate) AddCustomer(c ...*Customer) *TitleUpdate {
+	ids := make([]int, len(c))
+	for i := range c {
+		ids[i] = c[i].ID
+	}
+	return tu.AddCustomerIDs(ids...)
+}
+
 // Mutation returns the TitleMutation object of the builder.
 func (tu *TitleUpdate) Mutation() *TitleMutation {
 	return tu.mutation
@@ -67,6 +83,21 @@ func (tu *TitleUpdate) RemovePersonal(p ...*Personal) *TitleUpdate {
 		ids[i] = p[i].ID
 	}
 	return tu.RemovePersonalIDs(ids...)
+}
+
+// RemoveCustomerIDs removes the customer edge to Customer by ids.
+func (tu *TitleUpdate) RemoveCustomerIDs(ids ...int) *TitleUpdate {
+	tu.mutation.RemoveCustomerIDs(ids...)
+	return tu
+}
+
+// RemoveCustomer removes customer edges to Customer.
+func (tu *TitleUpdate) RemoveCustomer(c ...*Customer) *TitleUpdate {
+	ids := make([]int, len(c))
+	for i := range c {
+		ids[i] = c[i].ID
+	}
+	return tu.RemoveCustomerIDs(ids...)
 }
 
 // Save executes the query and returns the number of rows/vertices matched by this operation.
@@ -184,6 +215,44 @@ func (tu *TitleUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	if nodes := tu.mutation.RemovedCustomerIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   title.CustomerTable,
+			Columns: []string{title.CustomerColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: customer.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := tu.mutation.CustomerIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   title.CustomerTable,
+			Columns: []string{title.CustomerColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: customer.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, tu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{title.Label}
@@ -223,6 +292,21 @@ func (tuo *TitleUpdateOne) AddPersonal(p ...*Personal) *TitleUpdateOne {
 	return tuo.AddPersonalIDs(ids...)
 }
 
+// AddCustomerIDs adds the customer edge to Customer by ids.
+func (tuo *TitleUpdateOne) AddCustomerIDs(ids ...int) *TitleUpdateOne {
+	tuo.mutation.AddCustomerIDs(ids...)
+	return tuo
+}
+
+// AddCustomer adds the customer edges to Customer.
+func (tuo *TitleUpdateOne) AddCustomer(c ...*Customer) *TitleUpdateOne {
+	ids := make([]int, len(c))
+	for i := range c {
+		ids[i] = c[i].ID
+	}
+	return tuo.AddCustomerIDs(ids...)
+}
+
 // Mutation returns the TitleMutation object of the builder.
 func (tuo *TitleUpdateOne) Mutation() *TitleMutation {
 	return tuo.mutation
@@ -241,6 +325,21 @@ func (tuo *TitleUpdateOne) RemovePersonal(p ...*Personal) *TitleUpdateOne {
 		ids[i] = p[i].ID
 	}
 	return tuo.RemovePersonalIDs(ids...)
+}
+
+// RemoveCustomerIDs removes the customer edge to Customer by ids.
+func (tuo *TitleUpdateOne) RemoveCustomerIDs(ids ...int) *TitleUpdateOne {
+	tuo.mutation.RemoveCustomerIDs(ids...)
+	return tuo
+}
+
+// RemoveCustomer removes customer edges to Customer.
+func (tuo *TitleUpdateOne) RemoveCustomer(c ...*Customer) *TitleUpdateOne {
+	ids := make([]int, len(c))
+	for i := range c {
+		ids[i] = c[i].ID
+	}
+	return tuo.RemoveCustomerIDs(ids...)
 }
 
 // Save executes the query and returns the updated entity.
@@ -348,6 +447,44 @@ func (tuo *TitleUpdateOne) sqlSave(ctx context.Context) (t *Title, err error) {
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: personal.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if nodes := tuo.mutation.RemovedCustomerIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   title.CustomerTable,
+			Columns: []string{title.CustomerColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: customer.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := tuo.mutation.CustomerIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   title.CustomerTable,
+			Columns: []string{title.CustomerColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: customer.FieldID,
 				},
 			},
 		}

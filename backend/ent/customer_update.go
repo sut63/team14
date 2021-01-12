@@ -10,7 +10,10 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
 	"github.com/tanapon395/playlist-video/ent/customer"
+	"github.com/tanapon395/playlist-video/ent/gender"
+	"github.com/tanapon395/playlist-video/ent/personal"
 	"github.com/tanapon395/playlist-video/ent/predicate"
+	"github.com/tanapon395/playlist-video/ent/title"
 )
 
 // CustomerUpdate is the builder for updating Customer entities.
@@ -27,13 +30,107 @@ func (cu *CustomerUpdate) Where(ps ...predicate.Customer) *CustomerUpdate {
 	return cu
 }
 
+// SetCustomername sets the Customername field.
+func (cu *CustomerUpdate) SetCustomername(s string) *CustomerUpdate {
+	cu.mutation.SetCustomername(s)
+	return cu
+}
+
+// SetAddress sets the Address field.
+func (cu *CustomerUpdate) SetAddress(s string) *CustomerUpdate {
+	cu.mutation.SetAddress(s)
+	return cu
+}
+
+// SetPhonenumber sets the Phonenumber field.
+func (cu *CustomerUpdate) SetPhonenumber(s string) *CustomerUpdate {
+	cu.mutation.SetPhonenumber(s)
+	return cu
+}
+
+// SetGenderID sets the gender edge to Gender by id.
+func (cu *CustomerUpdate) SetGenderID(id int) *CustomerUpdate {
+	cu.mutation.SetGenderID(id)
+	return cu
+}
+
+// SetNillableGenderID sets the gender edge to Gender by id if the given value is not nil.
+func (cu *CustomerUpdate) SetNillableGenderID(id *int) *CustomerUpdate {
+	if id != nil {
+		cu = cu.SetGenderID(*id)
+	}
+	return cu
+}
+
+// SetGender sets the gender edge to Gender.
+func (cu *CustomerUpdate) SetGender(g *Gender) *CustomerUpdate {
+	return cu.SetGenderID(g.ID)
+}
+
+// SetPersonalID sets the personal edge to Personal by id.
+func (cu *CustomerUpdate) SetPersonalID(id int) *CustomerUpdate {
+	cu.mutation.SetPersonalID(id)
+	return cu
+}
+
+// SetNillablePersonalID sets the personal edge to Personal by id if the given value is not nil.
+func (cu *CustomerUpdate) SetNillablePersonalID(id *int) *CustomerUpdate {
+	if id != nil {
+		cu = cu.SetPersonalID(*id)
+	}
+	return cu
+}
+
+// SetPersonal sets the personal edge to Personal.
+func (cu *CustomerUpdate) SetPersonal(p *Personal) *CustomerUpdate {
+	return cu.SetPersonalID(p.ID)
+}
+
+// SetTitleID sets the title edge to Title by id.
+func (cu *CustomerUpdate) SetTitleID(id int) *CustomerUpdate {
+	cu.mutation.SetTitleID(id)
+	return cu
+}
+
+// SetNillableTitleID sets the title edge to Title by id if the given value is not nil.
+func (cu *CustomerUpdate) SetNillableTitleID(id *int) *CustomerUpdate {
+	if id != nil {
+		cu = cu.SetTitleID(*id)
+	}
+	return cu
+}
+
+// SetTitle sets the title edge to Title.
+func (cu *CustomerUpdate) SetTitle(t *Title) *CustomerUpdate {
+	return cu.SetTitleID(t.ID)
+}
+
 // Mutation returns the CustomerMutation object of the builder.
 func (cu *CustomerUpdate) Mutation() *CustomerMutation {
 	return cu.mutation
 }
 
+// ClearGender clears the gender edge to Gender.
+func (cu *CustomerUpdate) ClearGender() *CustomerUpdate {
+	cu.mutation.ClearGender()
+	return cu
+}
+
+// ClearPersonal clears the personal edge to Personal.
+func (cu *CustomerUpdate) ClearPersonal() *CustomerUpdate {
+	cu.mutation.ClearPersonal()
+	return cu
+}
+
+// ClearTitle clears the title edge to Title.
+func (cu *CustomerUpdate) ClearTitle() *CustomerUpdate {
+	cu.mutation.ClearTitle()
+	return cu
+}
+
 // Save executes the query and returns the number of rows/vertices matched by this operation.
 func (cu *CustomerUpdate) Save(ctx context.Context) (int, error) {
+
 	var (
 		err      error
 		affected int
@@ -101,6 +198,132 @@ func (cu *CustomerUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			}
 		}
 	}
+	if value, ok := cu.mutation.Customername(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: customer.FieldCustomername,
+		})
+	}
+	if value, ok := cu.mutation.Address(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: customer.FieldAddress,
+		})
+	}
+	if value, ok := cu.mutation.Phonenumber(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: customer.FieldPhonenumber,
+		})
+	}
+	if cu.mutation.GenderCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   customer.GenderTable,
+			Columns: []string{customer.GenderColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: gender.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := cu.mutation.GenderIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   customer.GenderTable,
+			Columns: []string{customer.GenderColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: gender.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if cu.mutation.PersonalCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   customer.PersonalTable,
+			Columns: []string{customer.PersonalColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: personal.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := cu.mutation.PersonalIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   customer.PersonalTable,
+			Columns: []string{customer.PersonalColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: personal.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if cu.mutation.TitleCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   customer.TitleTable,
+			Columns: []string{customer.TitleColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: title.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := cu.mutation.TitleIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   customer.TitleTable,
+			Columns: []string{customer.TitleColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: title.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, cu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{customer.Label}
@@ -119,13 +342,107 @@ type CustomerUpdateOne struct {
 	mutation *CustomerMutation
 }
 
+// SetCustomername sets the Customername field.
+func (cuo *CustomerUpdateOne) SetCustomername(s string) *CustomerUpdateOne {
+	cuo.mutation.SetCustomername(s)
+	return cuo
+}
+
+// SetAddress sets the Address field.
+func (cuo *CustomerUpdateOne) SetAddress(s string) *CustomerUpdateOne {
+	cuo.mutation.SetAddress(s)
+	return cuo
+}
+
+// SetPhonenumber sets the Phonenumber field.
+func (cuo *CustomerUpdateOne) SetPhonenumber(s string) *CustomerUpdateOne {
+	cuo.mutation.SetPhonenumber(s)
+	return cuo
+}
+
+// SetGenderID sets the gender edge to Gender by id.
+func (cuo *CustomerUpdateOne) SetGenderID(id int) *CustomerUpdateOne {
+	cuo.mutation.SetGenderID(id)
+	return cuo
+}
+
+// SetNillableGenderID sets the gender edge to Gender by id if the given value is not nil.
+func (cuo *CustomerUpdateOne) SetNillableGenderID(id *int) *CustomerUpdateOne {
+	if id != nil {
+		cuo = cuo.SetGenderID(*id)
+	}
+	return cuo
+}
+
+// SetGender sets the gender edge to Gender.
+func (cuo *CustomerUpdateOne) SetGender(g *Gender) *CustomerUpdateOne {
+	return cuo.SetGenderID(g.ID)
+}
+
+// SetPersonalID sets the personal edge to Personal by id.
+func (cuo *CustomerUpdateOne) SetPersonalID(id int) *CustomerUpdateOne {
+	cuo.mutation.SetPersonalID(id)
+	return cuo
+}
+
+// SetNillablePersonalID sets the personal edge to Personal by id if the given value is not nil.
+func (cuo *CustomerUpdateOne) SetNillablePersonalID(id *int) *CustomerUpdateOne {
+	if id != nil {
+		cuo = cuo.SetPersonalID(*id)
+	}
+	return cuo
+}
+
+// SetPersonal sets the personal edge to Personal.
+func (cuo *CustomerUpdateOne) SetPersonal(p *Personal) *CustomerUpdateOne {
+	return cuo.SetPersonalID(p.ID)
+}
+
+// SetTitleID sets the title edge to Title by id.
+func (cuo *CustomerUpdateOne) SetTitleID(id int) *CustomerUpdateOne {
+	cuo.mutation.SetTitleID(id)
+	return cuo
+}
+
+// SetNillableTitleID sets the title edge to Title by id if the given value is not nil.
+func (cuo *CustomerUpdateOne) SetNillableTitleID(id *int) *CustomerUpdateOne {
+	if id != nil {
+		cuo = cuo.SetTitleID(*id)
+	}
+	return cuo
+}
+
+// SetTitle sets the title edge to Title.
+func (cuo *CustomerUpdateOne) SetTitle(t *Title) *CustomerUpdateOne {
+	return cuo.SetTitleID(t.ID)
+}
+
 // Mutation returns the CustomerMutation object of the builder.
 func (cuo *CustomerUpdateOne) Mutation() *CustomerMutation {
 	return cuo.mutation
 }
 
+// ClearGender clears the gender edge to Gender.
+func (cuo *CustomerUpdateOne) ClearGender() *CustomerUpdateOne {
+	cuo.mutation.ClearGender()
+	return cuo
+}
+
+// ClearPersonal clears the personal edge to Personal.
+func (cuo *CustomerUpdateOne) ClearPersonal() *CustomerUpdateOne {
+	cuo.mutation.ClearPersonal()
+	return cuo
+}
+
+// ClearTitle clears the title edge to Title.
+func (cuo *CustomerUpdateOne) ClearTitle() *CustomerUpdateOne {
+	cuo.mutation.ClearTitle()
+	return cuo
+}
+
 // Save executes the query and returns the updated entity.
 func (cuo *CustomerUpdateOne) Save(ctx context.Context) (*Customer, error) {
+
 	var (
 		err  error
 		node *Customer
@@ -191,6 +508,132 @@ func (cuo *CustomerUpdateOne) sqlSave(ctx context.Context) (c *Customer, err err
 		return nil, &ValidationError{Name: "ID", err: fmt.Errorf("missing Customer.ID for update")}
 	}
 	_spec.Node.ID.Value = id
+	if value, ok := cuo.mutation.Customername(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: customer.FieldCustomername,
+		})
+	}
+	if value, ok := cuo.mutation.Address(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: customer.FieldAddress,
+		})
+	}
+	if value, ok := cuo.mutation.Phonenumber(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: customer.FieldPhonenumber,
+		})
+	}
+	if cuo.mutation.GenderCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   customer.GenderTable,
+			Columns: []string{customer.GenderColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: gender.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := cuo.mutation.GenderIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   customer.GenderTable,
+			Columns: []string{customer.GenderColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: gender.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if cuo.mutation.PersonalCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   customer.PersonalTable,
+			Columns: []string{customer.PersonalColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: personal.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := cuo.mutation.PersonalIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   customer.PersonalTable,
+			Columns: []string{customer.PersonalColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: personal.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if cuo.mutation.TitleCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   customer.TitleTable,
+			Columns: []string{customer.TitleColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: title.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := cuo.mutation.TitleIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   customer.TitleTable,
+			Columns: []string{customer.TitleColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: title.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	c = &Customer{config: cuo.config}
 	_spec.Assign = c.assignValues
 	_spec.ScanValues = c.scanValues()

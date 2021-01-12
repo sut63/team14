@@ -9,6 +9,7 @@ import (
 
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
+	"github.com/tanapon395/playlist-video/ent/customer"
 	"github.com/tanapon395/playlist-video/ent/personal"
 	"github.com/tanapon395/playlist-video/ent/title"
 )
@@ -39,6 +40,21 @@ func (tc *TitleCreate) AddPersonal(p ...*Personal) *TitleCreate {
 		ids[i] = p[i].ID
 	}
 	return tc.AddPersonalIDs(ids...)
+}
+
+// AddCustomerIDs adds the customer edge to Customer by ids.
+func (tc *TitleCreate) AddCustomerIDs(ids ...int) *TitleCreate {
+	tc.mutation.AddCustomerIDs(ids...)
+	return tc
+}
+
+// AddCustomer adds the customer edges to Customer.
+func (tc *TitleCreate) AddCustomer(c ...*Customer) *TitleCreate {
+	ids := make([]int, len(c))
+	for i := range c {
+		ids[i] = c[i].ID
+	}
+	return tc.AddCustomerIDs(ids...)
 }
 
 // Mutation returns the TitleMutation object of the builder.
@@ -130,6 +146,25 @@ func (tc *TitleCreate) createSpec() (*Title, *sqlgraph.CreateSpec) {
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: personal.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := tc.mutation.CustomerIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   title.CustomerTable,
+			Columns: []string{title.CustomerColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: customer.FieldID,
 				},
 			},
 		}

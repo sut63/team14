@@ -33,6 +33,140 @@ var doc = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/customers": {
+            "get": {
+                "description": "list customer entities",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "List customer entities",
+                "operationId": "list-customer",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Limit",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Offset",
+                        "name": "offset",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ent.Customer"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create customer",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create customer",
+                "operationId": "create-customer",
+                "parameters": [
+                    {
+                        "description": "Customer entity",
+                        "name": "customer",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.Customer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.Customer"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/customers/{id}": {
+            "delete": {
+                "description": "get customer by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Delete a customer entity by ID",
+                "operationId": "delete-customer",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Customer ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
         "/departments": {
             "get": {
                 "description": "list department entities",
@@ -571,6 +705,29 @@ var doc = `{
         }
     },
     "definitions": {
+        "controllers.Customer": {
+            "type": "object",
+            "properties": {
+                "address": {
+                    "type": "string"
+                },
+                "customername": {
+                    "type": "string"
+                },
+                "gender": {
+                    "type": "integer"
+                },
+                "personal": {
+                    "type": "integer"
+                },
+                "phonenumber": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "integer"
+                }
+            }
+        },
         "controllers.Department": {
             "type": "object",
             "properties": {
@@ -613,6 +770,52 @@ var doc = `{
         "controllers.Title": {
             "type": "object"
         },
+        "ent.Customer": {
+            "type": "object",
+            "properties": {
+                "Address": {
+                    "description": "Address holds the value of the \"Address\" field.",
+                    "type": "string"
+                },
+                "Customername": {
+                    "description": "Customername holds the value of the \"Customername\" field.",
+                    "type": "string"
+                },
+                "Phonenumber": {
+                    "description": "Phonenumber holds the value of the \"Phonenumber\" field.",
+                    "type": "string"
+                },
+                "edges": {
+                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the CustomerQuery when eager-loading is set.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.CustomerEdges"
+                },
+                "id": {
+                    "description": "ID of the ent.",
+                    "type": "integer"
+                }
+            }
+        },
+        "ent.CustomerEdges": {
+            "type": "object",
+            "properties": {
+                "gender": {
+                    "description": "Gender holds the value of the gender edge.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.Gender"
+                },
+                "personal": {
+                    "description": "Personal holds the value of the personal edge.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.Personal"
+                },
+                "title": {
+                    "description": "Title holds the value of the title edge.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.Title"
+                }
+            }
+        },
         "ent.Department": {
             "type": "object",
             "properties": {
@@ -634,6 +837,13 @@ var doc = `{
         "ent.DepartmentEdges": {
             "type": "object",
             "properties": {
+                "customer": {
+                    "description": "Customer holds the value of the customer edge.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.Customer"
+                    }
+                },
                 "personal": {
                     "description": "Personal holds the value of the personal edge.",
                     "type": "array",
@@ -664,6 +874,13 @@ var doc = `{
         "ent.GenderEdges": {
             "type": "object",
             "properties": {
+                "customer": {
+                    "description": "Customer holds the value of the customer edge.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.Customer"
+                    }
+                },
                 "personal": {
                     "description": "Personal holds the value of the personal edge.",
                     "type": "array",
@@ -702,6 +919,13 @@ var doc = `{
         "ent.PersonalEdges": {
             "type": "object",
             "properties": {
+                "customer": {
+                    "description": "Customer holds the value of the customer edge.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.Customer"
+                    }
+                },
                 "department": {
                     "description": "Department holds the value of the department edge.",
                     "type": "object",
@@ -740,6 +964,13 @@ var doc = `{
         "ent.TitleEdges": {
             "type": "object",
             "properties": {
+                "customer": {
+                    "description": "Customer holds the value of the customer edge.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.Customer"
+                    }
+                },
                 "personal": {
                     "description": "Personal holds the value of the personal edge.",
                     "type": "array",
