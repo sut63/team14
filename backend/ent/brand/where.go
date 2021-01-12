@@ -237,6 +237,34 @@ func HasProductWith(preds ...predicate.Product) predicate.Brand {
 	})
 }
 
+// HasFix applies the HasEdge predicate on the "fix" edge.
+func HasFix() predicate.Brand {
+	return predicate.Brand(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(FixTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, FixTable, FixColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasFixWith applies the HasEdge predicate on the "fix" edge with a given conditions (other predicates).
+func HasFixWith(preds ...predicate.Fix) predicate.Brand {
+	return predicate.Brand(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(FixInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, FixTable, FixColumn),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
 // And groups list of predicates with the AND operator between them.
 func And(predicates ...predicate.Brand) predicate.Brand {
 	return predicate.Brand(func(s *sql.Selector) {

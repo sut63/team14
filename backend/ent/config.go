@@ -29,6 +29,7 @@ type hooks struct {
 	Customer    []ent.Hook
 	Department  []ent.Hook
 	Fix         []ent.Hook
+	Fixcomtype  []ent.Hook
 	Gender      []ent.Hook
 	Personal    []ent.Hook
 	Product     []ent.Hook

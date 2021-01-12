@@ -7,12 +7,78 @@ const (
 	Label = "fix"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
+	// FieldProductnumber holds the string denoting the productnumber field in the database.
+	FieldProductnumber = "productnumber"
+	// FieldProblemtype holds the string denoting the problemtype field in the database.
+	FieldProblemtype = "problemtype"
+	// FieldQueue holds the string denoting the queue field in the database.
+	FieldQueue = "queue"
+	// FieldDate holds the string denoting the date field in the database.
+	FieldDate = "date"
+
+	// EdgeBrand holds the string denoting the brand edge name in mutations.
+	EdgeBrand = "brand"
+	// EdgePersonal holds the string denoting the personal edge name in mutations.
+	EdgePersonal = "personal"
+	// EdgeCustomer holds the string denoting the customer edge name in mutations.
+	EdgeCustomer = "customer"
+	// EdgeFixcomtype holds the string denoting the fixcomtype edge name in mutations.
+	EdgeFixcomtype = "fixcomtype"
 
 	// Table holds the table name of the fix in the database.
 	Table = "fixes"
+	// BrandTable is the table the holds the brand relation/edge.
+	BrandTable = "fixes"
+	// BrandInverseTable is the table name for the Brand entity.
+	// It exists in this package in order to avoid circular dependency with the "brand" package.
+	BrandInverseTable = "brands"
+	// BrandColumn is the table column denoting the brand relation/edge.
+	BrandColumn = "brand_id"
+	// PersonalTable is the table the holds the personal relation/edge.
+	PersonalTable = "fixes"
+	// PersonalInverseTable is the table name for the Personal entity.
+	// It exists in this package in order to avoid circular dependency with the "personal" package.
+	PersonalInverseTable = "personals"
+	// PersonalColumn is the table column denoting the personal relation/edge.
+	PersonalColumn = "personal_id"
+	// CustomerTable is the table the holds the customer relation/edge.
+	CustomerTable = "fixes"
+	// CustomerInverseTable is the table name for the Customer entity.
+	// It exists in this package in order to avoid circular dependency with the "customer" package.
+	CustomerInverseTable = "customers"
+	// CustomerColumn is the table column denoting the customer relation/edge.
+	CustomerColumn = "customer_id"
+	// FixcomtypeTable is the table the holds the fixcomtype relation/edge.
+	FixcomtypeTable = "fixes"
+	// FixcomtypeInverseTable is the table name for the Fixcomtype entity.
+	// It exists in this package in order to avoid circular dependency with the "fixcomtype" package.
+	FixcomtypeInverseTable = "fixcomtypes"
+	// FixcomtypeColumn is the table column denoting the fixcomtype relation/edge.
+	FixcomtypeColumn = "fixcomtype_id"
 )
 
 // Columns holds all SQL columns for fix fields.
 var Columns = []string{
 	FieldID,
+	FieldProductnumber,
+	FieldProblemtype,
+	FieldQueue,
+	FieldDate,
 }
+
+// ForeignKeys holds the SQL foreign-keys that are owned by the Fix type.
+var ForeignKeys = []string{
+	"brand_id",
+	"customer_id",
+	"fixcomtype_id",
+	"personal_id",
+}
+
+var (
+	// ProductnumberValidator is a validator for the "productnumber" field. It is called by the builders before save.
+	ProductnumberValidator func(string) error
+	// ProblemtypeValidator is a validator for the "problemtype" field. It is called by the builders before save.
+	ProblemtypeValidator func(string) error
+	// QueueValidator is a validator for the "queue" field. It is called by the builders before save.
+	QueueValidator func(string) error
+)

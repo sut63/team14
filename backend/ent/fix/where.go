@@ -3,7 +3,10 @@
 package fix
 
 import (
+	"time"
+
 	"github.com/facebookincubator/ent/dialect/sql"
+	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/tanapon395/playlist-video/ent/predicate"
 )
 
@@ -87,6 +90,555 @@ func IDLT(id int) predicate.Fix {
 func IDLTE(id int) predicate.Fix {
 	return predicate.Fix(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldID), id))
+	})
+}
+
+// Productnumber applies equality check predicate on the "productnumber" field. It's identical to ProductnumberEQ.
+func Productnumber(v string) predicate.Fix {
+	return predicate.Fix(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldProductnumber), v))
+	})
+}
+
+// Problemtype applies equality check predicate on the "problemtype" field. It's identical to ProblemtypeEQ.
+func Problemtype(v string) predicate.Fix {
+	return predicate.Fix(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldProblemtype), v))
+	})
+}
+
+// Queue applies equality check predicate on the "queue" field. It's identical to QueueEQ.
+func Queue(v string) predicate.Fix {
+	return predicate.Fix(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldQueue), v))
+	})
+}
+
+// Date applies equality check predicate on the "date" field. It's identical to DateEQ.
+func Date(v time.Time) predicate.Fix {
+	return predicate.Fix(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldDate), v))
+	})
+}
+
+// ProductnumberEQ applies the EQ predicate on the "productnumber" field.
+func ProductnumberEQ(v string) predicate.Fix {
+	return predicate.Fix(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldProductnumber), v))
+	})
+}
+
+// ProductnumberNEQ applies the NEQ predicate on the "productnumber" field.
+func ProductnumberNEQ(v string) predicate.Fix {
+	return predicate.Fix(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldProductnumber), v))
+	})
+}
+
+// ProductnumberIn applies the In predicate on the "productnumber" field.
+func ProductnumberIn(vs ...string) predicate.Fix {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Fix(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldProductnumber), v...))
+	})
+}
+
+// ProductnumberNotIn applies the NotIn predicate on the "productnumber" field.
+func ProductnumberNotIn(vs ...string) predicate.Fix {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Fix(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldProductnumber), v...))
+	})
+}
+
+// ProductnumberGT applies the GT predicate on the "productnumber" field.
+func ProductnumberGT(v string) predicate.Fix {
+	return predicate.Fix(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldProductnumber), v))
+	})
+}
+
+// ProductnumberGTE applies the GTE predicate on the "productnumber" field.
+func ProductnumberGTE(v string) predicate.Fix {
+	return predicate.Fix(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldProductnumber), v))
+	})
+}
+
+// ProductnumberLT applies the LT predicate on the "productnumber" field.
+func ProductnumberLT(v string) predicate.Fix {
+	return predicate.Fix(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldProductnumber), v))
+	})
+}
+
+// ProductnumberLTE applies the LTE predicate on the "productnumber" field.
+func ProductnumberLTE(v string) predicate.Fix {
+	return predicate.Fix(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldProductnumber), v))
+	})
+}
+
+// ProductnumberContains applies the Contains predicate on the "productnumber" field.
+func ProductnumberContains(v string) predicate.Fix {
+	return predicate.Fix(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldProductnumber), v))
+	})
+}
+
+// ProductnumberHasPrefix applies the HasPrefix predicate on the "productnumber" field.
+func ProductnumberHasPrefix(v string) predicate.Fix {
+	return predicate.Fix(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldProductnumber), v))
+	})
+}
+
+// ProductnumberHasSuffix applies the HasSuffix predicate on the "productnumber" field.
+func ProductnumberHasSuffix(v string) predicate.Fix {
+	return predicate.Fix(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldProductnumber), v))
+	})
+}
+
+// ProductnumberEqualFold applies the EqualFold predicate on the "productnumber" field.
+func ProductnumberEqualFold(v string) predicate.Fix {
+	return predicate.Fix(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldProductnumber), v))
+	})
+}
+
+// ProductnumberContainsFold applies the ContainsFold predicate on the "productnumber" field.
+func ProductnumberContainsFold(v string) predicate.Fix {
+	return predicate.Fix(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldProductnumber), v))
+	})
+}
+
+// ProblemtypeEQ applies the EQ predicate on the "problemtype" field.
+func ProblemtypeEQ(v string) predicate.Fix {
+	return predicate.Fix(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldProblemtype), v))
+	})
+}
+
+// ProblemtypeNEQ applies the NEQ predicate on the "problemtype" field.
+func ProblemtypeNEQ(v string) predicate.Fix {
+	return predicate.Fix(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldProblemtype), v))
+	})
+}
+
+// ProblemtypeIn applies the In predicate on the "problemtype" field.
+func ProblemtypeIn(vs ...string) predicate.Fix {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Fix(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldProblemtype), v...))
+	})
+}
+
+// ProblemtypeNotIn applies the NotIn predicate on the "problemtype" field.
+func ProblemtypeNotIn(vs ...string) predicate.Fix {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Fix(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldProblemtype), v...))
+	})
+}
+
+// ProblemtypeGT applies the GT predicate on the "problemtype" field.
+func ProblemtypeGT(v string) predicate.Fix {
+	return predicate.Fix(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldProblemtype), v))
+	})
+}
+
+// ProblemtypeGTE applies the GTE predicate on the "problemtype" field.
+func ProblemtypeGTE(v string) predicate.Fix {
+	return predicate.Fix(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldProblemtype), v))
+	})
+}
+
+// ProblemtypeLT applies the LT predicate on the "problemtype" field.
+func ProblemtypeLT(v string) predicate.Fix {
+	return predicate.Fix(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldProblemtype), v))
+	})
+}
+
+// ProblemtypeLTE applies the LTE predicate on the "problemtype" field.
+func ProblemtypeLTE(v string) predicate.Fix {
+	return predicate.Fix(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldProblemtype), v))
+	})
+}
+
+// ProblemtypeContains applies the Contains predicate on the "problemtype" field.
+func ProblemtypeContains(v string) predicate.Fix {
+	return predicate.Fix(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldProblemtype), v))
+	})
+}
+
+// ProblemtypeHasPrefix applies the HasPrefix predicate on the "problemtype" field.
+func ProblemtypeHasPrefix(v string) predicate.Fix {
+	return predicate.Fix(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldProblemtype), v))
+	})
+}
+
+// ProblemtypeHasSuffix applies the HasSuffix predicate on the "problemtype" field.
+func ProblemtypeHasSuffix(v string) predicate.Fix {
+	return predicate.Fix(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldProblemtype), v))
+	})
+}
+
+// ProblemtypeEqualFold applies the EqualFold predicate on the "problemtype" field.
+func ProblemtypeEqualFold(v string) predicate.Fix {
+	return predicate.Fix(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldProblemtype), v))
+	})
+}
+
+// ProblemtypeContainsFold applies the ContainsFold predicate on the "problemtype" field.
+func ProblemtypeContainsFold(v string) predicate.Fix {
+	return predicate.Fix(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldProblemtype), v))
+	})
+}
+
+// QueueEQ applies the EQ predicate on the "queue" field.
+func QueueEQ(v string) predicate.Fix {
+	return predicate.Fix(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldQueue), v))
+	})
+}
+
+// QueueNEQ applies the NEQ predicate on the "queue" field.
+func QueueNEQ(v string) predicate.Fix {
+	return predicate.Fix(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldQueue), v))
+	})
+}
+
+// QueueIn applies the In predicate on the "queue" field.
+func QueueIn(vs ...string) predicate.Fix {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Fix(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldQueue), v...))
+	})
+}
+
+// QueueNotIn applies the NotIn predicate on the "queue" field.
+func QueueNotIn(vs ...string) predicate.Fix {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Fix(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldQueue), v...))
+	})
+}
+
+// QueueGT applies the GT predicate on the "queue" field.
+func QueueGT(v string) predicate.Fix {
+	return predicate.Fix(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldQueue), v))
+	})
+}
+
+// QueueGTE applies the GTE predicate on the "queue" field.
+func QueueGTE(v string) predicate.Fix {
+	return predicate.Fix(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldQueue), v))
+	})
+}
+
+// QueueLT applies the LT predicate on the "queue" field.
+func QueueLT(v string) predicate.Fix {
+	return predicate.Fix(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldQueue), v))
+	})
+}
+
+// QueueLTE applies the LTE predicate on the "queue" field.
+func QueueLTE(v string) predicate.Fix {
+	return predicate.Fix(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldQueue), v))
+	})
+}
+
+// QueueContains applies the Contains predicate on the "queue" field.
+func QueueContains(v string) predicate.Fix {
+	return predicate.Fix(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldQueue), v))
+	})
+}
+
+// QueueHasPrefix applies the HasPrefix predicate on the "queue" field.
+func QueueHasPrefix(v string) predicate.Fix {
+	return predicate.Fix(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldQueue), v))
+	})
+}
+
+// QueueHasSuffix applies the HasSuffix predicate on the "queue" field.
+func QueueHasSuffix(v string) predicate.Fix {
+	return predicate.Fix(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldQueue), v))
+	})
+}
+
+// QueueEqualFold applies the EqualFold predicate on the "queue" field.
+func QueueEqualFold(v string) predicate.Fix {
+	return predicate.Fix(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldQueue), v))
+	})
+}
+
+// QueueContainsFold applies the ContainsFold predicate on the "queue" field.
+func QueueContainsFold(v string) predicate.Fix {
+	return predicate.Fix(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldQueue), v))
+	})
+}
+
+// DateEQ applies the EQ predicate on the "date" field.
+func DateEQ(v time.Time) predicate.Fix {
+	return predicate.Fix(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldDate), v))
+	})
+}
+
+// DateNEQ applies the NEQ predicate on the "date" field.
+func DateNEQ(v time.Time) predicate.Fix {
+	return predicate.Fix(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldDate), v))
+	})
+}
+
+// DateIn applies the In predicate on the "date" field.
+func DateIn(vs ...time.Time) predicate.Fix {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Fix(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldDate), v...))
+	})
+}
+
+// DateNotIn applies the NotIn predicate on the "date" field.
+func DateNotIn(vs ...time.Time) predicate.Fix {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Fix(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldDate), v...))
+	})
+}
+
+// DateGT applies the GT predicate on the "date" field.
+func DateGT(v time.Time) predicate.Fix {
+	return predicate.Fix(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldDate), v))
+	})
+}
+
+// DateGTE applies the GTE predicate on the "date" field.
+func DateGTE(v time.Time) predicate.Fix {
+	return predicate.Fix(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldDate), v))
+	})
+}
+
+// DateLT applies the LT predicate on the "date" field.
+func DateLT(v time.Time) predicate.Fix {
+	return predicate.Fix(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldDate), v))
+	})
+}
+
+// DateLTE applies the LTE predicate on the "date" field.
+func DateLTE(v time.Time) predicate.Fix {
+	return predicate.Fix(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldDate), v))
+	})
+}
+
+// HasBrand applies the HasEdge predicate on the "brand" edge.
+func HasBrand() predicate.Fix {
+	return predicate.Fix(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(BrandTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, BrandTable, BrandColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasBrandWith applies the HasEdge predicate on the "brand" edge with a given conditions (other predicates).
+func HasBrandWith(preds ...predicate.Brand) predicate.Fix {
+	return predicate.Fix(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(BrandInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, BrandTable, BrandColumn),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
+// HasPersonal applies the HasEdge predicate on the "personal" edge.
+func HasPersonal() predicate.Fix {
+	return predicate.Fix(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(PersonalTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, PersonalTable, PersonalColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasPersonalWith applies the HasEdge predicate on the "personal" edge with a given conditions (other predicates).
+func HasPersonalWith(preds ...predicate.Personal) predicate.Fix {
+	return predicate.Fix(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(PersonalInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, PersonalTable, PersonalColumn),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
+// HasCustomer applies the HasEdge predicate on the "customer" edge.
+func HasCustomer() predicate.Fix {
+	return predicate.Fix(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(CustomerTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, CustomerTable, CustomerColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasCustomerWith applies the HasEdge predicate on the "customer" edge with a given conditions (other predicates).
+func HasCustomerWith(preds ...predicate.Customer) predicate.Fix {
+	return predicate.Fix(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(CustomerInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, CustomerTable, CustomerColumn),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
+// HasFixcomtype applies the HasEdge predicate on the "fixcomtype" edge.
+func HasFixcomtype() predicate.Fix {
+	return predicate.Fix(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(FixcomtypeTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, FixcomtypeTable, FixcomtypeColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasFixcomtypeWith applies the HasEdge predicate on the "fixcomtype" edge with a given conditions (other predicates).
+func HasFixcomtypeWith(preds ...predicate.Fixcomtype) predicate.Fix {
+	return predicate.Fix(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(FixcomtypeInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, FixcomtypeTable, FixcomtypeColumn),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
 	})
 }
 

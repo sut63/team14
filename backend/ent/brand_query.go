@@ -13,6 +13,7 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
 	"github.com/tanapon395/playlist-video/ent/brand"
+	"github.com/tanapon395/playlist-video/ent/fix"
 	"github.com/tanapon395/playlist-video/ent/predicate"
 	"github.com/tanapon395/playlist-video/ent/product"
 )
@@ -27,6 +28,7 @@ type BrandQuery struct {
 	predicates []predicate.Brand
 	// eager-loading edges.
 	withProduct *ProductQuery
+	withFix     *FixQuery
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -67,6 +69,24 @@ func (bq *BrandQuery) QueryProduct() *ProductQuery {
 			sqlgraph.From(brand.Table, brand.FieldID, bq.sqlQuery()),
 			sqlgraph.To(product.Table, product.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, brand.ProductTable, brand.ProductColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(bq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryFix chains the current query on the fix edge.
+func (bq *BrandQuery) QueryFix() *FixQuery {
+	query := &FixQuery{config: bq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := bq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(brand.Table, brand.FieldID, bq.sqlQuery()),
+			sqlgraph.To(fix.Table, fix.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, brand.FixTable, brand.FixColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(bq.driver.Dialect(), step)
 		return fromU, nil
@@ -264,6 +284,17 @@ func (bq *BrandQuery) WithProduct(opts ...func(*ProductQuery)) *BrandQuery {
 	return bq
 }
 
+//  WithFix tells the query-builder to eager-loads the nodes that are connected to
+// the "fix" edge. The optional arguments used to configure the query builder of the edge.
+func (bq *BrandQuery) WithFix(opts ...func(*FixQuery)) *BrandQuery {
+	query := &FixQuery{config: bq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	bq.withFix = query
+	return bq
+}
+
 // GroupBy used to group vertices by one or more fields/columns.
 // It is often used with aggregate functions, like: count, max, mean, min, sum.
 //
@@ -330,8 +361,9 @@ func (bq *BrandQuery) sqlAll(ctx context.Context) ([]*Brand, error) {
 	var (
 		nodes       = []*Brand{}
 		_spec       = bq.querySpec()
-		loadedTypes = [1]bool{
+		loadedTypes = [2]bool{
 			bq.withProduct != nil,
+			bq.withFix != nil,
 		}
 	)
 	_spec.ScanValues = func() []interface{} {
@@ -380,6 +412,34 @@ func (bq *BrandQuery) sqlAll(ctx context.Context) ([]*Brand, error) {
 				return nil, fmt.Errorf(`unexpected foreign-key "Brand" returned %v for node %v`, *fk, n.ID)
 			}
 			node.Edges.Product = append(node.Edges.Product, n)
+		}
+	}
+
+	if query := bq.withFix; query != nil {
+		fks := make([]driver.Value, 0, len(nodes))
+		nodeids := make(map[int]*Brand)
+		for i := range nodes {
+			fks = append(fks, nodes[i].ID)
+			nodeids[nodes[i].ID] = nodes[i]
+		}
+		query.withFKs = true
+		query.Where(predicate.Fix(func(s *sql.Selector) {
+			s.Where(sql.InValues(brand.FixColumn, fks...))
+		}))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			fk := n.brand_id
+			if fk == nil {
+				return nil, fmt.Errorf(`foreign-key "brand_id" is nil for node %v`, n.ID)
+			}
+			node, ok := nodeids[*fk]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "brand_id" returned %v for node %v`, *fk, n.ID)
+			}
+			node.Edges.Fix = append(node.Edges.Fix, n)
 		}
 	}
 

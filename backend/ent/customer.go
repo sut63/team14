@@ -41,9 +41,11 @@ type CustomerEdges struct {
 	Personal *Personal
 	// Title holds the value of the title edge.
 	Title *Title
+	// Fix holds the value of the fix edge.
+	Fix []*Fix
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [3]bool
+	loadedTypes [4]bool
 }
 
 // GenderOrErr returns the Gender value or an error if the edge
@@ -86,6 +88,15 @@ func (e CustomerEdges) TitleOrErr() (*Title, error) {
 		return e.Title, nil
 	}
 	return nil, &NotLoadedError{edge: "title"}
+}
+
+// FixOrErr returns the Fix value or an error if the edge
+// was not loaded in eager-loading.
+func (e CustomerEdges) FixOrErr() ([]*Fix, error) {
+	if e.loadedTypes[3] {
+		return e.Fix, nil
+	}
+	return nil, &NotLoadedError{edge: "fix"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -178,6 +189,11 @@ func (c *Customer) QueryPersonal() *PersonalQuery {
 // QueryTitle queries the title edge of the Customer.
 func (c *Customer) QueryTitle() *TitleQuery {
 	return (&CustomerClient{config: c.config}).QueryTitle(c)
+}
+
+// QueryFix queries the fix edge of the Customer.
+func (c *Customer) QueryFix() *FixQuery {
+	return (&CustomerClient{config: c.config}).QueryFix(c)
 }
 
 // Update returns a builder for updating this Customer.

@@ -10,6 +10,7 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
 	"github.com/tanapon395/playlist-video/ent/brand"
+	"github.com/tanapon395/playlist-video/ent/fix"
 	"github.com/tanapon395/playlist-video/ent/predicate"
 	"github.com/tanapon395/playlist-video/ent/product"
 )
@@ -49,6 +50,21 @@ func (bu *BrandUpdate) AddProduct(p ...*Product) *BrandUpdate {
 	return bu.AddProductIDs(ids...)
 }
 
+// AddFixIDs adds the fix edge to Fix by ids.
+func (bu *BrandUpdate) AddFixIDs(ids ...int) *BrandUpdate {
+	bu.mutation.AddFixIDs(ids...)
+	return bu
+}
+
+// AddFix adds the fix edges to Fix.
+func (bu *BrandUpdate) AddFix(f ...*Fix) *BrandUpdate {
+	ids := make([]int, len(f))
+	for i := range f {
+		ids[i] = f[i].ID
+	}
+	return bu.AddFixIDs(ids...)
+}
+
 // Mutation returns the BrandMutation object of the builder.
 func (bu *BrandUpdate) Mutation() *BrandMutation {
 	return bu.mutation
@@ -67,6 +83,21 @@ func (bu *BrandUpdate) RemoveProduct(p ...*Product) *BrandUpdate {
 		ids[i] = p[i].ID
 	}
 	return bu.RemoveProductIDs(ids...)
+}
+
+// RemoveFixIDs removes the fix edge to Fix by ids.
+func (bu *BrandUpdate) RemoveFixIDs(ids ...int) *BrandUpdate {
+	bu.mutation.RemoveFixIDs(ids...)
+	return bu
+}
+
+// RemoveFix removes fix edges to Fix.
+func (bu *BrandUpdate) RemoveFix(f ...*Fix) *BrandUpdate {
+	ids := make([]int, len(f))
+	for i := range f {
+		ids[i] = f[i].ID
+	}
+	return bu.RemoveFixIDs(ids...)
 }
 
 // Save executes the query and returns the number of rows/vertices matched by this operation.
@@ -184,6 +215,44 @@ func (bu *BrandUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	if nodes := bu.mutation.RemovedFixIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   brand.FixTable,
+			Columns: []string{brand.FixColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: fix.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := bu.mutation.FixIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   brand.FixTable,
+			Columns: []string{brand.FixColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: fix.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, bu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{brand.Label}
@@ -223,6 +292,21 @@ func (buo *BrandUpdateOne) AddProduct(p ...*Product) *BrandUpdateOne {
 	return buo.AddProductIDs(ids...)
 }
 
+// AddFixIDs adds the fix edge to Fix by ids.
+func (buo *BrandUpdateOne) AddFixIDs(ids ...int) *BrandUpdateOne {
+	buo.mutation.AddFixIDs(ids...)
+	return buo
+}
+
+// AddFix adds the fix edges to Fix.
+func (buo *BrandUpdateOne) AddFix(f ...*Fix) *BrandUpdateOne {
+	ids := make([]int, len(f))
+	for i := range f {
+		ids[i] = f[i].ID
+	}
+	return buo.AddFixIDs(ids...)
+}
+
 // Mutation returns the BrandMutation object of the builder.
 func (buo *BrandUpdateOne) Mutation() *BrandMutation {
 	return buo.mutation
@@ -241,6 +325,21 @@ func (buo *BrandUpdateOne) RemoveProduct(p ...*Product) *BrandUpdateOne {
 		ids[i] = p[i].ID
 	}
 	return buo.RemoveProductIDs(ids...)
+}
+
+// RemoveFixIDs removes the fix edge to Fix by ids.
+func (buo *BrandUpdateOne) RemoveFixIDs(ids ...int) *BrandUpdateOne {
+	buo.mutation.RemoveFixIDs(ids...)
+	return buo
+}
+
+// RemoveFix removes fix edges to Fix.
+func (buo *BrandUpdateOne) RemoveFix(f ...*Fix) *BrandUpdateOne {
+	ids := make([]int, len(f))
+	for i := range f {
+		ids[i] = f[i].ID
+	}
+	return buo.RemoveFixIDs(ids...)
 }
 
 // Save executes the query and returns the updated entity.
@@ -348,6 +447,44 @@ func (buo *BrandUpdateOne) sqlSave(ctx context.Context) (b *Brand, err error) {
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: product.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if nodes := buo.mutation.RemovedFixIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   brand.FixTable,
+			Columns: []string{brand.FixColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: fix.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := buo.mutation.FixIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   brand.FixTable,
+			Columns: []string{brand.FixColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: fix.FieldID,
 				},
 			},
 		}

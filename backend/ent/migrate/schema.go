@@ -93,12 +93,61 @@ var (
 	// FixesColumns holds the columns for the "fixes" table.
 	FixesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "productnumber", Type: field.TypeString},
+		{Name: "problemtype", Type: field.TypeString},
+		{Name: "queue", Type: field.TypeString},
+		{Name: "date", Type: field.TypeTime},
+		{Name: "brand_id", Type: field.TypeInt, Nullable: true},
+		{Name: "customer_id", Type: field.TypeInt, Nullable: true},
+		{Name: "fixcomtype_id", Type: field.TypeInt, Nullable: true},
+		{Name: "personal_id", Type: field.TypeInt, Nullable: true},
 	}
 	// FixesTable holds the schema information for the "fixes" table.
 	FixesTable = &schema.Table{
-		Name:        "fixes",
-		Columns:     FixesColumns,
-		PrimaryKey:  []*schema.Column{FixesColumns[0]},
+		Name:       "fixes",
+		Columns:    FixesColumns,
+		PrimaryKey: []*schema.Column{FixesColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:  "fixes_brands_fix",
+				Columns: []*schema.Column{FixesColumns[5]},
+
+				RefColumns: []*schema.Column{BrandsColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+			{
+				Symbol:  "fixes_customers_fix",
+				Columns: []*schema.Column{FixesColumns[6]},
+
+				RefColumns: []*schema.Column{CustomersColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+			{
+				Symbol:  "fixes_fixcomtypes_fix",
+				Columns: []*schema.Column{FixesColumns[7]},
+
+				RefColumns: []*schema.Column{FixcomtypesColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+			{
+				Symbol:  "fixes_personals_fix",
+				Columns: []*schema.Column{FixesColumns[8]},
+
+				RefColumns: []*schema.Column{PersonalsColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+		},
+	}
+	// FixcomtypesColumns holds the columns for the "fixcomtypes" table.
+	FixcomtypesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "fixcomtypename", Type: field.TypeString, Unique: true},
+	}
+	// FixcomtypesTable holds the schema information for the "fixcomtypes" table.
+	FixcomtypesTable = &schema.Table{
+		Name:        "fixcomtypes",
+		Columns:     FixcomtypesColumns,
+		PrimaryKey:  []*schema.Column{FixcomtypesColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{},
 	}
 	// GendersColumns holds the columns for the "genders" table.
@@ -233,6 +282,7 @@ var (
 		CustomersTable,
 		DepartmentsTable,
 		FixesTable,
+		FixcomtypesTable,
 		GendersTable,
 		PersonalsTable,
 		ProductsTable,
@@ -247,6 +297,10 @@ func init() {
 	CustomersTable.ForeignKeys[1].RefTable = GendersTable
 	CustomersTable.ForeignKeys[2].RefTable = PersonalsTable
 	CustomersTable.ForeignKeys[3].RefTable = TitlesTable
+	FixesTable.ForeignKeys[0].RefTable = BrandsTable
+	FixesTable.ForeignKeys[1].RefTable = CustomersTable
+	FixesTable.ForeignKeys[2].RefTable = FixcomtypesTable
+	FixesTable.ForeignKeys[3].RefTable = PersonalsTable
 	PersonalsTable.ForeignKeys[0].RefTable = DepartmentsTable
 	PersonalsTable.ForeignKeys[1].RefTable = GendersTable
 	PersonalsTable.ForeignKeys[2].RefTable = TitlesTable

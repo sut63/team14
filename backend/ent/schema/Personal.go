@@ -28,5 +28,6 @@ func (Personal) Edges() []ent.Edge {
 		edge.From("department", Department.Type).Ref("personal").Unique(),
 		edge.From("gender", Gender.Type).Ref("personal").Unique(),
 		edge.To("product", Product.Type).StorageKey(edge.Column("Personal")),
+		edge.To("fix", Fix.Type).StorageKey(edge.Column("personal_id")),
 	}
 }

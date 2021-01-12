@@ -63,6 +63,16 @@ type Typeproduct struct {
 	Typeproductname string
 }
 
+// Fixcomtypes struct type
+type Fixcomtypes struct {
+	Fixcomtype []Fixcomtype
+}
+
+// Fixcomtype struct type
+type Fixcomtype struct {
+	Fixcomtypename string
+}
+
 // @title SUT SA Example API Playlist Vidoe
 // @version 1.0
 // @description This is a sample server for SUT SE 2563
@@ -127,6 +137,8 @@ func main() {
 	controllers.NewProductController(v1, client)
 	controllers.NewTypeproductController(v1, client)
 	controllers.NewBrandController(v1, client)
+	controllers.NewFixController(v1, client)
+	controllers.NewFixcomtypeController(v1, client)
 
 	//Set Title Data
 	titles := []string{"นาย", "นาง", "นางสาว", "ไม่ระบุ"}
@@ -163,6 +175,10 @@ func main() {
 			Brand{"Kingston"},
 			Brand{"MSI"},
 			Brand{"Western Digital"},
+			Brand{"ASUS"},
+			Brand{"ACER"},
+			Brand{"DELL"},
+			Brand{"LENOVO"},
 		},
 	}
 	for _, b := range brands.Brand {
@@ -189,6 +205,22 @@ func main() {
 			SetTypeproductname(t.Typeproductname).
 			Save(context.Background())
 	}
+
+	// Set Fixcomtypes Data
+	fixcomtypes := Fixcomtypes{
+		Fixcomtype: []Fixcomtype{
+			Fixcomtype{"Personal Computer(PC)"},
+			Fixcomtype{"Laptop"},
+			
+		},
+	}
+	for _, ft := range fixcomtypes.Fixcomtype {
+		client.Fixcomtype.
+			Create().
+			SetFixcomtypename(ft.Fixcomtypename).
+			Save(context.Background())
+	}
+
 	
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	router.Run()

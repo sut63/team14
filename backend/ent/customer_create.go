@@ -10,6 +10,7 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
 	"github.com/tanapon395/playlist-video/ent/customer"
+	"github.com/tanapon395/playlist-video/ent/fix"
 	"github.com/tanapon395/playlist-video/ent/gender"
 	"github.com/tanapon395/playlist-video/ent/personal"
 	"github.com/tanapon395/playlist-video/ent/title"
@@ -95,6 +96,21 @@ func (cc *CustomerCreate) SetNillableTitleID(id *int) *CustomerCreate {
 // SetTitle sets the title edge to Title.
 func (cc *CustomerCreate) SetTitle(t *Title) *CustomerCreate {
 	return cc.SetTitleID(t.ID)
+}
+
+// AddFixIDs adds the fix edge to Fix by ids.
+func (cc *CustomerCreate) AddFixIDs(ids ...int) *CustomerCreate {
+	cc.mutation.AddFixIDs(ids...)
+	return cc
+}
+
+// AddFix adds the fix edges to Fix.
+func (cc *CustomerCreate) AddFix(f ...*Fix) *CustomerCreate {
+	ids := make([]int, len(f))
+	for i := range f {
+		ids[i] = f[i].ID
+	}
+	return cc.AddFixIDs(ids...)
 }
 
 // Mutation returns the CustomerMutation object of the builder.
@@ -246,6 +262,25 @@ func (cc *CustomerCreate) createSpec() (*Customer, *sqlgraph.CreateSpec) {
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: title.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := cc.mutation.FixIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   customer.FixTable,
+			Columns: []string{customer.FixColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: fix.FieldID,
 				},
 			},
 		}

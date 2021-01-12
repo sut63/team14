@@ -11,7 +11,11 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
+	"github.com/tanapon395/playlist-video/ent/brand"
+	"github.com/tanapon395/playlist-video/ent/customer"
 	"github.com/tanapon395/playlist-video/ent/fix"
+	"github.com/tanapon395/playlist-video/ent/fixcomtype"
+	"github.com/tanapon395/playlist-video/ent/personal"
 	"github.com/tanapon395/playlist-video/ent/predicate"
 )
 
@@ -23,6 +27,12 @@ type FixQuery struct {
 	order      []OrderFunc
 	unique     []string
 	predicates []predicate.Fix
+	// eager-loading edges.
+	withBrand      *BrandQuery
+	withPersonal   *PersonalQuery
+	withCustomer   *CustomerQuery
+	withFixcomtype *FixcomtypeQuery
+	withFKs        bool
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -50,6 +60,78 @@ func (fq *FixQuery) Offset(offset int) *FixQuery {
 func (fq *FixQuery) Order(o ...OrderFunc) *FixQuery {
 	fq.order = append(fq.order, o...)
 	return fq
+}
+
+// QueryBrand chains the current query on the brand edge.
+func (fq *FixQuery) QueryBrand() *BrandQuery {
+	query := &BrandQuery{config: fq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := fq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(fix.Table, fix.FieldID, fq.sqlQuery()),
+			sqlgraph.To(brand.Table, brand.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, fix.BrandTable, fix.BrandColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(fq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryPersonal chains the current query on the personal edge.
+func (fq *FixQuery) QueryPersonal() *PersonalQuery {
+	query := &PersonalQuery{config: fq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := fq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(fix.Table, fix.FieldID, fq.sqlQuery()),
+			sqlgraph.To(personal.Table, personal.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, fix.PersonalTable, fix.PersonalColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(fq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryCustomer chains the current query on the customer edge.
+func (fq *FixQuery) QueryCustomer() *CustomerQuery {
+	query := &CustomerQuery{config: fq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := fq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(fix.Table, fix.FieldID, fq.sqlQuery()),
+			sqlgraph.To(customer.Table, customer.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, fix.CustomerTable, fix.CustomerColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(fq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryFixcomtype chains the current query on the fixcomtype edge.
+func (fq *FixQuery) QueryFixcomtype() *FixcomtypeQuery {
+	query := &FixcomtypeQuery{config: fq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := fq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(fix.Table, fix.FieldID, fq.sqlQuery()),
+			sqlgraph.To(fixcomtype.Table, fixcomtype.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, fix.FixcomtypeTable, fix.FixcomtypeColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(fq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
 }
 
 // First returns the first Fix entity in the query. Returns *NotFoundError when no fix was found.
@@ -231,8 +313,65 @@ func (fq *FixQuery) Clone() *FixQuery {
 	}
 }
 
+//  WithBrand tells the query-builder to eager-loads the nodes that are connected to
+// the "brand" edge. The optional arguments used to configure the query builder of the edge.
+func (fq *FixQuery) WithBrand(opts ...func(*BrandQuery)) *FixQuery {
+	query := &BrandQuery{config: fq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	fq.withBrand = query
+	return fq
+}
+
+//  WithPersonal tells the query-builder to eager-loads the nodes that are connected to
+// the "personal" edge. The optional arguments used to configure the query builder of the edge.
+func (fq *FixQuery) WithPersonal(opts ...func(*PersonalQuery)) *FixQuery {
+	query := &PersonalQuery{config: fq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	fq.withPersonal = query
+	return fq
+}
+
+//  WithCustomer tells the query-builder to eager-loads the nodes that are connected to
+// the "customer" edge. The optional arguments used to configure the query builder of the edge.
+func (fq *FixQuery) WithCustomer(opts ...func(*CustomerQuery)) *FixQuery {
+	query := &CustomerQuery{config: fq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	fq.withCustomer = query
+	return fq
+}
+
+//  WithFixcomtype tells the query-builder to eager-loads the nodes that are connected to
+// the "fixcomtype" edge. The optional arguments used to configure the query builder of the edge.
+func (fq *FixQuery) WithFixcomtype(opts ...func(*FixcomtypeQuery)) *FixQuery {
+	query := &FixcomtypeQuery{config: fq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	fq.withFixcomtype = query
+	return fq
+}
+
 // GroupBy used to group vertices by one or more fields/columns.
 // It is often used with aggregate functions, like: count, max, mean, min, sum.
+//
+// Example:
+//
+//	var v []struct {
+//		Productnumber string `json:"productnumber,omitempty"`
+//		Count int `json:"count,omitempty"`
+//	}
+//
+//	client.Fix.Query().
+//		GroupBy(fix.FieldProductnumber).
+//		Aggregate(ent.Count()).
+//		Scan(ctx, &v)
+//
 func (fq *FixQuery) GroupBy(field string, fields ...string) *FixGroupBy {
 	group := &FixGroupBy{config: fq.config}
 	group.fields = append([]string{field}, fields...)
@@ -246,6 +385,17 @@ func (fq *FixQuery) GroupBy(field string, fields ...string) *FixGroupBy {
 }
 
 // Select one or more fields from the given query.
+//
+// Example:
+//
+//	var v []struct {
+//		Productnumber string `json:"productnumber,omitempty"`
+//	}
+//
+//	client.Fix.Query().
+//		Select(fix.FieldProductnumber).
+//		Scan(ctx, &v)
+//
 func (fq *FixQuery) Select(field string, fields ...string) *FixSelect {
 	selector := &FixSelect{config: fq.config}
 	selector.fields = append([]string{field}, fields...)
@@ -271,13 +421,29 @@ func (fq *FixQuery) prepareQuery(ctx context.Context) error {
 
 func (fq *FixQuery) sqlAll(ctx context.Context) ([]*Fix, error) {
 	var (
-		nodes = []*Fix{}
-		_spec = fq.querySpec()
+		nodes       = []*Fix{}
+		withFKs     = fq.withFKs
+		_spec       = fq.querySpec()
+		loadedTypes = [4]bool{
+			fq.withBrand != nil,
+			fq.withPersonal != nil,
+			fq.withCustomer != nil,
+			fq.withFixcomtype != nil,
+		}
 	)
+	if fq.withBrand != nil || fq.withPersonal != nil || fq.withCustomer != nil || fq.withFixcomtype != nil {
+		withFKs = true
+	}
+	if withFKs {
+		_spec.Node.Columns = append(_spec.Node.Columns, fix.ForeignKeys...)
+	}
 	_spec.ScanValues = func() []interface{} {
 		node := &Fix{config: fq.config}
 		nodes = append(nodes, node)
 		values := node.scanValues()
+		if withFKs {
+			values = append(values, node.fkValues()...)
+		}
 		return values
 	}
 	_spec.Assign = func(values ...interface{}) error {
@@ -285,6 +451,7 @@ func (fq *FixQuery) sqlAll(ctx context.Context) ([]*Fix, error) {
 			return fmt.Errorf("ent: Assign called without calling ScanValues")
 		}
 		node := nodes[len(nodes)-1]
+		node.Edges.loadedTypes = loadedTypes
 		return node.assignValues(values...)
 	}
 	if err := sqlgraph.QueryNodes(ctx, fq.driver, _spec); err != nil {
@@ -293,6 +460,107 @@ func (fq *FixQuery) sqlAll(ctx context.Context) ([]*Fix, error) {
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
+
+	if query := fq.withBrand; query != nil {
+		ids := make([]int, 0, len(nodes))
+		nodeids := make(map[int][]*Fix)
+		for i := range nodes {
+			if fk := nodes[i].brand_id; fk != nil {
+				ids = append(ids, *fk)
+				nodeids[*fk] = append(nodeids[*fk], nodes[i])
+			}
+		}
+		query.Where(brand.IDIn(ids...))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			nodes, ok := nodeids[n.ID]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "brand_id" returned %v`, n.ID)
+			}
+			for i := range nodes {
+				nodes[i].Edges.Brand = n
+			}
+		}
+	}
+
+	if query := fq.withPersonal; query != nil {
+		ids := make([]int, 0, len(nodes))
+		nodeids := make(map[int][]*Fix)
+		for i := range nodes {
+			if fk := nodes[i].personal_id; fk != nil {
+				ids = append(ids, *fk)
+				nodeids[*fk] = append(nodeids[*fk], nodes[i])
+			}
+		}
+		query.Where(personal.IDIn(ids...))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			nodes, ok := nodeids[n.ID]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "personal_id" returned %v`, n.ID)
+			}
+			for i := range nodes {
+				nodes[i].Edges.Personal = n
+			}
+		}
+	}
+
+	if query := fq.withCustomer; query != nil {
+		ids := make([]int, 0, len(nodes))
+		nodeids := make(map[int][]*Fix)
+		for i := range nodes {
+			if fk := nodes[i].customer_id; fk != nil {
+				ids = append(ids, *fk)
+				nodeids[*fk] = append(nodeids[*fk], nodes[i])
+			}
+		}
+		query.Where(customer.IDIn(ids...))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			nodes, ok := nodeids[n.ID]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "customer_id" returned %v`, n.ID)
+			}
+			for i := range nodes {
+				nodes[i].Edges.Customer = n
+			}
+		}
+	}
+
+	if query := fq.withFixcomtype; query != nil {
+		ids := make([]int, 0, len(nodes))
+		nodeids := make(map[int][]*Fix)
+		for i := range nodes {
+			if fk := nodes[i].fixcomtype_id; fk != nil {
+				ids = append(ids, *fk)
+				nodeids[*fk] = append(nodeids[*fk], nodes[i])
+			}
+		}
+		query.Where(fixcomtype.IDIn(ids...))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			nodes, ok := nodeids[n.ID]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "fixcomtype_id" returned %v`, n.ID)
+			}
+			for i := range nodes {
+				nodes[i].Edges.Fixcomtype = n
+			}
+		}
+	}
+
 	return nodes, nil
 }
 

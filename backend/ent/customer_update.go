@@ -10,6 +10,7 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
 	"github.com/tanapon395/playlist-video/ent/customer"
+	"github.com/tanapon395/playlist-video/ent/fix"
 	"github.com/tanapon395/playlist-video/ent/gender"
 	"github.com/tanapon395/playlist-video/ent/personal"
 	"github.com/tanapon395/playlist-video/ent/predicate"
@@ -105,6 +106,21 @@ func (cu *CustomerUpdate) SetTitle(t *Title) *CustomerUpdate {
 	return cu.SetTitleID(t.ID)
 }
 
+// AddFixIDs adds the fix edge to Fix by ids.
+func (cu *CustomerUpdate) AddFixIDs(ids ...int) *CustomerUpdate {
+	cu.mutation.AddFixIDs(ids...)
+	return cu
+}
+
+// AddFix adds the fix edges to Fix.
+func (cu *CustomerUpdate) AddFix(f ...*Fix) *CustomerUpdate {
+	ids := make([]int, len(f))
+	for i := range f {
+		ids[i] = f[i].ID
+	}
+	return cu.AddFixIDs(ids...)
+}
+
 // Mutation returns the CustomerMutation object of the builder.
 func (cu *CustomerUpdate) Mutation() *CustomerMutation {
 	return cu.mutation
@@ -126,6 +142,21 @@ func (cu *CustomerUpdate) ClearPersonal() *CustomerUpdate {
 func (cu *CustomerUpdate) ClearTitle() *CustomerUpdate {
 	cu.mutation.ClearTitle()
 	return cu
+}
+
+// RemoveFixIDs removes the fix edge to Fix by ids.
+func (cu *CustomerUpdate) RemoveFixIDs(ids ...int) *CustomerUpdate {
+	cu.mutation.RemoveFixIDs(ids...)
+	return cu
+}
+
+// RemoveFix removes fix edges to Fix.
+func (cu *CustomerUpdate) RemoveFix(f ...*Fix) *CustomerUpdate {
+	ids := make([]int, len(f))
+	for i := range f {
+		ids[i] = f[i].ID
+	}
+	return cu.RemoveFixIDs(ids...)
 }
 
 // Save executes the query and returns the number of rows/vertices matched by this operation.
@@ -324,6 +355,44 @@ func (cu *CustomerUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	if nodes := cu.mutation.RemovedFixIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   customer.FixTable,
+			Columns: []string{customer.FixColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: fix.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := cu.mutation.FixIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   customer.FixTable,
+			Columns: []string{customer.FixColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: fix.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, cu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{customer.Label}
@@ -417,6 +486,21 @@ func (cuo *CustomerUpdateOne) SetTitle(t *Title) *CustomerUpdateOne {
 	return cuo.SetTitleID(t.ID)
 }
 
+// AddFixIDs adds the fix edge to Fix by ids.
+func (cuo *CustomerUpdateOne) AddFixIDs(ids ...int) *CustomerUpdateOne {
+	cuo.mutation.AddFixIDs(ids...)
+	return cuo
+}
+
+// AddFix adds the fix edges to Fix.
+func (cuo *CustomerUpdateOne) AddFix(f ...*Fix) *CustomerUpdateOne {
+	ids := make([]int, len(f))
+	for i := range f {
+		ids[i] = f[i].ID
+	}
+	return cuo.AddFixIDs(ids...)
+}
+
 // Mutation returns the CustomerMutation object of the builder.
 func (cuo *CustomerUpdateOne) Mutation() *CustomerMutation {
 	return cuo.mutation
@@ -438,6 +522,21 @@ func (cuo *CustomerUpdateOne) ClearPersonal() *CustomerUpdateOne {
 func (cuo *CustomerUpdateOne) ClearTitle() *CustomerUpdateOne {
 	cuo.mutation.ClearTitle()
 	return cuo
+}
+
+// RemoveFixIDs removes the fix edge to Fix by ids.
+func (cuo *CustomerUpdateOne) RemoveFixIDs(ids ...int) *CustomerUpdateOne {
+	cuo.mutation.RemoveFixIDs(ids...)
+	return cuo
+}
+
+// RemoveFix removes fix edges to Fix.
+func (cuo *CustomerUpdateOne) RemoveFix(f ...*Fix) *CustomerUpdateOne {
+	ids := make([]int, len(f))
+	for i := range f {
+		ids[i] = f[i].ID
+	}
+	return cuo.RemoveFixIDs(ids...)
 }
 
 // Save executes the query and returns the updated entity.
@@ -626,6 +725,44 @@ func (cuo *CustomerUpdateOne) sqlSave(ctx context.Context) (c *Customer, err err
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: title.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if nodes := cuo.mutation.RemovedFixIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   customer.FixTable,
+			Columns: []string{customer.FixColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: fix.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := cuo.mutation.FixIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   customer.FixTable,
+			Columns: []string{customer.FixColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: fix.FieldID,
 				},
 			},
 		}

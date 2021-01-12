@@ -14,6 +14,7 @@ import (
 	"github.com/tanapon395/playlist-video/ent/customer"
 	"github.com/tanapon395/playlist-video/ent/department"
 	"github.com/tanapon395/playlist-video/ent/fix"
+	"github.com/tanapon395/playlist-video/ent/fixcomtype"
 	"github.com/tanapon395/playlist-video/ent/gender"
 	"github.com/tanapon395/playlist-video/ent/personal"
 	"github.com/tanapon395/playlist-video/ent/product"
@@ -41,6 +42,8 @@ type Client struct {
 	Department *DepartmentClient
 	// Fix is the client for interacting with the Fix builders.
 	Fix *FixClient
+	// Fixcomtype is the client for interacting with the Fixcomtype builders.
+	Fixcomtype *FixcomtypeClient
 	// Gender is the client for interacting with the Gender builders.
 	Gender *GenderClient
 	// Personal is the client for interacting with the Personal builders.
@@ -71,6 +74,7 @@ func (c *Client) init() {
 	c.Customer = NewCustomerClient(c.config)
 	c.Department = NewDepartmentClient(c.config)
 	c.Fix = NewFixClient(c.config)
+	c.Fixcomtype = NewFixcomtypeClient(c.config)
 	c.Gender = NewGenderClient(c.config)
 	c.Personal = NewPersonalClient(c.config)
 	c.Product = NewProductClient(c.config)
@@ -114,6 +118,7 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		Customer:    NewCustomerClient(cfg),
 		Department:  NewDepartmentClient(cfg),
 		Fix:         NewFixClient(cfg),
+		Fixcomtype:  NewFixcomtypeClient(cfg),
 		Gender:      NewGenderClient(cfg),
 		Personal:    NewPersonalClient(cfg),
 		Product:     NewProductClient(cfg),
@@ -140,6 +145,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		Customer:    NewCustomerClient(cfg),
 		Department:  NewDepartmentClient(cfg),
 		Fix:         NewFixClient(cfg),
+		Fixcomtype:  NewFixcomtypeClient(cfg),
 		Gender:      NewGenderClient(cfg),
 		Personal:    NewPersonalClient(cfg),
 		Product:     NewProductClient(cfg),
@@ -179,6 +185,7 @@ func (c *Client) Use(hooks ...Hook) {
 	c.Customer.Use(hooks...)
 	c.Department.Use(hooks...)
 	c.Fix.Use(hooks...)
+	c.Fixcomtype.Use(hooks...)
 	c.Gender.Use(hooks...)
 	c.Personal.Use(hooks...)
 	c.Product.Use(hooks...)
@@ -364,6 +371,22 @@ func (c *BrandClient) QueryProduct(b *Brand) *ProductQuery {
 	return query
 }
 
+// QueryFix queries the fix edge of a Brand.
+func (c *BrandClient) QueryFix(b *Brand) *FixQuery {
+	query := &FixQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := b.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(brand.Table, brand.FieldID, id),
+			sqlgraph.To(fix.Table, fix.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, brand.FixTable, brand.FixColumn),
+		)
+		fromV = sqlgraph.Neighbors(b.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
 // Hooks returns the client hooks.
 func (c *BrandClient) Hooks() []Hook {
 	return c.hooks.Brand
@@ -488,6 +511,22 @@ func (c *CustomerClient) QueryTitle(cu *Customer) *TitleQuery {
 			sqlgraph.From(customer.Table, customer.FieldID, id),
 			sqlgraph.To(title.Table, title.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, true, customer.TitleTable, customer.TitleColumn),
+		)
+		fromV = sqlgraph.Neighbors(cu.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryFix queries the fix edge of a Customer.
+func (c *CustomerClient) QueryFix(cu *Customer) *FixQuery {
+	query := &FixQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := cu.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(customer.Table, customer.FieldID, id),
+			sqlgraph.To(fix.Table, fix.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, customer.FixTable, customer.FixColumn),
 		)
 		fromV = sqlgraph.Neighbors(cu.driver.Dialect(), step)
 		return fromV, nil
@@ -693,9 +732,172 @@ func (c *FixClient) GetX(ctx context.Context, id int) *Fix {
 	return f
 }
 
+// QueryBrand queries the brand edge of a Fix.
+func (c *FixClient) QueryBrand(f *Fix) *BrandQuery {
+	query := &BrandQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := f.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(fix.Table, fix.FieldID, id),
+			sqlgraph.To(brand.Table, brand.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, fix.BrandTable, fix.BrandColumn),
+		)
+		fromV = sqlgraph.Neighbors(f.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryPersonal queries the personal edge of a Fix.
+func (c *FixClient) QueryPersonal(f *Fix) *PersonalQuery {
+	query := &PersonalQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := f.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(fix.Table, fix.FieldID, id),
+			sqlgraph.To(personal.Table, personal.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, fix.PersonalTable, fix.PersonalColumn),
+		)
+		fromV = sqlgraph.Neighbors(f.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryCustomer queries the customer edge of a Fix.
+func (c *FixClient) QueryCustomer(f *Fix) *CustomerQuery {
+	query := &CustomerQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := f.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(fix.Table, fix.FieldID, id),
+			sqlgraph.To(customer.Table, customer.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, fix.CustomerTable, fix.CustomerColumn),
+		)
+		fromV = sqlgraph.Neighbors(f.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryFixcomtype queries the fixcomtype edge of a Fix.
+func (c *FixClient) QueryFixcomtype(f *Fix) *FixcomtypeQuery {
+	query := &FixcomtypeQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := f.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(fix.Table, fix.FieldID, id),
+			sqlgraph.To(fixcomtype.Table, fixcomtype.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, fix.FixcomtypeTable, fix.FixcomtypeColumn),
+		)
+		fromV = sqlgraph.Neighbors(f.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
 // Hooks returns the client hooks.
 func (c *FixClient) Hooks() []Hook {
 	return c.hooks.Fix
+}
+
+// FixcomtypeClient is a client for the Fixcomtype schema.
+type FixcomtypeClient struct {
+	config
+}
+
+// NewFixcomtypeClient returns a client for the Fixcomtype from the given config.
+func NewFixcomtypeClient(c config) *FixcomtypeClient {
+	return &FixcomtypeClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `fixcomtype.Hooks(f(g(h())))`.
+func (c *FixcomtypeClient) Use(hooks ...Hook) {
+	c.hooks.Fixcomtype = append(c.hooks.Fixcomtype, hooks...)
+}
+
+// Create returns a create builder for Fixcomtype.
+func (c *FixcomtypeClient) Create() *FixcomtypeCreate {
+	mutation := newFixcomtypeMutation(c.config, OpCreate)
+	return &FixcomtypeCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Update returns an update builder for Fixcomtype.
+func (c *FixcomtypeClient) Update() *FixcomtypeUpdate {
+	mutation := newFixcomtypeMutation(c.config, OpUpdate)
+	return &FixcomtypeUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *FixcomtypeClient) UpdateOne(f *Fixcomtype) *FixcomtypeUpdateOne {
+	mutation := newFixcomtypeMutation(c.config, OpUpdateOne, withFixcomtype(f))
+	return &FixcomtypeUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *FixcomtypeClient) UpdateOneID(id int) *FixcomtypeUpdateOne {
+	mutation := newFixcomtypeMutation(c.config, OpUpdateOne, withFixcomtypeID(id))
+	return &FixcomtypeUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for Fixcomtype.
+func (c *FixcomtypeClient) Delete() *FixcomtypeDelete {
+	mutation := newFixcomtypeMutation(c.config, OpDelete)
+	return &FixcomtypeDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a delete builder for the given entity.
+func (c *FixcomtypeClient) DeleteOne(f *Fixcomtype) *FixcomtypeDeleteOne {
+	return c.DeleteOneID(f.ID)
+}
+
+// DeleteOneID returns a delete builder for the given id.
+func (c *FixcomtypeClient) DeleteOneID(id int) *FixcomtypeDeleteOne {
+	builder := c.Delete().Where(fixcomtype.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &FixcomtypeDeleteOne{builder}
+}
+
+// Create returns a query builder for Fixcomtype.
+func (c *FixcomtypeClient) Query() *FixcomtypeQuery {
+	return &FixcomtypeQuery{config: c.config}
+}
+
+// Get returns a Fixcomtype entity by its id.
+func (c *FixcomtypeClient) Get(ctx context.Context, id int) (*Fixcomtype, error) {
+	return c.Query().Where(fixcomtype.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *FixcomtypeClient) GetX(ctx context.Context, id int) *Fixcomtype {
+	f, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return f
+}
+
+// QueryFix queries the fix edge of a Fixcomtype.
+func (c *FixcomtypeClient) QueryFix(f *Fixcomtype) *FixQuery {
+	query := &FixQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := f.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(fixcomtype.Table, fixcomtype.FieldID, id),
+			sqlgraph.To(fix.Table, fix.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, fixcomtype.FixTable, fixcomtype.FixColumn),
+		)
+		fromV = sqlgraph.Neighbors(f.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// Hooks returns the client hooks.
+func (c *FixcomtypeClient) Hooks() []Hook {
+	return c.hooks.Fixcomtype
 }
 
 // GenderClient is a client for the Gender schema.
@@ -964,6 +1166,22 @@ func (c *PersonalClient) QueryProduct(pe *Personal) *ProductQuery {
 			sqlgraph.From(personal.Table, personal.FieldID, id),
 			sqlgraph.To(product.Table, product.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, personal.ProductTable, personal.ProductColumn),
+		)
+		fromV = sqlgraph.Neighbors(pe.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryFix queries the fix edge of a Personal.
+func (c *PersonalClient) QueryFix(pe *Personal) *FixQuery {
+	query := &FixQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := pe.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(personal.Table, personal.FieldID, id),
+			sqlgraph.To(fix.Table, fix.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, personal.FixTable, personal.FixColumn),
 		)
 		fromV = sqlgraph.Neighbors(pe.driver.Dialect(), step)
 		return fromV, nil
