@@ -26,9 +26,11 @@ type Gender struct {
 type GenderEdges struct {
 	// Personal holds the value of the personal edge.
 	Personal []*Personal
+	// Customer holds the value of the customer edge.
+	Customer []*Customer
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [1]bool
+	loadedTypes [2]bool
 }
 
 // PersonalOrErr returns the Personal value or an error if the edge
@@ -38,6 +40,15 @@ func (e GenderEdges) PersonalOrErr() ([]*Personal, error) {
 		return e.Personal, nil
 	}
 	return nil, &NotLoadedError{edge: "personal"}
+}
+
+// CustomerOrErr returns the Customer value or an error if the edge
+// was not loaded in eager-loading.
+func (e GenderEdges) CustomerOrErr() ([]*Customer, error) {
+	if e.loadedTypes[1] {
+		return e.Customer, nil
+	}
+	return nil, &NotLoadedError{edge: "customer"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -71,6 +82,11 @@ func (ge *Gender) assignValues(values ...interface{}) error {
 // QueryPersonal queries the personal edge of the Gender.
 func (ge *Gender) QueryPersonal() *PersonalQuery {
 	return (&GenderClient{config: ge.config}).QueryPersonal(ge)
+}
+
+// QueryCustomer queries the customer edge of the Gender.
+func (ge *Gender) QueryCustomer() *CustomerQuery {
+	return (&GenderClient{config: ge.config}).QueryCustomer(ge)
 }
 
 // Update returns a builder for updating this Gender.

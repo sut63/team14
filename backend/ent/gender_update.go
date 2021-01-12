@@ -9,6 +9,7 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
+	"github.com/tanapon395/playlist-video/ent/customer"
 	"github.com/tanapon395/playlist-video/ent/gender"
 	"github.com/tanapon395/playlist-video/ent/personal"
 	"github.com/tanapon395/playlist-video/ent/predicate"
@@ -49,6 +50,21 @@ func (gu *GenderUpdate) AddPersonal(p ...*Personal) *GenderUpdate {
 	return gu.AddPersonalIDs(ids...)
 }
 
+// AddCustomerIDs adds the customer edge to Customer by ids.
+func (gu *GenderUpdate) AddCustomerIDs(ids ...int) *GenderUpdate {
+	gu.mutation.AddCustomerIDs(ids...)
+	return gu
+}
+
+// AddCustomer adds the customer edges to Customer.
+func (gu *GenderUpdate) AddCustomer(c ...*Customer) *GenderUpdate {
+	ids := make([]int, len(c))
+	for i := range c {
+		ids[i] = c[i].ID
+	}
+	return gu.AddCustomerIDs(ids...)
+}
+
 // Mutation returns the GenderMutation object of the builder.
 func (gu *GenderUpdate) Mutation() *GenderMutation {
 	return gu.mutation
@@ -67,6 +83,21 @@ func (gu *GenderUpdate) RemovePersonal(p ...*Personal) *GenderUpdate {
 		ids[i] = p[i].ID
 	}
 	return gu.RemovePersonalIDs(ids...)
+}
+
+// RemoveCustomerIDs removes the customer edge to Customer by ids.
+func (gu *GenderUpdate) RemoveCustomerIDs(ids ...int) *GenderUpdate {
+	gu.mutation.RemoveCustomerIDs(ids...)
+	return gu
+}
+
+// RemoveCustomer removes customer edges to Customer.
+func (gu *GenderUpdate) RemoveCustomer(c ...*Customer) *GenderUpdate {
+	ids := make([]int, len(c))
+	for i := range c {
+		ids[i] = c[i].ID
+	}
+	return gu.RemoveCustomerIDs(ids...)
 }
 
 // Save executes the query and returns the number of rows/vertices matched by this operation.
@@ -184,6 +215,44 @@ func (gu *GenderUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	if nodes := gu.mutation.RemovedCustomerIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   gender.CustomerTable,
+			Columns: []string{gender.CustomerColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: customer.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := gu.mutation.CustomerIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   gender.CustomerTable,
+			Columns: []string{gender.CustomerColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: customer.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, gu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{gender.Label}
@@ -223,6 +292,21 @@ func (guo *GenderUpdateOne) AddPersonal(p ...*Personal) *GenderUpdateOne {
 	return guo.AddPersonalIDs(ids...)
 }
 
+// AddCustomerIDs adds the customer edge to Customer by ids.
+func (guo *GenderUpdateOne) AddCustomerIDs(ids ...int) *GenderUpdateOne {
+	guo.mutation.AddCustomerIDs(ids...)
+	return guo
+}
+
+// AddCustomer adds the customer edges to Customer.
+func (guo *GenderUpdateOne) AddCustomer(c ...*Customer) *GenderUpdateOne {
+	ids := make([]int, len(c))
+	for i := range c {
+		ids[i] = c[i].ID
+	}
+	return guo.AddCustomerIDs(ids...)
+}
+
 // Mutation returns the GenderMutation object of the builder.
 func (guo *GenderUpdateOne) Mutation() *GenderMutation {
 	return guo.mutation
@@ -241,6 +325,21 @@ func (guo *GenderUpdateOne) RemovePersonal(p ...*Personal) *GenderUpdateOne {
 		ids[i] = p[i].ID
 	}
 	return guo.RemovePersonalIDs(ids...)
+}
+
+// RemoveCustomerIDs removes the customer edge to Customer by ids.
+func (guo *GenderUpdateOne) RemoveCustomerIDs(ids ...int) *GenderUpdateOne {
+	guo.mutation.RemoveCustomerIDs(ids...)
+	return guo
+}
+
+// RemoveCustomer removes customer edges to Customer.
+func (guo *GenderUpdateOne) RemoveCustomer(c ...*Customer) *GenderUpdateOne {
+	ids := make([]int, len(c))
+	for i := range c {
+		ids[i] = c[i].ID
+	}
+	return guo.RemoveCustomerIDs(ids...)
 }
 
 // Save executes the query and returns the updated entity.
@@ -348,6 +447,44 @@ func (guo *GenderUpdateOne) sqlSave(ctx context.Context) (ge *Gender, err error)
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: personal.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if nodes := guo.mutation.RemovedCustomerIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   gender.CustomerTable,
+			Columns: []string{gender.CustomerColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: customer.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := guo.mutation.CustomerIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   gender.CustomerTable,
+			Columns: []string{gender.CustomerColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: customer.FieldID,
 				},
 			},
 		}

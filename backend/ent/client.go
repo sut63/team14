@@ -334,6 +334,54 @@ func (c *CustomerClient) GetX(ctx context.Context, id int) *Customer {
 	return cu
 }
 
+// QueryGender queries the gender edge of a Customer.
+func (c *CustomerClient) QueryGender(cu *Customer) *GenderQuery {
+	query := &GenderQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := cu.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(customer.Table, customer.FieldID, id),
+			sqlgraph.To(gender.Table, gender.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, customer.GenderTable, customer.GenderColumn),
+		)
+		fromV = sqlgraph.Neighbors(cu.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryPersonal queries the personal edge of a Customer.
+func (c *CustomerClient) QueryPersonal(cu *Customer) *PersonalQuery {
+	query := &PersonalQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := cu.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(customer.Table, customer.FieldID, id),
+			sqlgraph.To(personal.Table, personal.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, customer.PersonalTable, customer.PersonalColumn),
+		)
+		fromV = sqlgraph.Neighbors(cu.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryTitle queries the title edge of a Customer.
+func (c *CustomerClient) QueryTitle(cu *Customer) *TitleQuery {
+	query := &TitleQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := cu.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(customer.Table, customer.FieldID, id),
+			sqlgraph.To(title.Table, title.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, customer.TitleTable, customer.TitleColumn),
+		)
+		fromV = sqlgraph.Neighbors(cu.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
 // Hooks returns the client hooks.
 func (c *CustomerClient) Hooks() []Hook {
 	return c.hooks.Customer
@@ -426,6 +474,22 @@ func (c *DepartmentClient) QueryPersonal(d *Department) *PersonalQuery {
 			sqlgraph.From(department.Table, department.FieldID, id),
 			sqlgraph.To(personal.Table, personal.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, department.PersonalTable, department.PersonalColumn),
+		)
+		fromV = sqlgraph.Neighbors(d.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryCustomer queries the customer edge of a Department.
+func (c *DepartmentClient) QueryCustomer(d *Department) *CustomerQuery {
+	query := &CustomerQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := d.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(department.Table, department.FieldID, id),
+			sqlgraph.To(customer.Table, customer.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, department.CustomerTable, department.CustomerColumn),
 		)
 		fromV = sqlgraph.Neighbors(d.driver.Dialect(), step)
 		return fromV, nil
@@ -615,6 +679,22 @@ func (c *GenderClient) QueryPersonal(ge *Gender) *PersonalQuery {
 	return query
 }
 
+// QueryCustomer queries the customer edge of a Gender.
+func (c *GenderClient) QueryCustomer(ge *Gender) *CustomerQuery {
+	query := &CustomerQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := ge.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(gender.Table, gender.FieldID, id),
+			sqlgraph.To(customer.Table, customer.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, gender.CustomerTable, gender.CustomerColumn),
+		)
+		fromV = sqlgraph.Neighbors(ge.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
 // Hooks returns the client hooks.
 func (c *GenderClient) Hooks() []Hook {
 	return c.hooks.Gender
@@ -696,6 +776,22 @@ func (c *PersonalClient) GetX(ctx context.Context, id int) *Personal {
 		panic(err)
 	}
 	return pe
+}
+
+// QueryCustomer queries the customer edge of a Personal.
+func (c *PersonalClient) QueryCustomer(pe *Personal) *CustomerQuery {
+	query := &CustomerQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := pe.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(personal.Table, personal.FieldID, id),
+			sqlgraph.To(customer.Table, customer.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, personal.CustomerTable, personal.CustomerColumn),
+		)
+		fromV = sqlgraph.Neighbors(pe.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
 }
 
 // QueryTitle queries the title edge of a Personal.
@@ -1004,6 +1100,22 @@ func (c *TitleClient) QueryPersonal(t *Title) *PersonalQuery {
 			sqlgraph.From(title.Table, title.FieldID, id),
 			sqlgraph.To(personal.Table, personal.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, title.PersonalTable, title.PersonalColumn),
+		)
+		fromV = sqlgraph.Neighbors(t.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryCustomer queries the customer edge of a Title.
+func (c *TitleClient) QueryCustomer(t *Title) *CustomerQuery {
+	query := &CustomerQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := t.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(title.Table, title.FieldID, id),
+			sqlgraph.To(customer.Table, customer.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, title.CustomerTable, title.CustomerColumn),
 		)
 		fromV = sqlgraph.Neighbors(t.driver.Dialect(), step)
 		return fromV, nil

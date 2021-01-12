@@ -26,9 +26,11 @@ type Title struct {
 type TitleEdges struct {
 	// Personal holds the value of the personal edge.
 	Personal []*Personal
+	// Customer holds the value of the customer edge.
+	Customer []*Customer
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [1]bool
+	loadedTypes [2]bool
 }
 
 // PersonalOrErr returns the Personal value or an error if the edge
@@ -38,6 +40,15 @@ func (e TitleEdges) PersonalOrErr() ([]*Personal, error) {
 		return e.Personal, nil
 	}
 	return nil, &NotLoadedError{edge: "personal"}
+}
+
+// CustomerOrErr returns the Customer value or an error if the edge
+// was not loaded in eager-loading.
+func (e TitleEdges) CustomerOrErr() ([]*Customer, error) {
+	if e.loadedTypes[1] {
+		return e.Customer, nil
+	}
+	return nil, &NotLoadedError{edge: "customer"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -71,6 +82,11 @@ func (t *Title) assignValues(values ...interface{}) error {
 // QueryPersonal queries the personal edge of the Title.
 func (t *Title) QueryPersonal() *PersonalQuery {
 	return (&TitleClient{config: t.config}).QueryPersonal(t)
+}
+
+// QueryCustomer queries the customer edge of the Title.
+func (t *Title) QueryCustomer() *CustomerQuery {
+	return (&TitleClient{config: t.config}).QueryCustomer(t)
 }
 
 // Update returns a builder for updating this Title.

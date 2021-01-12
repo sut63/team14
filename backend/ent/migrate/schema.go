@@ -22,13 +22,49 @@ var (
 	// CustomersColumns holds the columns for the "customers" table.
 	CustomersColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "customername", Type: field.TypeString},
+		{Name: "address", Type: field.TypeString},
+		{Name: "phonenumber", Type: field.TypeString},
+		{Name: "department_id", Type: field.TypeInt, Nullable: true},
+		{Name: "gender_id", Type: field.TypeInt, Nullable: true},
+		{Name: "personal_id", Type: field.TypeInt, Nullable: true},
+		{Name: "title_id", Type: field.TypeInt, Nullable: true},
 	}
 	// CustomersTable holds the schema information for the "customers" table.
 	CustomersTable = &schema.Table{
-		Name:        "customers",
-		Columns:     CustomersColumns,
-		PrimaryKey:  []*schema.Column{CustomersColumns[0]},
-		ForeignKeys: []*schema.ForeignKey{},
+		Name:       "customers",
+		Columns:    CustomersColumns,
+		PrimaryKey: []*schema.Column{CustomersColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:  "customers_departments_customer",
+				Columns: []*schema.Column{CustomersColumns[4]},
+
+				RefColumns: []*schema.Column{DepartmentsColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+			{
+				Symbol:  "customers_genders_customer",
+				Columns: []*schema.Column{CustomersColumns[5]},
+
+				RefColumns: []*schema.Column{GendersColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+			{
+				Symbol:  "customers_personals_customer",
+				Columns: []*schema.Column{CustomersColumns[6]},
+
+				RefColumns: []*schema.Column{PersonalsColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+			{
+				Symbol:  "customers_titles_customer",
+				Columns: []*schema.Column{CustomersColumns[7]},
+
+				RefColumns: []*schema.Column{TitlesColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+		},
 	}
 	// DepartmentsColumns holds the columns for the "departments" table.
 	DepartmentsColumns = []*schema.Column{
@@ -153,6 +189,10 @@ var (
 )
 
 func init() {
+	CustomersTable.ForeignKeys[0].RefTable = DepartmentsTable
+	CustomersTable.ForeignKeys[1].RefTable = GendersTable
+	CustomersTable.ForeignKeys[2].RefTable = PersonalsTable
+	CustomersTable.ForeignKeys[3].RefTable = TitlesTable
 	PersonalsTable.ForeignKeys[0].RefTable = DepartmentsTable
 	PersonalsTable.ForeignKeys[1].RefTable = GendersTable
 	PersonalsTable.ForeignKeys[2].RefTable = TitlesTable

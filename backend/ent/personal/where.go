@@ -445,6 +445,34 @@ func PasswordContainsFold(v string) predicate.Personal {
 	})
 }
 
+// HasCustomer applies the HasEdge predicate on the "customer" edge.
+func HasCustomer() predicate.Personal {
+	return predicate.Personal(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(CustomerTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, CustomerTable, CustomerColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasCustomerWith applies the HasEdge predicate on the "customer" edge with a given conditions (other predicates).
+func HasCustomerWith(preds ...predicate.Customer) predicate.Personal {
+	return predicate.Personal(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(CustomerInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, CustomerTable, CustomerColumn),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
 // HasTitle applies the HasEdge predicate on the "title" edge.
 func HasTitle() predicate.Personal {
 	return predicate.Personal(func(s *sql.Selector) {

@@ -23,6 +23,7 @@ func (Personal) Fields() []ent.Field {
 // Edges of the Personal.
 func (Personal) Edges() []ent.Edge {
 	return []ent.Edge{
+		edge.To("customer", Customer.Type).StorageKey(edge.Column("personal_id")),
 		edge.From("title", Title.Type).Ref("personal").Unique(),
 		edge.From("department", Department.Type).Ref("personal").Unique(),
 		edge.From("gender", Gender.Type).Ref("personal").Unique(),

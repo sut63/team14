@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"sync"
 
+	"github.com/tanapon395/playlist-video/ent/customer"
 	"github.com/tanapon395/playlist-video/ent/department"
 	"github.com/tanapon395/playlist-video/ent/gender"
 	"github.com/tanapon395/playlist-video/ent/personal"
@@ -269,12 +270,21 @@ func (m *AdminrepairMutation) ResetEdge(name string) error {
 // nodes in the graph.
 type CustomerMutation struct {
 	config
-	op            Op
-	typ           string
-	id            *int
-	clearedFields map[string]struct{}
-	done          bool
-	oldValue      func(context.Context) (*Customer, error)
+	op              Op
+	typ             string
+	id              *int
+	_Customername   *string
+	_Address        *string
+	_Phonenumber    *string
+	clearedFields   map[string]struct{}
+	gender          *int
+	clearedgender   bool
+	personal        *int
+	clearedpersonal bool
+	title           *int
+	clearedtitle    bool
+	done            bool
+	oldValue        func(context.Context) (*Customer, error)
 }
 
 var _ ent.Mutation = (*CustomerMutation)(nil)
@@ -356,6 +366,234 @@ func (m *CustomerMutation) ID() (id int, exists bool) {
 	return *m.id, true
 }
 
+// SetCustomername sets the Customername field.
+func (m *CustomerMutation) SetCustomername(s string) {
+	m._Customername = &s
+}
+
+// Customername returns the Customername value in the mutation.
+func (m *CustomerMutation) Customername() (r string, exists bool) {
+	v := m._Customername
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCustomername returns the old Customername value of the Customer.
+// If the Customer object wasn't provided to the builder, the object is fetched
+// from the database.
+// An error is returned if the mutation operation is not UpdateOne, or database query fails.
+func (m *CustomerMutation) OldCustomername(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldCustomername is allowed only on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldCustomername requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCustomername: %w", err)
+	}
+	return oldValue.Customername, nil
+}
+
+// ResetCustomername reset all changes of the "Customername" field.
+func (m *CustomerMutation) ResetCustomername() {
+	m._Customername = nil
+}
+
+// SetAddress sets the Address field.
+func (m *CustomerMutation) SetAddress(s string) {
+	m._Address = &s
+}
+
+// Address returns the Address value in the mutation.
+func (m *CustomerMutation) Address() (r string, exists bool) {
+	v := m._Address
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldAddress returns the old Address value of the Customer.
+// If the Customer object wasn't provided to the builder, the object is fetched
+// from the database.
+// An error is returned if the mutation operation is not UpdateOne, or database query fails.
+func (m *CustomerMutation) OldAddress(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldAddress is allowed only on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldAddress requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldAddress: %w", err)
+	}
+	return oldValue.Address, nil
+}
+
+// ResetAddress reset all changes of the "Address" field.
+func (m *CustomerMutation) ResetAddress() {
+	m._Address = nil
+}
+
+// SetPhonenumber sets the Phonenumber field.
+func (m *CustomerMutation) SetPhonenumber(s string) {
+	m._Phonenumber = &s
+}
+
+// Phonenumber returns the Phonenumber value in the mutation.
+func (m *CustomerMutation) Phonenumber() (r string, exists bool) {
+	v := m._Phonenumber
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldPhonenumber returns the old Phonenumber value of the Customer.
+// If the Customer object wasn't provided to the builder, the object is fetched
+// from the database.
+// An error is returned if the mutation operation is not UpdateOne, or database query fails.
+func (m *CustomerMutation) OldPhonenumber(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldPhonenumber is allowed only on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldPhonenumber requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldPhonenumber: %w", err)
+	}
+	return oldValue.Phonenumber, nil
+}
+
+// ResetPhonenumber reset all changes of the "Phonenumber" field.
+func (m *CustomerMutation) ResetPhonenumber() {
+	m._Phonenumber = nil
+}
+
+// SetGenderID sets the gender edge to Gender by id.
+func (m *CustomerMutation) SetGenderID(id int) {
+	m.gender = &id
+}
+
+// ClearGender clears the gender edge to Gender.
+func (m *CustomerMutation) ClearGender() {
+	m.clearedgender = true
+}
+
+// GenderCleared returns if the edge gender was cleared.
+func (m *CustomerMutation) GenderCleared() bool {
+	return m.clearedgender
+}
+
+// GenderID returns the gender id in the mutation.
+func (m *CustomerMutation) GenderID() (id int, exists bool) {
+	if m.gender != nil {
+		return *m.gender, true
+	}
+	return
+}
+
+// GenderIDs returns the gender ids in the mutation.
+// Note that ids always returns len(ids) <= 1 for unique edges, and you should use
+// GenderID instead. It exists only for internal usage by the builders.
+func (m *CustomerMutation) GenderIDs() (ids []int) {
+	if id := m.gender; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetGender reset all changes of the "gender" edge.
+func (m *CustomerMutation) ResetGender() {
+	m.gender = nil
+	m.clearedgender = false
+}
+
+// SetPersonalID sets the personal edge to Personal by id.
+func (m *CustomerMutation) SetPersonalID(id int) {
+	m.personal = &id
+}
+
+// ClearPersonal clears the personal edge to Personal.
+func (m *CustomerMutation) ClearPersonal() {
+	m.clearedpersonal = true
+}
+
+// PersonalCleared returns if the edge personal was cleared.
+func (m *CustomerMutation) PersonalCleared() bool {
+	return m.clearedpersonal
+}
+
+// PersonalID returns the personal id in the mutation.
+func (m *CustomerMutation) PersonalID() (id int, exists bool) {
+	if m.personal != nil {
+		return *m.personal, true
+	}
+	return
+}
+
+// PersonalIDs returns the personal ids in the mutation.
+// Note that ids always returns len(ids) <= 1 for unique edges, and you should use
+// PersonalID instead. It exists only for internal usage by the builders.
+func (m *CustomerMutation) PersonalIDs() (ids []int) {
+	if id := m.personal; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetPersonal reset all changes of the "personal" edge.
+func (m *CustomerMutation) ResetPersonal() {
+	m.personal = nil
+	m.clearedpersonal = false
+}
+
+// SetTitleID sets the title edge to Title by id.
+func (m *CustomerMutation) SetTitleID(id int) {
+	m.title = &id
+}
+
+// ClearTitle clears the title edge to Title.
+func (m *CustomerMutation) ClearTitle() {
+	m.clearedtitle = true
+}
+
+// TitleCleared returns if the edge title was cleared.
+func (m *CustomerMutation) TitleCleared() bool {
+	return m.clearedtitle
+}
+
+// TitleID returns the title id in the mutation.
+func (m *CustomerMutation) TitleID() (id int, exists bool) {
+	if m.title != nil {
+		return *m.title, true
+	}
+	return
+}
+
+// TitleIDs returns the title ids in the mutation.
+// Note that ids always returns len(ids) <= 1 for unique edges, and you should use
+// TitleID instead. It exists only for internal usage by the builders.
+func (m *CustomerMutation) TitleIDs() (ids []int) {
+	if id := m.title; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetTitle reset all changes of the "title" edge.
+func (m *CustomerMutation) ResetTitle() {
+	m.title = nil
+	m.clearedtitle = false
+}
+
 // Op returns the operation name.
 func (m *CustomerMutation) Op() Op {
 	return m.op
@@ -370,7 +608,16 @@ func (m *CustomerMutation) Type() string {
 // this mutation. Note that, in order to get all numeric
 // fields that were in/decremented, call AddedFields().
 func (m *CustomerMutation) Fields() []string {
-	fields := make([]string, 0, 0)
+	fields := make([]string, 0, 3)
+	if m._Customername != nil {
+		fields = append(fields, customer.FieldCustomername)
+	}
+	if m._Address != nil {
+		fields = append(fields, customer.FieldAddress)
+	}
+	if m._Phonenumber != nil {
+		fields = append(fields, customer.FieldPhonenumber)
+	}
 	return fields
 }
 
@@ -378,6 +625,14 @@ func (m *CustomerMutation) Fields() []string {
 // The second boolean value indicates that this field was
 // not set, or was not define in the schema.
 func (m *CustomerMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case customer.FieldCustomername:
+		return m.Customername()
+	case customer.FieldAddress:
+		return m.Address()
+	case customer.FieldPhonenumber:
+		return m.Phonenumber()
+	}
 	return nil, false
 }
 
@@ -385,6 +640,14 @@ func (m *CustomerMutation) Field(name string) (ent.Value, bool) {
 // An error is returned if the mutation operation is not UpdateOne,
 // or the query to the database was failed.
 func (m *CustomerMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case customer.FieldCustomername:
+		return m.OldCustomername(ctx)
+	case customer.FieldAddress:
+		return m.OldAddress(ctx)
+	case customer.FieldPhonenumber:
+		return m.OldPhonenumber(ctx)
+	}
 	return nil, fmt.Errorf("unknown Customer field %s", name)
 }
 
@@ -393,6 +656,27 @@ func (m *CustomerMutation) OldField(ctx context.Context, name string) (ent.Value
 // type mismatch the field type.
 func (m *CustomerMutation) SetField(name string, value ent.Value) error {
 	switch name {
+	case customer.FieldCustomername:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCustomername(v)
+		return nil
+	case customer.FieldAddress:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetAddress(v)
+		return nil
+	case customer.FieldPhonenumber:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetPhonenumber(v)
+		return nil
 	}
 	return fmt.Errorf("unknown Customer field %s", name)
 }
@@ -414,6 +698,8 @@ func (m *CustomerMutation) AddedField(name string) (ent.Value, bool) {
 // error if the field is not defined in the schema, or if the
 // type mismatch the field type.
 func (m *CustomerMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	}
 	return fmt.Errorf("unknown Customer numeric field %s", name)
 }
 
@@ -440,51 +726,115 @@ func (m *CustomerMutation) ClearField(name string) error {
 // given field name. It returns an error if the field is not
 // defined in the schema.
 func (m *CustomerMutation) ResetField(name string) error {
+	switch name {
+	case customer.FieldCustomername:
+		m.ResetCustomername()
+		return nil
+	case customer.FieldAddress:
+		m.ResetAddress()
+		return nil
+	case customer.FieldPhonenumber:
+		m.ResetPhonenumber()
+		return nil
+	}
 	return fmt.Errorf("unknown Customer field %s", name)
 }
 
 // AddedEdges returns all edge names that were set/added in this
 // mutation.
 func (m *CustomerMutation) AddedEdges() []string {
-	edges := make([]string, 0, 0)
+	edges := make([]string, 0, 3)
+	if m.gender != nil {
+		edges = append(edges, customer.EdgeGender)
+	}
+	if m.personal != nil {
+		edges = append(edges, customer.EdgePersonal)
+	}
+	if m.title != nil {
+		edges = append(edges, customer.EdgeTitle)
+	}
 	return edges
 }
 
 // AddedIDs returns all ids (to other nodes) that were added for
 // the given edge name.
 func (m *CustomerMutation) AddedIDs(name string) []ent.Value {
+	switch name {
+	case customer.EdgeGender:
+		if id := m.gender; id != nil {
+			return []ent.Value{*id}
+		}
+	case customer.EdgePersonal:
+		if id := m.personal; id != nil {
+			return []ent.Value{*id}
+		}
+	case customer.EdgeTitle:
+		if id := m.title; id != nil {
+			return []ent.Value{*id}
+		}
+	}
 	return nil
 }
 
 // RemovedEdges returns all edge names that were removed in this
 // mutation.
 func (m *CustomerMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 0)
+	edges := make([]string, 0, 3)
 	return edges
 }
 
 // RemovedIDs returns all ids (to other nodes) that were removed for
 // the given edge name.
 func (m *CustomerMutation) RemovedIDs(name string) []ent.Value {
+	switch name {
+	}
 	return nil
 }
 
 // ClearedEdges returns all edge names that were cleared in this
 // mutation.
 func (m *CustomerMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 0)
+	edges := make([]string, 0, 3)
+	if m.clearedgender {
+		edges = append(edges, customer.EdgeGender)
+	}
+	if m.clearedpersonal {
+		edges = append(edges, customer.EdgePersonal)
+	}
+	if m.clearedtitle {
+		edges = append(edges, customer.EdgeTitle)
+	}
 	return edges
 }
 
 // EdgeCleared returns a boolean indicates if this edge was
 // cleared in this mutation.
 func (m *CustomerMutation) EdgeCleared(name string) bool {
+	switch name {
+	case customer.EdgeGender:
+		return m.clearedgender
+	case customer.EdgePersonal:
+		return m.clearedpersonal
+	case customer.EdgeTitle:
+		return m.clearedtitle
+	}
 	return false
 }
 
 // ClearEdge clears the value for the given name. It returns an
 // error if the edge name is not defined in the schema.
 func (m *CustomerMutation) ClearEdge(name string) error {
+	switch name {
+	case customer.EdgeGender:
+		m.ClearGender()
+		return nil
+	case customer.EdgePersonal:
+		m.ClearPersonal()
+		return nil
+	case customer.EdgeTitle:
+		m.ClearTitle()
+		return nil
+	}
 	return fmt.Errorf("unknown Customer unique edge %s", name)
 }
 
@@ -492,6 +842,17 @@ func (m *CustomerMutation) ClearEdge(name string) error {
 // given edge name. It returns an error if the edge is not
 // defined in the schema.
 func (m *CustomerMutation) ResetEdge(name string) error {
+	switch name {
+	case customer.EdgeGender:
+		m.ResetGender()
+		return nil
+	case customer.EdgePersonal:
+		m.ResetPersonal()
+		return nil
+	case customer.EdgeTitle:
+		m.ResetTitle()
+		return nil
+	}
 	return fmt.Errorf("unknown Customer edge %s", name)
 }
 
@@ -506,6 +867,8 @@ type DepartmentMutation struct {
 	clearedFields   map[string]struct{}
 	personal        map[int]struct{}
 	removedpersonal map[int]struct{}
+	customer        map[int]struct{}
+	removedcustomer map[int]struct{}
 	done            bool
 	oldValue        func(context.Context) (*Department, error)
 }
@@ -668,6 +1031,48 @@ func (m *DepartmentMutation) ResetPersonal() {
 	m.removedpersonal = nil
 }
 
+// AddCustomerIDs adds the customer edge to Customer by ids.
+func (m *DepartmentMutation) AddCustomerIDs(ids ...int) {
+	if m.customer == nil {
+		m.customer = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.customer[ids[i]] = struct{}{}
+	}
+}
+
+// RemoveCustomerIDs removes the customer edge to Customer by ids.
+func (m *DepartmentMutation) RemoveCustomerIDs(ids ...int) {
+	if m.removedcustomer == nil {
+		m.removedcustomer = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.removedcustomer[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedCustomer returns the removed ids of customer.
+func (m *DepartmentMutation) RemovedCustomerIDs() (ids []int) {
+	for id := range m.removedcustomer {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// CustomerIDs returns the customer ids in the mutation.
+func (m *DepartmentMutation) CustomerIDs() (ids []int) {
+	for id := range m.customer {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetCustomer reset all changes of the "customer" edge.
+func (m *DepartmentMutation) ResetCustomer() {
+	m.customer = nil
+	m.removedcustomer = nil
+}
+
 // Op returns the operation name.
 func (m *DepartmentMutation) Op() Op {
 	return m.op
@@ -783,9 +1188,12 @@ func (m *DepartmentMutation) ResetField(name string) error {
 // AddedEdges returns all edge names that were set/added in this
 // mutation.
 func (m *DepartmentMutation) AddedEdges() []string {
-	edges := make([]string, 0, 1)
+	edges := make([]string, 0, 2)
 	if m.personal != nil {
 		edges = append(edges, department.EdgePersonal)
+	}
+	if m.customer != nil {
+		edges = append(edges, department.EdgeCustomer)
 	}
 	return edges
 }
@@ -800,6 +1208,12 @@ func (m *DepartmentMutation) AddedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
+	case department.EdgeCustomer:
+		ids := make([]ent.Value, 0, len(m.customer))
+		for id := range m.customer {
+			ids = append(ids, id)
+		}
+		return ids
 	}
 	return nil
 }
@@ -807,9 +1221,12 @@ func (m *DepartmentMutation) AddedIDs(name string) []ent.Value {
 // RemovedEdges returns all edge names that were removed in this
 // mutation.
 func (m *DepartmentMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 1)
+	edges := make([]string, 0, 2)
 	if m.removedpersonal != nil {
 		edges = append(edges, department.EdgePersonal)
+	}
+	if m.removedcustomer != nil {
+		edges = append(edges, department.EdgeCustomer)
 	}
 	return edges
 }
@@ -824,6 +1241,12 @@ func (m *DepartmentMutation) RemovedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
+	case department.EdgeCustomer:
+		ids := make([]ent.Value, 0, len(m.removedcustomer))
+		for id := range m.removedcustomer {
+			ids = append(ids, id)
+		}
+		return ids
 	}
 	return nil
 }
@@ -831,7 +1254,7 @@ func (m *DepartmentMutation) RemovedIDs(name string) []ent.Value {
 // ClearedEdges returns all edge names that were cleared in this
 // mutation.
 func (m *DepartmentMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 1)
+	edges := make([]string, 0, 2)
 	return edges
 }
 
@@ -858,6 +1281,9 @@ func (m *DepartmentMutation) ResetEdge(name string) error {
 	switch name {
 	case department.EdgePersonal:
 		m.ResetPersonal()
+		return nil
+	case department.EdgeCustomer:
+		m.ResetCustomer()
 		return nil
 	}
 	return fmt.Errorf("unknown Department edge %s", name)
@@ -1104,6 +1530,8 @@ type GenderMutation struct {
 	clearedFields   map[string]struct{}
 	personal        map[int]struct{}
 	removedpersonal map[int]struct{}
+	customer        map[int]struct{}
+	removedcustomer map[int]struct{}
 	done            bool
 	oldValue        func(context.Context) (*Gender, error)
 }
@@ -1266,6 +1694,48 @@ func (m *GenderMutation) ResetPersonal() {
 	m.removedpersonal = nil
 }
 
+// AddCustomerIDs adds the customer edge to Customer by ids.
+func (m *GenderMutation) AddCustomerIDs(ids ...int) {
+	if m.customer == nil {
+		m.customer = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.customer[ids[i]] = struct{}{}
+	}
+}
+
+// RemoveCustomerIDs removes the customer edge to Customer by ids.
+func (m *GenderMutation) RemoveCustomerIDs(ids ...int) {
+	if m.removedcustomer == nil {
+		m.removedcustomer = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.removedcustomer[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedCustomer returns the removed ids of customer.
+func (m *GenderMutation) RemovedCustomerIDs() (ids []int) {
+	for id := range m.removedcustomer {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// CustomerIDs returns the customer ids in the mutation.
+func (m *GenderMutation) CustomerIDs() (ids []int) {
+	for id := range m.customer {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetCustomer reset all changes of the "customer" edge.
+func (m *GenderMutation) ResetCustomer() {
+	m.customer = nil
+	m.removedcustomer = nil
+}
+
 // Op returns the operation name.
 func (m *GenderMutation) Op() Op {
 	return m.op
@@ -1381,9 +1851,12 @@ func (m *GenderMutation) ResetField(name string) error {
 // AddedEdges returns all edge names that were set/added in this
 // mutation.
 func (m *GenderMutation) AddedEdges() []string {
-	edges := make([]string, 0, 1)
+	edges := make([]string, 0, 2)
 	if m.personal != nil {
 		edges = append(edges, gender.EdgePersonal)
+	}
+	if m.customer != nil {
+		edges = append(edges, gender.EdgeCustomer)
 	}
 	return edges
 }
@@ -1398,6 +1871,12 @@ func (m *GenderMutation) AddedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
+	case gender.EdgeCustomer:
+		ids := make([]ent.Value, 0, len(m.customer))
+		for id := range m.customer {
+			ids = append(ids, id)
+		}
+		return ids
 	}
 	return nil
 }
@@ -1405,9 +1884,12 @@ func (m *GenderMutation) AddedIDs(name string) []ent.Value {
 // RemovedEdges returns all edge names that were removed in this
 // mutation.
 func (m *GenderMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 1)
+	edges := make([]string, 0, 2)
 	if m.removedpersonal != nil {
 		edges = append(edges, gender.EdgePersonal)
+	}
+	if m.removedcustomer != nil {
+		edges = append(edges, gender.EdgeCustomer)
 	}
 	return edges
 }
@@ -1422,6 +1904,12 @@ func (m *GenderMutation) RemovedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
+	case gender.EdgeCustomer:
+		ids := make([]ent.Value, 0, len(m.removedcustomer))
+		for id := range m.removedcustomer {
+			ids = append(ids, id)
+		}
+		return ids
 	}
 	return nil
 }
@@ -1429,7 +1917,7 @@ func (m *GenderMutation) RemovedIDs(name string) []ent.Value {
 // ClearedEdges returns all edge names that were cleared in this
 // mutation.
 func (m *GenderMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 1)
+	edges := make([]string, 0, 2)
 	return edges
 }
 
@@ -1457,6 +1945,9 @@ func (m *GenderMutation) ResetEdge(name string) error {
 	case gender.EdgePersonal:
 		m.ResetPersonal()
 		return nil
+	case gender.EdgeCustomer:
+		m.ResetCustomer()
+		return nil
 	}
 	return fmt.Errorf("unknown Gender edge %s", name)
 }
@@ -1472,6 +1963,8 @@ type PersonalMutation struct {
 	_Email            *string
 	_Password         *string
 	clearedFields     map[string]struct{}
+	customer          map[int]struct{}
+	removedcustomer   map[int]struct{}
 	title             *int
 	clearedtitle      bool
 	department        *int
@@ -1670,6 +2163,48 @@ func (m *PersonalMutation) OldPassword(ctx context.Context) (v string, err error
 // ResetPassword reset all changes of the "Password" field.
 func (m *PersonalMutation) ResetPassword() {
 	m._Password = nil
+}
+
+// AddCustomerIDs adds the customer edge to Customer by ids.
+func (m *PersonalMutation) AddCustomerIDs(ids ...int) {
+	if m.customer == nil {
+		m.customer = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.customer[ids[i]] = struct{}{}
+	}
+}
+
+// RemoveCustomerIDs removes the customer edge to Customer by ids.
+func (m *PersonalMutation) RemoveCustomerIDs(ids ...int) {
+	if m.removedcustomer == nil {
+		m.removedcustomer = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.removedcustomer[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedCustomer returns the removed ids of customer.
+func (m *PersonalMutation) RemovedCustomerIDs() (ids []int) {
+	for id := range m.removedcustomer {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// CustomerIDs returns the customer ids in the mutation.
+func (m *PersonalMutation) CustomerIDs() (ids []int) {
+	for id := range m.customer {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetCustomer reset all changes of the "customer" edge.
+func (m *PersonalMutation) ResetCustomer() {
+	m.customer = nil
+	m.removedcustomer = nil
 }
 
 // SetTitleID sets the title edge to Title by id.
@@ -1938,7 +2473,10 @@ func (m *PersonalMutation) ResetField(name string) error {
 // AddedEdges returns all edge names that were set/added in this
 // mutation.
 func (m *PersonalMutation) AddedEdges() []string {
-	edges := make([]string, 0, 3)
+	edges := make([]string, 0, 4)
+	if m.customer != nil {
+		edges = append(edges, personal.EdgeCustomer)
+	}
 	if m.title != nil {
 		edges = append(edges, personal.EdgeTitle)
 	}
@@ -1955,6 +2493,12 @@ func (m *PersonalMutation) AddedEdges() []string {
 // the given edge name.
 func (m *PersonalMutation) AddedIDs(name string) []ent.Value {
 	switch name {
+	case personal.EdgeCustomer:
+		ids := make([]ent.Value, 0, len(m.customer))
+		for id := range m.customer {
+			ids = append(ids, id)
+		}
+		return ids
 	case personal.EdgeTitle:
 		if id := m.title; id != nil {
 			return []ent.Value{*id}
@@ -1974,7 +2518,10 @@ func (m *PersonalMutation) AddedIDs(name string) []ent.Value {
 // RemovedEdges returns all edge names that were removed in this
 // mutation.
 func (m *PersonalMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 3)
+	edges := make([]string, 0, 4)
+	if m.removedcustomer != nil {
+		edges = append(edges, personal.EdgeCustomer)
+	}
 	return edges
 }
 
@@ -1982,6 +2529,12 @@ func (m *PersonalMutation) RemovedEdges() []string {
 // the given edge name.
 func (m *PersonalMutation) RemovedIDs(name string) []ent.Value {
 	switch name {
+	case personal.EdgeCustomer:
+		ids := make([]ent.Value, 0, len(m.removedcustomer))
+		for id := range m.removedcustomer {
+			ids = append(ids, id)
+		}
+		return ids
 	}
 	return nil
 }
@@ -1989,7 +2542,7 @@ func (m *PersonalMutation) RemovedIDs(name string) []ent.Value {
 // ClearedEdges returns all edge names that were cleared in this
 // mutation.
 func (m *PersonalMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 3)
+	edges := make([]string, 0, 4)
 	if m.clearedtitle {
 		edges = append(edges, personal.EdgeTitle)
 	}
@@ -2038,6 +2591,9 @@ func (m *PersonalMutation) ClearEdge(name string) error {
 // defined in the schema.
 func (m *PersonalMutation) ResetEdge(name string) error {
 	switch name {
+	case personal.EdgeCustomer:
+		m.ResetCustomer()
+		return nil
 	case personal.EdgeTitle:
 		m.ResetTitle()
 		return nil
@@ -2522,6 +3078,8 @@ type TitleMutation struct {
 	clearedFields   map[string]struct{}
 	personal        map[int]struct{}
 	removedpersonal map[int]struct{}
+	customer        map[int]struct{}
+	removedcustomer map[int]struct{}
 	done            bool
 	oldValue        func(context.Context) (*Title, error)
 }
@@ -2684,6 +3242,48 @@ func (m *TitleMutation) ResetPersonal() {
 	m.removedpersonal = nil
 }
 
+// AddCustomerIDs adds the customer edge to Customer by ids.
+func (m *TitleMutation) AddCustomerIDs(ids ...int) {
+	if m.customer == nil {
+		m.customer = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.customer[ids[i]] = struct{}{}
+	}
+}
+
+// RemoveCustomerIDs removes the customer edge to Customer by ids.
+func (m *TitleMutation) RemoveCustomerIDs(ids ...int) {
+	if m.removedcustomer == nil {
+		m.removedcustomer = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.removedcustomer[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedCustomer returns the removed ids of customer.
+func (m *TitleMutation) RemovedCustomerIDs() (ids []int) {
+	for id := range m.removedcustomer {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// CustomerIDs returns the customer ids in the mutation.
+func (m *TitleMutation) CustomerIDs() (ids []int) {
+	for id := range m.customer {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetCustomer reset all changes of the "customer" edge.
+func (m *TitleMutation) ResetCustomer() {
+	m.customer = nil
+	m.removedcustomer = nil
+}
+
 // Op returns the operation name.
 func (m *TitleMutation) Op() Op {
 	return m.op
@@ -2799,9 +3399,12 @@ func (m *TitleMutation) ResetField(name string) error {
 // AddedEdges returns all edge names that were set/added in this
 // mutation.
 func (m *TitleMutation) AddedEdges() []string {
-	edges := make([]string, 0, 1)
+	edges := make([]string, 0, 2)
 	if m.personal != nil {
 		edges = append(edges, title.EdgePersonal)
+	}
+	if m.customer != nil {
+		edges = append(edges, title.EdgeCustomer)
 	}
 	return edges
 }
@@ -2816,6 +3419,12 @@ func (m *TitleMutation) AddedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
+	case title.EdgeCustomer:
+		ids := make([]ent.Value, 0, len(m.customer))
+		for id := range m.customer {
+			ids = append(ids, id)
+		}
+		return ids
 	}
 	return nil
 }
@@ -2823,9 +3432,12 @@ func (m *TitleMutation) AddedIDs(name string) []ent.Value {
 // RemovedEdges returns all edge names that were removed in this
 // mutation.
 func (m *TitleMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 1)
+	edges := make([]string, 0, 2)
 	if m.removedpersonal != nil {
 		edges = append(edges, title.EdgePersonal)
+	}
+	if m.removedcustomer != nil {
+		edges = append(edges, title.EdgeCustomer)
 	}
 	return edges
 }
@@ -2840,6 +3452,12 @@ func (m *TitleMutation) RemovedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
+	case title.EdgeCustomer:
+		ids := make([]ent.Value, 0, len(m.removedcustomer))
+		for id := range m.removedcustomer {
+			ids = append(ids, id)
+		}
+		return ids
 	}
 	return nil
 }
@@ -2847,7 +3465,7 @@ func (m *TitleMutation) RemovedIDs(name string) []ent.Value {
 // ClearedEdges returns all edge names that were cleared in this
 // mutation.
 func (m *TitleMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 1)
+	edges := make([]string, 0, 2)
 	return edges
 }
 
@@ -2874,6 +3492,9 @@ func (m *TitleMutation) ResetEdge(name string) error {
 	switch name {
 	case title.EdgePersonal:
 		m.ResetPersonal()
+		return nil
+	case title.EdgeCustomer:
+		m.ResetCustomer()
 		return nil
 	}
 	return fmt.Errorf("unknown Title edge %s", name)

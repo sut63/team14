@@ -9,6 +9,7 @@ import (
 
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
+	"github.com/tanapon395/playlist-video/ent/customer"
 	"github.com/tanapon395/playlist-video/ent/gender"
 	"github.com/tanapon395/playlist-video/ent/personal"
 )
@@ -39,6 +40,21 @@ func (gc *GenderCreate) AddPersonal(p ...*Personal) *GenderCreate {
 		ids[i] = p[i].ID
 	}
 	return gc.AddPersonalIDs(ids...)
+}
+
+// AddCustomerIDs adds the customer edge to Customer by ids.
+func (gc *GenderCreate) AddCustomerIDs(ids ...int) *GenderCreate {
+	gc.mutation.AddCustomerIDs(ids...)
+	return gc
+}
+
+// AddCustomer adds the customer edges to Customer.
+func (gc *GenderCreate) AddCustomer(c ...*Customer) *GenderCreate {
+	ids := make([]int, len(c))
+	for i := range c {
+		ids[i] = c[i].ID
+	}
+	return gc.AddCustomerIDs(ids...)
 }
 
 // Mutation returns the GenderMutation object of the builder.
@@ -130,6 +146,25 @@ func (gc *GenderCreate) createSpec() (*Gender, *sqlgraph.CreateSpec) {
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: personal.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := gc.mutation.CustomerIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   gender.CustomerTable,
+			Columns: []string{gender.CustomerColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: customer.FieldID,
 				},
 			},
 		}

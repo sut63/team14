@@ -12,6 +12,7 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
+	"github.com/tanapon395/playlist-video/ent/customer"
 	"github.com/tanapon395/playlist-video/ent/gender"
 	"github.com/tanapon395/playlist-video/ent/personal"
 	"github.com/tanapon395/playlist-video/ent/predicate"
@@ -27,6 +28,7 @@ type GenderQuery struct {
 	predicates []predicate.Gender
 	// eager-loading edges.
 	withPersonal *PersonalQuery
+	withCustomer *CustomerQuery
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -67,6 +69,24 @@ func (gq *GenderQuery) QueryPersonal() *PersonalQuery {
 			sqlgraph.From(gender.Table, gender.FieldID, gq.sqlQuery()),
 			sqlgraph.To(personal.Table, personal.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, gender.PersonalTable, gender.PersonalColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(gq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryCustomer chains the current query on the customer edge.
+func (gq *GenderQuery) QueryCustomer() *CustomerQuery {
+	query := &CustomerQuery{config: gq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := gq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(gender.Table, gender.FieldID, gq.sqlQuery()),
+			sqlgraph.To(customer.Table, customer.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, gender.CustomerTable, gender.CustomerColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(gq.driver.Dialect(), step)
 		return fromU, nil
@@ -264,6 +284,17 @@ func (gq *GenderQuery) WithPersonal(opts ...func(*PersonalQuery)) *GenderQuery {
 	return gq
 }
 
+//  WithCustomer tells the query-builder to eager-loads the nodes that are connected to
+// the "customer" edge. The optional arguments used to configure the query builder of the edge.
+func (gq *GenderQuery) WithCustomer(opts ...func(*CustomerQuery)) *GenderQuery {
+	query := &CustomerQuery{config: gq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	gq.withCustomer = query
+	return gq
+}
+
 // GroupBy used to group vertices by one or more fields/columns.
 // It is often used with aggregate functions, like: count, max, mean, min, sum.
 //
@@ -330,8 +361,9 @@ func (gq *GenderQuery) sqlAll(ctx context.Context) ([]*Gender, error) {
 	var (
 		nodes       = []*Gender{}
 		_spec       = gq.querySpec()
-		loadedTypes = [1]bool{
+		loadedTypes = [2]bool{
 			gq.withPersonal != nil,
+			gq.withCustomer != nil,
 		}
 	)
 	_spec.ScanValues = func() []interface{} {
@@ -380,6 +412,34 @@ func (gq *GenderQuery) sqlAll(ctx context.Context) ([]*Gender, error) {
 				return nil, fmt.Errorf(`unexpected foreign-key "gender_id" returned %v for node %v`, *fk, n.ID)
 			}
 			node.Edges.Personal = append(node.Edges.Personal, n)
+		}
+	}
+
+	if query := gq.withCustomer; query != nil {
+		fks := make([]driver.Value, 0, len(nodes))
+		nodeids := make(map[int]*Gender)
+		for i := range nodes {
+			fks = append(fks, nodes[i].ID)
+			nodeids[nodes[i].ID] = nodes[i]
+		}
+		query.withFKs = true
+		query.Where(predicate.Customer(func(s *sql.Selector) {
+			s.Where(sql.InValues(gender.CustomerColumn, fks...))
+		}))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			fk := n.gender_id
+			if fk == nil {
+				return nil, fmt.Errorf(`foreign-key "gender_id" is nil for node %v`, n.ID)
+			}
+			node, ok := nodeids[*fk]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "gender_id" returned %v for node %v`, *fk, n.ID)
+			}
+			node.Edges.Customer = append(node.Edges.Customer, n)
 		}
 	}
 

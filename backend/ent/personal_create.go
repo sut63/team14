@@ -9,6 +9,7 @@ import (
 
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
+	"github.com/tanapon395/playlist-video/ent/customer"
 	"github.com/tanapon395/playlist-video/ent/department"
 	"github.com/tanapon395/playlist-video/ent/gender"
 	"github.com/tanapon395/playlist-video/ent/personal"
@@ -38,6 +39,21 @@ func (pc *PersonalCreate) SetEmail(s string) *PersonalCreate {
 func (pc *PersonalCreate) SetPassword(s string) *PersonalCreate {
 	pc.mutation.SetPassword(s)
 	return pc
+}
+
+// AddCustomerIDs adds the customer edge to Customer by ids.
+func (pc *PersonalCreate) AddCustomerIDs(ids ...int) *PersonalCreate {
+	pc.mutation.AddCustomerIDs(ids...)
+	return pc
+}
+
+// AddCustomer adds the customer edges to Customer.
+func (pc *PersonalCreate) AddCustomer(c ...*Customer) *PersonalCreate {
+	ids := make([]int, len(c))
+	for i := range c {
+		ids[i] = c[i].ID
+	}
+	return pc.AddCustomerIDs(ids...)
 }
 
 // SetTitleID sets the title edge to Title by id.
@@ -196,6 +212,25 @@ func (pc *PersonalCreate) createSpec() (*Personal, *sqlgraph.CreateSpec) {
 			Column: personal.FieldPassword,
 		})
 		pe.Password = value
+	}
+	if nodes := pc.mutation.CustomerIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   personal.CustomerTable,
+			Columns: []string{personal.CustomerColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: customer.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
 	}
 	if nodes := pc.mutation.TitleIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

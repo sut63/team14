@@ -9,6 +9,7 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
+	"github.com/tanapon395/playlist-video/ent/customer"
 	"github.com/tanapon395/playlist-video/ent/department"
 	"github.com/tanapon395/playlist-video/ent/personal"
 	"github.com/tanapon395/playlist-video/ent/predicate"
@@ -49,6 +50,21 @@ func (du *DepartmentUpdate) AddPersonal(p ...*Personal) *DepartmentUpdate {
 	return du.AddPersonalIDs(ids...)
 }
 
+// AddCustomerIDs adds the customer edge to Customer by ids.
+func (du *DepartmentUpdate) AddCustomerIDs(ids ...int) *DepartmentUpdate {
+	du.mutation.AddCustomerIDs(ids...)
+	return du
+}
+
+// AddCustomer adds the customer edges to Customer.
+func (du *DepartmentUpdate) AddCustomer(c ...*Customer) *DepartmentUpdate {
+	ids := make([]int, len(c))
+	for i := range c {
+		ids[i] = c[i].ID
+	}
+	return du.AddCustomerIDs(ids...)
+}
+
 // Mutation returns the DepartmentMutation object of the builder.
 func (du *DepartmentUpdate) Mutation() *DepartmentMutation {
 	return du.mutation
@@ -67,6 +83,21 @@ func (du *DepartmentUpdate) RemovePersonal(p ...*Personal) *DepartmentUpdate {
 		ids[i] = p[i].ID
 	}
 	return du.RemovePersonalIDs(ids...)
+}
+
+// RemoveCustomerIDs removes the customer edge to Customer by ids.
+func (du *DepartmentUpdate) RemoveCustomerIDs(ids ...int) *DepartmentUpdate {
+	du.mutation.RemoveCustomerIDs(ids...)
+	return du
+}
+
+// RemoveCustomer removes customer edges to Customer.
+func (du *DepartmentUpdate) RemoveCustomer(c ...*Customer) *DepartmentUpdate {
+	ids := make([]int, len(c))
+	for i := range c {
+		ids[i] = c[i].ID
+	}
+	return du.RemoveCustomerIDs(ids...)
 }
 
 // Save executes the query and returns the number of rows/vertices matched by this operation.
@@ -184,6 +215,44 @@ func (du *DepartmentUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	if nodes := du.mutation.RemovedCustomerIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   department.CustomerTable,
+			Columns: []string{department.CustomerColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: customer.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := du.mutation.CustomerIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   department.CustomerTable,
+			Columns: []string{department.CustomerColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: customer.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, du.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{department.Label}
@@ -223,6 +292,21 @@ func (duo *DepartmentUpdateOne) AddPersonal(p ...*Personal) *DepartmentUpdateOne
 	return duo.AddPersonalIDs(ids...)
 }
 
+// AddCustomerIDs adds the customer edge to Customer by ids.
+func (duo *DepartmentUpdateOne) AddCustomerIDs(ids ...int) *DepartmentUpdateOne {
+	duo.mutation.AddCustomerIDs(ids...)
+	return duo
+}
+
+// AddCustomer adds the customer edges to Customer.
+func (duo *DepartmentUpdateOne) AddCustomer(c ...*Customer) *DepartmentUpdateOne {
+	ids := make([]int, len(c))
+	for i := range c {
+		ids[i] = c[i].ID
+	}
+	return duo.AddCustomerIDs(ids...)
+}
+
 // Mutation returns the DepartmentMutation object of the builder.
 func (duo *DepartmentUpdateOne) Mutation() *DepartmentMutation {
 	return duo.mutation
@@ -241,6 +325,21 @@ func (duo *DepartmentUpdateOne) RemovePersonal(p ...*Personal) *DepartmentUpdate
 		ids[i] = p[i].ID
 	}
 	return duo.RemovePersonalIDs(ids...)
+}
+
+// RemoveCustomerIDs removes the customer edge to Customer by ids.
+func (duo *DepartmentUpdateOne) RemoveCustomerIDs(ids ...int) *DepartmentUpdateOne {
+	duo.mutation.RemoveCustomerIDs(ids...)
+	return duo
+}
+
+// RemoveCustomer removes customer edges to Customer.
+func (duo *DepartmentUpdateOne) RemoveCustomer(c ...*Customer) *DepartmentUpdateOne {
+	ids := make([]int, len(c))
+	for i := range c {
+		ids[i] = c[i].ID
+	}
+	return duo.RemoveCustomerIDs(ids...)
 }
 
 // Save executes the query and returns the updated entity.
@@ -348,6 +447,44 @@ func (duo *DepartmentUpdateOne) sqlSave(ctx context.Context) (d *Department, err
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: personal.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if nodes := duo.mutation.RemovedCustomerIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   department.CustomerTable,
+			Columns: []string{department.CustomerColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: customer.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := duo.mutation.CustomerIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   department.CustomerTable,
+			Columns: []string{department.CustomerColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: customer.FieldID,
 				},
 			},
 		}

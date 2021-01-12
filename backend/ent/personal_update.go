@@ -9,6 +9,7 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
+	"github.com/tanapon395/playlist-video/ent/customer"
 	"github.com/tanapon395/playlist-video/ent/department"
 	"github.com/tanapon395/playlist-video/ent/gender"
 	"github.com/tanapon395/playlist-video/ent/personal"
@@ -46,6 +47,21 @@ func (pu *PersonalUpdate) SetEmail(s string) *PersonalUpdate {
 func (pu *PersonalUpdate) SetPassword(s string) *PersonalUpdate {
 	pu.mutation.SetPassword(s)
 	return pu
+}
+
+// AddCustomerIDs adds the customer edge to Customer by ids.
+func (pu *PersonalUpdate) AddCustomerIDs(ids ...int) *PersonalUpdate {
+	pu.mutation.AddCustomerIDs(ids...)
+	return pu
+}
+
+// AddCustomer adds the customer edges to Customer.
+func (pu *PersonalUpdate) AddCustomer(c ...*Customer) *PersonalUpdate {
+	ids := make([]int, len(c))
+	for i := range c {
+		ids[i] = c[i].ID
+	}
+	return pu.AddCustomerIDs(ids...)
 }
 
 // SetTitleID sets the title edge to Title by id.
@@ -108,6 +124,21 @@ func (pu *PersonalUpdate) SetGender(g *Gender) *PersonalUpdate {
 // Mutation returns the PersonalMutation object of the builder.
 func (pu *PersonalUpdate) Mutation() *PersonalMutation {
 	return pu.mutation
+}
+
+// RemoveCustomerIDs removes the customer edge to Customer by ids.
+func (pu *PersonalUpdate) RemoveCustomerIDs(ids ...int) *PersonalUpdate {
+	pu.mutation.RemoveCustomerIDs(ids...)
+	return pu
+}
+
+// RemoveCustomer removes customer edges to Customer.
+func (pu *PersonalUpdate) RemoveCustomer(c ...*Customer) *PersonalUpdate {
+	ids := make([]int, len(c))
+	for i := range c {
+		ids[i] = c[i].ID
+	}
+	return pu.RemoveCustomerIDs(ids...)
 }
 
 // ClearTitle clears the title edge to Title.
@@ -218,6 +249,44 @@ func (pu *PersonalUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Value:  value,
 			Column: personal.FieldPassword,
 		})
+	}
+	if nodes := pu.mutation.RemovedCustomerIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   personal.CustomerTable,
+			Columns: []string{personal.CustomerColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: customer.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := pu.mutation.CustomerIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   personal.CustomerTable,
+			Columns: []string{personal.CustomerColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: customer.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	if pu.mutation.TitleCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -360,6 +429,21 @@ func (puo *PersonalUpdateOne) SetPassword(s string) *PersonalUpdateOne {
 	return puo
 }
 
+// AddCustomerIDs adds the customer edge to Customer by ids.
+func (puo *PersonalUpdateOne) AddCustomerIDs(ids ...int) *PersonalUpdateOne {
+	puo.mutation.AddCustomerIDs(ids...)
+	return puo
+}
+
+// AddCustomer adds the customer edges to Customer.
+func (puo *PersonalUpdateOne) AddCustomer(c ...*Customer) *PersonalUpdateOne {
+	ids := make([]int, len(c))
+	for i := range c {
+		ids[i] = c[i].ID
+	}
+	return puo.AddCustomerIDs(ids...)
+}
+
 // SetTitleID sets the title edge to Title by id.
 func (puo *PersonalUpdateOne) SetTitleID(id int) *PersonalUpdateOne {
 	puo.mutation.SetTitleID(id)
@@ -420,6 +504,21 @@ func (puo *PersonalUpdateOne) SetGender(g *Gender) *PersonalUpdateOne {
 // Mutation returns the PersonalMutation object of the builder.
 func (puo *PersonalUpdateOne) Mutation() *PersonalMutation {
 	return puo.mutation
+}
+
+// RemoveCustomerIDs removes the customer edge to Customer by ids.
+func (puo *PersonalUpdateOne) RemoveCustomerIDs(ids ...int) *PersonalUpdateOne {
+	puo.mutation.RemoveCustomerIDs(ids...)
+	return puo
+}
+
+// RemoveCustomer removes customer edges to Customer.
+func (puo *PersonalUpdateOne) RemoveCustomer(c ...*Customer) *PersonalUpdateOne {
+	ids := make([]int, len(c))
+	for i := range c {
+		ids[i] = c[i].ID
+	}
+	return puo.RemoveCustomerIDs(ids...)
 }
 
 // ClearTitle clears the title edge to Title.
@@ -528,6 +627,44 @@ func (puo *PersonalUpdateOne) sqlSave(ctx context.Context) (pe *Personal, err er
 			Value:  value,
 			Column: personal.FieldPassword,
 		})
+	}
+	if nodes := puo.mutation.RemovedCustomerIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   personal.CustomerTable,
+			Columns: []string{personal.CustomerColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: customer.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := puo.mutation.CustomerIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   personal.CustomerTable,
+			Columns: []string{personal.CustomerColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: customer.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	if puo.mutation.TitleCleared() {
 		edge := &sqlgraph.EdgeSpec{

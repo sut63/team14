@@ -22,5 +22,6 @@ func (Title) Fields() []ent.Field {
 func (Title) Edges() []ent.Edge {
 	return []ent.Edge{
 		edge.To("personal", Personal.Type).StorageKey(edge.Column("title_id")),
+		edge.To("customer", Customer.Type).StorageKey(edge.Column("title_id")),
 	}
 }

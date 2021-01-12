@@ -26,9 +26,11 @@ type Department struct {
 type DepartmentEdges struct {
 	// Personal holds the value of the personal edge.
 	Personal []*Personal
+	// Customer holds the value of the customer edge.
+	Customer []*Customer
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [1]bool
+	loadedTypes [2]bool
 }
 
 // PersonalOrErr returns the Personal value or an error if the edge
@@ -38,6 +40,15 @@ func (e DepartmentEdges) PersonalOrErr() ([]*Personal, error) {
 		return e.Personal, nil
 	}
 	return nil, &NotLoadedError{edge: "personal"}
+}
+
+// CustomerOrErr returns the Customer value or an error if the edge
+// was not loaded in eager-loading.
+func (e DepartmentEdges) CustomerOrErr() ([]*Customer, error) {
+	if e.loadedTypes[1] {
+		return e.Customer, nil
+	}
+	return nil, &NotLoadedError{edge: "customer"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -71,6 +82,11 @@ func (d *Department) assignValues(values ...interface{}) error {
 // QueryPersonal queries the personal edge of the Department.
 func (d *Department) QueryPersonal() *PersonalQuery {
 	return (&DepartmentClient{config: d.config}).QueryPersonal(d)
+}
+
+// QueryCustomer queries the customer edge of the Department.
+func (d *Department) QueryCustomer() *CustomerQuery {
+	return (&DepartmentClient{config: d.config}).QueryCustomer(d)
 }
 
 // Update returns a builder for updating this Department.

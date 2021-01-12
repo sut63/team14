@@ -4,11 +4,15 @@ package ent
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
 	"github.com/tanapon395/playlist-video/ent/customer"
+	"github.com/tanapon395/playlist-video/ent/gender"
+	"github.com/tanapon395/playlist-video/ent/personal"
+	"github.com/tanapon395/playlist-video/ent/title"
 )
 
 // CustomerCreate is the builder for creating a Customer entity.
@@ -18,6 +22,81 @@ type CustomerCreate struct {
 	hooks    []Hook
 }
 
+// SetCustomername sets the Customername field.
+func (cc *CustomerCreate) SetCustomername(s string) *CustomerCreate {
+	cc.mutation.SetCustomername(s)
+	return cc
+}
+
+// SetAddress sets the Address field.
+func (cc *CustomerCreate) SetAddress(s string) *CustomerCreate {
+	cc.mutation.SetAddress(s)
+	return cc
+}
+
+// SetPhonenumber sets the Phonenumber field.
+func (cc *CustomerCreate) SetPhonenumber(s string) *CustomerCreate {
+	cc.mutation.SetPhonenumber(s)
+	return cc
+}
+
+// SetGenderID sets the gender edge to Gender by id.
+func (cc *CustomerCreate) SetGenderID(id int) *CustomerCreate {
+	cc.mutation.SetGenderID(id)
+	return cc
+}
+
+// SetNillableGenderID sets the gender edge to Gender by id if the given value is not nil.
+func (cc *CustomerCreate) SetNillableGenderID(id *int) *CustomerCreate {
+	if id != nil {
+		cc = cc.SetGenderID(*id)
+	}
+	return cc
+}
+
+// SetGender sets the gender edge to Gender.
+func (cc *CustomerCreate) SetGender(g *Gender) *CustomerCreate {
+	return cc.SetGenderID(g.ID)
+}
+
+// SetPersonalID sets the personal edge to Personal by id.
+func (cc *CustomerCreate) SetPersonalID(id int) *CustomerCreate {
+	cc.mutation.SetPersonalID(id)
+	return cc
+}
+
+// SetNillablePersonalID sets the personal edge to Personal by id if the given value is not nil.
+func (cc *CustomerCreate) SetNillablePersonalID(id *int) *CustomerCreate {
+	if id != nil {
+		cc = cc.SetPersonalID(*id)
+	}
+	return cc
+}
+
+// SetPersonal sets the personal edge to Personal.
+func (cc *CustomerCreate) SetPersonal(p *Personal) *CustomerCreate {
+	return cc.SetPersonalID(p.ID)
+}
+
+// SetTitleID sets the title edge to Title by id.
+func (cc *CustomerCreate) SetTitleID(id int) *CustomerCreate {
+	cc.mutation.SetTitleID(id)
+	return cc
+}
+
+// SetNillableTitleID sets the title edge to Title by id if the given value is not nil.
+func (cc *CustomerCreate) SetNillableTitleID(id *int) *CustomerCreate {
+	if id != nil {
+		cc = cc.SetTitleID(*id)
+	}
+	return cc
+}
+
+// SetTitle sets the title edge to Title.
+func (cc *CustomerCreate) SetTitle(t *Title) *CustomerCreate {
+	return cc.SetTitleID(t.ID)
+}
+
 // Mutation returns the CustomerMutation object of the builder.
 func (cc *CustomerCreate) Mutation() *CustomerMutation {
 	return cc.mutation
@@ -25,6 +104,15 @@ func (cc *CustomerCreate) Mutation() *CustomerMutation {
 
 // Save creates the Customer in the database.
 func (cc *CustomerCreate) Save(ctx context.Context) (*Customer, error) {
+	if _, ok := cc.mutation.Customername(); !ok {
+		return nil, &ValidationError{Name: "Customername", err: errors.New("ent: missing required field \"Customername\"")}
+	}
+	if _, ok := cc.mutation.Address(); !ok {
+		return nil, &ValidationError{Name: "Address", err: errors.New("ent: missing required field \"Address\"")}
+	}
+	if _, ok := cc.mutation.Phonenumber(); !ok {
+		return nil, &ValidationError{Name: "Phonenumber", err: errors.New("ent: missing required field \"Phonenumber\"")}
+	}
 	var (
 		err  error
 		node *Customer
@@ -85,5 +173,86 @@ func (cc *CustomerCreate) createSpec() (*Customer, *sqlgraph.CreateSpec) {
 			},
 		}
 	)
+	if value, ok := cc.mutation.Customername(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: customer.FieldCustomername,
+		})
+		c.Customername = value
+	}
+	if value, ok := cc.mutation.Address(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: customer.FieldAddress,
+		})
+		c.Address = value
+	}
+	if value, ok := cc.mutation.Phonenumber(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: customer.FieldPhonenumber,
+		})
+		c.Phonenumber = value
+	}
+	if nodes := cc.mutation.GenderIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   customer.GenderTable,
+			Columns: []string{customer.GenderColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: gender.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := cc.mutation.PersonalIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   customer.PersonalTable,
+			Columns: []string{customer.PersonalColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: personal.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := cc.mutation.TitleIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   customer.TitleTable,
+			Columns: []string{customer.TitleColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: title.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
 	return c, _spec
 }

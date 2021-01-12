@@ -34,6 +34,8 @@ type Personal struct {
 
 // PersonalEdges holds the relations/edges for other nodes in the graph.
 type PersonalEdges struct {
+	// Customer holds the value of the customer edge.
+	Customer []*Customer
 	// Title holds the value of the title edge.
 	Title *Title
 	// Department holds the value of the department edge.
@@ -42,13 +44,22 @@ type PersonalEdges struct {
 	Gender *Gender
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [3]bool
+	loadedTypes [4]bool
+}
+
+// CustomerOrErr returns the Customer value or an error if the edge
+// was not loaded in eager-loading.
+func (e PersonalEdges) CustomerOrErr() ([]*Customer, error) {
+	if e.loadedTypes[0] {
+		return e.Customer, nil
+	}
+	return nil, &NotLoadedError{edge: "customer"}
 }
 
 // TitleOrErr returns the Title value or an error if the edge
 // was not loaded in eager-loading, or loaded but was not found.
 func (e PersonalEdges) TitleOrErr() (*Title, error) {
-	if e.loadedTypes[0] {
+	if e.loadedTypes[1] {
 		if e.Title == nil {
 			// The edge title was loaded in eager-loading,
 			// but was not found.
@@ -62,7 +73,7 @@ func (e PersonalEdges) TitleOrErr() (*Title, error) {
 // DepartmentOrErr returns the Department value or an error if the edge
 // was not loaded in eager-loading, or loaded but was not found.
 func (e PersonalEdges) DepartmentOrErr() (*Department, error) {
-	if e.loadedTypes[1] {
+	if e.loadedTypes[2] {
 		if e.Department == nil {
 			// The edge department was loaded in eager-loading,
 			// but was not found.
@@ -76,7 +87,7 @@ func (e PersonalEdges) DepartmentOrErr() (*Department, error) {
 // GenderOrErr returns the Gender value or an error if the edge
 // was not loaded in eager-loading, or loaded but was not found.
 func (e PersonalEdges) GenderOrErr() (*Gender, error) {
-	if e.loadedTypes[2] {
+	if e.loadedTypes[3] {
 		if e.Gender == nil {
 			// The edge gender was loaded in eager-loading,
 			// but was not found.
@@ -155,6 +166,11 @@ func (pe *Personal) assignValues(values ...interface{}) error {
 		}
 	}
 	return nil
+}
+
+// QueryCustomer queries the customer edge of the Personal.
+func (pe *Personal) QueryCustomer() *CustomerQuery {
+	return (&PersonalClient{config: pe.config}).QueryCustomer(pe)
 }
 
 // QueryTitle queries the title edge of the Personal.

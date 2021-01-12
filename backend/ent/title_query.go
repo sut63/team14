@@ -12,6 +12,7 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
+	"github.com/tanapon395/playlist-video/ent/customer"
 	"github.com/tanapon395/playlist-video/ent/personal"
 	"github.com/tanapon395/playlist-video/ent/predicate"
 	"github.com/tanapon395/playlist-video/ent/title"
@@ -27,6 +28,7 @@ type TitleQuery struct {
 	predicates []predicate.Title
 	// eager-loading edges.
 	withPersonal *PersonalQuery
+	withCustomer *CustomerQuery
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -67,6 +69,24 @@ func (tq *TitleQuery) QueryPersonal() *PersonalQuery {
 			sqlgraph.From(title.Table, title.FieldID, tq.sqlQuery()),
 			sqlgraph.To(personal.Table, personal.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, title.PersonalTable, title.PersonalColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(tq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryCustomer chains the current query on the customer edge.
+func (tq *TitleQuery) QueryCustomer() *CustomerQuery {
+	query := &CustomerQuery{config: tq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := tq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(title.Table, title.FieldID, tq.sqlQuery()),
+			sqlgraph.To(customer.Table, customer.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, title.CustomerTable, title.CustomerColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(tq.driver.Dialect(), step)
 		return fromU, nil
@@ -264,6 +284,17 @@ func (tq *TitleQuery) WithPersonal(opts ...func(*PersonalQuery)) *TitleQuery {
 	return tq
 }
 
+//  WithCustomer tells the query-builder to eager-loads the nodes that are connected to
+// the "customer" edge. The optional arguments used to configure the query builder of the edge.
+func (tq *TitleQuery) WithCustomer(opts ...func(*CustomerQuery)) *TitleQuery {
+	query := &CustomerQuery{config: tq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	tq.withCustomer = query
+	return tq
+}
+
 // GroupBy used to group vertices by one or more fields/columns.
 // It is often used with aggregate functions, like: count, max, mean, min, sum.
 //
@@ -330,8 +361,9 @@ func (tq *TitleQuery) sqlAll(ctx context.Context) ([]*Title, error) {
 	var (
 		nodes       = []*Title{}
 		_spec       = tq.querySpec()
-		loadedTypes = [1]bool{
+		loadedTypes = [2]bool{
 			tq.withPersonal != nil,
+			tq.withCustomer != nil,
 		}
 	)
 	_spec.ScanValues = func() []interface{} {
@@ -380,6 +412,34 @@ func (tq *TitleQuery) sqlAll(ctx context.Context) ([]*Title, error) {
 				return nil, fmt.Errorf(`unexpected foreign-key "title_id" returned %v for node %v`, *fk, n.ID)
 			}
 			node.Edges.Personal = append(node.Edges.Personal, n)
+		}
+	}
+
+	if query := tq.withCustomer; query != nil {
+		fks := make([]driver.Value, 0, len(nodes))
+		nodeids := make(map[int]*Title)
+		for i := range nodes {
+			fks = append(fks, nodes[i].ID)
+			nodeids[nodes[i].ID] = nodes[i]
+		}
+		query.withFKs = true
+		query.Where(predicate.Customer(func(s *sql.Selector) {
+			s.Where(sql.InValues(title.CustomerColumn, fks...))
+		}))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			fk := n.title_id
+			if fk == nil {
+				return nil, fmt.Errorf(`foreign-key "title_id" is nil for node %v`, n.ID)
+			}
+			node, ok := nodeids[*fk]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "title_id" returned %v for node %v`, *fk, n.ID)
+			}
+			node.Edges.Customer = append(node.Edges.Customer, n)
 		}
 	}
 
