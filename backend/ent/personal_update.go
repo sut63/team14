@@ -11,6 +11,7 @@ import (
 	"github.com/facebookincubator/ent/schema/field"
 	"github.com/tanapon395/playlist-video/ent/customer"
 	"github.com/tanapon395/playlist-video/ent/department"
+	"github.com/tanapon395/playlist-video/ent/fix"
 	"github.com/tanapon395/playlist-video/ent/gender"
 	"github.com/tanapon395/playlist-video/ent/personal"
 	"github.com/tanapon395/playlist-video/ent/predicate"
@@ -137,6 +138,21 @@ func (pu *PersonalUpdate) AddProduct(p ...*Product) *PersonalUpdate {
 	return pu.AddProductIDs(ids...)
 }
 
+// AddFixIDs adds the fix edge to Fix by ids.
+func (pu *PersonalUpdate) AddFixIDs(ids ...int) *PersonalUpdate {
+	pu.mutation.AddFixIDs(ids...)
+	return pu
+}
+
+// AddFix adds the fix edges to Fix.
+func (pu *PersonalUpdate) AddFix(f ...*Fix) *PersonalUpdate {
+	ids := make([]int, len(f))
+	for i := range f {
+		ids[i] = f[i].ID
+	}
+	return pu.AddFixIDs(ids...)
+}
+
 // Mutation returns the PersonalMutation object of the builder.
 func (pu *PersonalUpdate) Mutation() *PersonalMutation {
 	return pu.mutation
@@ -188,6 +204,21 @@ func (pu *PersonalUpdate) RemoveProduct(p ...*Product) *PersonalUpdate {
 		ids[i] = p[i].ID
 	}
 	return pu.RemoveProductIDs(ids...)
+}
+
+// RemoveFixIDs removes the fix edge to Fix by ids.
+func (pu *PersonalUpdate) RemoveFixIDs(ids ...int) *PersonalUpdate {
+	pu.mutation.RemoveFixIDs(ids...)
+	return pu
+}
+
+// RemoveFix removes fix edges to Fix.
+func (pu *PersonalUpdate) RemoveFix(f ...*Fix) *PersonalUpdate {
+	ids := make([]int, len(f))
+	for i := range f {
+		ids[i] = f[i].ID
+	}
+	return pu.RemoveFixIDs(ids...)
 }
 
 // Save executes the query and returns the number of rows/vertices matched by this operation.
@@ -462,6 +493,44 @@ func (pu *PersonalUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	if nodes := pu.mutation.RemovedFixIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   personal.FixTable,
+			Columns: []string{personal.FixColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: fix.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := pu.mutation.FixIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   personal.FixTable,
+			Columns: []string{personal.FixColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: fix.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, pu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{personal.Label}
@@ -585,6 +654,21 @@ func (puo *PersonalUpdateOne) AddProduct(p ...*Product) *PersonalUpdateOne {
 	return puo.AddProductIDs(ids...)
 }
 
+// AddFixIDs adds the fix edge to Fix by ids.
+func (puo *PersonalUpdateOne) AddFixIDs(ids ...int) *PersonalUpdateOne {
+	puo.mutation.AddFixIDs(ids...)
+	return puo
+}
+
+// AddFix adds the fix edges to Fix.
+func (puo *PersonalUpdateOne) AddFix(f ...*Fix) *PersonalUpdateOne {
+	ids := make([]int, len(f))
+	for i := range f {
+		ids[i] = f[i].ID
+	}
+	return puo.AddFixIDs(ids...)
+}
+
 // Mutation returns the PersonalMutation object of the builder.
 func (puo *PersonalUpdateOne) Mutation() *PersonalMutation {
 	return puo.mutation
@@ -636,6 +720,21 @@ func (puo *PersonalUpdateOne) RemoveProduct(p ...*Product) *PersonalUpdateOne {
 		ids[i] = p[i].ID
 	}
 	return puo.RemoveProductIDs(ids...)
+}
+
+// RemoveFixIDs removes the fix edge to Fix by ids.
+func (puo *PersonalUpdateOne) RemoveFixIDs(ids ...int) *PersonalUpdateOne {
+	puo.mutation.RemoveFixIDs(ids...)
+	return puo
+}
+
+// RemoveFix removes fix edges to Fix.
+func (puo *PersonalUpdateOne) RemoveFix(f ...*Fix) *PersonalUpdateOne {
+	ids := make([]int, len(f))
+	for i := range f {
+		ids[i] = f[i].ID
+	}
+	return puo.RemoveFixIDs(ids...)
 }
 
 // Save executes the query and returns the updated entity.
@@ -900,6 +999,44 @@ func (puo *PersonalUpdateOne) sqlSave(ctx context.Context) (pe *Personal, err er
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: product.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if nodes := puo.mutation.RemovedFixIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   personal.FixTable,
+			Columns: []string{personal.FixColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: fix.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := puo.mutation.FixIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   personal.FixTable,
+			Columns: []string{personal.FixColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: fix.FieldID,
 				},
 			},
 		}

@@ -24,6 +24,8 @@ const (
 	EdgeGender = "gender"
 	// EdgeProduct holds the string denoting the product edge name in mutations.
 	EdgeProduct = "product"
+	// EdgeFix holds the string denoting the fix edge name in mutations.
+	EdgeFix = "fix"
 
 	// Table holds the table name of the personal in the database.
 	Table = "personals"
@@ -62,6 +64,13 @@ const (
 	ProductInverseTable = "products"
 	// ProductColumn is the table column denoting the product relation/edge.
 	ProductColumn = "Personal"
+	// FixTable is the table the holds the fix relation/edge.
+	FixTable = "fixes"
+	// FixInverseTable is the table name for the Fix entity.
+	// It exists in this package in order to avoid circular dependency with the "fix" package.
+	FixInverseTable = "fixes"
+	// FixColumn is the table column denoting the fix relation/edge.
+	FixColumn = "personal_id"
 )
 
 // Columns holds all SQL columns for personal fields.

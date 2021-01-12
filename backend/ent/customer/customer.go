@@ -20,6 +20,8 @@ const (
 	EdgePersonal = "personal"
 	// EdgeTitle holds the string denoting the title edge name in mutations.
 	EdgeTitle = "title"
+	// EdgeFix holds the string denoting the fix edge name in mutations.
+	EdgeFix = "fix"
 
 	// Table holds the table name of the customer in the database.
 	Table = "customers"
@@ -44,6 +46,13 @@ const (
 	TitleInverseTable = "titles"
 	// TitleColumn is the table column denoting the title relation/edge.
 	TitleColumn = "title_id"
+	// FixTable is the table the holds the fix relation/edge.
+	FixTable = "fixes"
+	// FixInverseTable is the table name for the Fix entity.
+	// It exists in this package in order to avoid circular dependency with the "fix" package.
+	FixInverseTable = "fixes"
+	// FixColumn is the table column denoting the fix relation/edge.
+	FixColumn = "customer_id"
 )
 
 // Columns holds all SQL columns for customer fields.

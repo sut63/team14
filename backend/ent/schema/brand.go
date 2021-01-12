@@ -22,5 +22,6 @@ func (Brand) Fields() []ent.Field {
 func (Brand) Edges() []ent.Edge {
 	return []ent.Edge{
 		edge.To("product", Product.Type).StorageKey(edge.Column("Brand")),
+		edge.To("fix", Fix.Type).StorageKey(edge.Column("brand_id")),
 	}
 }

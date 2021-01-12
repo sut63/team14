@@ -4,6 +4,7 @@ package ent
 
 import (
 	"context"
+	"database/sql/driver"
 	"errors"
 	"fmt"
 	"math"
@@ -12,6 +13,7 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
 	"github.com/tanapon395/playlist-video/ent/customer"
+	"github.com/tanapon395/playlist-video/ent/fix"
 	"github.com/tanapon395/playlist-video/ent/gender"
 	"github.com/tanapon395/playlist-video/ent/personal"
 	"github.com/tanapon395/playlist-video/ent/predicate"
@@ -30,6 +32,7 @@ type CustomerQuery struct {
 	withGender   *GenderQuery
 	withPersonal *PersonalQuery
 	withTitle    *TitleQuery
+	withFix      *FixQuery
 	withFKs      bool
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
@@ -107,6 +110,24 @@ func (cq *CustomerQuery) QueryTitle() *TitleQuery {
 			sqlgraph.From(customer.Table, customer.FieldID, cq.sqlQuery()),
 			sqlgraph.To(title.Table, title.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, true, customer.TitleTable, customer.TitleColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(cq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryFix chains the current query on the fix edge.
+func (cq *CustomerQuery) QueryFix() *FixQuery {
+	query := &FixQuery{config: cq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := cq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(customer.Table, customer.FieldID, cq.sqlQuery()),
+			sqlgraph.To(fix.Table, fix.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, customer.FixTable, customer.FixColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(cq.driver.Dialect(), step)
 		return fromU, nil
@@ -326,6 +347,17 @@ func (cq *CustomerQuery) WithTitle(opts ...func(*TitleQuery)) *CustomerQuery {
 	return cq
 }
 
+//  WithFix tells the query-builder to eager-loads the nodes that are connected to
+// the "fix" edge. The optional arguments used to configure the query builder of the edge.
+func (cq *CustomerQuery) WithFix(opts ...func(*FixQuery)) *CustomerQuery {
+	query := &FixQuery{config: cq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	cq.withFix = query
+	return cq
+}
+
 // GroupBy used to group vertices by one or more fields/columns.
 // It is often used with aggregate functions, like: count, max, mean, min, sum.
 //
@@ -393,10 +425,11 @@ func (cq *CustomerQuery) sqlAll(ctx context.Context) ([]*Customer, error) {
 		nodes       = []*Customer{}
 		withFKs     = cq.withFKs
 		_spec       = cq.querySpec()
-		loadedTypes = [3]bool{
+		loadedTypes = [4]bool{
 			cq.withGender != nil,
 			cq.withPersonal != nil,
 			cq.withTitle != nil,
+			cq.withFix != nil,
 		}
 	)
 	if cq.withGender != nil || cq.withPersonal != nil || cq.withTitle != nil {
@@ -501,6 +534,34 @@ func (cq *CustomerQuery) sqlAll(ctx context.Context) ([]*Customer, error) {
 			for i := range nodes {
 				nodes[i].Edges.Title = n
 			}
+		}
+	}
+
+	if query := cq.withFix; query != nil {
+		fks := make([]driver.Value, 0, len(nodes))
+		nodeids := make(map[int]*Customer)
+		for i := range nodes {
+			fks = append(fks, nodes[i].ID)
+			nodeids[nodes[i].ID] = nodes[i]
+		}
+		query.withFKs = true
+		query.Where(predicate.Fix(func(s *sql.Selector) {
+			s.Where(sql.InValues(customer.FixColumn, fks...))
+		}))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			fk := n.customer_id
+			if fk == nil {
+				return nil, fmt.Errorf(`foreign-key "customer_id" is nil for node %v`, n.ID)
+			}
+			node, ok := nodeids[*fk]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "customer_id" returned %v for node %v`, *fk, n.ID)
+			}
+			node.Edges.Fix = append(node.Edges.Fix, n)
 		}
 	}
 

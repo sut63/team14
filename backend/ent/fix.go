@@ -5,22 +5,127 @@ package ent
 import (
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/facebookincubator/ent/dialect/sql"
+	"github.com/tanapon395/playlist-video/ent/brand"
+	"github.com/tanapon395/playlist-video/ent/customer"
 	"github.com/tanapon395/playlist-video/ent/fix"
+	"github.com/tanapon395/playlist-video/ent/fixcomtype"
+	"github.com/tanapon395/playlist-video/ent/personal"
 )
 
 // Fix is the model entity for the Fix schema.
 type Fix struct {
-	config
+	config `json:"-"`
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
+	// Productnumber holds the value of the "productnumber" field.
+	Productnumber string `json:"productnumber,omitempty"`
+	// Problemtype holds the value of the "problemtype" field.
+	Problemtype string `json:"problemtype,omitempty"`
+	// Queue holds the value of the "queue" field.
+	Queue string `json:"queue,omitempty"`
+	// Date holds the value of the "date" field.
+	Date time.Time `json:"date,omitempty"`
+	// Edges holds the relations/edges for other nodes in the graph.
+	// The values are being populated by the FixQuery when eager-loading is set.
+	Edges         FixEdges `json:"edges"`
+	brand_id      *int
+	customer_id   *int
+	fixcomtype_id *int
+	personal_id   *int
+}
+
+// FixEdges holds the relations/edges for other nodes in the graph.
+type FixEdges struct {
+	// Brand holds the value of the brand edge.
+	Brand *Brand
+	// Personal holds the value of the personal edge.
+	Personal *Personal
+	// Customer holds the value of the customer edge.
+	Customer *Customer
+	// Fixcomtype holds the value of the fixcomtype edge.
+	Fixcomtype *Fixcomtype
+	// loadedTypes holds the information for reporting if a
+	// type was loaded (or requested) in eager-loading or not.
+	loadedTypes [4]bool
+}
+
+// BrandOrErr returns the Brand value or an error if the edge
+// was not loaded in eager-loading, or loaded but was not found.
+func (e FixEdges) BrandOrErr() (*Brand, error) {
+	if e.loadedTypes[0] {
+		if e.Brand == nil {
+			// The edge brand was loaded in eager-loading,
+			// but was not found.
+			return nil, &NotFoundError{label: brand.Label}
+		}
+		return e.Brand, nil
+	}
+	return nil, &NotLoadedError{edge: "brand"}
+}
+
+// PersonalOrErr returns the Personal value or an error if the edge
+// was not loaded in eager-loading, or loaded but was not found.
+func (e FixEdges) PersonalOrErr() (*Personal, error) {
+	if e.loadedTypes[1] {
+		if e.Personal == nil {
+			// The edge personal was loaded in eager-loading,
+			// but was not found.
+			return nil, &NotFoundError{label: personal.Label}
+		}
+		return e.Personal, nil
+	}
+	return nil, &NotLoadedError{edge: "personal"}
+}
+
+// CustomerOrErr returns the Customer value or an error if the edge
+// was not loaded in eager-loading, or loaded but was not found.
+func (e FixEdges) CustomerOrErr() (*Customer, error) {
+	if e.loadedTypes[2] {
+		if e.Customer == nil {
+			// The edge customer was loaded in eager-loading,
+			// but was not found.
+			return nil, &NotFoundError{label: customer.Label}
+		}
+		return e.Customer, nil
+	}
+	return nil, &NotLoadedError{edge: "customer"}
+}
+
+// FixcomtypeOrErr returns the Fixcomtype value or an error if the edge
+// was not loaded in eager-loading, or loaded but was not found.
+func (e FixEdges) FixcomtypeOrErr() (*Fixcomtype, error) {
+	if e.loadedTypes[3] {
+		if e.Fixcomtype == nil {
+			// The edge fixcomtype was loaded in eager-loading,
+			// but was not found.
+			return nil, &NotFoundError{label: fixcomtype.Label}
+		}
+		return e.Fixcomtype, nil
+	}
+	return nil, &NotLoadedError{edge: "fixcomtype"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
 func (*Fix) scanValues() []interface{} {
 	return []interface{}{
-		&sql.NullInt64{}, // id
+		&sql.NullInt64{},  // id
+		&sql.NullString{}, // productnumber
+		&sql.NullString{}, // problemtype
+		&sql.NullString{}, // queue
+		&sql.NullTime{},   // date
+	}
+}
+
+// fkValues returns the types for scanning foreign-keys values from sql.Rows.
+func (*Fix) fkValues() []interface{} {
+	return []interface{}{
+		&sql.NullInt64{}, // brand_id
+		&sql.NullInt64{}, // customer_id
+		&sql.NullInt64{}, // fixcomtype_id
+		&sql.NullInt64{}, // personal_id
 	}
 }
 
@@ -36,7 +141,74 @@ func (f *Fix) assignValues(values ...interface{}) error {
 	}
 	f.ID = int(value.Int64)
 	values = values[1:]
+	if value, ok := values[0].(*sql.NullString); !ok {
+		return fmt.Errorf("unexpected type %T for field productnumber", values[0])
+	} else if value.Valid {
+		f.Productnumber = value.String
+	}
+	if value, ok := values[1].(*sql.NullString); !ok {
+		return fmt.Errorf("unexpected type %T for field problemtype", values[1])
+	} else if value.Valid {
+		f.Problemtype = value.String
+	}
+	if value, ok := values[2].(*sql.NullString); !ok {
+		return fmt.Errorf("unexpected type %T for field queue", values[2])
+	} else if value.Valid {
+		f.Queue = value.String
+	}
+	if value, ok := values[3].(*sql.NullTime); !ok {
+		return fmt.Errorf("unexpected type %T for field date", values[3])
+	} else if value.Valid {
+		f.Date = value.Time
+	}
+	values = values[4:]
+	if len(values) == len(fix.ForeignKeys) {
+		if value, ok := values[0].(*sql.NullInt64); !ok {
+			return fmt.Errorf("unexpected type %T for edge-field brand_id", value)
+		} else if value.Valid {
+			f.brand_id = new(int)
+			*f.brand_id = int(value.Int64)
+		}
+		if value, ok := values[1].(*sql.NullInt64); !ok {
+			return fmt.Errorf("unexpected type %T for edge-field customer_id", value)
+		} else if value.Valid {
+			f.customer_id = new(int)
+			*f.customer_id = int(value.Int64)
+		}
+		if value, ok := values[2].(*sql.NullInt64); !ok {
+			return fmt.Errorf("unexpected type %T for edge-field fixcomtype_id", value)
+		} else if value.Valid {
+			f.fixcomtype_id = new(int)
+			*f.fixcomtype_id = int(value.Int64)
+		}
+		if value, ok := values[3].(*sql.NullInt64); !ok {
+			return fmt.Errorf("unexpected type %T for edge-field personal_id", value)
+		} else if value.Valid {
+			f.personal_id = new(int)
+			*f.personal_id = int(value.Int64)
+		}
+	}
 	return nil
+}
+
+// QueryBrand queries the brand edge of the Fix.
+func (f *Fix) QueryBrand() *BrandQuery {
+	return (&FixClient{config: f.config}).QueryBrand(f)
+}
+
+// QueryPersonal queries the personal edge of the Fix.
+func (f *Fix) QueryPersonal() *PersonalQuery {
+	return (&FixClient{config: f.config}).QueryPersonal(f)
+}
+
+// QueryCustomer queries the customer edge of the Fix.
+func (f *Fix) QueryCustomer() *CustomerQuery {
+	return (&FixClient{config: f.config}).QueryCustomer(f)
+}
+
+// QueryFixcomtype queries the fixcomtype edge of the Fix.
+func (f *Fix) QueryFixcomtype() *FixcomtypeQuery {
+	return (&FixClient{config: f.config}).QueryFixcomtype(f)
 }
 
 // Update returns a builder for updating this Fix.
@@ -62,6 +234,14 @@ func (f *Fix) String() string {
 	var builder strings.Builder
 	builder.WriteString("Fix(")
 	builder.WriteString(fmt.Sprintf("id=%v", f.ID))
+	builder.WriteString(", productnumber=")
+	builder.WriteString(f.Productnumber)
+	builder.WriteString(", problemtype=")
+	builder.WriteString(f.Problemtype)
+	builder.WriteString(", queue=")
+	builder.WriteString(f.Queue)
+	builder.WriteString(", date=")
+	builder.WriteString(f.Date.Format(time.ANSIC))
 	builder.WriteByte(')')
 	return builder.String()
 }

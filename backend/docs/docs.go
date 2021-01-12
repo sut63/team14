@@ -33,6 +33,53 @@ var doc = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/Fixcomtypes": {
+            "get": {
+                "description": "list fixcomtype entities",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "List fixcomtype entities",
+                "operationId": "list-fixcomtype",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Limit",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Offset",
+                        "name": "offset",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ent.Fixcomtype"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
         "/brand/{id}": {
             "delete": {
                 "description": "get brand by ID",
@@ -631,6 +678,366 @@ var doc = `{
                     {
                         "type": "integer",
                         "description": "Department ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/fixcomtype/{id}": {
+            "delete": {
+                "description": "get fixcomtype by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Delete a fixcomtype entity by ID",
+                "operationId": "delete-fixcomtype",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Fixcomtype ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/fixcomtypes": {
+            "post": {
+                "description": "Create fixcomtype",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create fixcomtype",
+                "operationId": "create-fixcomtype",
+                "parameters": [
+                    {
+                        "description": "Fixcomtype entity",
+                        "name": "fixcomtype",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/ent.Fixcomtype"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.Fixcomtype"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/fixcomtypes/{id}": {
+            "get": {
+                "description": "get fixcomtype by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get a fixcomtype entity by ID",
+                "operationId": "get-fixcomtype",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Fixcomtype ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.Fixcomtype"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/fixs": {
+            "get": {
+                "description": "list fix entities",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "List fix entities",
+                "operationId": "list-fix",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Limit",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Offset",
+                        "name": "offset",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ent.Fix"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create fix",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create fix",
+                "operationId": "create-fix",
+                "parameters": [
+                    {
+                        "description": "Fix entity",
+                        "name": "fix",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.Fix"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.Fix"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/fixs/{id}": {
+            "get": {
+                "description": "get fix by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get a fix entity by ID",
+                "operationId": "get-fix",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Fix ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.Fix"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "update fix by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Update a fix entity by ID",
+                "operationId": "update-fix",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Fix ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Fix entity",
+                        "name": "fix",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/ent.Fix"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.Fix"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "get fix by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Delete a fix entity by ID",
+                "operationId": "delete-fix",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Fix ID",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -1688,6 +2095,35 @@ var doc = `{
                 }
             }
         },
+        "controllers.Fix": {
+            "type": "object",
+            "properties": {
+                "brand": {
+                    "type": "integer"
+                },
+                "customer": {
+                    "type": "integer"
+                },
+                "date": {
+                    "type": "string"
+                },
+                "fixcomtype": {
+                    "type": "integer"
+                },
+                "personal": {
+                    "type": "integer"
+                },
+                "problemtype": {
+                    "type": "string"
+                },
+                "productnumber": {
+                    "type": "string"
+                },
+                "queue": {
+                    "type": "string"
+                }
+            }
+        },
         "controllers.Gender": {
             "type": "object",
             "properties": {
@@ -1766,6 +2202,13 @@ var doc = `{
         "ent.BrandEdges": {
             "type": "object",
             "properties": {
+                "fix": {
+                    "description": "Fix holds the value of the fix edge.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.Fix"
+                    }
+                },
                 "product": {
                     "description": "Product holds the value of the product edge.",
                     "type": "array",
@@ -1804,6 +2247,13 @@ var doc = `{
         "ent.CustomerEdges": {
             "type": "object",
             "properties": {
+                "fix": {
+                    "description": "Fix holds the value of the fix edge.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.Fix"
+                    }
+                },
                 "gender": {
                     "description": "Gender holds the value of the gender edge.",
                     "type": "object",
@@ -1854,6 +2304,91 @@ var doc = `{
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/ent.Personal"
+                    }
+                }
+            }
+        },
+        "ent.Fix": {
+            "type": "object",
+            "properties": {
+                "date": {
+                    "description": "Date holds the value of the \"date\" field.",
+                    "type": "string"
+                },
+                "edges": {
+                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the FixQuery when eager-loading is set.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.FixEdges"
+                },
+                "id": {
+                    "description": "ID of the ent.",
+                    "type": "integer"
+                },
+                "problemtype": {
+                    "description": "Problemtype holds the value of the \"problemtype\" field.",
+                    "type": "string"
+                },
+                "productnumber": {
+                    "description": "Productnumber holds the value of the \"productnumber\" field.",
+                    "type": "string"
+                },
+                "queue": {
+                    "description": "Queue holds the value of the \"queue\" field.",
+                    "type": "string"
+                }
+            }
+        },
+        "ent.FixEdges": {
+            "type": "object",
+            "properties": {
+                "brand": {
+                    "description": "Brand holds the value of the brand edge.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.Brand"
+                },
+                "customer": {
+                    "description": "Customer holds the value of the customer edge.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.Customer"
+                },
+                "fixcomtype": {
+                    "description": "Fixcomtype holds the value of the fixcomtype edge.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.Fixcomtype"
+                },
+                "personal": {
+                    "description": "Personal holds the value of the personal edge.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.Personal"
+                }
+            }
+        },
+        "ent.Fixcomtype": {
+            "type": "object",
+            "properties": {
+                "edges": {
+                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the FixcomtypeQuery when eager-loading is set.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.FixcomtypeEdges"
+                },
+                "fixcomtypename": {
+                    "description": "Fixcomtypename holds the value of the \"fixcomtypename\" field.",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "ID of the ent.",
+                    "type": "integer"
+                }
+            }
+        },
+        "ent.FixcomtypeEdges": {
+            "type": "object",
+            "properties": {
+                "fix": {
+                    "description": "Fix holds the value of the fix edge.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.Fix"
                     }
                 }
             }
@@ -1935,6 +2470,13 @@ var doc = `{
                     "description": "Department holds the value of the department edge.",
                     "type": "object",
                     "$ref": "#/definitions/ent.Department"
+                },
+                "fix": {
+                    "description": "Fix holds the value of the fix edge.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.Fix"
+                    }
                 },
                 "gender": {
                     "description": "Gender holds the value of the gender edge.",

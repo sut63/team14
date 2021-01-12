@@ -5,11 +5,16 @@ package ent
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
+	"github.com/tanapon395/playlist-video/ent/brand"
+	"github.com/tanapon395/playlist-video/ent/customer"
 	"github.com/tanapon395/playlist-video/ent/fix"
+	"github.com/tanapon395/playlist-video/ent/fixcomtype"
+	"github.com/tanapon395/playlist-video/ent/personal"
 	"github.com/tanapon395/playlist-video/ent/predicate"
 )
 
@@ -27,13 +32,153 @@ func (fu *FixUpdate) Where(ps ...predicate.Fix) *FixUpdate {
 	return fu
 }
 
+// SetProductnumber sets the productnumber field.
+func (fu *FixUpdate) SetProductnumber(s string) *FixUpdate {
+	fu.mutation.SetProductnumber(s)
+	return fu
+}
+
+// SetProblemtype sets the problemtype field.
+func (fu *FixUpdate) SetProblemtype(s string) *FixUpdate {
+	fu.mutation.SetProblemtype(s)
+	return fu
+}
+
+// SetQueue sets the queue field.
+func (fu *FixUpdate) SetQueue(s string) *FixUpdate {
+	fu.mutation.SetQueue(s)
+	return fu
+}
+
+// SetDate sets the date field.
+func (fu *FixUpdate) SetDate(t time.Time) *FixUpdate {
+	fu.mutation.SetDate(t)
+	return fu
+}
+
+// SetBrandID sets the brand edge to Brand by id.
+func (fu *FixUpdate) SetBrandID(id int) *FixUpdate {
+	fu.mutation.SetBrandID(id)
+	return fu
+}
+
+// SetNillableBrandID sets the brand edge to Brand by id if the given value is not nil.
+func (fu *FixUpdate) SetNillableBrandID(id *int) *FixUpdate {
+	if id != nil {
+		fu = fu.SetBrandID(*id)
+	}
+	return fu
+}
+
+// SetBrand sets the brand edge to Brand.
+func (fu *FixUpdate) SetBrand(b *Brand) *FixUpdate {
+	return fu.SetBrandID(b.ID)
+}
+
+// SetPersonalID sets the personal edge to Personal by id.
+func (fu *FixUpdate) SetPersonalID(id int) *FixUpdate {
+	fu.mutation.SetPersonalID(id)
+	return fu
+}
+
+// SetNillablePersonalID sets the personal edge to Personal by id if the given value is not nil.
+func (fu *FixUpdate) SetNillablePersonalID(id *int) *FixUpdate {
+	if id != nil {
+		fu = fu.SetPersonalID(*id)
+	}
+	return fu
+}
+
+// SetPersonal sets the personal edge to Personal.
+func (fu *FixUpdate) SetPersonal(p *Personal) *FixUpdate {
+	return fu.SetPersonalID(p.ID)
+}
+
+// SetCustomerID sets the customer edge to Customer by id.
+func (fu *FixUpdate) SetCustomerID(id int) *FixUpdate {
+	fu.mutation.SetCustomerID(id)
+	return fu
+}
+
+// SetNillableCustomerID sets the customer edge to Customer by id if the given value is not nil.
+func (fu *FixUpdate) SetNillableCustomerID(id *int) *FixUpdate {
+	if id != nil {
+		fu = fu.SetCustomerID(*id)
+	}
+	return fu
+}
+
+// SetCustomer sets the customer edge to Customer.
+func (fu *FixUpdate) SetCustomer(c *Customer) *FixUpdate {
+	return fu.SetCustomerID(c.ID)
+}
+
+// SetFixcomtypeID sets the fixcomtype edge to Fixcomtype by id.
+func (fu *FixUpdate) SetFixcomtypeID(id int) *FixUpdate {
+	fu.mutation.SetFixcomtypeID(id)
+	return fu
+}
+
+// SetNillableFixcomtypeID sets the fixcomtype edge to Fixcomtype by id if the given value is not nil.
+func (fu *FixUpdate) SetNillableFixcomtypeID(id *int) *FixUpdate {
+	if id != nil {
+		fu = fu.SetFixcomtypeID(*id)
+	}
+	return fu
+}
+
+// SetFixcomtype sets the fixcomtype edge to Fixcomtype.
+func (fu *FixUpdate) SetFixcomtype(f *Fixcomtype) *FixUpdate {
+	return fu.SetFixcomtypeID(f.ID)
+}
+
 // Mutation returns the FixMutation object of the builder.
 func (fu *FixUpdate) Mutation() *FixMutation {
 	return fu.mutation
 }
 
+// ClearBrand clears the brand edge to Brand.
+func (fu *FixUpdate) ClearBrand() *FixUpdate {
+	fu.mutation.ClearBrand()
+	return fu
+}
+
+// ClearPersonal clears the personal edge to Personal.
+func (fu *FixUpdate) ClearPersonal() *FixUpdate {
+	fu.mutation.ClearPersonal()
+	return fu
+}
+
+// ClearCustomer clears the customer edge to Customer.
+func (fu *FixUpdate) ClearCustomer() *FixUpdate {
+	fu.mutation.ClearCustomer()
+	return fu
+}
+
+// ClearFixcomtype clears the fixcomtype edge to Fixcomtype.
+func (fu *FixUpdate) ClearFixcomtype() *FixUpdate {
+	fu.mutation.ClearFixcomtype()
+	return fu
+}
+
 // Save executes the query and returns the number of rows/vertices matched by this operation.
 func (fu *FixUpdate) Save(ctx context.Context) (int, error) {
+	if v, ok := fu.mutation.Productnumber(); ok {
+		if err := fix.ProductnumberValidator(v); err != nil {
+			return 0, &ValidationError{Name: "productnumber", err: fmt.Errorf("ent: validator failed for field \"productnumber\": %w", err)}
+		}
+	}
+	if v, ok := fu.mutation.Problemtype(); ok {
+		if err := fix.ProblemtypeValidator(v); err != nil {
+			return 0, &ValidationError{Name: "problemtype", err: fmt.Errorf("ent: validator failed for field \"problemtype\": %w", err)}
+		}
+	}
+	if v, ok := fu.mutation.Queue(); ok {
+		if err := fix.QueueValidator(v); err != nil {
+			return 0, &ValidationError{Name: "queue", err: fmt.Errorf("ent: validator failed for field \"queue\": %w", err)}
+		}
+	}
+
 	var (
 		err      error
 		affected int
@@ -101,6 +246,174 @@ func (fu *FixUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			}
 		}
 	}
+	if value, ok := fu.mutation.Productnumber(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: fix.FieldProductnumber,
+		})
+	}
+	if value, ok := fu.mutation.Problemtype(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: fix.FieldProblemtype,
+		})
+	}
+	if value, ok := fu.mutation.Queue(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: fix.FieldQueue,
+		})
+	}
+	if value, ok := fu.mutation.Date(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeTime,
+			Value:  value,
+			Column: fix.FieldDate,
+		})
+	}
+	if fu.mutation.BrandCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   fix.BrandTable,
+			Columns: []string{fix.BrandColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: brand.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := fu.mutation.BrandIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   fix.BrandTable,
+			Columns: []string{fix.BrandColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: brand.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if fu.mutation.PersonalCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   fix.PersonalTable,
+			Columns: []string{fix.PersonalColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: personal.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := fu.mutation.PersonalIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   fix.PersonalTable,
+			Columns: []string{fix.PersonalColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: personal.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if fu.mutation.CustomerCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   fix.CustomerTable,
+			Columns: []string{fix.CustomerColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: customer.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := fu.mutation.CustomerIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   fix.CustomerTable,
+			Columns: []string{fix.CustomerColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: customer.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if fu.mutation.FixcomtypeCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   fix.FixcomtypeTable,
+			Columns: []string{fix.FixcomtypeColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: fixcomtype.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := fu.mutation.FixcomtypeIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   fix.FixcomtypeTable,
+			Columns: []string{fix.FixcomtypeColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: fixcomtype.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, fu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{fix.Label}
@@ -119,13 +432,153 @@ type FixUpdateOne struct {
 	mutation *FixMutation
 }
 
+// SetProductnumber sets the productnumber field.
+func (fuo *FixUpdateOne) SetProductnumber(s string) *FixUpdateOne {
+	fuo.mutation.SetProductnumber(s)
+	return fuo
+}
+
+// SetProblemtype sets the problemtype field.
+func (fuo *FixUpdateOne) SetProblemtype(s string) *FixUpdateOne {
+	fuo.mutation.SetProblemtype(s)
+	return fuo
+}
+
+// SetQueue sets the queue field.
+func (fuo *FixUpdateOne) SetQueue(s string) *FixUpdateOne {
+	fuo.mutation.SetQueue(s)
+	return fuo
+}
+
+// SetDate sets the date field.
+func (fuo *FixUpdateOne) SetDate(t time.Time) *FixUpdateOne {
+	fuo.mutation.SetDate(t)
+	return fuo
+}
+
+// SetBrandID sets the brand edge to Brand by id.
+func (fuo *FixUpdateOne) SetBrandID(id int) *FixUpdateOne {
+	fuo.mutation.SetBrandID(id)
+	return fuo
+}
+
+// SetNillableBrandID sets the brand edge to Brand by id if the given value is not nil.
+func (fuo *FixUpdateOne) SetNillableBrandID(id *int) *FixUpdateOne {
+	if id != nil {
+		fuo = fuo.SetBrandID(*id)
+	}
+	return fuo
+}
+
+// SetBrand sets the brand edge to Brand.
+func (fuo *FixUpdateOne) SetBrand(b *Brand) *FixUpdateOne {
+	return fuo.SetBrandID(b.ID)
+}
+
+// SetPersonalID sets the personal edge to Personal by id.
+func (fuo *FixUpdateOne) SetPersonalID(id int) *FixUpdateOne {
+	fuo.mutation.SetPersonalID(id)
+	return fuo
+}
+
+// SetNillablePersonalID sets the personal edge to Personal by id if the given value is not nil.
+func (fuo *FixUpdateOne) SetNillablePersonalID(id *int) *FixUpdateOne {
+	if id != nil {
+		fuo = fuo.SetPersonalID(*id)
+	}
+	return fuo
+}
+
+// SetPersonal sets the personal edge to Personal.
+func (fuo *FixUpdateOne) SetPersonal(p *Personal) *FixUpdateOne {
+	return fuo.SetPersonalID(p.ID)
+}
+
+// SetCustomerID sets the customer edge to Customer by id.
+func (fuo *FixUpdateOne) SetCustomerID(id int) *FixUpdateOne {
+	fuo.mutation.SetCustomerID(id)
+	return fuo
+}
+
+// SetNillableCustomerID sets the customer edge to Customer by id if the given value is not nil.
+func (fuo *FixUpdateOne) SetNillableCustomerID(id *int) *FixUpdateOne {
+	if id != nil {
+		fuo = fuo.SetCustomerID(*id)
+	}
+	return fuo
+}
+
+// SetCustomer sets the customer edge to Customer.
+func (fuo *FixUpdateOne) SetCustomer(c *Customer) *FixUpdateOne {
+	return fuo.SetCustomerID(c.ID)
+}
+
+// SetFixcomtypeID sets the fixcomtype edge to Fixcomtype by id.
+func (fuo *FixUpdateOne) SetFixcomtypeID(id int) *FixUpdateOne {
+	fuo.mutation.SetFixcomtypeID(id)
+	return fuo
+}
+
+// SetNillableFixcomtypeID sets the fixcomtype edge to Fixcomtype by id if the given value is not nil.
+func (fuo *FixUpdateOne) SetNillableFixcomtypeID(id *int) *FixUpdateOne {
+	if id != nil {
+		fuo = fuo.SetFixcomtypeID(*id)
+	}
+	return fuo
+}
+
+// SetFixcomtype sets the fixcomtype edge to Fixcomtype.
+func (fuo *FixUpdateOne) SetFixcomtype(f *Fixcomtype) *FixUpdateOne {
+	return fuo.SetFixcomtypeID(f.ID)
+}
+
 // Mutation returns the FixMutation object of the builder.
 func (fuo *FixUpdateOne) Mutation() *FixMutation {
 	return fuo.mutation
 }
 
+// ClearBrand clears the brand edge to Brand.
+func (fuo *FixUpdateOne) ClearBrand() *FixUpdateOne {
+	fuo.mutation.ClearBrand()
+	return fuo
+}
+
+// ClearPersonal clears the personal edge to Personal.
+func (fuo *FixUpdateOne) ClearPersonal() *FixUpdateOne {
+	fuo.mutation.ClearPersonal()
+	return fuo
+}
+
+// ClearCustomer clears the customer edge to Customer.
+func (fuo *FixUpdateOne) ClearCustomer() *FixUpdateOne {
+	fuo.mutation.ClearCustomer()
+	return fuo
+}
+
+// ClearFixcomtype clears the fixcomtype edge to Fixcomtype.
+func (fuo *FixUpdateOne) ClearFixcomtype() *FixUpdateOne {
+	fuo.mutation.ClearFixcomtype()
+	return fuo
+}
+
 // Save executes the query and returns the updated entity.
 func (fuo *FixUpdateOne) Save(ctx context.Context) (*Fix, error) {
+	if v, ok := fuo.mutation.Productnumber(); ok {
+		if err := fix.ProductnumberValidator(v); err != nil {
+			return nil, &ValidationError{Name: "productnumber", err: fmt.Errorf("ent: validator failed for field \"productnumber\": %w", err)}
+		}
+	}
+	if v, ok := fuo.mutation.Problemtype(); ok {
+		if err := fix.ProblemtypeValidator(v); err != nil {
+			return nil, &ValidationError{Name: "problemtype", err: fmt.Errorf("ent: validator failed for field \"problemtype\": %w", err)}
+		}
+	}
+	if v, ok := fuo.mutation.Queue(); ok {
+		if err := fix.QueueValidator(v); err != nil {
+			return nil, &ValidationError{Name: "queue", err: fmt.Errorf("ent: validator failed for field \"queue\": %w", err)}
+		}
+	}
+
 	var (
 		err  error
 		node *Fix
@@ -191,6 +644,174 @@ func (fuo *FixUpdateOne) sqlSave(ctx context.Context) (f *Fix, err error) {
 		return nil, &ValidationError{Name: "ID", err: fmt.Errorf("missing Fix.ID for update")}
 	}
 	_spec.Node.ID.Value = id
+	if value, ok := fuo.mutation.Productnumber(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: fix.FieldProductnumber,
+		})
+	}
+	if value, ok := fuo.mutation.Problemtype(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: fix.FieldProblemtype,
+		})
+	}
+	if value, ok := fuo.mutation.Queue(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: fix.FieldQueue,
+		})
+	}
+	if value, ok := fuo.mutation.Date(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeTime,
+			Value:  value,
+			Column: fix.FieldDate,
+		})
+	}
+	if fuo.mutation.BrandCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   fix.BrandTable,
+			Columns: []string{fix.BrandColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: brand.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := fuo.mutation.BrandIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   fix.BrandTable,
+			Columns: []string{fix.BrandColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: brand.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if fuo.mutation.PersonalCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   fix.PersonalTable,
+			Columns: []string{fix.PersonalColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: personal.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := fuo.mutation.PersonalIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   fix.PersonalTable,
+			Columns: []string{fix.PersonalColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: personal.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if fuo.mutation.CustomerCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   fix.CustomerTable,
+			Columns: []string{fix.CustomerColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: customer.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := fuo.mutation.CustomerIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   fix.CustomerTable,
+			Columns: []string{fix.CustomerColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: customer.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if fuo.mutation.FixcomtypeCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   fix.FixcomtypeTable,
+			Columns: []string{fix.FixcomtypeColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: fixcomtype.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := fuo.mutation.FixcomtypeIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   fix.FixcomtypeTable,
+			Columns: []string{fix.FixcomtypeColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: fixcomtype.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	f = &Fix{config: fuo.config}
 	_spec.Assign = f.assignValues
 	_spec.ScanValues = f.scanValues()

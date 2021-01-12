@@ -21,6 +21,9 @@ type Department func(*sql.Selector)
 // Fix is the predicate function for fix builders.
 type Fix func(*sql.Selector)
 
+// Fixcomtype is the predicate function for fixcomtype builders.
+type Fixcomtype func(*sql.Selector)
+
 // Gender is the predicate function for gender builders.
 type Gender func(*sql.Selector)
 
