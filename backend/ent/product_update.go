@@ -9,8 +9,11 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
+	"github.com/tanapon395/playlist-video/ent/brand"
+	"github.com/tanapon395/playlist-video/ent/personal"
 	"github.com/tanapon395/playlist-video/ent/predicate"
 	"github.com/tanapon395/playlist-video/ent/product"
+	"github.com/tanapon395/playlist-video/ent/typeproduct"
 )
 
 // ProductUpdate is the builder for updating Product entities.
@@ -27,13 +30,122 @@ func (pu *ProductUpdate) Where(ps ...predicate.Product) *ProductUpdate {
 	return pu
 }
 
+// SetProductname sets the Productname field.
+func (pu *ProductUpdate) SetProductname(s string) *ProductUpdate {
+	pu.mutation.SetProductname(s)
+	return pu
+}
+
+// SetNumberofproduct sets the Numberofproduct field.
+func (pu *ProductUpdate) SetNumberofproduct(s string) *ProductUpdate {
+	pu.mutation.SetNumberofproduct(s)
+	return pu
+}
+
+// SetPrice sets the Price field.
+func (pu *ProductUpdate) SetPrice(s string) *ProductUpdate {
+	pu.mutation.SetPrice(s)
+	return pu
+}
+
+// SetBrandID sets the brand edge to Brand by id.
+func (pu *ProductUpdate) SetBrandID(id int) *ProductUpdate {
+	pu.mutation.SetBrandID(id)
+	return pu
+}
+
+// SetNillableBrandID sets the brand edge to Brand by id if the given value is not nil.
+func (pu *ProductUpdate) SetNillableBrandID(id *int) *ProductUpdate {
+	if id != nil {
+		pu = pu.SetBrandID(*id)
+	}
+	return pu
+}
+
+// SetBrand sets the brand edge to Brand.
+func (pu *ProductUpdate) SetBrand(b *Brand) *ProductUpdate {
+	return pu.SetBrandID(b.ID)
+}
+
+// SetTypeproductID sets the typeproduct edge to Typeproduct by id.
+func (pu *ProductUpdate) SetTypeproductID(id int) *ProductUpdate {
+	pu.mutation.SetTypeproductID(id)
+	return pu
+}
+
+// SetNillableTypeproductID sets the typeproduct edge to Typeproduct by id if the given value is not nil.
+func (pu *ProductUpdate) SetNillableTypeproductID(id *int) *ProductUpdate {
+	if id != nil {
+		pu = pu.SetTypeproductID(*id)
+	}
+	return pu
+}
+
+// SetTypeproduct sets the typeproduct edge to Typeproduct.
+func (pu *ProductUpdate) SetTypeproduct(t *Typeproduct) *ProductUpdate {
+	return pu.SetTypeproductID(t.ID)
+}
+
+// SetPersonalID sets the personal edge to Personal by id.
+func (pu *ProductUpdate) SetPersonalID(id int) *ProductUpdate {
+	pu.mutation.SetPersonalID(id)
+	return pu
+}
+
+// SetNillablePersonalID sets the personal edge to Personal by id if the given value is not nil.
+func (pu *ProductUpdate) SetNillablePersonalID(id *int) *ProductUpdate {
+	if id != nil {
+		pu = pu.SetPersonalID(*id)
+	}
+	return pu
+}
+
+// SetPersonal sets the personal edge to Personal.
+func (pu *ProductUpdate) SetPersonal(p *Personal) *ProductUpdate {
+	return pu.SetPersonalID(p.ID)
+}
+
 // Mutation returns the ProductMutation object of the builder.
 func (pu *ProductUpdate) Mutation() *ProductMutation {
 	return pu.mutation
 }
 
+// ClearBrand clears the brand edge to Brand.
+func (pu *ProductUpdate) ClearBrand() *ProductUpdate {
+	pu.mutation.ClearBrand()
+	return pu
+}
+
+// ClearTypeproduct clears the typeproduct edge to Typeproduct.
+func (pu *ProductUpdate) ClearTypeproduct() *ProductUpdate {
+	pu.mutation.ClearTypeproduct()
+	return pu
+}
+
+// ClearPersonal clears the personal edge to Personal.
+func (pu *ProductUpdate) ClearPersonal() *ProductUpdate {
+	pu.mutation.ClearPersonal()
+	return pu
+}
+
 // Save executes the query and returns the number of rows/vertices matched by this operation.
 func (pu *ProductUpdate) Save(ctx context.Context) (int, error) {
+	if v, ok := pu.mutation.Productname(); ok {
+		if err := product.ProductnameValidator(v); err != nil {
+			return 0, &ValidationError{Name: "Productname", err: fmt.Errorf("ent: validator failed for field \"Productname\": %w", err)}
+		}
+	}
+	if v, ok := pu.mutation.Numberofproduct(); ok {
+		if err := product.NumberofproductValidator(v); err != nil {
+			return 0, &ValidationError{Name: "Numberofproduct", err: fmt.Errorf("ent: validator failed for field \"Numberofproduct\": %w", err)}
+		}
+	}
+	if v, ok := pu.mutation.Price(); ok {
+		if err := product.PriceValidator(v); err != nil {
+			return 0, &ValidationError{Name: "Price", err: fmt.Errorf("ent: validator failed for field \"Price\": %w", err)}
+		}
+	}
+
 	var (
 		err      error
 		affected int
@@ -101,6 +213,132 @@ func (pu *ProductUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			}
 		}
 	}
+	if value, ok := pu.mutation.Productname(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: product.FieldProductname,
+		})
+	}
+	if value, ok := pu.mutation.Numberofproduct(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: product.FieldNumberofproduct,
+		})
+	}
+	if value, ok := pu.mutation.Price(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: product.FieldPrice,
+		})
+	}
+	if pu.mutation.BrandCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   product.BrandTable,
+			Columns: []string{product.BrandColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: brand.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := pu.mutation.BrandIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   product.BrandTable,
+			Columns: []string{product.BrandColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: brand.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if pu.mutation.TypeproductCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   product.TypeproductTable,
+			Columns: []string{product.TypeproductColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: typeproduct.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := pu.mutation.TypeproductIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   product.TypeproductTable,
+			Columns: []string{product.TypeproductColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: typeproduct.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if pu.mutation.PersonalCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   product.PersonalTable,
+			Columns: []string{product.PersonalColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: personal.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := pu.mutation.PersonalIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   product.PersonalTable,
+			Columns: []string{product.PersonalColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: personal.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, pu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{product.Label}
@@ -119,13 +357,122 @@ type ProductUpdateOne struct {
 	mutation *ProductMutation
 }
 
+// SetProductname sets the Productname field.
+func (puo *ProductUpdateOne) SetProductname(s string) *ProductUpdateOne {
+	puo.mutation.SetProductname(s)
+	return puo
+}
+
+// SetNumberofproduct sets the Numberofproduct field.
+func (puo *ProductUpdateOne) SetNumberofproduct(s string) *ProductUpdateOne {
+	puo.mutation.SetNumberofproduct(s)
+	return puo
+}
+
+// SetPrice sets the Price field.
+func (puo *ProductUpdateOne) SetPrice(s string) *ProductUpdateOne {
+	puo.mutation.SetPrice(s)
+	return puo
+}
+
+// SetBrandID sets the brand edge to Brand by id.
+func (puo *ProductUpdateOne) SetBrandID(id int) *ProductUpdateOne {
+	puo.mutation.SetBrandID(id)
+	return puo
+}
+
+// SetNillableBrandID sets the brand edge to Brand by id if the given value is not nil.
+func (puo *ProductUpdateOne) SetNillableBrandID(id *int) *ProductUpdateOne {
+	if id != nil {
+		puo = puo.SetBrandID(*id)
+	}
+	return puo
+}
+
+// SetBrand sets the brand edge to Brand.
+func (puo *ProductUpdateOne) SetBrand(b *Brand) *ProductUpdateOne {
+	return puo.SetBrandID(b.ID)
+}
+
+// SetTypeproductID sets the typeproduct edge to Typeproduct by id.
+func (puo *ProductUpdateOne) SetTypeproductID(id int) *ProductUpdateOne {
+	puo.mutation.SetTypeproductID(id)
+	return puo
+}
+
+// SetNillableTypeproductID sets the typeproduct edge to Typeproduct by id if the given value is not nil.
+func (puo *ProductUpdateOne) SetNillableTypeproductID(id *int) *ProductUpdateOne {
+	if id != nil {
+		puo = puo.SetTypeproductID(*id)
+	}
+	return puo
+}
+
+// SetTypeproduct sets the typeproduct edge to Typeproduct.
+func (puo *ProductUpdateOne) SetTypeproduct(t *Typeproduct) *ProductUpdateOne {
+	return puo.SetTypeproductID(t.ID)
+}
+
+// SetPersonalID sets the personal edge to Personal by id.
+func (puo *ProductUpdateOne) SetPersonalID(id int) *ProductUpdateOne {
+	puo.mutation.SetPersonalID(id)
+	return puo
+}
+
+// SetNillablePersonalID sets the personal edge to Personal by id if the given value is not nil.
+func (puo *ProductUpdateOne) SetNillablePersonalID(id *int) *ProductUpdateOne {
+	if id != nil {
+		puo = puo.SetPersonalID(*id)
+	}
+	return puo
+}
+
+// SetPersonal sets the personal edge to Personal.
+func (puo *ProductUpdateOne) SetPersonal(p *Personal) *ProductUpdateOne {
+	return puo.SetPersonalID(p.ID)
+}
+
 // Mutation returns the ProductMutation object of the builder.
 func (puo *ProductUpdateOne) Mutation() *ProductMutation {
 	return puo.mutation
 }
 
+// ClearBrand clears the brand edge to Brand.
+func (puo *ProductUpdateOne) ClearBrand() *ProductUpdateOne {
+	puo.mutation.ClearBrand()
+	return puo
+}
+
+// ClearTypeproduct clears the typeproduct edge to Typeproduct.
+func (puo *ProductUpdateOne) ClearTypeproduct() *ProductUpdateOne {
+	puo.mutation.ClearTypeproduct()
+	return puo
+}
+
+// ClearPersonal clears the personal edge to Personal.
+func (puo *ProductUpdateOne) ClearPersonal() *ProductUpdateOne {
+	puo.mutation.ClearPersonal()
+	return puo
+}
+
 // Save executes the query and returns the updated entity.
 func (puo *ProductUpdateOne) Save(ctx context.Context) (*Product, error) {
+	if v, ok := puo.mutation.Productname(); ok {
+		if err := product.ProductnameValidator(v); err != nil {
+			return nil, &ValidationError{Name: "Productname", err: fmt.Errorf("ent: validator failed for field \"Productname\": %w", err)}
+		}
+	}
+	if v, ok := puo.mutation.Numberofproduct(); ok {
+		if err := product.NumberofproductValidator(v); err != nil {
+			return nil, &ValidationError{Name: "Numberofproduct", err: fmt.Errorf("ent: validator failed for field \"Numberofproduct\": %w", err)}
+		}
+	}
+	if v, ok := puo.mutation.Price(); ok {
+		if err := product.PriceValidator(v); err != nil {
+			return nil, &ValidationError{Name: "Price", err: fmt.Errorf("ent: validator failed for field \"Price\": %w", err)}
+		}
+	}
+
 	var (
 		err  error
 		node *Product
@@ -191,6 +538,132 @@ func (puo *ProductUpdateOne) sqlSave(ctx context.Context) (pr *Product, err erro
 		return nil, &ValidationError{Name: "ID", err: fmt.Errorf("missing Product.ID for update")}
 	}
 	_spec.Node.ID.Value = id
+	if value, ok := puo.mutation.Productname(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: product.FieldProductname,
+		})
+	}
+	if value, ok := puo.mutation.Numberofproduct(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: product.FieldNumberofproduct,
+		})
+	}
+	if value, ok := puo.mutation.Price(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: product.FieldPrice,
+		})
+	}
+	if puo.mutation.BrandCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   product.BrandTable,
+			Columns: []string{product.BrandColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: brand.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := puo.mutation.BrandIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   product.BrandTable,
+			Columns: []string{product.BrandColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: brand.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if puo.mutation.TypeproductCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   product.TypeproductTable,
+			Columns: []string{product.TypeproductColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: typeproduct.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := puo.mutation.TypeproductIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   product.TypeproductTable,
+			Columns: []string{product.TypeproductColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: typeproduct.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if puo.mutation.PersonalCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   product.PersonalTable,
+			Columns: []string{product.PersonalColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: personal.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := puo.mutation.PersonalIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   product.PersonalTable,
+			Columns: []string{product.PersonalColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: personal.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	pr = &Product{config: puo.config}
 	_spec.Assign = pr.assignValues
 	_spec.ScanValues = pr.scanValues()

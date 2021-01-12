@@ -9,6 +9,9 @@ import (
 // Adminrepair is the predicate function for adminrepair builders.
 type Adminrepair func(*sql.Selector)
 
+// Brand is the predicate function for brand builders.
+type Brand func(*sql.Selector)
+
 // Customer is the predicate function for customer builders.
 type Customer func(*sql.Selector)
 
@@ -32,3 +35,6 @@ type Receipt func(*sql.Selector)
 
 // Title is the predicate function for title builders.
 type Title func(*sql.Selector)
+
+// Typeproduct is the predicate function for typeproduct builders.
+type Typeproduct func(*sql.Selector)

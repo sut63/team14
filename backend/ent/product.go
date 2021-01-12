@@ -7,20 +7,102 @@ import (
 	"strings"
 
 	"github.com/facebookincubator/ent/dialect/sql"
+	"github.com/tanapon395/playlist-video/ent/brand"
+	"github.com/tanapon395/playlist-video/ent/personal"
 	"github.com/tanapon395/playlist-video/ent/product"
+	"github.com/tanapon395/playlist-video/ent/typeproduct"
 )
 
 // Product is the model entity for the Product schema.
 type Product struct {
-	config
+	config `json:"-"`
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
+	// Productname holds the value of the "Productname" field.
+	Productname string `json:"Productname,omitempty"`
+	// Numberofproduct holds the value of the "Numberofproduct" field.
+	Numberofproduct string `json:"Numberofproduct,omitempty"`
+	// Price holds the value of the "Price" field.
+	Price string `json:"Price,omitempty"`
+	// Edges holds the relations/edges for other nodes in the graph.
+	// The values are being populated by the ProductQuery when eager-loading is set.
+	Edges       ProductEdges `json:"edges"`
+	Brand       *int
+	Personal    *int
+	Typeproduct *int
+}
+
+// ProductEdges holds the relations/edges for other nodes in the graph.
+type ProductEdges struct {
+	// Brand holds the value of the brand edge.
+	Brand *Brand
+	// Typeproduct holds the value of the typeproduct edge.
+	Typeproduct *Typeproduct
+	// Personal holds the value of the personal edge.
+	Personal *Personal
+	// loadedTypes holds the information for reporting if a
+	// type was loaded (or requested) in eager-loading or not.
+	loadedTypes [3]bool
+}
+
+// BrandOrErr returns the Brand value or an error if the edge
+// was not loaded in eager-loading, or loaded but was not found.
+func (e ProductEdges) BrandOrErr() (*Brand, error) {
+	if e.loadedTypes[0] {
+		if e.Brand == nil {
+			// The edge brand was loaded in eager-loading,
+			// but was not found.
+			return nil, &NotFoundError{label: brand.Label}
+		}
+		return e.Brand, nil
+	}
+	return nil, &NotLoadedError{edge: "brand"}
+}
+
+// TypeproductOrErr returns the Typeproduct value or an error if the edge
+// was not loaded in eager-loading, or loaded but was not found.
+func (e ProductEdges) TypeproductOrErr() (*Typeproduct, error) {
+	if e.loadedTypes[1] {
+		if e.Typeproduct == nil {
+			// The edge typeproduct was loaded in eager-loading,
+			// but was not found.
+			return nil, &NotFoundError{label: typeproduct.Label}
+		}
+		return e.Typeproduct, nil
+	}
+	return nil, &NotLoadedError{edge: "typeproduct"}
+}
+
+// PersonalOrErr returns the Personal value or an error if the edge
+// was not loaded in eager-loading, or loaded but was not found.
+func (e ProductEdges) PersonalOrErr() (*Personal, error) {
+	if e.loadedTypes[2] {
+		if e.Personal == nil {
+			// The edge personal was loaded in eager-loading,
+			// but was not found.
+			return nil, &NotFoundError{label: personal.Label}
+		}
+		return e.Personal, nil
+	}
+	return nil, &NotLoadedError{edge: "personal"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
 func (*Product) scanValues() []interface{} {
 	return []interface{}{
-		&sql.NullInt64{}, // id
+		&sql.NullInt64{},  // id
+		&sql.NullString{}, // Productname
+		&sql.NullString{}, // Numberofproduct
+		&sql.NullString{}, // Price
+	}
+}
+
+// fkValues returns the types for scanning foreign-keys values from sql.Rows.
+func (*Product) fkValues() []interface{} {
+	return []interface{}{
+		&sql.NullInt64{}, // Brand
+		&sql.NullInt64{}, // Personal
+		&sql.NullInt64{}, // Typeproduct
 	}
 }
 
@@ -36,7 +118,58 @@ func (pr *Product) assignValues(values ...interface{}) error {
 	}
 	pr.ID = int(value.Int64)
 	values = values[1:]
+	if value, ok := values[0].(*sql.NullString); !ok {
+		return fmt.Errorf("unexpected type %T for field Productname", values[0])
+	} else if value.Valid {
+		pr.Productname = value.String
+	}
+	if value, ok := values[1].(*sql.NullString); !ok {
+		return fmt.Errorf("unexpected type %T for field Numberofproduct", values[1])
+	} else if value.Valid {
+		pr.Numberofproduct = value.String
+	}
+	if value, ok := values[2].(*sql.NullString); !ok {
+		return fmt.Errorf("unexpected type %T for field Price", values[2])
+	} else if value.Valid {
+		pr.Price = value.String
+	}
+	values = values[3:]
+	if len(values) == len(product.ForeignKeys) {
+		if value, ok := values[0].(*sql.NullInt64); !ok {
+			return fmt.Errorf("unexpected type %T for edge-field Brand", value)
+		} else if value.Valid {
+			pr.Brand = new(int)
+			*pr.Brand = int(value.Int64)
+		}
+		if value, ok := values[1].(*sql.NullInt64); !ok {
+			return fmt.Errorf("unexpected type %T for edge-field Personal", value)
+		} else if value.Valid {
+			pr.Personal = new(int)
+			*pr.Personal = int(value.Int64)
+		}
+		if value, ok := values[2].(*sql.NullInt64); !ok {
+			return fmt.Errorf("unexpected type %T for edge-field Typeproduct", value)
+		} else if value.Valid {
+			pr.Typeproduct = new(int)
+			*pr.Typeproduct = int(value.Int64)
+		}
+	}
 	return nil
+}
+
+// QueryBrand queries the brand edge of the Product.
+func (pr *Product) QueryBrand() *BrandQuery {
+	return (&ProductClient{config: pr.config}).QueryBrand(pr)
+}
+
+// QueryTypeproduct queries the typeproduct edge of the Product.
+func (pr *Product) QueryTypeproduct() *TypeproductQuery {
+	return (&ProductClient{config: pr.config}).QueryTypeproduct(pr)
+}
+
+// QueryPersonal queries the personal edge of the Product.
+func (pr *Product) QueryPersonal() *PersonalQuery {
+	return (&ProductClient{config: pr.config}).QueryPersonal(pr)
 }
 
 // Update returns a builder for updating this Product.
@@ -62,6 +195,12 @@ func (pr *Product) String() string {
 	var builder strings.Builder
 	builder.WriteString("Product(")
 	builder.WriteString(fmt.Sprintf("id=%v", pr.ID))
+	builder.WriteString(", Productname=")
+	builder.WriteString(pr.Productname)
+	builder.WriteString(", Numberofproduct=")
+	builder.WriteString(pr.Numberofproduct)
+	builder.WriteString(", Price=")
+	builder.WriteString(pr.Price)
 	builder.WriteByte(')')
 	return builder.String()
 }

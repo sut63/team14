@@ -7,12 +7,65 @@ const (
 	Label = "product"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
+	// FieldProductname holds the string denoting the productname field in the database.
+	FieldProductname = "productname"
+	// FieldNumberofproduct holds the string denoting the numberofproduct field in the database.
+	FieldNumberofproduct = "numberofproduct"
+	// FieldPrice holds the string denoting the price field in the database.
+	FieldPrice = "price"
+
+	// EdgeBrand holds the string denoting the brand edge name in mutations.
+	EdgeBrand = "brand"
+	// EdgeTypeproduct holds the string denoting the typeproduct edge name in mutations.
+	EdgeTypeproduct = "typeproduct"
+	// EdgePersonal holds the string denoting the personal edge name in mutations.
+	EdgePersonal = "personal"
 
 	// Table holds the table name of the product in the database.
 	Table = "products"
+	// BrandTable is the table the holds the brand relation/edge.
+	BrandTable = "products"
+	// BrandInverseTable is the table name for the Brand entity.
+	// It exists in this package in order to avoid circular dependency with the "brand" package.
+	BrandInverseTable = "brands"
+	// BrandColumn is the table column denoting the brand relation/edge.
+	BrandColumn = "Brand"
+	// TypeproductTable is the table the holds the typeproduct relation/edge.
+	TypeproductTable = "products"
+	// TypeproductInverseTable is the table name for the Typeproduct entity.
+	// It exists in this package in order to avoid circular dependency with the "typeproduct" package.
+	TypeproductInverseTable = "typeproducts"
+	// TypeproductColumn is the table column denoting the typeproduct relation/edge.
+	TypeproductColumn = "Typeproduct"
+	// PersonalTable is the table the holds the personal relation/edge.
+	PersonalTable = "products"
+	// PersonalInverseTable is the table name for the Personal entity.
+	// It exists in this package in order to avoid circular dependency with the "personal" package.
+	PersonalInverseTable = "personals"
+	// PersonalColumn is the table column denoting the personal relation/edge.
+	PersonalColumn = "Personal"
 )
 
 // Columns holds all SQL columns for product fields.
 var Columns = []string{
 	FieldID,
+	FieldProductname,
+	FieldNumberofproduct,
+	FieldPrice,
 }
+
+// ForeignKeys holds the SQL foreign-keys that are owned by the Product type.
+var ForeignKeys = []string{
+	"Brand",
+	"Personal",
+	"Typeproduct",
+}
+
+var (
+	// ProductnameValidator is a validator for the "Productname" field. It is called by the builders before save.
+	ProductnameValidator func(string) error
+	// NumberofproductValidator is a validator for the "Numberofproduct" field. It is called by the builders before save.
+	NumberofproductValidator func(string) error
+	// PriceValidator is a validator for the "Price" field. It is called by the builders before save.
+	PriceValidator func(string) error
+)

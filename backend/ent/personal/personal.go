@@ -22,6 +22,8 @@ const (
 	EdgeDepartment = "department"
 	// EdgeGender holds the string denoting the gender edge name in mutations.
 	EdgeGender = "gender"
+	// EdgeProduct holds the string denoting the product edge name in mutations.
+	EdgeProduct = "product"
 
 	// Table holds the table name of the personal in the database.
 	Table = "personals"
@@ -53,6 +55,13 @@ const (
 	GenderInverseTable = "genders"
 	// GenderColumn is the table column denoting the gender relation/edge.
 	GenderColumn = "gender_id"
+	// ProductTable is the table the holds the product relation/edge.
+	ProductTable = "products"
+	// ProductInverseTable is the table name for the Product entity.
+	// It exists in this package in order to avoid circular dependency with the "product" package.
+	ProductInverseTable = "products"
+	// ProductColumn is the table column denoting the product relation/edge.
+	ProductColumn = "Personal"
 )
 
 // Columns holds all SQL columns for personal fields.

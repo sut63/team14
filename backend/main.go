@@ -43,6 +43,26 @@ type Gender struct {
 	Gendername string
 }
 
+// Brands struct type
+type Brands struct {
+	Brand []Brand
+}
+
+// Brand struct type
+type Brand struct {
+	Brandname string
+}
+
+// Typeproducts struct type
+type Typeproducts struct {
+	Typeproduct []Typeproduct
+}
+
+// Typeproduct struct type
+type Typeproduct struct {
+	Typeproductname string
+}
+
 // @title SUT SA Example API Playlist Vidoe
 // @version 1.0
 // @description This is a sample server for SUT SE 2563
@@ -104,6 +124,9 @@ func main() {
 	controllers.NewDepartmentController(v1, client)
 	controllers.NewGenderController(v1, client)
 	controllers.NewCustomerController(v1, client)
+	controllers.NewProductController(v1, client)
+	controllers.NewTypeproductController(v1, client)
+	controllers.NewBrandController(v1, client)
 
 	//Set Title Data
 	titles := []string{"นาย", "นาง", "นางสาว", "ไม่ระบุ"}
@@ -132,6 +155,41 @@ func main() {
 			Save(context.Background())
 	}
 
+	// Set Brands Data
+	brands := Brands{
+		Brand: []Brand{
+			Brand{"Intel"},
+			Brand{"AMD"},
+			Brand{"Kingston"},
+			Brand{"MSI"},
+			Brand{"Western Digital"},
+		},
+	}
+	for _, b := range brands.Brand {
+		client.Brand.
+			Create().
+			SetBrandname(b.Brandname).
+			Save(context.Background())
+	}
+
+	// Set Typeproducts Data
+	typeproducts := Typeproducts{
+		Typeproduct: []Typeproduct{
+			Typeproduct{"เมนบอร์ด"},
+			Typeproduct{"พัดลมระบายความร้อน"},
+			Typeproduct{"SSD"},
+			Typeproduct{"HDD"},
+			Typeproduct{"CPU"},
+			Typeproduct{"RAM"},
+		},
+	}
+	for _, t := range typeproducts.Typeproduct {
+		client.Typeproduct.
+			Create().
+			SetTypeproductname(t.Typeproductname).
+			Save(context.Background())
+	}
+	
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	router.Run()
 }

@@ -10,6 +10,7 @@ import (
 	"github.com/tanapon395/playlist-video/ent/migrate"
 
 	"github.com/tanapon395/playlist-video/ent/adminrepair"
+	"github.com/tanapon395/playlist-video/ent/brand"
 	"github.com/tanapon395/playlist-video/ent/customer"
 	"github.com/tanapon395/playlist-video/ent/department"
 	"github.com/tanapon395/playlist-video/ent/fix"
@@ -18,6 +19,7 @@ import (
 	"github.com/tanapon395/playlist-video/ent/product"
 	"github.com/tanapon395/playlist-video/ent/receipt"
 	"github.com/tanapon395/playlist-video/ent/title"
+	"github.com/tanapon395/playlist-video/ent/typeproduct"
 
 	"github.com/facebookincubator/ent/dialect"
 	"github.com/facebookincubator/ent/dialect/sql"
@@ -31,6 +33,8 @@ type Client struct {
 	Schema *migrate.Schema
 	// Adminrepair is the client for interacting with the Adminrepair builders.
 	Adminrepair *AdminrepairClient
+	// Brand is the client for interacting with the Brand builders.
+	Brand *BrandClient
 	// Customer is the client for interacting with the Customer builders.
 	Customer *CustomerClient
 	// Department is the client for interacting with the Department builders.
@@ -47,6 +51,8 @@ type Client struct {
 	Receipt *ReceiptClient
 	// Title is the client for interacting with the Title builders.
 	Title *TitleClient
+	// Typeproduct is the client for interacting with the Typeproduct builders.
+	Typeproduct *TypeproductClient
 }
 
 // NewClient creates a new client configured with the given options.
@@ -61,6 +67,7 @@ func NewClient(opts ...Option) *Client {
 func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
 	c.Adminrepair = NewAdminrepairClient(c.config)
+	c.Brand = NewBrandClient(c.config)
 	c.Customer = NewCustomerClient(c.config)
 	c.Department = NewDepartmentClient(c.config)
 	c.Fix = NewFixClient(c.config)
@@ -69,6 +76,7 @@ func (c *Client) init() {
 	c.Product = NewProductClient(c.config)
 	c.Receipt = NewReceiptClient(c.config)
 	c.Title = NewTitleClient(c.config)
+	c.Typeproduct = NewTypeproductClient(c.config)
 }
 
 // Open opens a database/sql.DB specified by the driver name and
@@ -102,6 +110,7 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		ctx:         ctx,
 		config:      cfg,
 		Adminrepair: NewAdminrepairClient(cfg),
+		Brand:       NewBrandClient(cfg),
 		Customer:    NewCustomerClient(cfg),
 		Department:  NewDepartmentClient(cfg),
 		Fix:         NewFixClient(cfg),
@@ -110,6 +119,7 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		Product:     NewProductClient(cfg),
 		Receipt:     NewReceiptClient(cfg),
 		Title:       NewTitleClient(cfg),
+		Typeproduct: NewTypeproductClient(cfg),
 	}, nil
 }
 
@@ -126,6 +136,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 	return &Tx{
 		config:      cfg,
 		Adminrepair: NewAdminrepairClient(cfg),
+		Brand:       NewBrandClient(cfg),
 		Customer:    NewCustomerClient(cfg),
 		Department:  NewDepartmentClient(cfg),
 		Fix:         NewFixClient(cfg),
@@ -134,6 +145,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		Product:     NewProductClient(cfg),
 		Receipt:     NewReceiptClient(cfg),
 		Title:       NewTitleClient(cfg),
+		Typeproduct: NewTypeproductClient(cfg),
 	}, nil
 }
 
@@ -163,6 +175,7 @@ func (c *Client) Close() error {
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
 	c.Adminrepair.Use(hooks...)
+	c.Brand.Use(hooks...)
 	c.Customer.Use(hooks...)
 	c.Department.Use(hooks...)
 	c.Fix.Use(hooks...)
@@ -171,6 +184,7 @@ func (c *Client) Use(hooks ...Hook) {
 	c.Product.Use(hooks...)
 	c.Receipt.Use(hooks...)
 	c.Title.Use(hooks...)
+	c.Typeproduct.Use(hooks...)
 }
 
 // AdminrepairClient is a client for the Adminrepair schema.
@@ -254,6 +268,105 @@ func (c *AdminrepairClient) GetX(ctx context.Context, id int) *Adminrepair {
 // Hooks returns the client hooks.
 func (c *AdminrepairClient) Hooks() []Hook {
 	return c.hooks.Adminrepair
+}
+
+// BrandClient is a client for the Brand schema.
+type BrandClient struct {
+	config
+}
+
+// NewBrandClient returns a client for the Brand from the given config.
+func NewBrandClient(c config) *BrandClient {
+	return &BrandClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `brand.Hooks(f(g(h())))`.
+func (c *BrandClient) Use(hooks ...Hook) {
+	c.hooks.Brand = append(c.hooks.Brand, hooks...)
+}
+
+// Create returns a create builder for Brand.
+func (c *BrandClient) Create() *BrandCreate {
+	mutation := newBrandMutation(c.config, OpCreate)
+	return &BrandCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Update returns an update builder for Brand.
+func (c *BrandClient) Update() *BrandUpdate {
+	mutation := newBrandMutation(c.config, OpUpdate)
+	return &BrandUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *BrandClient) UpdateOne(b *Brand) *BrandUpdateOne {
+	mutation := newBrandMutation(c.config, OpUpdateOne, withBrand(b))
+	return &BrandUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *BrandClient) UpdateOneID(id int) *BrandUpdateOne {
+	mutation := newBrandMutation(c.config, OpUpdateOne, withBrandID(id))
+	return &BrandUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for Brand.
+func (c *BrandClient) Delete() *BrandDelete {
+	mutation := newBrandMutation(c.config, OpDelete)
+	return &BrandDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a delete builder for the given entity.
+func (c *BrandClient) DeleteOne(b *Brand) *BrandDeleteOne {
+	return c.DeleteOneID(b.ID)
+}
+
+// DeleteOneID returns a delete builder for the given id.
+func (c *BrandClient) DeleteOneID(id int) *BrandDeleteOne {
+	builder := c.Delete().Where(brand.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &BrandDeleteOne{builder}
+}
+
+// Create returns a query builder for Brand.
+func (c *BrandClient) Query() *BrandQuery {
+	return &BrandQuery{config: c.config}
+}
+
+// Get returns a Brand entity by its id.
+func (c *BrandClient) Get(ctx context.Context, id int) (*Brand, error) {
+	return c.Query().Where(brand.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *BrandClient) GetX(ctx context.Context, id int) *Brand {
+	b, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return b
+}
+
+// QueryProduct queries the product edge of a Brand.
+func (c *BrandClient) QueryProduct(b *Brand) *ProductQuery {
+	query := &ProductQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := b.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(brand.Table, brand.FieldID, id),
+			sqlgraph.To(product.Table, product.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, brand.ProductTable, brand.ProductColumn),
+		)
+		fromV = sqlgraph.Neighbors(b.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// Hooks returns the client hooks.
+func (c *BrandClient) Hooks() []Hook {
+	return c.hooks.Brand
 }
 
 // CustomerClient is a client for the Customer schema.
@@ -842,6 +955,22 @@ func (c *PersonalClient) QueryGender(pe *Personal) *GenderQuery {
 	return query
 }
 
+// QueryProduct queries the product edge of a Personal.
+func (c *PersonalClient) QueryProduct(pe *Personal) *ProductQuery {
+	query := &ProductQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := pe.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(personal.Table, personal.FieldID, id),
+			sqlgraph.To(product.Table, product.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, personal.ProductTable, personal.ProductColumn),
+		)
+		fromV = sqlgraph.Neighbors(pe.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
 // Hooks returns the client hooks.
 func (c *PersonalClient) Hooks() []Hook {
 	return c.hooks.Personal
@@ -923,6 +1052,54 @@ func (c *ProductClient) GetX(ctx context.Context, id int) *Product {
 		panic(err)
 	}
 	return pr
+}
+
+// QueryBrand queries the brand edge of a Product.
+func (c *ProductClient) QueryBrand(pr *Product) *BrandQuery {
+	query := &BrandQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := pr.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(product.Table, product.FieldID, id),
+			sqlgraph.To(brand.Table, brand.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, product.BrandTable, product.BrandColumn),
+		)
+		fromV = sqlgraph.Neighbors(pr.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryTypeproduct queries the typeproduct edge of a Product.
+func (c *ProductClient) QueryTypeproduct(pr *Product) *TypeproductQuery {
+	query := &TypeproductQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := pr.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(product.Table, product.FieldID, id),
+			sqlgraph.To(typeproduct.Table, typeproduct.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, product.TypeproductTable, product.TypeproductColumn),
+		)
+		fromV = sqlgraph.Neighbors(pr.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryPersonal queries the personal edge of a Product.
+func (c *ProductClient) QueryPersonal(pr *Product) *PersonalQuery {
+	query := &PersonalQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := pr.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(product.Table, product.FieldID, id),
+			sqlgraph.To(personal.Table, personal.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, product.PersonalTable, product.PersonalColumn),
+		)
+		fromV = sqlgraph.Neighbors(pr.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
 }
 
 // Hooks returns the client hooks.
@@ -1126,4 +1303,103 @@ func (c *TitleClient) QueryCustomer(t *Title) *CustomerQuery {
 // Hooks returns the client hooks.
 func (c *TitleClient) Hooks() []Hook {
 	return c.hooks.Title
+}
+
+// TypeproductClient is a client for the Typeproduct schema.
+type TypeproductClient struct {
+	config
+}
+
+// NewTypeproductClient returns a client for the Typeproduct from the given config.
+func NewTypeproductClient(c config) *TypeproductClient {
+	return &TypeproductClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `typeproduct.Hooks(f(g(h())))`.
+func (c *TypeproductClient) Use(hooks ...Hook) {
+	c.hooks.Typeproduct = append(c.hooks.Typeproduct, hooks...)
+}
+
+// Create returns a create builder for Typeproduct.
+func (c *TypeproductClient) Create() *TypeproductCreate {
+	mutation := newTypeproductMutation(c.config, OpCreate)
+	return &TypeproductCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Update returns an update builder for Typeproduct.
+func (c *TypeproductClient) Update() *TypeproductUpdate {
+	mutation := newTypeproductMutation(c.config, OpUpdate)
+	return &TypeproductUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *TypeproductClient) UpdateOne(t *Typeproduct) *TypeproductUpdateOne {
+	mutation := newTypeproductMutation(c.config, OpUpdateOne, withTypeproduct(t))
+	return &TypeproductUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *TypeproductClient) UpdateOneID(id int) *TypeproductUpdateOne {
+	mutation := newTypeproductMutation(c.config, OpUpdateOne, withTypeproductID(id))
+	return &TypeproductUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for Typeproduct.
+func (c *TypeproductClient) Delete() *TypeproductDelete {
+	mutation := newTypeproductMutation(c.config, OpDelete)
+	return &TypeproductDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a delete builder for the given entity.
+func (c *TypeproductClient) DeleteOne(t *Typeproduct) *TypeproductDeleteOne {
+	return c.DeleteOneID(t.ID)
+}
+
+// DeleteOneID returns a delete builder for the given id.
+func (c *TypeproductClient) DeleteOneID(id int) *TypeproductDeleteOne {
+	builder := c.Delete().Where(typeproduct.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &TypeproductDeleteOne{builder}
+}
+
+// Create returns a query builder for Typeproduct.
+func (c *TypeproductClient) Query() *TypeproductQuery {
+	return &TypeproductQuery{config: c.config}
+}
+
+// Get returns a Typeproduct entity by its id.
+func (c *TypeproductClient) Get(ctx context.Context, id int) (*Typeproduct, error) {
+	return c.Query().Where(typeproduct.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *TypeproductClient) GetX(ctx context.Context, id int) *Typeproduct {
+	t, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return t
+}
+
+// QueryProduct queries the product edge of a Typeproduct.
+func (c *TypeproductClient) QueryProduct(t *Typeproduct) *ProductQuery {
+	query := &ProductQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := t.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(typeproduct.Table, typeproduct.FieldID, id),
+			sqlgraph.To(product.Table, product.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, typeproduct.ProductTable, typeproduct.ProductColumn),
+		)
+		fromV = sqlgraph.Neighbors(t.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// Hooks returns the client hooks.
+func (c *TypeproductClient) Hooks() []Hook {
+	return c.hooks.Typeproduct
 }
