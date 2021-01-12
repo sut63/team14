@@ -195,98 +195,6 @@
                         }
                     }
                 }
-            },
-            "put": {
-                "description": "update department by ID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Update a department entity by ID",
-                "operationId": "update-department",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Department ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "Department entity",
-                        "name": "department",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/ent.Department"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/ent.Department"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "description": "get department by ID",
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Delete a department entity by ID",
-                "operationId": "delete-department",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Department ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    }
-                }
             }
         },
         "/customers": {
@@ -421,98 +329,6 @@
                         }
                     }
                 }
-            },
-            "put": {
-                "description": "update gender by ID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Update a gender entity by ID",
-                "operationId": "update-gender",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Gender ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "Gender entity",
-                        "name": "gender",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/ent.Gender"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/ent.Gender"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "description": "get gender by ID",
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Delete a gender entity by ID",
-                "operationId": "delete-gender",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Gender ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    }
-                }
             }
         },
         "/departments": {
@@ -604,23 +420,18 @@
                 }
             }
         },
-<<<<<<< HEAD
         "/departments/{id}": {
             "get": {
                 "description": "get department by ID",
-=======
-        "/personals/{id}": {
-            "get": {
-                "description": "get personal by ID",
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Get a personal entity by ID",
-                "operationId": "get-personal",
+                "summary": "Get a department entity by ID",
+                "operationId": "get-department",
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Personal ID",
+                        "description": "Department ID",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -630,7 +441,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/ent.Personal"
+                            "$ref": "#/definitions/ent.Department"
                         }
                     },
                     "400": {
@@ -654,30 +465,30 @@
                 }
             },
             "put": {
-                "description": "update personal by ID",
+                "description": "update department by ID",
                 "consumes": [
                     "application/json"
                 ],
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Update a personal entity by ID",
-                "operationId": "update-personal",
+                "summary": "Update a department entity by ID",
+                "operationId": "update-department",
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Personal ID",
+                        "description": "Department ID",
                         "name": "id",
                         "in": "path",
                         "required": true
                     },
                     {
-                        "description": "Personal entity",
-                        "name": "personal",
+                        "description": "Department entity",
+                        "name": "department",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/ent.Personal"
+                            "$ref": "#/definitions/ent.Department"
                         }
                     }
                 ],
@@ -685,7 +496,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/ent.Personal"
+                            "$ref": "#/definitions/ent.Department"
                         }
                     },
                     "400": {
@@ -703,13 +514,12 @@
                 }
             },
             "delete": {
-                "description": "get personal by ID",
->>>>>>> issue-26
+                "description": "get department by ID",
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Get a department entity by ID",
-                "operationId": "get-department",
+                "summary": "Delete a department entity by ID",
+                "operationId": "delete-department",
                 "parameters": [
                     {
                         "type": "integer",
@@ -723,7 +533,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/ent.Department"
+                            "$ref": "#/definitions/gin.H"
                         }
                     },
                     "400": {
@@ -881,30 +691,30 @@
                 }
             },
             "put": {
-                "description": "update title by ID",
+                "description": "update gender by ID",
                 "consumes": [
                     "application/json"
                 ],
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Update a title entity by ID",
-                "operationId": "update-title",
+                "summary": "Update a gender entity by ID",
+                "operationId": "update-gender",
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Title ID",
+                        "description": "Gender ID",
                         "name": "id",
                         "in": "path",
                         "required": true
                     },
                     {
-                        "description": "Title entity",
-                        "name": "title",
+                        "description": "Gender entity",
+                        "name": "gender",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/ent.Title"
+                            "$ref": "#/definitions/ent.Gender"
                         }
                     }
                 ],
@@ -912,7 +722,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/ent.Title"
+                            "$ref": "#/definitions/ent.Gender"
                         }
                     },
                     "400": {
@@ -930,16 +740,16 @@
                 }
             },
             "delete": {
-                "description": "get title by ID",
+                "description": "get gender by ID",
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Delete a title entity by ID",
-                "operationId": "delete-title",
+                "summary": "Delete a gender entity by ID",
+                "operationId": "delete-gender",
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Title ID",
+                        "description": "Gender ID",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -1063,6 +873,98 @@
             }
         },
         "/personals/{id}": {
+            "get": {
+                "description": "get personal by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get a personal entity by ID",
+                "operationId": "get-personal",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Personal ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.Personal"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "update personal by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Update a personal entity by ID",
+                "operationId": "update-personal",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Personal ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Personal entity",
+                        "name": "personal",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/ent.Personal"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.Personal"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            },
             "delete": {
                 "description": "get personal by ID",
                 "produces": [
@@ -1373,6 +1275,98 @@
                         }
                     }
                 }
+            },
+            "put": {
+                "description": "update title by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Update a title entity by ID",
+                "operationId": "update-title",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Title ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Title entity",
+                        "name": "title",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/ent.Title"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.Title"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "get title by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Delete a title entity by ID",
+                "operationId": "delete-title",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Title ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
             }
         },
         "/typeproduct/{id}": {
@@ -1607,10 +1601,10 @@
                 "gender": {
                     "type": "integer"
                 },
-                "name": {
+                "password": {
                     "type": "string"
                 },
-                "password": {
+                "personalname": {
                     "type": "string"
                 },
                 "title": {
@@ -1801,12 +1795,12 @@
                     "description": "Email holds the value of the \"Email\" field.",
                     "type": "string"
                 },
-                "Name": {
-                    "description": "Name holds the value of the \"Name\" field.",
-                    "type": "string"
-                },
                 "Password": {
                     "description": "Password holds the value of the \"Password\" field.",
+                    "type": "string"
+                },
+                "Personalname": {
+                    "description": "Personalname holds the value of the \"Personalname\" field.",
                     "type": "string"
                 },
                 "edges": {

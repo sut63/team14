@@ -116,7 +116,7 @@ var (
 	// PersonalsColumns holds the columns for the "personals" table.
 	PersonalsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
-		{Name: "name", Type: field.TypeString},
+		{Name: "personalname", Type: field.TypeString},
 		{Name: "email", Type: field.TypeString},
 		{Name: "password", Type: field.TypeString},
 		{Name: "department_id", Type: field.TypeInt, Nullable: true},

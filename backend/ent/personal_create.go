@@ -24,9 +24,9 @@ type PersonalCreate struct {
 	hooks    []Hook
 }
 
-// SetName sets the Name field.
-func (pc *PersonalCreate) SetName(s string) *PersonalCreate {
-	pc.mutation.SetName(s)
+// SetPersonalname sets the Personalname field.
+func (pc *PersonalCreate) SetPersonalname(s string) *PersonalCreate {
+	pc.mutation.SetPersonalname(s)
 	return pc
 }
 
@@ -136,8 +136,8 @@ func (pc *PersonalCreate) Mutation() *PersonalMutation {
 
 // Save creates the Personal in the database.
 func (pc *PersonalCreate) Save(ctx context.Context) (*Personal, error) {
-	if _, ok := pc.mutation.Name(); !ok {
-		return nil, &ValidationError{Name: "Name", err: errors.New("ent: missing required field \"Name\"")}
+	if _, ok := pc.mutation.Personalname(); !ok {
+		return nil, &ValidationError{Name: "Personalname", err: errors.New("ent: missing required field \"Personalname\"")}
 	}
 	if _, ok := pc.mutation.Email(); !ok {
 		return nil, &ValidationError{Name: "Email", err: errors.New("ent: missing required field \"Email\"")}
@@ -205,13 +205,13 @@ func (pc *PersonalCreate) createSpec() (*Personal, *sqlgraph.CreateSpec) {
 			},
 		}
 	)
-	if value, ok := pc.mutation.Name(); ok {
+	if value, ok := pc.mutation.Personalname(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: personal.FieldName,
+			Column: personal.FieldPersonalname,
 		})
-		pe.Name = value
+		pe.Personalname = value
 	}
 	if value, ok := pc.mutation.Email(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{

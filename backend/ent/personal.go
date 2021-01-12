@@ -18,8 +18,8 @@ type Personal struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
-	// Name holds the value of the "Name" field.
-	Name string `json:"Name,omitempty"`
+	// Personalname holds the value of the "Personalname" field.
+	Personalname string `json:"Personalname,omitempty"`
 	// Email holds the value of the "Email" field.
 	Email string `json:"Email,omitempty"`
 	// Password holds the value of the "Password" field.
@@ -113,7 +113,7 @@ func (e PersonalEdges) ProductOrErr() ([]*Product, error) {
 func (*Personal) scanValues() []interface{} {
 	return []interface{}{
 		&sql.NullInt64{},  // id
-		&sql.NullString{}, // Name
+		&sql.NullString{}, // Personalname
 		&sql.NullString{}, // Email
 		&sql.NullString{}, // Password
 	}
@@ -141,9 +141,9 @@ func (pe *Personal) assignValues(values ...interface{}) error {
 	pe.ID = int(value.Int64)
 	values = values[1:]
 	if value, ok := values[0].(*sql.NullString); !ok {
-		return fmt.Errorf("unexpected type %T for field Name", values[0])
+		return fmt.Errorf("unexpected type %T for field Personalname", values[0])
 	} else if value.Valid {
-		pe.Name = value.String
+		pe.Personalname = value.String
 	}
 	if value, ok := values[1].(*sql.NullString); !ok {
 		return fmt.Errorf("unexpected type %T for field Email", values[1])
@@ -227,8 +227,8 @@ func (pe *Personal) String() string {
 	var builder strings.Builder
 	builder.WriteString("Personal(")
 	builder.WriteString(fmt.Sprintf("id=%v", pe.ID))
-	builder.WriteString(", Name=")
-	builder.WriteString(pe.Name)
+	builder.WriteString(", Personalname=")
+	builder.WriteString(pe.Personalname)
 	builder.WriteString(", Email=")
 	builder.WriteString(pe.Email)
 	builder.WriteString(", Password=")

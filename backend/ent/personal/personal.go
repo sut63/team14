@@ -7,8 +7,8 @@ const (
 	Label = "personal"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
-	// FieldName holds the string denoting the name field in the database.
-	FieldName = "name"
+	// FieldPersonalname holds the string denoting the personalname field in the database.
+	FieldPersonalname = "personalname"
 	// FieldEmail holds the string denoting the email field in the database.
 	FieldEmail = "email"
 	// FieldPassword holds the string denoting the password field in the database.
@@ -67,7 +67,7 @@ const (
 // Columns holds all SQL columns for personal fields.
 var Columns = []string{
 	FieldID,
-	FieldName,
+	FieldPersonalname,
 	FieldEmail,
 	FieldPassword,
 }

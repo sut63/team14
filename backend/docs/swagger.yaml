@@ -33,9 +33,9 @@ definitions:
         type: string
       gender:
         type: integer
-      name:
-        type: string
       password:
+        type: string
+      personalname:
         type: string
       title:
         type: integer
@@ -177,11 +177,11 @@ definitions:
       Email:
         description: Email holds the value of the "Email" field.
         type: string
-      Name:
-        description: Name holds the value of the "Name" field.
-        type: string
       Password:
         description: Password holds the value of the "Password" field.
+        type: string
+      Personalname:
+        description: Personalname holds the value of the "Personalname" field.
         type: string
       edges:
         $ref: '#/definitions/ent.PersonalEdges'
@@ -927,7 +927,68 @@ paths:
           schema:
             $ref: '#/definitions/gin.H'
       summary: Delete a personal entity by ID
-<<<<<<< HEAD
+    get:
+      description: get personal by ID
+      operationId: get-personal
+      parameters:
+      - description: Personal ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.Personal'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Get a personal entity by ID
+    put:
+      consumes:
+      - application/json
+      description: update personal by ID
+      operationId: update-personal
+      parameters:
+      - description: Personal ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Personal entity
+        in: body
+        name: personal
+        required: true
+        schema:
+          $ref: '#/definitions/ent.Personal'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.Personal'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Update a personal entity by ID
   /products:
     get:
       description: list product entities
@@ -940,16 +1001,6 @@ paths:
       - description: Offset
         in: query
         name: offset
-=======
-    get:
-      description: get personal by ID
-      operationId: get-personal
-      parameters:
-      - description: Personal ID
-        in: path
-        name: id
-        required: true
->>>>>>> issue-26
         type: integer
       produces:
       - application/json
@@ -957,18 +1008,13 @@ paths:
         "200":
           description: OK
           schema:
-<<<<<<< HEAD
             items:
               $ref: '#/definitions/ent.Product'
             type: array
-=======
-            $ref: '#/definitions/ent.Personal'
->>>>>>> issue-26
         "400":
           description: Bad Request
           schema:
             $ref: '#/definitions/gin.H'
-<<<<<<< HEAD
         "500":
           description: Internal Server Error
           schema:
@@ -995,17 +1041,12 @@ paths:
             $ref: '#/definitions/controllers.Product'
         "400":
           description: Bad Request
-=======
-        "404":
-          description: Not Found
->>>>>>> issue-26
           schema:
             $ref: '#/definitions/gin.H'
         "500":
           description: Internal Server Error
           schema:
             $ref: '#/definitions/gin.H'
-<<<<<<< HEAD
       summary: Create product
   /products/{id}:
     delete:
@@ -1013,60 +1054,30 @@ paths:
       operationId: delete-product
       parameters:
       - description: Product ID
-=======
-      summary: Get a personal entity by ID
-    put:
-      consumes:
-      - application/json
-      description: update personal by ID
-      operationId: update-personal
-      parameters:
-      - description: Personal ID
->>>>>>> issue-26
         in: path
         name: id
         required: true
         type: integer
-<<<<<<< HEAD
-=======
-      - description: Personal entity
-        in: body
-        name: personal
-        required: true
-        schema:
-          $ref: '#/definitions/ent.Personal'
->>>>>>> issue-26
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-<<<<<<< HEAD
             $ref: '#/definitions/gin.H'
-=======
-            $ref: '#/definitions/ent.Personal'
->>>>>>> issue-26
         "400":
           description: Bad Request
           schema:
             $ref: '#/definitions/gin.H'
-<<<<<<< HEAD
         "404":
           description: Not Found
           schema:
             $ref: '#/definitions/gin.H'
-=======
->>>>>>> issue-26
         "500":
           description: Internal Server Error
           schema:
             $ref: '#/definitions/gin.H'
-<<<<<<< HEAD
       summary: Delete a product entity by ID
-=======
-      summary: Update a personal entity by ID
->>>>>>> issue-26
   /titles:
     get:
       description: list title entities
@@ -1185,14 +1196,6 @@ paths:
           schema:
             $ref: '#/definitions/gin.H'
       summary: Get a title entity by ID
-<<<<<<< HEAD
-  /typeproduct/{id}:
-    delete:
-      description: get typeproduct by ID
-      operationId: delete-typeproduct
-      parameters:
-      - description: Typeproduct ID
-=======
     put:
       consumes:
       - application/json
@@ -1200,12 +1203,42 @@ paths:
       operationId: update-title
       parameters:
       - description: Title ID
->>>>>>> issue-26
         in: path
         name: id
         required: true
         type: integer
-<<<<<<< HEAD
+      - description: Title entity
+        in: body
+        name: title
+        required: true
+        schema:
+          $ref: '#/definitions/ent.Title'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.Title'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Update a title entity by ID
+  /typeproduct/{id}:
+    delete:
+      description: get typeproduct by ID
+      operationId: delete-typeproduct
+      parameters:
+      - description: Typeproduct ID
+        in: path
+        name: id
+        required: true
+        type: integer
       produces:
       - application/json
       responses:
@@ -1295,45 +1328,26 @@ paths:
         name: id
         required: true
         type: integer
-=======
-      - description: Title entity
-        in: body
-        name: title
-        required: true
-        schema:
-          $ref: '#/definitions/ent.Title'
->>>>>>> issue-26
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-<<<<<<< HEAD
             $ref: '#/definitions/ent.Typeproduct'
-=======
-            $ref: '#/definitions/ent.Title'
->>>>>>> issue-26
         "400":
           description: Bad Request
           schema:
             $ref: '#/definitions/gin.H'
-<<<<<<< HEAD
         "404":
           description: Not Found
           schema:
             $ref: '#/definitions/gin.H'
-=======
->>>>>>> issue-26
         "500":
           description: Internal Server Error
           schema:
             $ref: '#/definitions/gin.H'
-<<<<<<< HEAD
       summary: Get a typeproduct entity by ID
-=======
-      summary: Update a title entity by ID
->>>>>>> issue-26
 securityDefinitions:
   ApiKeyAuth:
     in: header

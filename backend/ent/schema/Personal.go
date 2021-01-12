@@ -14,7 +14,7 @@ type Personal struct {
 // Fields of the Personal.
 func (Personal) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("Name"),
+		field.String("Personalname"),
 		field.String("Email"),
 		field.String("Password"),
 	}

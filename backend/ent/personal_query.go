@@ -395,12 +395,12 @@ func (pq *PersonalQuery) WithProduct(opts ...func(*ProductQuery)) *PersonalQuery
 // Example:
 //
 //	var v []struct {
-//		Name string `json:"Name,omitempty"`
+//		Personalname string `json:"Personalname,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
 //	client.Personal.Query().
-//		GroupBy(personal.FieldName).
+//		GroupBy(personal.FieldPersonalname).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 //
@@ -421,11 +421,11 @@ func (pq *PersonalQuery) GroupBy(field string, fields ...string) *PersonalGroupB
 // Example:
 //
 //	var v []struct {
-//		Name string `json:"Name,omitempty"`
+//		Personalname string `json:"Personalname,omitempty"`
 //	}
 //
 //	client.Personal.Query().
-//		Select(personal.FieldName).
+//		Select(personal.FieldPersonalname).
 //		Scan(ctx, &v)
 //
 func (pq *PersonalQuery) Select(field string, fields ...string) *PersonalSelect {

@@ -19,12 +19,12 @@ type PersonalController struct {
 }
 
 type Personal struct {
-	Name       string
-	Email      string
-	Password   string
-	Title      int
-	Department int
-	Gender     int
+	Personalname string
+	Email        string
+	Password     string
+	Title        int
+	Department   int
+	Gender       int
 }
 
 // CreatePersonal handles POST requests for adding personal entities
@@ -85,7 +85,7 @@ func (ctl *PersonalController) CreatePersonal(c *gin.Context) {
 
 	p, err := ctl.client.Personal.
 		Create().
-		SetName(obj.Name).
+		SetPersonalname(obj.Personalname).
 		SetEmail(obj.Email).
 		SetPassword(obj.Password).
 		SetTitle(nt).

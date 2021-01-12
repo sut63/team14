@@ -2332,7 +2332,7 @@ type PersonalMutation struct {
 	op                Op
 	typ               string
 	id                *int
-	_Name             *string
+	_Personalname     *string
 	_Email            *string
 	_Password         *string
 	clearedFields     map[string]struct{}
@@ -2429,41 +2429,41 @@ func (m *PersonalMutation) ID() (id int, exists bool) {
 	return *m.id, true
 }
 
-// SetName sets the Name field.
-func (m *PersonalMutation) SetName(s string) {
-	m._Name = &s
+// SetPersonalname sets the Personalname field.
+func (m *PersonalMutation) SetPersonalname(s string) {
+	m._Personalname = &s
 }
 
-// Name returns the Name value in the mutation.
-func (m *PersonalMutation) Name() (r string, exists bool) {
-	v := m._Name
+// Personalname returns the Personalname value in the mutation.
+func (m *PersonalMutation) Personalname() (r string, exists bool) {
+	v := m._Personalname
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldName returns the old Name value of the Personal.
+// OldPersonalname returns the old Personalname value of the Personal.
 // If the Personal object wasn't provided to the builder, the object is fetched
 // from the database.
 // An error is returned if the mutation operation is not UpdateOne, or database query fails.
-func (m *PersonalMutation) OldName(ctx context.Context) (v string, err error) {
+func (m *PersonalMutation) OldPersonalname(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, fmt.Errorf("OldName is allowed only on UpdateOne operations")
+		return v, fmt.Errorf("OldPersonalname is allowed only on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, fmt.Errorf("OldName requires an ID field in the mutation")
+		return v, fmt.Errorf("OldPersonalname requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldName: %w", err)
+		return v, fmt.Errorf("querying old value for OldPersonalname: %w", err)
 	}
-	return oldValue.Name, nil
+	return oldValue.Personalname, nil
 }
 
-// ResetName reset all changes of the "Name" field.
-func (m *PersonalMutation) ResetName() {
-	m._Name = nil
+// ResetPersonalname reset all changes of the "Personalname" field.
+func (m *PersonalMutation) ResetPersonalname() {
+	m._Personalname = nil
 }
 
 // SetEmail sets the Email field.
@@ -2756,8 +2756,8 @@ func (m *PersonalMutation) Type() string {
 // fields that were in/decremented, call AddedFields().
 func (m *PersonalMutation) Fields() []string {
 	fields := make([]string, 0, 3)
-	if m._Name != nil {
-		fields = append(fields, personal.FieldName)
+	if m._Personalname != nil {
+		fields = append(fields, personal.FieldPersonalname)
 	}
 	if m._Email != nil {
 		fields = append(fields, personal.FieldEmail)
@@ -2773,8 +2773,8 @@ func (m *PersonalMutation) Fields() []string {
 // not set, or was not define in the schema.
 func (m *PersonalMutation) Field(name string) (ent.Value, bool) {
 	switch name {
-	case personal.FieldName:
-		return m.Name()
+	case personal.FieldPersonalname:
+		return m.Personalname()
 	case personal.FieldEmail:
 		return m.Email()
 	case personal.FieldPassword:
@@ -2788,8 +2788,8 @@ func (m *PersonalMutation) Field(name string) (ent.Value, bool) {
 // or the query to the database was failed.
 func (m *PersonalMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
 	switch name {
-	case personal.FieldName:
-		return m.OldName(ctx)
+	case personal.FieldPersonalname:
+		return m.OldPersonalname(ctx)
 	case personal.FieldEmail:
 		return m.OldEmail(ctx)
 	case personal.FieldPassword:
@@ -2803,12 +2803,12 @@ func (m *PersonalMutation) OldField(ctx context.Context, name string) (ent.Value
 // type mismatch the field type.
 func (m *PersonalMutation) SetField(name string, value ent.Value) error {
 	switch name {
-	case personal.FieldName:
+	case personal.FieldPersonalname:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetName(v)
+		m.SetPersonalname(v)
 		return nil
 	case personal.FieldEmail:
 		v, ok := value.(string)
@@ -2874,8 +2874,8 @@ func (m *PersonalMutation) ClearField(name string) error {
 // defined in the schema.
 func (m *PersonalMutation) ResetField(name string) error {
 	switch name {
-	case personal.FieldName:
-		m.ResetName()
+	case personal.FieldPersonalname:
+		m.ResetPersonalname()
 		return nil
 	case personal.FieldEmail:
 		m.ResetEmail()

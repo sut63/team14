@@ -91,10 +91,10 @@ func IDLTE(id int) predicate.Personal {
 	})
 }
 
-// Name applies equality check predicate on the "Name" field. It's identical to NameEQ.
-func Name(v string) predicate.Personal {
+// Personalname applies equality check predicate on the "Personalname" field. It's identical to PersonalnameEQ.
+func Personalname(v string) predicate.Personal {
 	return predicate.Personal(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldName), v))
+		s.Where(sql.EQ(s.C(FieldPersonalname), v))
 	})
 }
 
@@ -112,22 +112,22 @@ func Password(v string) predicate.Personal {
 	})
 }
 
-// NameEQ applies the EQ predicate on the "Name" field.
-func NameEQ(v string) predicate.Personal {
+// PersonalnameEQ applies the EQ predicate on the "Personalname" field.
+func PersonalnameEQ(v string) predicate.Personal {
 	return predicate.Personal(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldName), v))
+		s.Where(sql.EQ(s.C(FieldPersonalname), v))
 	})
 }
 
-// NameNEQ applies the NEQ predicate on the "Name" field.
-func NameNEQ(v string) predicate.Personal {
+// PersonalnameNEQ applies the NEQ predicate on the "Personalname" field.
+func PersonalnameNEQ(v string) predicate.Personal {
 	return predicate.Personal(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldName), v))
+		s.Where(sql.NEQ(s.C(FieldPersonalname), v))
 	})
 }
 
-// NameIn applies the In predicate on the "Name" field.
-func NameIn(vs ...string) predicate.Personal {
+// PersonalnameIn applies the In predicate on the "Personalname" field.
+func PersonalnameIn(vs ...string) predicate.Personal {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -139,12 +139,12 @@ func NameIn(vs ...string) predicate.Personal {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.In(s.C(FieldName), v...))
+		s.Where(sql.In(s.C(FieldPersonalname), v...))
 	})
 }
 
-// NameNotIn applies the NotIn predicate on the "Name" field.
-func NameNotIn(vs ...string) predicate.Personal {
+// PersonalnameNotIn applies the NotIn predicate on the "Personalname" field.
+func PersonalnameNotIn(vs ...string) predicate.Personal {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -156,70 +156,70 @@ func NameNotIn(vs ...string) predicate.Personal {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.NotIn(s.C(FieldName), v...))
+		s.Where(sql.NotIn(s.C(FieldPersonalname), v...))
 	})
 }
 
-// NameGT applies the GT predicate on the "Name" field.
-func NameGT(v string) predicate.Personal {
+// PersonalnameGT applies the GT predicate on the "Personalname" field.
+func PersonalnameGT(v string) predicate.Personal {
 	return predicate.Personal(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldName), v))
+		s.Where(sql.GT(s.C(FieldPersonalname), v))
 	})
 }
 
-// NameGTE applies the GTE predicate on the "Name" field.
-func NameGTE(v string) predicate.Personal {
+// PersonalnameGTE applies the GTE predicate on the "Personalname" field.
+func PersonalnameGTE(v string) predicate.Personal {
 	return predicate.Personal(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldName), v))
+		s.Where(sql.GTE(s.C(FieldPersonalname), v))
 	})
 }
 
-// NameLT applies the LT predicate on the "Name" field.
-func NameLT(v string) predicate.Personal {
+// PersonalnameLT applies the LT predicate on the "Personalname" field.
+func PersonalnameLT(v string) predicate.Personal {
 	return predicate.Personal(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldName), v))
+		s.Where(sql.LT(s.C(FieldPersonalname), v))
 	})
 }
 
-// NameLTE applies the LTE predicate on the "Name" field.
-func NameLTE(v string) predicate.Personal {
+// PersonalnameLTE applies the LTE predicate on the "Personalname" field.
+func PersonalnameLTE(v string) predicate.Personal {
 	return predicate.Personal(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldName), v))
+		s.Where(sql.LTE(s.C(FieldPersonalname), v))
 	})
 }
 
-// NameContains applies the Contains predicate on the "Name" field.
-func NameContains(v string) predicate.Personal {
+// PersonalnameContains applies the Contains predicate on the "Personalname" field.
+func PersonalnameContains(v string) predicate.Personal {
 	return predicate.Personal(func(s *sql.Selector) {
-		s.Where(sql.Contains(s.C(FieldName), v))
+		s.Where(sql.Contains(s.C(FieldPersonalname), v))
 	})
 }
 
-// NameHasPrefix applies the HasPrefix predicate on the "Name" field.
-func NameHasPrefix(v string) predicate.Personal {
+// PersonalnameHasPrefix applies the HasPrefix predicate on the "Personalname" field.
+func PersonalnameHasPrefix(v string) predicate.Personal {
 	return predicate.Personal(func(s *sql.Selector) {
-		s.Where(sql.HasPrefix(s.C(FieldName), v))
+		s.Where(sql.HasPrefix(s.C(FieldPersonalname), v))
 	})
 }
 
-// NameHasSuffix applies the HasSuffix predicate on the "Name" field.
-func NameHasSuffix(v string) predicate.Personal {
+// PersonalnameHasSuffix applies the HasSuffix predicate on the "Personalname" field.
+func PersonalnameHasSuffix(v string) predicate.Personal {
 	return predicate.Personal(func(s *sql.Selector) {
-		s.Where(sql.HasSuffix(s.C(FieldName), v))
+		s.Where(sql.HasSuffix(s.C(FieldPersonalname), v))
 	})
 }
 
-// NameEqualFold applies the EqualFold predicate on the "Name" field.
-func NameEqualFold(v string) predicate.Personal {
+// PersonalnameEqualFold applies the EqualFold predicate on the "Personalname" field.
+func PersonalnameEqualFold(v string) predicate.Personal {
 	return predicate.Personal(func(s *sql.Selector) {
-		s.Where(sql.EqualFold(s.C(FieldName), v))
+		s.Where(sql.EqualFold(s.C(FieldPersonalname), v))
 	})
 }
 
-// NameContainsFold applies the ContainsFold predicate on the "Name" field.
-func NameContainsFold(v string) predicate.Personal {
+// PersonalnameContainsFold applies the ContainsFold predicate on the "Personalname" field.
+func PersonalnameContainsFold(v string) predicate.Personal {
 	return predicate.Personal(func(s *sql.Selector) {
-		s.Where(sql.ContainsFold(s.C(FieldName), v))
+		s.Where(sql.ContainsFold(s.C(FieldPersonalname), v))
 	})
 }
 

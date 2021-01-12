@@ -32,9 +32,9 @@ func (pu *PersonalUpdate) Where(ps ...predicate.Personal) *PersonalUpdate {
 	return pu
 }
 
-// SetName sets the Name field.
-func (pu *PersonalUpdate) SetName(s string) *PersonalUpdate {
-	pu.mutation.SetName(s)
+// SetPersonalname sets the Personalname field.
+func (pu *PersonalUpdate) SetPersonalname(s string) *PersonalUpdate {
+	pu.mutation.SetPersonalname(s)
 	return pu
 }
 
@@ -260,11 +260,11 @@ func (pu *PersonalUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			}
 		}
 	}
-	if value, ok := pu.mutation.Name(); ok {
+	if value, ok := pu.mutation.Personalname(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: personal.FieldName,
+			Column: personal.FieldPersonalname,
 		})
 	}
 	if value, ok := pu.mutation.Email(); ok {
@@ -480,9 +480,9 @@ type PersonalUpdateOne struct {
 	mutation *PersonalMutation
 }
 
-// SetName sets the Name field.
-func (puo *PersonalUpdateOne) SetName(s string) *PersonalUpdateOne {
-	puo.mutation.SetName(s)
+// SetPersonalname sets the Personalname field.
+func (puo *PersonalUpdateOne) SetPersonalname(s string) *PersonalUpdateOne {
+	puo.mutation.SetPersonalname(s)
 	return puo
 }
 
@@ -706,11 +706,11 @@ func (puo *PersonalUpdateOne) sqlSave(ctx context.Context) (pe *Personal, err er
 		return nil, &ValidationError{Name: "ID", err: fmt.Errorf("missing Personal.ID for update")}
 	}
 	_spec.Node.ID.Value = id
-	if value, ok := puo.mutation.Name(); ok {
+	if value, ok := puo.mutation.Personalname(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: personal.FieldName,
+			Column: personal.FieldPersonalname,
 		})
 	}
 	if value, ok := puo.mutation.Email(); ok {
