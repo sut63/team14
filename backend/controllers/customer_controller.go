@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strconv"
 
+	"github.com/tanapon395/playlist-video/ent/customer"
 	"github.com/tanapon395/playlist-video/ent/gender"
 	"github.com/tanapon395/playlist-video/ent/personal"
 	"github.com/tanapon395/playlist-video/ent/title"
@@ -97,6 +98,40 @@ func (ctl *CustomerController) CreateCustomer(c *gin.Context) {
 	c.JSON(200, cm)
 }
 
+// GetCustomer handles GET requests to retrieve a customer entity
+// @Summary Get a customer entity by ID
+// @Description get customer by ID
+// @ID get-customer
+// @Produce  json
+// @Param id path int true "Customer ID"
+// @Success 200 {object} ent.Customer
+// @Failure 400 {object} gin.H
+// @Failure 404 {object} gin.H
+// @Failure 500 {object} gin.H
+// @Router /customers/{id} [get]
+func (ctl *CustomerController) GetCustomer(c *gin.Context) {
+	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
+	if err != nil {
+		c.JSON(400, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	cm, err := ctl.client.Customer.
+		Query().
+		Where(customer.IDEQ(int(id))).
+		Only(context.Background())
+	if err != nil {
+		c.JSON(404, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(200, cm)
+}
+
 // ListCustomer handles request to get a list of customer entities
 // @Summary List customer entities
 // @Description list customer entities
@@ -176,6 +211,46 @@ func (ctl *CustomerController) DeleteCustomer(c *gin.Context) {
 	c.JSON(200, gin.H{"result": fmt.Sprintf("ok deleted %v", id)})
 }
 
+// UpdateCustomer handles PUT requests to update a customer entity
+// @Summary Update a customer entity by ID
+// @Description update customer by ID
+// @ID update-customer
+// @Accept   json
+// @Produce  json
+// @Param id path int true "Customer ID"
+// @Param customer body ent.Customer true "Customer entity"
+// @Success 200 {object} ent.Customer
+// @Failure 400 {object} gin.H
+// @Failure 500 {object} gin.H
+// @Router /customers/{id} [put]
+func (ctl *CustomerController) UpdateCustomer(c *gin.Context) {
+	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
+	if err != nil {
+		c.JSON(400, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	obj := ent.Customer{}
+	if err := c.ShouldBind(&obj); err != nil {
+		c.JSON(400, gin.H{
+			"error": "customer binding failed",
+		})
+		return
+	}
+	obj.ID = int(id)
+	cm, err := ctl.client.Customer.
+		UpdateOne(&obj).
+		Save(context.Background())
+	if err != nil {
+		c.JSON(400, gin.H{"error": "update failed"})
+		return
+	}
+
+	c.JSON(200, cm)
+}
+
 // NewCustomerController creates and registers handles for the customer controller
 func NewCustomerController(router gin.IRouter, client *ent.Client) *CustomerController {
 	cmc := &CustomerController{
@@ -186,10 +261,15 @@ func NewCustomerController(router gin.IRouter, client *ent.Client) *CustomerCont
 	return cmc
 }
 
+// InitCustomerController registers routes to the main engine
 func (ctl *CustomerController) register() {
 	customers := ctl.router.Group("/customers")
 
-	customers.POST("", ctl.CreateCustomer)
 	customers.GET("", ctl.ListCustomer)
+
+	// CRUD
+	customers.POST("", ctl.CreateCustomer)
+	customers.GET(":id", ctl.GetCustomer)
+	customers.PUT(":id", ctl.UpdateCustomer)
 	customers.DELETE(":id", ctl.DeleteCustomer)
 }
