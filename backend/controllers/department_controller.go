@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"context"
+	"fmt"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -133,6 +134,79 @@ func (ctl *DepartmentController) ListDepartment(c *gin.Context) {
 	c.JSON(200, departmnets)
 }
 
+// DeleteDepartment handles DELETE requests to delete a department entity
+// @Summary Delete a department entity by ID
+// @Description get department by ID
+// @ID delete-department
+// @Produce  json
+// @Param id path int true "Department ID"
+// @Success 200 {object} gin.H
+// @Failure 400 {object} gin.H
+// @Failure 404 {object} gin.H
+// @Failure 500 {object} gin.H
+// @Router /departments/{id} [delete]
+func (ctl *DepartmentController) DeleteDepartment(c *gin.Context) {
+	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
+	if err != nil {
+		c.JSON(400, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	err = ctl.client.Department.
+		DeleteOneID(int(id)).
+		Exec(context.Background())
+	if err != nil {
+		c.JSON(404, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(200, gin.H{"result": fmt.Sprintf("ok deleted %v", id)})
+}
+
+// UpdateDepartment handles PUT requests to update a department entity
+// @Summary Update a department entity by ID
+// @Description update department by ID
+// @ID update-department
+// @Accept   json
+// @Produce  json
+// @Param id path int true "Department ID"
+// @Param department body ent.Department true "Department entity"
+// @Success 200 {object} ent.Department
+// @Failure 400 {object} gin.H
+// @Failure 500 {object} gin.H
+// @Router /departments/{id} [put]
+func (ctl *DepartmentController) UpdateDepartment(c *gin.Context) {
+	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
+	if err != nil {
+		c.JSON(400, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	obj := ent.Department{}
+	if err := c.ShouldBind(&obj); err != nil {
+		c.JSON(400, gin.H{
+			"error": "department binding failed",
+		})
+		return
+	}
+	obj.ID = int(id)
+	d, err := ctl.client.Department.
+		UpdateOne(&obj).
+		Save(context.Background())
+	if err != nil {
+		c.JSON(400, gin.H{"error": "update failed"})
+		return
+	}
+
+	c.JSON(200, d)
+}
+
 // NewDepartmentController creates and registers handles for the department controller
 func NewDepartmentController(router gin.IRouter, client *ent.Client) *DepartmentController {
 	dc := &DepartmentController{
@@ -146,11 +220,16 @@ func NewDepartmentController(router gin.IRouter, client *ent.Client) *Department
 
 }
 
+// InitDepartmentController registers routes to the main engine
 func (ctl *DepartmentController) register() {
 	departments := ctl.router.Group("/departments")
 
+	departments.GET("", ctl.ListDepartment)
+
+	// CRUD
 	departments.POST("", ctl.CreateDepartment)
 	departments.GET(":id", ctl.GetDepartment)
-	departments.GET("", ctl.ListDepartment)
+	departments.PUT(":id", ctl.UpdateDepartment)
+	departments.DELETE(":id", ctl.DeleteDepartment)
 
 }
