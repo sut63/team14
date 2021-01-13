@@ -65,7 +65,6 @@ var Columns = []string{
 
 // ForeignKeys holds the SQL foreign-keys that are owned by the Customer type.
 var ForeignKeys = []string{
-	"department_id",
 	"gender_id",
 	"personal_id",
 	"title_id",

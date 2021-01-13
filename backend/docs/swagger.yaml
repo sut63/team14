@@ -210,11 +210,6 @@ definitions:
     type: object
   ent.DepartmentEdges:
     properties:
-      customer:
-        description: Customer holds the value of the customer edge.
-        items:
-          $ref: '#/definitions/ent.Customer'
-        type: array
       personal:
         description: Personal holds the value of the personal edge.
         items:

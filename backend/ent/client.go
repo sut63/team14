@@ -704,22 +704,6 @@ func (c *DepartmentClient) QueryPersonal(d *Department) *PersonalQuery {
 	return query
 }
 
-// QueryCustomer queries the customer edge of a Department.
-func (c *DepartmentClient) QueryCustomer(d *Department) *CustomerQuery {
-	query := &CustomerQuery{config: c.config}
-	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
-		id := d.ID
-		step := sqlgraph.NewStep(
-			sqlgraph.From(department.Table, department.FieldID, id),
-			sqlgraph.To(customer.Table, customer.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, department.CustomerTable, department.CustomerColumn),
-		)
-		fromV = sqlgraph.Neighbors(d.driver.Dialect(), step)
-		return fromV, nil
-	}
-	return query
-}
-
 // Hooks returns the client hooks.
 func (c *DepartmentClient) Hooks() []Hook {
 	return c.hooks.Department

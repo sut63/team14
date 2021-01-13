@@ -12,7 +12,6 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
-	"github.com/tanapon395/playlist-video/ent/customer"
 	"github.com/tanapon395/playlist-video/ent/department"
 	"github.com/tanapon395/playlist-video/ent/personal"
 	"github.com/tanapon395/playlist-video/ent/predicate"
@@ -28,7 +27,6 @@ type DepartmentQuery struct {
 	predicates []predicate.Department
 	// eager-loading edges.
 	withPersonal *PersonalQuery
-	withCustomer *CustomerQuery
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -69,24 +67,6 @@ func (dq *DepartmentQuery) QueryPersonal() *PersonalQuery {
 			sqlgraph.From(department.Table, department.FieldID, dq.sqlQuery()),
 			sqlgraph.To(personal.Table, personal.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, department.PersonalTable, department.PersonalColumn),
-		)
-		fromU = sqlgraph.SetNeighbors(dq.driver.Dialect(), step)
-		return fromU, nil
-	}
-	return query
-}
-
-// QueryCustomer chains the current query on the customer edge.
-func (dq *DepartmentQuery) QueryCustomer() *CustomerQuery {
-	query := &CustomerQuery{config: dq.config}
-	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
-		if err := dq.prepareQuery(ctx); err != nil {
-			return nil, err
-		}
-		step := sqlgraph.NewStep(
-			sqlgraph.From(department.Table, department.FieldID, dq.sqlQuery()),
-			sqlgraph.To(customer.Table, customer.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, department.CustomerTable, department.CustomerColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(dq.driver.Dialect(), step)
 		return fromU, nil
@@ -284,17 +264,6 @@ func (dq *DepartmentQuery) WithPersonal(opts ...func(*PersonalQuery)) *Departmen
 	return dq
 }
 
-//  WithCustomer tells the query-builder to eager-loads the nodes that are connected to
-// the "customer" edge. The optional arguments used to configure the query builder of the edge.
-func (dq *DepartmentQuery) WithCustomer(opts ...func(*CustomerQuery)) *DepartmentQuery {
-	query := &CustomerQuery{config: dq.config}
-	for _, opt := range opts {
-		opt(query)
-	}
-	dq.withCustomer = query
-	return dq
-}
-
 // GroupBy used to group vertices by one or more fields/columns.
 // It is often used with aggregate functions, like: count, max, mean, min, sum.
 //
@@ -361,9 +330,8 @@ func (dq *DepartmentQuery) sqlAll(ctx context.Context) ([]*Department, error) {
 	var (
 		nodes       = []*Department{}
 		_spec       = dq.querySpec()
-		loadedTypes = [2]bool{
+		loadedTypes = [1]bool{
 			dq.withPersonal != nil,
-			dq.withCustomer != nil,
 		}
 	)
 	_spec.ScanValues = func() []interface{} {
@@ -412,34 +380,6 @@ func (dq *DepartmentQuery) sqlAll(ctx context.Context) ([]*Department, error) {
 				return nil, fmt.Errorf(`unexpected foreign-key "department_id" returned %v for node %v`, *fk, n.ID)
 			}
 			node.Edges.Personal = append(node.Edges.Personal, n)
-		}
-	}
-
-	if query := dq.withCustomer; query != nil {
-		fks := make([]driver.Value, 0, len(nodes))
-		nodeids := make(map[int]*Department)
-		for i := range nodes {
-			fks = append(fks, nodes[i].ID)
-			nodeids[nodes[i].ID] = nodes[i]
-		}
-		query.withFKs = true
-		query.Where(predicate.Customer(func(s *sql.Selector) {
-			s.Where(sql.InValues(department.CustomerColumn, fks...))
-		}))
-		neighbors, err := query.All(ctx)
-		if err != nil {
-			return nil, err
-		}
-		for _, n := range neighbors {
-			fk := n.department_id
-			if fk == nil {
-				return nil, fmt.Errorf(`foreign-key "department_id" is nil for node %v`, n.ID)
-			}
-			node, ok := nodeids[*fk]
-			if !ok {
-				return nil, fmt.Errorf(`unexpected foreign-key "department_id" returned %v for node %v`, *fk, n.ID)
-			}
-			node.Edges.Customer = append(node.Edges.Customer, n)
 		}
 	}
 

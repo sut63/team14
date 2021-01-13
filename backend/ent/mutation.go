@@ -1693,8 +1693,6 @@ type DepartmentMutation struct {
 	clearedFields   map[string]struct{}
 	personal        map[int]struct{}
 	removedpersonal map[int]struct{}
-	customer        map[int]struct{}
-	removedcustomer map[int]struct{}
 	done            bool
 	oldValue        func(context.Context) (*Department, error)
 }
@@ -1857,48 +1855,6 @@ func (m *DepartmentMutation) ResetPersonal() {
 	m.removedpersonal = nil
 }
 
-// AddCustomerIDs adds the customer edge to Customer by ids.
-func (m *DepartmentMutation) AddCustomerIDs(ids ...int) {
-	if m.customer == nil {
-		m.customer = make(map[int]struct{})
-	}
-	for i := range ids {
-		m.customer[ids[i]] = struct{}{}
-	}
-}
-
-// RemoveCustomerIDs removes the customer edge to Customer by ids.
-func (m *DepartmentMutation) RemoveCustomerIDs(ids ...int) {
-	if m.removedcustomer == nil {
-		m.removedcustomer = make(map[int]struct{})
-	}
-	for i := range ids {
-		m.removedcustomer[ids[i]] = struct{}{}
-	}
-}
-
-// RemovedCustomer returns the removed ids of customer.
-func (m *DepartmentMutation) RemovedCustomerIDs() (ids []int) {
-	for id := range m.removedcustomer {
-		ids = append(ids, id)
-	}
-	return
-}
-
-// CustomerIDs returns the customer ids in the mutation.
-func (m *DepartmentMutation) CustomerIDs() (ids []int) {
-	for id := range m.customer {
-		ids = append(ids, id)
-	}
-	return
-}
-
-// ResetCustomer reset all changes of the "customer" edge.
-func (m *DepartmentMutation) ResetCustomer() {
-	m.customer = nil
-	m.removedcustomer = nil
-}
-
 // Op returns the operation name.
 func (m *DepartmentMutation) Op() Op {
 	return m.op
@@ -2014,12 +1970,9 @@ func (m *DepartmentMutation) ResetField(name string) error {
 // AddedEdges returns all edge names that were set/added in this
 // mutation.
 func (m *DepartmentMutation) AddedEdges() []string {
-	edges := make([]string, 0, 2)
+	edges := make([]string, 0, 1)
 	if m.personal != nil {
 		edges = append(edges, department.EdgePersonal)
-	}
-	if m.customer != nil {
-		edges = append(edges, department.EdgeCustomer)
 	}
 	return edges
 }
@@ -2034,12 +1987,6 @@ func (m *DepartmentMutation) AddedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
-	case department.EdgeCustomer:
-		ids := make([]ent.Value, 0, len(m.customer))
-		for id := range m.customer {
-			ids = append(ids, id)
-		}
-		return ids
 	}
 	return nil
 }
@@ -2047,12 +1994,9 @@ func (m *DepartmentMutation) AddedIDs(name string) []ent.Value {
 // RemovedEdges returns all edge names that were removed in this
 // mutation.
 func (m *DepartmentMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 2)
+	edges := make([]string, 0, 1)
 	if m.removedpersonal != nil {
 		edges = append(edges, department.EdgePersonal)
-	}
-	if m.removedcustomer != nil {
-		edges = append(edges, department.EdgeCustomer)
 	}
 	return edges
 }
@@ -2067,12 +2011,6 @@ func (m *DepartmentMutation) RemovedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
-	case department.EdgeCustomer:
-		ids := make([]ent.Value, 0, len(m.removedcustomer))
-		for id := range m.removedcustomer {
-			ids = append(ids, id)
-		}
-		return ids
 	}
 	return nil
 }
@@ -2080,7 +2018,7 @@ func (m *DepartmentMutation) RemovedIDs(name string) []ent.Value {
 // ClearedEdges returns all edge names that were cleared in this
 // mutation.
 func (m *DepartmentMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 2)
+	edges := make([]string, 0, 1)
 	return edges
 }
 
@@ -2107,9 +2045,6 @@ func (m *DepartmentMutation) ResetEdge(name string) error {
 	switch name {
 	case department.EdgePersonal:
 		m.ResetPersonal()
-		return nil
-	case department.EdgeCustomer:
-		m.ResetCustomer()
 		return nil
 	}
 	return fmt.Errorf("unknown Department edge %s", name)

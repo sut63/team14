@@ -12,8 +12,6 @@ const (
 
 	// EdgePersonal holds the string denoting the personal edge name in mutations.
 	EdgePersonal = "personal"
-	// EdgeCustomer holds the string denoting the customer edge name in mutations.
-	EdgeCustomer = "customer"
 
 	// Table holds the table name of the department in the database.
 	Table = "departments"
@@ -24,13 +22,6 @@ const (
 	PersonalInverseTable = "personals"
 	// PersonalColumn is the table column denoting the personal relation/edge.
 	PersonalColumn = "department_id"
-	// CustomerTable is the table the holds the customer relation/edge.
-	CustomerTable = "customers"
-	// CustomerInverseTable is the table name for the Customer entity.
-	// It exists in this package in order to avoid circular dependency with the "customer" package.
-	CustomerInverseTable = "customers"
-	// CustomerColumn is the table column denoting the customer relation/edge.
-	CustomerColumn = "department_id"
 )
 
 // Columns holds all SQL columns for department fields.
