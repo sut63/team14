@@ -63,7 +63,6 @@ var (
 		{Name: "customername", Type: field.TypeString},
 		{Name: "address", Type: field.TypeString},
 		{Name: "phonenumber", Type: field.TypeString},
-		{Name: "department_id", Type: field.TypeInt, Nullable: true},
 		{Name: "gender_id", Type: field.TypeInt, Nullable: true},
 		{Name: "personal_id", Type: field.TypeInt, Nullable: true},
 		{Name: "title_id", Type: field.TypeInt, Nullable: true},
@@ -75,29 +74,22 @@ var (
 		PrimaryKey: []*schema.Column{CustomersColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{
 			{
-				Symbol:  "customers_departments_customer",
-				Columns: []*schema.Column{CustomersColumns[4]},
-
-				RefColumns: []*schema.Column{DepartmentsColumns[0]},
-				OnDelete:   schema.SetNull,
-			},
-			{
 				Symbol:  "customers_genders_customer",
-				Columns: []*schema.Column{CustomersColumns[5]},
+				Columns: []*schema.Column{CustomersColumns[4]},
 
 				RefColumns: []*schema.Column{GendersColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:  "customers_personals_customer",
-				Columns: []*schema.Column{CustomersColumns[6]},
+				Columns: []*schema.Column{CustomersColumns[5]},
 
 				RefColumns: []*schema.Column{PersonalsColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:  "customers_titles_customer",
-				Columns: []*schema.Column{CustomersColumns[7]},
+				Columns: []*schema.Column{CustomersColumns[6]},
 
 				RefColumns: []*schema.Column{TitlesColumns[0]},
 				OnDelete:   schema.SetNull,
@@ -364,10 +356,9 @@ func init() {
 	AdminrepairsTable.ForeignKeys[0].RefTable = FixesTable
 	AdminrepairsTable.ForeignKeys[1].RefTable = PersonalsTable
 	AdminrepairsTable.ForeignKeys[2].RefTable = ProductsTable
-	CustomersTable.ForeignKeys[0].RefTable = DepartmentsTable
-	CustomersTable.ForeignKeys[1].RefTable = GendersTable
-	CustomersTable.ForeignKeys[2].RefTable = PersonalsTable
-	CustomersTable.ForeignKeys[3].RefTable = TitlesTable
+	CustomersTable.ForeignKeys[0].RefTable = GendersTable
+	CustomersTable.ForeignKeys[1].RefTable = PersonalsTable
+	CustomersTable.ForeignKeys[2].RefTable = TitlesTable
 	FixesTable.ForeignKeys[0].RefTable = BrandsTable
 	FixesTable.ForeignKeys[1].RefTable = CustomersTable
 	FixesTable.ForeignKeys[2].RefTable = FixcomtypesTable

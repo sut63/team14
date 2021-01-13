@@ -237,34 +237,6 @@ func HasPersonalWith(preds ...predicate.Personal) predicate.Department {
 	})
 }
 
-// HasCustomer applies the HasEdge predicate on the "customer" edge.
-func HasCustomer() predicate.Department {
-	return predicate.Department(func(s *sql.Selector) {
-		step := sqlgraph.NewStep(
-			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(CustomerTable, FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, CustomerTable, CustomerColumn),
-		)
-		sqlgraph.HasNeighbors(s, step)
-	})
-}
-
-// HasCustomerWith applies the HasEdge predicate on the "customer" edge with a given conditions (other predicates).
-func HasCustomerWith(preds ...predicate.Customer) predicate.Department {
-	return predicate.Department(func(s *sql.Selector) {
-		step := sqlgraph.NewStep(
-			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(CustomerInverseTable, FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, CustomerTable, CustomerColumn),
-		)
-		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
-			for _, p := range preds {
-				p(s)
-			}
-		})
-	})
-}
-
 // And groups list of predicates with the AND operator between them.
 func And(predicates ...predicate.Department) predicate.Department {
 	return predicate.Department(func(s *sql.Selector) {

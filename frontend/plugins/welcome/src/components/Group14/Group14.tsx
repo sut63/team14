@@ -51,7 +51,7 @@ const Group14: FC<{}> = () => {
               variant="outlined"
               fullWidth
               size="large"  
-              href="" 
+              href="/CustomerTable" 
               startIcon={<FaceIcon />}
               className={classes.systemstlye}> 
               ข้อมูลลูกค้า

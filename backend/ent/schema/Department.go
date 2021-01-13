@@ -22,6 +22,5 @@ func (Department) Fields() []ent.Field {
 func (Department) Edges() []ent.Edge {
 	return []ent.Edge{
 		edge.To("personal", Personal.Type).StorageKey(edge.Column("department_id")),
-		edge.To("customer", Customer.Type).StorageKey(edge.Column("department_id")),
 	}
 }

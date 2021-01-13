@@ -26,11 +26,10 @@ type Customer struct {
 	Phonenumber string `json:"Phonenumber,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the CustomerQuery when eager-loading is set.
-	Edges         CustomerEdges `json:"edges"`
-	department_id *int
-	gender_id     *int
-	personal_id   *int
-	title_id      *int
+	Edges       CustomerEdges `json:"edges"`
+	gender_id   *int
+	personal_id *int
+	title_id    *int
 }
 
 // CustomerEdges holds the relations/edges for other nodes in the graph.
@@ -112,7 +111,6 @@ func (*Customer) scanValues() []interface{} {
 // fkValues returns the types for scanning foreign-keys values from sql.Rows.
 func (*Customer) fkValues() []interface{} {
 	return []interface{}{
-		&sql.NullInt64{}, // department_id
 		&sql.NullInt64{}, // gender_id
 		&sql.NullInt64{}, // personal_id
 		&sql.NullInt64{}, // title_id
@@ -149,24 +147,18 @@ func (c *Customer) assignValues(values ...interface{}) error {
 	values = values[3:]
 	if len(values) == len(customer.ForeignKeys) {
 		if value, ok := values[0].(*sql.NullInt64); !ok {
-			return fmt.Errorf("unexpected type %T for edge-field department_id", value)
-		} else if value.Valid {
-			c.department_id = new(int)
-			*c.department_id = int(value.Int64)
-		}
-		if value, ok := values[1].(*sql.NullInt64); !ok {
 			return fmt.Errorf("unexpected type %T for edge-field gender_id", value)
 		} else if value.Valid {
 			c.gender_id = new(int)
 			*c.gender_id = int(value.Int64)
 		}
-		if value, ok := values[2].(*sql.NullInt64); !ok {
+		if value, ok := values[1].(*sql.NullInt64); !ok {
 			return fmt.Errorf("unexpected type %T for edge-field personal_id", value)
 		} else if value.Valid {
 			c.personal_id = new(int)
 			*c.personal_id = int(value.Int64)
 		}
-		if value, ok := values[3].(*sql.NullInt64); !ok {
+		if value, ok := values[2].(*sql.NullInt64); !ok {
 			return fmt.Errorf("unexpected type %T for edge-field title_id", value)
 		} else if value.Valid {
 			c.title_id = new(int)

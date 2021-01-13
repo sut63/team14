@@ -3032,13 +3032,6 @@ var doc = `{
         "ent.DepartmentEdges": {
             "type": "object",
             "properties": {
-                "customer": {
-                    "description": "Customer holds the value of the customer edge.",
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/ent.Customer"
-                    }
-                },
                 "personal": {
                     "description": "Personal holds the value of the personal edge.",
                     "type": "array",
