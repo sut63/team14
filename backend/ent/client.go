@@ -16,6 +16,7 @@ import (
 	"github.com/tanapon395/playlist-video/ent/fix"
 	"github.com/tanapon395/playlist-video/ent/fixcomtype"
 	"github.com/tanapon395/playlist-video/ent/gender"
+	"github.com/tanapon395/playlist-video/ent/paymenttype"
 	"github.com/tanapon395/playlist-video/ent/personal"
 	"github.com/tanapon395/playlist-video/ent/product"
 	"github.com/tanapon395/playlist-video/ent/receipt"
@@ -46,6 +47,8 @@ type Client struct {
 	Fixcomtype *FixcomtypeClient
 	// Gender is the client for interacting with the Gender builders.
 	Gender *GenderClient
+	// PaymentType is the client for interacting with the PaymentType builders.
+	PaymentType *PaymentTypeClient
 	// Personal is the client for interacting with the Personal builders.
 	Personal *PersonalClient
 	// Product is the client for interacting with the Product builders.
@@ -76,6 +79,7 @@ func (c *Client) init() {
 	c.Fix = NewFixClient(c.config)
 	c.Fixcomtype = NewFixcomtypeClient(c.config)
 	c.Gender = NewGenderClient(c.config)
+	c.PaymentType = NewPaymentTypeClient(c.config)
 	c.Personal = NewPersonalClient(c.config)
 	c.Product = NewProductClient(c.config)
 	c.Receipt = NewReceiptClient(c.config)
@@ -120,6 +124,7 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		Fix:         NewFixClient(cfg),
 		Fixcomtype:  NewFixcomtypeClient(cfg),
 		Gender:      NewGenderClient(cfg),
+		PaymentType: NewPaymentTypeClient(cfg),
 		Personal:    NewPersonalClient(cfg),
 		Product:     NewProductClient(cfg),
 		Receipt:     NewReceiptClient(cfg),
@@ -147,6 +152,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		Fix:         NewFixClient(cfg),
 		Fixcomtype:  NewFixcomtypeClient(cfg),
 		Gender:      NewGenderClient(cfg),
+		PaymentType: NewPaymentTypeClient(cfg),
 		Personal:    NewPersonalClient(cfg),
 		Product:     NewProductClient(cfg),
 		Receipt:     NewReceiptClient(cfg),
@@ -187,6 +193,7 @@ func (c *Client) Use(hooks ...Hook) {
 	c.Fix.Use(hooks...)
 	c.Fixcomtype.Use(hooks...)
 	c.Gender.Use(hooks...)
+	c.PaymentType.Use(hooks...)
 	c.Personal.Use(hooks...)
 	c.Product.Use(hooks...)
 	c.Receipt.Use(hooks...)
@@ -270,6 +277,22 @@ func (c *AdminrepairClient) GetX(ctx context.Context, id int) *Adminrepair {
 		panic(err)
 	}
 	return a
+}
+
+// QueryReceipt queries the receipt edge of a Adminrepair.
+func (c *AdminrepairClient) QueryReceipt(a *Adminrepair) *ReceiptQuery {
+	query := &ReceiptQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := a.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(adminrepair.Table, adminrepair.FieldID, id),
+			sqlgraph.To(receipt.Table, receipt.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, adminrepair.ReceiptTable, adminrepair.ReceiptColumn),
+		)
+		fromV = sqlgraph.Neighbors(a.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
 }
 
 // QueryAdminrepairPersonal queries the AdminrepairPersonal edge of a Adminrepair.
@@ -1079,6 +1102,105 @@ func (c *GenderClient) Hooks() []Hook {
 	return c.hooks.Gender
 }
 
+// PaymentTypeClient is a client for the PaymentType schema.
+type PaymentTypeClient struct {
+	config
+}
+
+// NewPaymentTypeClient returns a client for the PaymentType from the given config.
+func NewPaymentTypeClient(c config) *PaymentTypeClient {
+	return &PaymentTypeClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `paymenttype.Hooks(f(g(h())))`.
+func (c *PaymentTypeClient) Use(hooks ...Hook) {
+	c.hooks.PaymentType = append(c.hooks.PaymentType, hooks...)
+}
+
+// Create returns a create builder for PaymentType.
+func (c *PaymentTypeClient) Create() *PaymentTypeCreate {
+	mutation := newPaymentTypeMutation(c.config, OpCreate)
+	return &PaymentTypeCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Update returns an update builder for PaymentType.
+func (c *PaymentTypeClient) Update() *PaymentTypeUpdate {
+	mutation := newPaymentTypeMutation(c.config, OpUpdate)
+	return &PaymentTypeUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *PaymentTypeClient) UpdateOne(pt *PaymentType) *PaymentTypeUpdateOne {
+	mutation := newPaymentTypeMutation(c.config, OpUpdateOne, withPaymentType(pt))
+	return &PaymentTypeUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *PaymentTypeClient) UpdateOneID(id int) *PaymentTypeUpdateOne {
+	mutation := newPaymentTypeMutation(c.config, OpUpdateOne, withPaymentTypeID(id))
+	return &PaymentTypeUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for PaymentType.
+func (c *PaymentTypeClient) Delete() *PaymentTypeDelete {
+	mutation := newPaymentTypeMutation(c.config, OpDelete)
+	return &PaymentTypeDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a delete builder for the given entity.
+func (c *PaymentTypeClient) DeleteOne(pt *PaymentType) *PaymentTypeDeleteOne {
+	return c.DeleteOneID(pt.ID)
+}
+
+// DeleteOneID returns a delete builder for the given id.
+func (c *PaymentTypeClient) DeleteOneID(id int) *PaymentTypeDeleteOne {
+	builder := c.Delete().Where(paymenttype.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &PaymentTypeDeleteOne{builder}
+}
+
+// Create returns a query builder for PaymentType.
+func (c *PaymentTypeClient) Query() *PaymentTypeQuery {
+	return &PaymentTypeQuery{config: c.config}
+}
+
+// Get returns a PaymentType entity by its id.
+func (c *PaymentTypeClient) Get(ctx context.Context, id int) (*PaymentType, error) {
+	return c.Query().Where(paymenttype.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *PaymentTypeClient) GetX(ctx context.Context, id int) *PaymentType {
+	pt, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return pt
+}
+
+// QueryReceipt queries the receipt edge of a PaymentType.
+func (c *PaymentTypeClient) QueryReceipt(pt *PaymentType) *ReceiptQuery {
+	query := &ReceiptQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := pt.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(paymenttype.Table, paymenttype.FieldID, id),
+			sqlgraph.To(receipt.Table, receipt.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, paymenttype.ReceiptTable, paymenttype.ReceiptColumn),
+		)
+		fromV = sqlgraph.Neighbors(pt.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// Hooks returns the client hooks.
+func (c *PaymentTypeClient) Hooks() []Hook {
+	return c.hooks.PaymentType
+}
+
 // PersonalClient is a client for the Personal schema.
 type PersonalClient struct {
 	config
@@ -1262,6 +1384,22 @@ func (c *PersonalClient) QueryPersonal(pe *Personal) *AdminrepairQuery {
 			sqlgraph.From(personal.Table, personal.FieldID, id),
 			sqlgraph.To(adminrepair.Table, adminrepair.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, personal.PersonalTable, personal.PersonalColumn),
+		)
+		fromV = sqlgraph.Neighbors(pe.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryReceipt queries the receipt edge of a Personal.
+func (c *PersonalClient) QueryReceipt(pe *Personal) *ReceiptQuery {
+	query := &ReceiptQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := pe.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(personal.Table, personal.FieldID, id),
+			sqlgraph.To(receipt.Table, receipt.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, personal.ReceiptTable, personal.ReceiptColumn),
 		)
 		fromV = sqlgraph.Neighbors(pe.driver.Dialect(), step)
 		return fromV, nil
@@ -1497,6 +1635,54 @@ func (c *ReceiptClient) GetX(ctx context.Context, id int) *Receipt {
 		panic(err)
 	}
 	return r
+}
+
+// QueryPaymenttype queries the paymenttype edge of a Receipt.
+func (c *ReceiptClient) QueryPaymenttype(r *Receipt) *PaymentTypeQuery {
+	query := &PaymentTypeQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := r.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(receipt.Table, receipt.FieldID, id),
+			sqlgraph.To(paymenttype.Table, paymenttype.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, receipt.PaymenttypeTable, receipt.PaymenttypeColumn),
+		)
+		fromV = sqlgraph.Neighbors(r.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryAdminrepair queries the adminrepair edge of a Receipt.
+func (c *ReceiptClient) QueryAdminrepair(r *Receipt) *AdminrepairQuery {
+	query := &AdminrepairQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := r.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(receipt.Table, receipt.FieldID, id),
+			sqlgraph.To(adminrepair.Table, adminrepair.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, receipt.AdminrepairTable, receipt.AdminrepairColumn),
+		)
+		fromV = sqlgraph.Neighbors(r.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryPersonal queries the personal edge of a Receipt.
+func (c *ReceiptClient) QueryPersonal(r *Receipt) *PersonalQuery {
+	query := &PersonalQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := r.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(receipt.Table, receipt.FieldID, id),
+			sqlgraph.To(personal.Table, personal.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, receipt.PersonalTable, receipt.PersonalColumn),
+		)
+		fromV = sqlgraph.Neighbors(r.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
 }
 
 // Hooks returns the client hooks.

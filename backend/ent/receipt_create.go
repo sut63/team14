@@ -4,10 +4,15 @@ package ent
 
 import (
 	"context"
+	"errors"
 	"fmt"
+	"time"
 
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
+	"github.com/tanapon395/playlist-video/ent/adminrepair"
+	"github.com/tanapon395/playlist-video/ent/paymenttype"
+	"github.com/tanapon395/playlist-video/ent/personal"
 	"github.com/tanapon395/playlist-video/ent/receipt"
 )
 
@@ -18,6 +23,95 @@ type ReceiptCreate struct {
 	hooks    []Hook
 }
 
+// SetCusidentification sets the Cusidentification field.
+func (rc *ReceiptCreate) SetCusidentification(s string) *ReceiptCreate {
+	rc.mutation.SetCusidentification(s)
+	return rc
+}
+
+// SetCustomername sets the Customername field.
+func (rc *ReceiptCreate) SetCustomername(s string) *ReceiptCreate {
+	rc.mutation.SetCustomername(s)
+	return rc
+}
+
+// SetPhonenumber sets the Phonenumber field.
+func (rc *ReceiptCreate) SetPhonenumber(s string) *ReceiptCreate {
+	rc.mutation.SetPhonenumber(s)
+	return rc
+}
+
+// SetAddedTime sets the added_time field.
+func (rc *ReceiptCreate) SetAddedTime(t time.Time) *ReceiptCreate {
+	rc.mutation.SetAddedTime(t)
+	return rc
+}
+
+// SetNillableAddedTime sets the added_time field if the given value is not nil.
+func (rc *ReceiptCreate) SetNillableAddedTime(t *time.Time) *ReceiptCreate {
+	if t != nil {
+		rc.SetAddedTime(*t)
+	}
+	return rc
+}
+
+// SetPaymenttypeID sets the paymenttype edge to PaymentType by id.
+func (rc *ReceiptCreate) SetPaymenttypeID(id int) *ReceiptCreate {
+	rc.mutation.SetPaymenttypeID(id)
+	return rc
+}
+
+// SetNillablePaymenttypeID sets the paymenttype edge to PaymentType by id if the given value is not nil.
+func (rc *ReceiptCreate) SetNillablePaymenttypeID(id *int) *ReceiptCreate {
+	if id != nil {
+		rc = rc.SetPaymenttypeID(*id)
+	}
+	return rc
+}
+
+// SetPaymenttype sets the paymenttype edge to PaymentType.
+func (rc *ReceiptCreate) SetPaymenttype(p *PaymentType) *ReceiptCreate {
+	return rc.SetPaymenttypeID(p.ID)
+}
+
+// SetAdminrepairID sets the adminrepair edge to Adminrepair by id.
+func (rc *ReceiptCreate) SetAdminrepairID(id int) *ReceiptCreate {
+	rc.mutation.SetAdminrepairID(id)
+	return rc
+}
+
+// SetNillableAdminrepairID sets the adminrepair edge to Adminrepair by id if the given value is not nil.
+func (rc *ReceiptCreate) SetNillableAdminrepairID(id *int) *ReceiptCreate {
+	if id != nil {
+		rc = rc.SetAdminrepairID(*id)
+	}
+	return rc
+}
+
+// SetAdminrepair sets the adminrepair edge to Adminrepair.
+func (rc *ReceiptCreate) SetAdminrepair(a *Adminrepair) *ReceiptCreate {
+	return rc.SetAdminrepairID(a.ID)
+}
+
+// SetPersonalID sets the personal edge to Personal by id.
+func (rc *ReceiptCreate) SetPersonalID(id int) *ReceiptCreate {
+	rc.mutation.SetPersonalID(id)
+	return rc
+}
+
+// SetNillablePersonalID sets the personal edge to Personal by id if the given value is not nil.
+func (rc *ReceiptCreate) SetNillablePersonalID(id *int) *ReceiptCreate {
+	if id != nil {
+		rc = rc.SetPersonalID(*id)
+	}
+	return rc
+}
+
+// SetPersonal sets the personal edge to Personal.
+func (rc *ReceiptCreate) SetPersonal(p *Personal) *ReceiptCreate {
+	return rc.SetPersonalID(p.ID)
+}
+
 // Mutation returns the ReceiptMutation object of the builder.
 func (rc *ReceiptCreate) Mutation() *ReceiptMutation {
 	return rc.mutation
@@ -25,6 +119,34 @@ func (rc *ReceiptCreate) Mutation() *ReceiptMutation {
 
 // Save creates the Receipt in the database.
 func (rc *ReceiptCreate) Save(ctx context.Context) (*Receipt, error) {
+	if _, ok := rc.mutation.Cusidentification(); !ok {
+		return nil, &ValidationError{Name: "Cusidentification", err: errors.New("ent: missing required field \"Cusidentification\"")}
+	}
+	if v, ok := rc.mutation.Cusidentification(); ok {
+		if err := receipt.CusidentificationValidator(v); err != nil {
+			return nil, &ValidationError{Name: "Cusidentification", err: fmt.Errorf("ent: validator failed for field \"Cusidentification\": %w", err)}
+		}
+	}
+	if _, ok := rc.mutation.Customername(); !ok {
+		return nil, &ValidationError{Name: "Customername", err: errors.New("ent: missing required field \"Customername\"")}
+	}
+	if v, ok := rc.mutation.Customername(); ok {
+		if err := receipt.CustomernameValidator(v); err != nil {
+			return nil, &ValidationError{Name: "Customername", err: fmt.Errorf("ent: validator failed for field \"Customername\": %w", err)}
+		}
+	}
+	if _, ok := rc.mutation.Phonenumber(); !ok {
+		return nil, &ValidationError{Name: "Phonenumber", err: errors.New("ent: missing required field \"Phonenumber\"")}
+	}
+	if v, ok := rc.mutation.Phonenumber(); ok {
+		if err := receipt.PhonenumberValidator(v); err != nil {
+			return nil, &ValidationError{Name: "Phonenumber", err: fmt.Errorf("ent: validator failed for field \"Phonenumber\": %w", err)}
+		}
+	}
+	if _, ok := rc.mutation.AddedTime(); !ok {
+		v := receipt.DefaultAddedTime()
+		rc.mutation.SetAddedTime(v)
+	}
 	var (
 		err  error
 		node *Receipt
@@ -85,5 +207,94 @@ func (rc *ReceiptCreate) createSpec() (*Receipt, *sqlgraph.CreateSpec) {
 			},
 		}
 	)
+	if value, ok := rc.mutation.Cusidentification(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: receipt.FieldCusidentification,
+		})
+		r.Cusidentification = value
+	}
+	if value, ok := rc.mutation.Customername(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: receipt.FieldCustomername,
+		})
+		r.Customername = value
+	}
+	if value, ok := rc.mutation.Phonenumber(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: receipt.FieldPhonenumber,
+		})
+		r.Phonenumber = value
+	}
+	if value, ok := rc.mutation.AddedTime(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeTime,
+			Value:  value,
+			Column: receipt.FieldAddedTime,
+		})
+		r.AddedTime = value
+	}
+	if nodes := rc.mutation.PaymenttypeIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   receipt.PaymenttypeTable,
+			Columns: []string{receipt.PaymenttypeColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: paymenttype.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := rc.mutation.AdminrepairIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   receipt.AdminrepairTable,
+			Columns: []string{receipt.AdminrepairColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: adminrepair.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := rc.mutation.PersonalIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   receipt.PersonalTable,
+			Columns: []string{receipt.PersonalColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: personal.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
 	return r, _spec
 }

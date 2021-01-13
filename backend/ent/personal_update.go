@@ -17,6 +17,7 @@ import (
 	"github.com/tanapon395/playlist-video/ent/personal"
 	"github.com/tanapon395/playlist-video/ent/predicate"
 	"github.com/tanapon395/playlist-video/ent/product"
+	"github.com/tanapon395/playlist-video/ent/receipt"
 	"github.com/tanapon395/playlist-video/ent/title"
 )
 
@@ -169,6 +170,21 @@ func (pu *PersonalUpdate) AddPersonal(a ...*Adminrepair) *PersonalUpdate {
 	return pu.AddPersonalIDs(ids...)
 }
 
+// AddReceiptIDs adds the receipt edge to Receipt by ids.
+func (pu *PersonalUpdate) AddReceiptIDs(ids ...int) *PersonalUpdate {
+	pu.mutation.AddReceiptIDs(ids...)
+	return pu
+}
+
+// AddReceipt adds the receipt edges to Receipt.
+func (pu *PersonalUpdate) AddReceipt(r ...*Receipt) *PersonalUpdate {
+	ids := make([]int, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
+	}
+	return pu.AddReceiptIDs(ids...)
+}
+
 // Mutation returns the PersonalMutation object of the builder.
 func (pu *PersonalUpdate) Mutation() *PersonalMutation {
 	return pu.mutation
@@ -250,6 +266,21 @@ func (pu *PersonalUpdate) RemovePersonal(a ...*Adminrepair) *PersonalUpdate {
 		ids[i] = a[i].ID
 	}
 	return pu.RemovePersonalIDs(ids...)
+}
+
+// RemoveReceiptIDs removes the receipt edge to Receipt by ids.
+func (pu *PersonalUpdate) RemoveReceiptIDs(ids ...int) *PersonalUpdate {
+	pu.mutation.RemoveReceiptIDs(ids...)
+	return pu
+}
+
+// RemoveReceipt removes receipt edges to Receipt.
+func (pu *PersonalUpdate) RemoveReceipt(r ...*Receipt) *PersonalUpdate {
+	ids := make([]int, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
+	}
+	return pu.RemoveReceiptIDs(ids...)
 }
 
 // Save executes the query and returns the number of rows/vertices matched by this operation.
@@ -600,6 +631,44 @@ func (pu *PersonalUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	if nodes := pu.mutation.RemovedReceiptIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   personal.ReceiptTable,
+			Columns: []string{personal.ReceiptColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: receipt.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := pu.mutation.ReceiptIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   personal.ReceiptTable,
+			Columns: []string{personal.ReceiptColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: receipt.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, pu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{personal.Label}
@@ -753,6 +822,21 @@ func (puo *PersonalUpdateOne) AddPersonal(a ...*Adminrepair) *PersonalUpdateOne 
 	return puo.AddPersonalIDs(ids...)
 }
 
+// AddReceiptIDs adds the receipt edge to Receipt by ids.
+func (puo *PersonalUpdateOne) AddReceiptIDs(ids ...int) *PersonalUpdateOne {
+	puo.mutation.AddReceiptIDs(ids...)
+	return puo
+}
+
+// AddReceipt adds the receipt edges to Receipt.
+func (puo *PersonalUpdateOne) AddReceipt(r ...*Receipt) *PersonalUpdateOne {
+	ids := make([]int, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
+	}
+	return puo.AddReceiptIDs(ids...)
+}
+
 // Mutation returns the PersonalMutation object of the builder.
 func (puo *PersonalUpdateOne) Mutation() *PersonalMutation {
 	return puo.mutation
@@ -834,6 +918,21 @@ func (puo *PersonalUpdateOne) RemovePersonal(a ...*Adminrepair) *PersonalUpdateO
 		ids[i] = a[i].ID
 	}
 	return puo.RemovePersonalIDs(ids...)
+}
+
+// RemoveReceiptIDs removes the receipt edge to Receipt by ids.
+func (puo *PersonalUpdateOne) RemoveReceiptIDs(ids ...int) *PersonalUpdateOne {
+	puo.mutation.RemoveReceiptIDs(ids...)
+	return puo
+}
+
+// RemoveReceipt removes receipt edges to Receipt.
+func (puo *PersonalUpdateOne) RemoveReceipt(r ...*Receipt) *PersonalUpdateOne {
+	ids := make([]int, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
+	}
+	return puo.RemoveReceiptIDs(ids...)
 }
 
 // Save executes the query and returns the updated entity.
@@ -1174,6 +1273,44 @@ func (puo *PersonalUpdateOne) sqlSave(ctx context.Context) (pe *Personal, err er
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: adminrepair.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if nodes := puo.mutation.RemovedReceiptIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   personal.ReceiptTable,
+			Columns: []string{personal.ReceiptColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: receipt.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := puo.mutation.ReceiptIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   personal.ReceiptTable,
+			Columns: []string{personal.ReceiptColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: receipt.FieldID,
 				},
 			},
 		}

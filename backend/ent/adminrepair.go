@@ -30,6 +30,8 @@ type Adminrepair struct {
 
 // AdminrepairEdges holds the relations/edges for other nodes in the graph.
 type AdminrepairEdges struct {
+	// Receipt holds the value of the receipt edge.
+	Receipt []*Receipt
 	// AdminrepairPersonal holds the value of the AdminrepairPersonal edge.
 	AdminrepairPersonal *Personal
 	// AdminrepairFix holds the value of the AdminrepairFix edge.
@@ -38,13 +40,22 @@ type AdminrepairEdges struct {
 	AdminrepairProduct *Product
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [3]bool
+	loadedTypes [4]bool
+}
+
+// ReceiptOrErr returns the Receipt value or an error if the edge
+// was not loaded in eager-loading.
+func (e AdminrepairEdges) ReceiptOrErr() ([]*Receipt, error) {
+	if e.loadedTypes[0] {
+		return e.Receipt, nil
+	}
+	return nil, &NotLoadedError{edge: "receipt"}
 }
 
 // AdminrepairPersonalOrErr returns the AdminrepairPersonal value or an error if the edge
 // was not loaded in eager-loading, or loaded but was not found.
 func (e AdminrepairEdges) AdminrepairPersonalOrErr() (*Personal, error) {
-	if e.loadedTypes[0] {
+	if e.loadedTypes[1] {
 		if e.AdminrepairPersonal == nil {
 			// The edge AdminrepairPersonal was loaded in eager-loading,
 			// but was not found.
@@ -58,7 +69,7 @@ func (e AdminrepairEdges) AdminrepairPersonalOrErr() (*Personal, error) {
 // AdminrepairFixOrErr returns the AdminrepairFix value or an error if the edge
 // was not loaded in eager-loading, or loaded but was not found.
 func (e AdminrepairEdges) AdminrepairFixOrErr() (*Fix, error) {
-	if e.loadedTypes[1] {
+	if e.loadedTypes[2] {
 		if e.AdminrepairFix == nil {
 			// The edge AdminrepairFix was loaded in eager-loading,
 			// but was not found.
@@ -72,7 +83,7 @@ func (e AdminrepairEdges) AdminrepairFixOrErr() (*Fix, error) {
 // AdminrepairProductOrErr returns the AdminrepairProduct value or an error if the edge
 // was not loaded in eager-loading, or loaded but was not found.
 func (e AdminrepairEdges) AdminrepairProductOrErr() (*Product, error) {
-	if e.loadedTypes[2] {
+	if e.loadedTypes[3] {
 		if e.AdminrepairProduct == nil {
 			// The edge AdminrepairProduct was loaded in eager-loading,
 			// but was not found.
@@ -139,6 +150,11 @@ func (a *Adminrepair) assignValues(values ...interface{}) error {
 		}
 	}
 	return nil
+}
+
+// QueryReceipt queries the receipt edge of the Adminrepair.
+func (a *Adminrepair) QueryReceipt() *ReceiptQuery {
+	return (&AdminrepairClient{config: a.config}).QueryReceipt(a)
 }
 
 // QueryAdminrepairPersonal queries the AdminrepairPersonal edge of the Adminrepair.

@@ -1523,6 +1523,232 @@ var doc = `{
                 }
             }
         },
+        "/paymenttypes": {
+            "get": {
+                "description": "list paymenttype entities",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "List paymenttype entities",
+                "operationId": "list-paymenttype",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Limit",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Offset",
+                        "name": "offset",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ent.PaymentType"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create paymenttype",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create paymenttype",
+                "operationId": "create-paymenttype",
+                "parameters": [
+                    {
+                        "description": "PaymentType entity",
+                        "name": "paymenttype",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/ent.PaymentType"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.PaymentType"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/paymenttypes/{id}": {
+            "get": {
+                "description": "get paymenttype by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get a paymenttype entity by ID",
+                "operationId": "get-paymenttype",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "PaymentType ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.PaymentType"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "update paymenttype by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Update a paymenttype entity by ID",
+                "operationId": "update-paymenttype",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "PaymentType ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "PaymentType entity",
+                        "name": "paymenttype",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/ent.PaymentType"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.PaymentType"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "get paymenttype by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Delete a paymenttype entity by ID",
+                "operationId": "delete-paymenttype",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "PaymentType ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
         "/personals": {
             "get": {
                 "description": "list personal entities",
@@ -1850,6 +2076,232 @@ var doc = `{
                     {
                         "type": "integer",
                         "description": "Product ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/receipts": {
+            "get": {
+                "description": "list receipt entities",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "List receipt entities",
+                "operationId": "list-receipt",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Limit",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Offset",
+                        "name": "offset",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ent.Receipt"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create receipt",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create receipt",
+                "operationId": "create-receipt",
+                "parameters": [
+                    {
+                        "description": "Receipt entity",
+                        "name": "receipt",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/ent.Receipt"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.Receipt"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/receipts/{id}": {
+            "get": {
+                "description": "get receipt by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get a receipt entity by ID",
+                "operationId": "get-receipt",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Receipt ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.Receipt"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "update receipt by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Update a receipt entity by ID",
+                "operationId": "update-receipt",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "receipt ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Receipt entity",
+                        "name": "receipt",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/ent.Receipt"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.Receipt"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "get receipt by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Delete a receipt entity by ID",
+                "operationId": "delete-receipt",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Receipt ID",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -2442,6 +2894,13 @@ var doc = `{
                     "description": "AdminrepairProduct holds the value of the AdminrepairProduct edge.",
                     "type": "object",
                     "$ref": "#/definitions/ent.Product"
+                },
+                "receipt": {
+                    "description": "Receipt holds the value of the receipt edge.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.Receipt"
+                    }
                 }
             }
         },
@@ -2701,6 +3160,36 @@ var doc = `{
                 }
             }
         },
+        "ent.PaymentType": {
+            "type": "object",
+            "properties": {
+                "Typename": {
+                    "description": "Typename holds the value of the \"Typename\" field.",
+                    "type": "string"
+                },
+                "edges": {
+                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the PaymentTypeQuery when eager-loading is set.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.PaymentTypeEdges"
+                },
+                "id": {
+                    "description": "ID of the ent.",
+                    "type": "integer"
+                }
+            }
+        },
+        "ent.PaymentTypeEdges": {
+            "type": "object",
+            "properties": {
+                "receipt": {
+                    "description": "Receipt holds the value of the receipt edge.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.Receipt"
+                    }
+                }
+            }
+        },
         "ent.Personal": {
             "type": "object",
             "properties": {
@@ -2766,6 +3255,13 @@ var doc = `{
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/ent.Product"
+                    }
+                },
+                "receipt": {
+                    "description": "Receipt holds the value of the receipt edge.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.Receipt"
                     }
                 },
                 "title": {
@@ -2834,6 +3330,56 @@ var doc = `{
                     "description": "Typeproduct holds the value of the typeproduct edge.",
                     "type": "object",
                     "$ref": "#/definitions/ent.Typeproduct"
+                }
+            }
+        },
+        "ent.Receipt": {
+            "type": "object",
+            "properties": {
+                "Cusidentification": {
+                    "description": "Cusidentification holds the value of the \"Cusidentification\" field.",
+                    "type": "string"
+                },
+                "Customername": {
+                    "description": "Customername holds the value of the \"Customername\" field.",
+                    "type": "string"
+                },
+                "Phonenumber": {
+                    "description": "Phonenumber holds the value of the \"Phonenumber\" field.",
+                    "type": "string"
+                },
+                "added_time": {
+                    "description": "AddedTime holds the value of the \"added_time\" field.",
+                    "type": "string"
+                },
+                "edges": {
+                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the ReceiptQuery when eager-loading is set.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.ReceiptEdges"
+                },
+                "id": {
+                    "description": "ID of the ent.",
+                    "type": "integer"
+                }
+            }
+        },
+        "ent.ReceiptEdges": {
+            "type": "object",
+            "properties": {
+                "adminrepair": {
+                    "description": "Adminrepair holds the value of the adminrepair edge.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.Adminrepair"
+                },
+                "paymenttype": {
+                    "description": "Paymenttype holds the value of the paymenttype edge.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.PaymentType"
+                },
+                "personal": {
+                    "description": "Personal holds the value of the personal edge.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.Personal"
                 }
             }
         },
@@ -2930,7 +3476,6 @@ var doc = `{
         "OAuth2Application": {
             "type": "oauth2",
             "flow": "application",
-            "authorizationUrl": "",
             "tokenUrl": "https://example.com/oauth/token",
             "scopes": {
                 "admin": " Grants read and write access to administrative information",
@@ -2949,7 +3494,6 @@ var doc = `{
         "OAuth2Password": {
             "type": "oauth2",
             "flow": "password",
-            "authorizationUrl": "",
             "tokenUrl": "https://example.com/oauth/token",
             "scopes": {
                 "admin": " Grants read and write access to administrative information",

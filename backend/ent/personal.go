@@ -48,9 +48,11 @@ type PersonalEdges struct {
 	Fix []*Fix
 	// Personal holds the value of the personal edge.
 	Personal []*Adminrepair
+	// Receipt holds the value of the receipt edge.
+	Receipt []*Receipt
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [7]bool
+	loadedTypes [8]bool
 }
 
 // CustomerOrErr returns the Customer value or an error if the edge
@@ -129,6 +131,15 @@ func (e PersonalEdges) PersonalOrErr() ([]*Adminrepair, error) {
 		return e.Personal, nil
 	}
 	return nil, &NotLoadedError{edge: "personal"}
+}
+
+// ReceiptOrErr returns the Receipt value or an error if the edge
+// was not loaded in eager-loading.
+func (e PersonalEdges) ReceiptOrErr() ([]*Receipt, error) {
+	if e.loadedTypes[7] {
+		return e.Receipt, nil
+	}
+	return nil, &NotLoadedError{edge: "receipt"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -234,6 +245,11 @@ func (pe *Personal) QueryFix() *FixQuery {
 // QueryPersonal queries the personal edge of the Personal.
 func (pe *Personal) QueryPersonal() *AdminrepairQuery {
 	return (&PersonalClient{config: pe.config}).QueryPersonal(pe)
+}
+
+// QueryReceipt queries the receipt edge of the Personal.
+func (pe *Personal) QueryReceipt() *ReceiptQuery {
+	return (&PersonalClient{config: pe.config}).QueryReceipt(pe)
 }
 
 // Update returns a builder for updating this Personal.

@@ -11,6 +11,9 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
+	"github.com/tanapon395/playlist-video/ent/adminrepair"
+	"github.com/tanapon395/playlist-video/ent/paymenttype"
+	"github.com/tanapon395/playlist-video/ent/personal"
 	"github.com/tanapon395/playlist-video/ent/predicate"
 	"github.com/tanapon395/playlist-video/ent/receipt"
 )
@@ -23,6 +26,11 @@ type ReceiptQuery struct {
 	order      []OrderFunc
 	unique     []string
 	predicates []predicate.Receipt
+	// eager-loading edges.
+	withPaymenttype *PaymentTypeQuery
+	withAdminrepair *AdminrepairQuery
+	withPersonal    *PersonalQuery
+	withFKs         bool
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -50,6 +58,60 @@ func (rq *ReceiptQuery) Offset(offset int) *ReceiptQuery {
 func (rq *ReceiptQuery) Order(o ...OrderFunc) *ReceiptQuery {
 	rq.order = append(rq.order, o...)
 	return rq
+}
+
+// QueryPaymenttype chains the current query on the paymenttype edge.
+func (rq *ReceiptQuery) QueryPaymenttype() *PaymentTypeQuery {
+	query := &PaymentTypeQuery{config: rq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := rq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(receipt.Table, receipt.FieldID, rq.sqlQuery()),
+			sqlgraph.To(paymenttype.Table, paymenttype.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, receipt.PaymenttypeTable, receipt.PaymenttypeColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(rq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryAdminrepair chains the current query on the adminrepair edge.
+func (rq *ReceiptQuery) QueryAdminrepair() *AdminrepairQuery {
+	query := &AdminrepairQuery{config: rq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := rq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(receipt.Table, receipt.FieldID, rq.sqlQuery()),
+			sqlgraph.To(adminrepair.Table, adminrepair.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, receipt.AdminrepairTable, receipt.AdminrepairColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(rq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryPersonal chains the current query on the personal edge.
+func (rq *ReceiptQuery) QueryPersonal() *PersonalQuery {
+	query := &PersonalQuery{config: rq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := rq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(receipt.Table, receipt.FieldID, rq.sqlQuery()),
+			sqlgraph.To(personal.Table, personal.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, receipt.PersonalTable, receipt.PersonalColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(rq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
 }
 
 // First returns the first Receipt entity in the query. Returns *NotFoundError when no receipt was found.
@@ -231,8 +293,54 @@ func (rq *ReceiptQuery) Clone() *ReceiptQuery {
 	}
 }
 
+//  WithPaymenttype tells the query-builder to eager-loads the nodes that are connected to
+// the "paymenttype" edge. The optional arguments used to configure the query builder of the edge.
+func (rq *ReceiptQuery) WithPaymenttype(opts ...func(*PaymentTypeQuery)) *ReceiptQuery {
+	query := &PaymentTypeQuery{config: rq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	rq.withPaymenttype = query
+	return rq
+}
+
+//  WithAdminrepair tells the query-builder to eager-loads the nodes that are connected to
+// the "adminrepair" edge. The optional arguments used to configure the query builder of the edge.
+func (rq *ReceiptQuery) WithAdminrepair(opts ...func(*AdminrepairQuery)) *ReceiptQuery {
+	query := &AdminrepairQuery{config: rq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	rq.withAdminrepair = query
+	return rq
+}
+
+//  WithPersonal tells the query-builder to eager-loads the nodes that are connected to
+// the "personal" edge. The optional arguments used to configure the query builder of the edge.
+func (rq *ReceiptQuery) WithPersonal(opts ...func(*PersonalQuery)) *ReceiptQuery {
+	query := &PersonalQuery{config: rq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	rq.withPersonal = query
+	return rq
+}
+
 // GroupBy used to group vertices by one or more fields/columns.
 // It is often used with aggregate functions, like: count, max, mean, min, sum.
+//
+// Example:
+//
+//	var v []struct {
+//		Cusidentification string `json:"Cusidentification,omitempty"`
+//		Count int `json:"count,omitempty"`
+//	}
+//
+//	client.Receipt.Query().
+//		GroupBy(receipt.FieldCusidentification).
+//		Aggregate(ent.Count()).
+//		Scan(ctx, &v)
+//
 func (rq *ReceiptQuery) GroupBy(field string, fields ...string) *ReceiptGroupBy {
 	group := &ReceiptGroupBy{config: rq.config}
 	group.fields = append([]string{field}, fields...)
@@ -246,6 +354,17 @@ func (rq *ReceiptQuery) GroupBy(field string, fields ...string) *ReceiptGroupBy 
 }
 
 // Select one or more fields from the given query.
+//
+// Example:
+//
+//	var v []struct {
+//		Cusidentification string `json:"Cusidentification,omitempty"`
+//	}
+//
+//	client.Receipt.Query().
+//		Select(receipt.FieldCusidentification).
+//		Scan(ctx, &v)
+//
 func (rq *ReceiptQuery) Select(field string, fields ...string) *ReceiptSelect {
 	selector := &ReceiptSelect{config: rq.config}
 	selector.fields = append([]string{field}, fields...)
@@ -271,13 +390,28 @@ func (rq *ReceiptQuery) prepareQuery(ctx context.Context) error {
 
 func (rq *ReceiptQuery) sqlAll(ctx context.Context) ([]*Receipt, error) {
 	var (
-		nodes = []*Receipt{}
-		_spec = rq.querySpec()
+		nodes       = []*Receipt{}
+		withFKs     = rq.withFKs
+		_spec       = rq.querySpec()
+		loadedTypes = [3]bool{
+			rq.withPaymenttype != nil,
+			rq.withAdminrepair != nil,
+			rq.withPersonal != nil,
+		}
 	)
+	if rq.withPaymenttype != nil || rq.withAdminrepair != nil || rq.withPersonal != nil {
+		withFKs = true
+	}
+	if withFKs {
+		_spec.Node.Columns = append(_spec.Node.Columns, receipt.ForeignKeys...)
+	}
 	_spec.ScanValues = func() []interface{} {
 		node := &Receipt{config: rq.config}
 		nodes = append(nodes, node)
 		values := node.scanValues()
+		if withFKs {
+			values = append(values, node.fkValues()...)
+		}
 		return values
 	}
 	_spec.Assign = func(values ...interface{}) error {
@@ -285,6 +419,7 @@ func (rq *ReceiptQuery) sqlAll(ctx context.Context) ([]*Receipt, error) {
 			return fmt.Errorf("ent: Assign called without calling ScanValues")
 		}
 		node := nodes[len(nodes)-1]
+		node.Edges.loadedTypes = loadedTypes
 		return node.assignValues(values...)
 	}
 	if err := sqlgraph.QueryNodes(ctx, rq.driver, _spec); err != nil {
@@ -293,6 +428,82 @@ func (rq *ReceiptQuery) sqlAll(ctx context.Context) ([]*Receipt, error) {
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
+
+	if query := rq.withPaymenttype; query != nil {
+		ids := make([]int, 0, len(nodes))
+		nodeids := make(map[int][]*Receipt)
+		for i := range nodes {
+			if fk := nodes[i].paymenttype_id; fk != nil {
+				ids = append(ids, *fk)
+				nodeids[*fk] = append(nodeids[*fk], nodes[i])
+			}
+		}
+		query.Where(paymenttype.IDIn(ids...))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			nodes, ok := nodeids[n.ID]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "paymenttype_id" returned %v`, n.ID)
+			}
+			for i := range nodes {
+				nodes[i].Edges.Paymenttype = n
+			}
+		}
+	}
+
+	if query := rq.withAdminrepair; query != nil {
+		ids := make([]int, 0, len(nodes))
+		nodeids := make(map[int][]*Receipt)
+		for i := range nodes {
+			if fk := nodes[i].adminrepair_id; fk != nil {
+				ids = append(ids, *fk)
+				nodeids[*fk] = append(nodeids[*fk], nodes[i])
+			}
+		}
+		query.Where(adminrepair.IDIn(ids...))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			nodes, ok := nodeids[n.ID]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "adminrepair_id" returned %v`, n.ID)
+			}
+			for i := range nodes {
+				nodes[i].Edges.Adminrepair = n
+			}
+		}
+	}
+
+	if query := rq.withPersonal; query != nil {
+		ids := make([]int, 0, len(nodes))
+		nodeids := make(map[int][]*Receipt)
+		for i := range nodes {
+			if fk := nodes[i].personal_id; fk != nil {
+				ids = append(ids, *fk)
+				nodeids[*fk] = append(nodeids[*fk], nodes[i])
+			}
+		}
+		query.Where(personal.IDIn(ids...))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			nodes, ok := nodeids[n.ID]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "personal_id" returned %v`, n.ID)
+			}
+			for i := range nodes {
+				nodes[i].Edges.Personal = n
+			}
+		}
+	}
+
 	return nodes, nil
 }
 

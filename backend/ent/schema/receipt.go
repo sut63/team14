@@ -1,6 +1,12 @@
 package schema
 
-import "github.com/facebookincubator/ent"
+import (
+	"time"
+
+	"github.com/facebookincubator/ent"
+	"github.com/facebookincubator/ent/schema/edge"
+	"github.com/facebookincubator/ent/schema/field"
+)
 
 // Receipt holds the schema definition for the Receipt entity.
 type Receipt struct {
@@ -9,10 +15,20 @@ type Receipt struct {
 
 // Fields of the Receipt.
 func (Receipt) Fields() []ent.Field {
-	return nil
+	return []ent.Field{
+		field.String("Cusidentification").NotEmpty(),
+		field.String("Customername").NotEmpty(),
+		field.String("Phonenumber").NotEmpty(),
+		field.Time("added_time").
+			Default(time.Now),
+	}
 }
 
 // Edges of the Receipt.
 func (Receipt) Edges() []ent.Edge {
-	return nil
+	return []ent.Edge{
+		edge.From("paymenttype", PaymentType.Type).Ref("receipt").Unique(),
+		edge.From("adminrepair", Adminrepair.Type).Ref("receipt").Unique(),
+		edge.From("personal", Personal.Type).Ref("receipt").Unique(),
+	}
 }

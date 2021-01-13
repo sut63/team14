@@ -21,6 +21,7 @@ func (Adminrepair) Fields() []ent.Field {
 // Edges of the Adminrepair.
 func (Adminrepair) Edges() []ent.Edge {
 	return []ent.Edge{
+		edge.To("receipt", Receipt.Type).StorageKey(edge.Column("adminrepair_id")),
 		edge.From("AdminrepairPersonal", Personal.Type).Ref("personal").Unique(),
 		edge.From("AdminrepairFix", Fix.Type).Ref("fix").Unique(),
 		edge.From("AdminrepairProduct", Product.Type).Ref("product").Unique(),

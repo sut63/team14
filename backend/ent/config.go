@@ -31,6 +31,7 @@ type hooks struct {
 	Fix         []ent.Hook
 	Fixcomtype  []ent.Hook
 	Gender      []ent.Hook
+	PaymentType []ent.Hook
 	Personal    []ent.Hook
 	Product     []ent.Hook
 	Receipt     []ent.Hook

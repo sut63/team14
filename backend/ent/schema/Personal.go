@@ -30,5 +30,6 @@ func (Personal) Edges() []ent.Edge {
 		edge.To("product", Product.Type).StorageKey(edge.Column("Personal")),
 		edge.To("fix", Fix.Type).StorageKey(edge.Column("personal_id")),
 		edge.To("personal", Adminrepair.Type).StorageKey(edge.Column("personal_id")),
+		edge.To("receipt", Receipt.Type).StorageKey(edge.Column("personal_id")),
 	}
 }

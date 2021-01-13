@@ -27,6 +27,9 @@ type Fixcomtype func(*sql.Selector)
 // Gender is the predicate function for gender builders.
 type Gender func(*sql.Selector)
 
+// PaymentType is the predicate function for paymenttype builders.
+type PaymentType func(*sql.Selector)
+
 // Personal is the predicate function for personal builders.
 type Personal func(*sql.Selector)
 

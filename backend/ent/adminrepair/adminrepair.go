@@ -10,6 +10,8 @@ const (
 	// FieldEquipmentdamate holds the string denoting the equipmentdamate field in the database.
 	FieldEquipmentdamate = "equipmentdamate"
 
+	// EdgeReceipt holds the string denoting the receipt edge name in mutations.
+	EdgeReceipt = "receipt"
 	// EdgeAdminrepairPersonal holds the string denoting the adminrepairpersonal edge name in mutations.
 	EdgeAdminrepairPersonal = "AdminrepairPersonal"
 	// EdgeAdminrepairFix holds the string denoting the adminrepairfix edge name in mutations.
@@ -19,6 +21,13 @@ const (
 
 	// Table holds the table name of the adminrepair in the database.
 	Table = "adminrepairs"
+	// ReceiptTable is the table the holds the receipt relation/edge.
+	ReceiptTable = "receipts"
+	// ReceiptInverseTable is the table name for the Receipt entity.
+	// It exists in this package in order to avoid circular dependency with the "receipt" package.
+	ReceiptInverseTable = "receipts"
+	// ReceiptColumn is the table column denoting the receipt relation/edge.
+	ReceiptColumn = "adminrepair_id"
 	// AdminrepairPersonalTable is the table the holds the AdminrepairPersonal relation/edge.
 	AdminrepairPersonalTable = "adminrepairs"
 	// AdminrepairPersonalInverseTable is the table name for the Personal entity.
