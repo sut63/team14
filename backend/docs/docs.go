@@ -80,6 +80,232 @@ var doc = `{
                 }
             }
         },
+        "/adminrepairs": {
+            "get": {
+                "description": "list adminrepair entities",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "List adminrepair entities",
+                "operationId": "list-adminrepair",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Limit",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Offset",
+                        "name": "offset",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ent.Adminrepair"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create adminrepair",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create adminrepair",
+                "operationId": "create-adminrepair",
+                "parameters": [
+                    {
+                        "description": "Adminrepair entity",
+                        "name": "adminrepair",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/ent.Adminrepair"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.Adminrepair"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/adminrepairs/{id}": {
+            "get": {
+                "description": "get adminrepair by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get a adminrepair entity by ID",
+                "operationId": "get-adminrepair",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Adminrepair ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.Adminrepair"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "update adminrepair by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Update a adminrepair entity by ID",
+                "operationId": "update-adminrepair",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Adminrepair ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Adminrepair entity",
+                        "name": "adminrepair",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/ent.Adminrepair"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.Adminrepair"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "get adminrepair by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Delete a adminrepair entity by ID",
+                "operationId": "delete-adminrepair",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Adminrepair ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
         "/brand/{id}": {
             "delete": {
                 "description": "get brand by ID",
@@ -2181,6 +2407,44 @@ var doc = `{
         "controllers.Title": {
             "type": "object"
         },
+        "ent.Adminrepair": {
+            "type": "object",
+            "properties": {
+                "edges": {
+                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the AdminrepairQuery when eager-loading is set.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.AdminrepairEdges"
+                },
+                "equipmentdamate": {
+                    "description": "Equipmentdamate holds the value of the \"equipmentdamate\" field.",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "ID of the ent.",
+                    "type": "integer"
+                }
+            }
+        },
+        "ent.AdminrepairEdges": {
+            "type": "object",
+            "properties": {
+                "adminrepairFix": {
+                    "description": "AdminrepairFix holds the value of the AdminrepairFix edge.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.Fix"
+                },
+                "adminrepairPersonal": {
+                    "description": "AdminrepairPersonal holds the value of the AdminrepairPersonal edge.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.Personal"
+                },
+                "adminrepairProduct": {
+                    "description": "AdminrepairProduct holds the value of the AdminrepairProduct edge.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.Product"
+                }
+            }
+        },
         "ent.Brand": {
             "type": "object",
             "properties": {
@@ -2351,6 +2615,13 @@ var doc = `{
                     "type": "object",
                     "$ref": "#/definitions/ent.Customer"
                 },
+                "fix": {
+                    "description": "Fix holds the value of the fix edge.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.Adminrepair"
+                    }
+                },
                 "fixcomtype": {
                     "description": "Fixcomtype holds the value of the fixcomtype edge.",
                     "type": "object",
@@ -2483,6 +2754,13 @@ var doc = `{
                     "type": "object",
                     "$ref": "#/definitions/ent.Gender"
                 },
+                "personal": {
+                    "description": "Personal holds the value of the personal edge.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.Adminrepair"
+                    }
+                },
                 "product": {
                     "description": "Product holds the value of the product edge.",
                     "type": "array",
@@ -2544,6 +2822,13 @@ var doc = `{
                     "description": "Personal holds the value of the personal edge.",
                     "type": "object",
                     "$ref": "#/definitions/ent.Personal"
+                },
+                "product": {
+                    "description": "Product holds the value of the product edge.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.Adminrepair"
+                    }
                 },
                 "typeproduct": {
                     "description": "Typeproduct holds the value of the typeproduct edge.",

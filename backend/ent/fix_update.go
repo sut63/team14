@@ -10,6 +10,7 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
+	"github.com/tanapon395/playlist-video/ent/adminrepair"
 	"github.com/tanapon395/playlist-video/ent/brand"
 	"github.com/tanapon395/playlist-video/ent/customer"
 	"github.com/tanapon395/playlist-video/ent/fix"
@@ -54,6 +55,21 @@ func (fu *FixUpdate) SetQueue(s string) *FixUpdate {
 func (fu *FixUpdate) SetDate(t time.Time) *FixUpdate {
 	fu.mutation.SetDate(t)
 	return fu
+}
+
+// AddFixIDs adds the fix edge to Adminrepair by ids.
+func (fu *FixUpdate) AddFixIDs(ids ...int) *FixUpdate {
+	fu.mutation.AddFixIDs(ids...)
+	return fu
+}
+
+// AddFix adds the fix edges to Adminrepair.
+func (fu *FixUpdate) AddFix(a ...*Adminrepair) *FixUpdate {
+	ids := make([]int, len(a))
+	for i := range a {
+		ids[i] = a[i].ID
+	}
+	return fu.AddFixIDs(ids...)
 }
 
 // SetBrandID sets the brand edge to Brand by id.
@@ -135,6 +151,21 @@ func (fu *FixUpdate) SetFixcomtype(f *Fixcomtype) *FixUpdate {
 // Mutation returns the FixMutation object of the builder.
 func (fu *FixUpdate) Mutation() *FixMutation {
 	return fu.mutation
+}
+
+// RemoveFixIDs removes the fix edge to Adminrepair by ids.
+func (fu *FixUpdate) RemoveFixIDs(ids ...int) *FixUpdate {
+	fu.mutation.RemoveFixIDs(ids...)
+	return fu
+}
+
+// RemoveFix removes fix edges to Adminrepair.
+func (fu *FixUpdate) RemoveFix(a ...*Adminrepair) *FixUpdate {
+	ids := make([]int, len(a))
+	for i := range a {
+		ids[i] = a[i].ID
+	}
+	return fu.RemoveFixIDs(ids...)
 }
 
 // ClearBrand clears the brand edge to Brand.
@@ -273,6 +304,44 @@ func (fu *FixUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Value:  value,
 			Column: fix.FieldDate,
 		})
+	}
+	if nodes := fu.mutation.RemovedFixIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   fix.FixTable,
+			Columns: []string{fix.FixColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: adminrepair.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := fu.mutation.FixIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   fix.FixTable,
+			Columns: []string{fix.FixColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: adminrepair.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	if fu.mutation.BrandCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -456,6 +525,21 @@ func (fuo *FixUpdateOne) SetDate(t time.Time) *FixUpdateOne {
 	return fuo
 }
 
+// AddFixIDs adds the fix edge to Adminrepair by ids.
+func (fuo *FixUpdateOne) AddFixIDs(ids ...int) *FixUpdateOne {
+	fuo.mutation.AddFixIDs(ids...)
+	return fuo
+}
+
+// AddFix adds the fix edges to Adminrepair.
+func (fuo *FixUpdateOne) AddFix(a ...*Adminrepair) *FixUpdateOne {
+	ids := make([]int, len(a))
+	for i := range a {
+		ids[i] = a[i].ID
+	}
+	return fuo.AddFixIDs(ids...)
+}
+
 // SetBrandID sets the brand edge to Brand by id.
 func (fuo *FixUpdateOne) SetBrandID(id int) *FixUpdateOne {
 	fuo.mutation.SetBrandID(id)
@@ -535,6 +619,21 @@ func (fuo *FixUpdateOne) SetFixcomtype(f *Fixcomtype) *FixUpdateOne {
 // Mutation returns the FixMutation object of the builder.
 func (fuo *FixUpdateOne) Mutation() *FixMutation {
 	return fuo.mutation
+}
+
+// RemoveFixIDs removes the fix edge to Adminrepair by ids.
+func (fuo *FixUpdateOne) RemoveFixIDs(ids ...int) *FixUpdateOne {
+	fuo.mutation.RemoveFixIDs(ids...)
+	return fuo
+}
+
+// RemoveFix removes fix edges to Adminrepair.
+func (fuo *FixUpdateOne) RemoveFix(a ...*Adminrepair) *FixUpdateOne {
+	ids := make([]int, len(a))
+	for i := range a {
+		ids[i] = a[i].ID
+	}
+	return fuo.RemoveFixIDs(ids...)
 }
 
 // ClearBrand clears the brand edge to Brand.
@@ -671,6 +770,44 @@ func (fuo *FixUpdateOne) sqlSave(ctx context.Context) (f *Fix, err error) {
 			Value:  value,
 			Column: fix.FieldDate,
 		})
+	}
+	if nodes := fuo.mutation.RemovedFixIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   fix.FixTable,
+			Columns: []string{fix.FixColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: adminrepair.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := fuo.mutation.FixIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   fix.FixTable,
+			Columns: []string{fix.FixColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: adminrepair.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	if fuo.mutation.BrandCleared() {
 		edge := &sqlgraph.EdgeSpec{

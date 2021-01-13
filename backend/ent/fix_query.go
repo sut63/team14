@@ -4,6 +4,7 @@ package ent
 
 import (
 	"context"
+	"database/sql/driver"
 	"errors"
 	"fmt"
 	"math"
@@ -11,6 +12,7 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
+	"github.com/tanapon395/playlist-video/ent/adminrepair"
 	"github.com/tanapon395/playlist-video/ent/brand"
 	"github.com/tanapon395/playlist-video/ent/customer"
 	"github.com/tanapon395/playlist-video/ent/fix"
@@ -28,6 +30,7 @@ type FixQuery struct {
 	unique     []string
 	predicates []predicate.Fix
 	// eager-loading edges.
+	withFix        *AdminrepairQuery
 	withBrand      *BrandQuery
 	withPersonal   *PersonalQuery
 	withCustomer   *CustomerQuery
@@ -60,6 +63,24 @@ func (fq *FixQuery) Offset(offset int) *FixQuery {
 func (fq *FixQuery) Order(o ...OrderFunc) *FixQuery {
 	fq.order = append(fq.order, o...)
 	return fq
+}
+
+// QueryFix chains the current query on the fix edge.
+func (fq *FixQuery) QueryFix() *AdminrepairQuery {
+	query := &AdminrepairQuery{config: fq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := fq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(fix.Table, fix.FieldID, fq.sqlQuery()),
+			sqlgraph.To(adminrepair.Table, adminrepair.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, fix.FixTable, fix.FixColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(fq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
 }
 
 // QueryBrand chains the current query on the brand edge.
@@ -313,6 +334,17 @@ func (fq *FixQuery) Clone() *FixQuery {
 	}
 }
 
+//  WithFix tells the query-builder to eager-loads the nodes that are connected to
+// the "fix" edge. The optional arguments used to configure the query builder of the edge.
+func (fq *FixQuery) WithFix(opts ...func(*AdminrepairQuery)) *FixQuery {
+	query := &AdminrepairQuery{config: fq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	fq.withFix = query
+	return fq
+}
+
 //  WithBrand tells the query-builder to eager-loads the nodes that are connected to
 // the "brand" edge. The optional arguments used to configure the query builder of the edge.
 func (fq *FixQuery) WithBrand(opts ...func(*BrandQuery)) *FixQuery {
@@ -424,7 +456,8 @@ func (fq *FixQuery) sqlAll(ctx context.Context) ([]*Fix, error) {
 		nodes       = []*Fix{}
 		withFKs     = fq.withFKs
 		_spec       = fq.querySpec()
-		loadedTypes = [4]bool{
+		loadedTypes = [5]bool{
+			fq.withFix != nil,
 			fq.withBrand != nil,
 			fq.withPersonal != nil,
 			fq.withCustomer != nil,
@@ -459,6 +492,34 @@ func (fq *FixQuery) sqlAll(ctx context.Context) ([]*Fix, error) {
 	}
 	if len(nodes) == 0 {
 		return nodes, nil
+	}
+
+	if query := fq.withFix; query != nil {
+		fks := make([]driver.Value, 0, len(nodes))
+		nodeids := make(map[int]*Fix)
+		for i := range nodes {
+			fks = append(fks, nodes[i].ID)
+			nodeids[nodes[i].ID] = nodes[i]
+		}
+		query.withFKs = true
+		query.Where(predicate.Adminrepair(func(s *sql.Selector) {
+			s.Where(sql.InValues(fix.FixColumn, fks...))
+		}))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			fk := n.fix_id
+			if fk == nil {
+				return nil, fmt.Errorf(`foreign-key "fix_id" is nil for node %v`, n.ID)
+			}
+			node, ok := nodeids[*fk]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "fix_id" returned %v for node %v`, *fk, n.ID)
+			}
+			node.Edges.Fix = append(node.Edges.Fix, n)
+		}
 	}
 
 	if query := fq.withBrand; query != nil {

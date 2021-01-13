@@ -9,6 +9,7 @@ import (
 
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
+	"github.com/tanapon395/playlist-video/ent/adminrepair"
 	"github.com/tanapon395/playlist-video/ent/customer"
 	"github.com/tanapon395/playlist-video/ent/department"
 	"github.com/tanapon395/playlist-video/ent/fix"
@@ -143,6 +144,21 @@ func (pc *PersonalCreate) AddFix(f ...*Fix) *PersonalCreate {
 		ids[i] = f[i].ID
 	}
 	return pc.AddFixIDs(ids...)
+}
+
+// AddPersonalIDs adds the personal edge to Adminrepair by ids.
+func (pc *PersonalCreate) AddPersonalIDs(ids ...int) *PersonalCreate {
+	pc.mutation.AddPersonalIDs(ids...)
+	return pc
+}
+
+// AddPersonal adds the personal edges to Adminrepair.
+func (pc *PersonalCreate) AddPersonal(a ...*Adminrepair) *PersonalCreate {
+	ids := make([]int, len(a))
+	for i := range a {
+		ids[i] = a[i].ID
+	}
+	return pc.AddPersonalIDs(ids...)
 }
 
 // Mutation returns the PersonalMutation object of the builder.
@@ -351,6 +367,25 @@ func (pc *PersonalCreate) createSpec() (*Personal, *sqlgraph.CreateSpec) {
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: fix.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := pc.mutation.PersonalIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   personal.PersonalTable,
+			Columns: []string{personal.PersonalColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: adminrepair.FieldID,
 				},
 			},
 		}

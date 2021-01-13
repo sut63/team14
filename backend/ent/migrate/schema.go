@@ -11,13 +11,39 @@ var (
 	// AdminrepairsColumns holds the columns for the "adminrepairs" table.
 	AdminrepairsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "equipmentdamate", Type: field.TypeString},
+		{Name: "fix_id", Type: field.TypeInt, Nullable: true},
+		{Name: "personal_id", Type: field.TypeInt, Nullable: true},
+		{Name: "product_id", Type: field.TypeInt, Nullable: true},
 	}
 	// AdminrepairsTable holds the schema information for the "adminrepairs" table.
 	AdminrepairsTable = &schema.Table{
-		Name:        "adminrepairs",
-		Columns:     AdminrepairsColumns,
-		PrimaryKey:  []*schema.Column{AdminrepairsColumns[0]},
-		ForeignKeys: []*schema.ForeignKey{},
+		Name:       "adminrepairs",
+		Columns:    AdminrepairsColumns,
+		PrimaryKey: []*schema.Column{AdminrepairsColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:  "adminrepairs_fixes_fix",
+				Columns: []*schema.Column{AdminrepairsColumns[2]},
+
+				RefColumns: []*schema.Column{FixesColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+			{
+				Symbol:  "adminrepairs_personals_personal",
+				Columns: []*schema.Column{AdminrepairsColumns[3]},
+
+				RefColumns: []*schema.Column{PersonalsColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+			{
+				Symbol:  "adminrepairs_products_product",
+				Columns: []*schema.Column{AdminrepairsColumns[4]},
+
+				RefColumns: []*schema.Column{ProductsColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+		},
 	}
 	// BrandsColumns holds the columns for the "brands" table.
 	BrandsColumns = []*schema.Column{
@@ -293,6 +319,9 @@ var (
 )
 
 func init() {
+	AdminrepairsTable.ForeignKeys[0].RefTable = FixesTable
+	AdminrepairsTable.ForeignKeys[1].RefTable = PersonalsTable
+	AdminrepairsTable.ForeignKeys[2].RefTable = ProductsTable
 	CustomersTable.ForeignKeys[0].RefTable = DepartmentsTable
 	CustomersTable.ForeignKeys[1].RefTable = GendersTable
 	CustomersTable.ForeignKeys[2].RefTable = PersonalsTable

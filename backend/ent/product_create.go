@@ -9,6 +9,7 @@ import (
 
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
+	"github.com/tanapon395/playlist-video/ent/adminrepair"
 	"github.com/tanapon395/playlist-video/ent/brand"
 	"github.com/tanapon395/playlist-video/ent/personal"
 	"github.com/tanapon395/playlist-video/ent/product"
@@ -38,6 +39,21 @@ func (pc *ProductCreate) SetNumberofproduct(s string) *ProductCreate {
 func (pc *ProductCreate) SetPrice(s string) *ProductCreate {
 	pc.mutation.SetPrice(s)
 	return pc
+}
+
+// AddProductIDs adds the product edge to Adminrepair by ids.
+func (pc *ProductCreate) AddProductIDs(ids ...int) *ProductCreate {
+	pc.mutation.AddProductIDs(ids...)
+	return pc
+}
+
+// AddProduct adds the product edges to Adminrepair.
+func (pc *ProductCreate) AddProduct(a ...*Adminrepair) *ProductCreate {
+	ids := make([]int, len(a))
+	for i := range a {
+		ids[i] = a[i].ID
+	}
+	return pc.AddProductIDs(ids...)
 }
 
 // SetBrandID sets the brand edge to Brand by id.
@@ -211,6 +227,25 @@ func (pc *ProductCreate) createSpec() (*Product, *sqlgraph.CreateSpec) {
 			Column: product.FieldPrice,
 		})
 		pr.Price = value
+	}
+	if nodes := pc.mutation.ProductIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   product.ProductTable,
+			Columns: []string{product.ProductColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: adminrepair.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
 	}
 	if nodes := pc.mutation.BrandIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

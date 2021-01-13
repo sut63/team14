@@ -3,6 +3,7 @@
 package ent
 
 import (
+	"github.com/tanapon395/playlist-video/ent/adminrepair"
 	"github.com/tanapon395/playlist-video/ent/fix"
 	"github.com/tanapon395/playlist-video/ent/product"
 	"github.com/tanapon395/playlist-video/ent/schema"
@@ -12,6 +13,12 @@ import (
 // code (default values, validators or hooks) and stitches it
 // to their package variables.
 func init() {
+	adminrepairFields := schema.Adminrepair{}.Fields()
+	_ = adminrepairFields
+	// adminrepairDescEquipmentdamate is the schema descriptor for equipmentdamate field.
+	adminrepairDescEquipmentdamate := adminrepairFields[0].Descriptor()
+	// adminrepair.EquipmentdamateValidator is a validator for the "equipmentdamate" field. It is called by the builders before save.
+	adminrepair.EquipmentdamateValidator = adminrepairDescEquipmentdamate.Validators[0].(func(string) error)
 	fixFields := schema.Fix{}.Fields()
 	_ = fixFields
 	// fixDescProductnumber is the schema descriptor for productnumber field.

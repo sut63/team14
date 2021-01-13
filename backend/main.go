@@ -139,6 +139,7 @@ func main() {
 	controllers.NewBrandController(v1, client)
 	controllers.NewFixController(v1, client)
 	controllers.NewFixcomtypeController(v1, client)
+	controllers.NewAdminrepairController(v1, client)
 
 	//Set Title Data
 	titles := []string{"นาย", "นาง", "นางสาว", "ไม่ระบุ"}
@@ -211,7 +212,6 @@ func main() {
 		Fixcomtype: []Fixcomtype{
 			Fixcomtype{"Personal Computer(PC)"},
 			Fixcomtype{"Laptop"},
-			
 		},
 	}
 	for _, ft := range fixcomtypes.Fixcomtype {
@@ -221,7 +221,6 @@ func main() {
 			Save(context.Background())
 	}
 
-	
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	router.Run()
 }

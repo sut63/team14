@@ -46,9 +46,11 @@ type PersonalEdges struct {
 	Product []*Product
 	// Fix holds the value of the fix edge.
 	Fix []*Fix
+	// Personal holds the value of the personal edge.
+	Personal []*Adminrepair
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [6]bool
+	loadedTypes [7]bool
 }
 
 // CustomerOrErr returns the Customer value or an error if the edge
@@ -118,6 +120,15 @@ func (e PersonalEdges) FixOrErr() ([]*Fix, error) {
 		return e.Fix, nil
 	}
 	return nil, &NotLoadedError{edge: "fix"}
+}
+
+// PersonalOrErr returns the Personal value or an error if the edge
+// was not loaded in eager-loading.
+func (e PersonalEdges) PersonalOrErr() ([]*Adminrepair, error) {
+	if e.loadedTypes[6] {
+		return e.Personal, nil
+	}
+	return nil, &NotLoadedError{edge: "personal"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -218,6 +229,11 @@ func (pe *Personal) QueryProduct() *ProductQuery {
 // QueryFix queries the fix edge of the Personal.
 func (pe *Personal) QueryFix() *FixQuery {
 	return (&PersonalClient{config: pe.config}).QueryFix(pe)
+}
+
+// QueryPersonal queries the personal edge of the Personal.
+func (pe *Personal) QueryPersonal() *AdminrepairQuery {
+	return (&PersonalClient{config: pe.config}).QueryPersonal(pe)
 }
 
 // Update returns a builder for updating this Personal.

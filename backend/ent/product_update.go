@@ -9,6 +9,7 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
+	"github.com/tanapon395/playlist-video/ent/adminrepair"
 	"github.com/tanapon395/playlist-video/ent/brand"
 	"github.com/tanapon395/playlist-video/ent/personal"
 	"github.com/tanapon395/playlist-video/ent/predicate"
@@ -46,6 +47,21 @@ func (pu *ProductUpdate) SetNumberofproduct(s string) *ProductUpdate {
 func (pu *ProductUpdate) SetPrice(s string) *ProductUpdate {
 	pu.mutation.SetPrice(s)
 	return pu
+}
+
+// AddProductIDs adds the product edge to Adminrepair by ids.
+func (pu *ProductUpdate) AddProductIDs(ids ...int) *ProductUpdate {
+	pu.mutation.AddProductIDs(ids...)
+	return pu
+}
+
+// AddProduct adds the product edges to Adminrepair.
+func (pu *ProductUpdate) AddProduct(a ...*Adminrepair) *ProductUpdate {
+	ids := make([]int, len(a))
+	for i := range a {
+		ids[i] = a[i].ID
+	}
+	return pu.AddProductIDs(ids...)
 }
 
 // SetBrandID sets the brand edge to Brand by id.
@@ -108,6 +124,21 @@ func (pu *ProductUpdate) SetPersonal(p *Personal) *ProductUpdate {
 // Mutation returns the ProductMutation object of the builder.
 func (pu *ProductUpdate) Mutation() *ProductMutation {
 	return pu.mutation
+}
+
+// RemoveProductIDs removes the product edge to Adminrepair by ids.
+func (pu *ProductUpdate) RemoveProductIDs(ids ...int) *ProductUpdate {
+	pu.mutation.RemoveProductIDs(ids...)
+	return pu
+}
+
+// RemoveProduct removes product edges to Adminrepair.
+func (pu *ProductUpdate) RemoveProduct(a ...*Adminrepair) *ProductUpdate {
+	ids := make([]int, len(a))
+	for i := range a {
+		ids[i] = a[i].ID
+	}
+	return pu.RemoveProductIDs(ids...)
 }
 
 // ClearBrand clears the brand edge to Brand.
@@ -233,6 +264,44 @@ func (pu *ProductUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Value:  value,
 			Column: product.FieldPrice,
 		})
+	}
+	if nodes := pu.mutation.RemovedProductIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   product.ProductTable,
+			Columns: []string{product.ProductColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: adminrepair.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := pu.mutation.ProductIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   product.ProductTable,
+			Columns: []string{product.ProductColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: adminrepair.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	if pu.mutation.BrandCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -375,6 +444,21 @@ func (puo *ProductUpdateOne) SetPrice(s string) *ProductUpdateOne {
 	return puo
 }
 
+// AddProductIDs adds the product edge to Adminrepair by ids.
+func (puo *ProductUpdateOne) AddProductIDs(ids ...int) *ProductUpdateOne {
+	puo.mutation.AddProductIDs(ids...)
+	return puo
+}
+
+// AddProduct adds the product edges to Adminrepair.
+func (puo *ProductUpdateOne) AddProduct(a ...*Adminrepair) *ProductUpdateOne {
+	ids := make([]int, len(a))
+	for i := range a {
+		ids[i] = a[i].ID
+	}
+	return puo.AddProductIDs(ids...)
+}
+
 // SetBrandID sets the brand edge to Brand by id.
 func (puo *ProductUpdateOne) SetBrandID(id int) *ProductUpdateOne {
 	puo.mutation.SetBrandID(id)
@@ -435,6 +519,21 @@ func (puo *ProductUpdateOne) SetPersonal(p *Personal) *ProductUpdateOne {
 // Mutation returns the ProductMutation object of the builder.
 func (puo *ProductUpdateOne) Mutation() *ProductMutation {
 	return puo.mutation
+}
+
+// RemoveProductIDs removes the product edge to Adminrepair by ids.
+func (puo *ProductUpdateOne) RemoveProductIDs(ids ...int) *ProductUpdateOne {
+	puo.mutation.RemoveProductIDs(ids...)
+	return puo
+}
+
+// RemoveProduct removes product edges to Adminrepair.
+func (puo *ProductUpdateOne) RemoveProduct(a ...*Adminrepair) *ProductUpdateOne {
+	ids := make([]int, len(a))
+	for i := range a {
+		ids[i] = a[i].ID
+	}
+	return puo.RemoveProductIDs(ids...)
 }
 
 // ClearBrand clears the brand edge to Brand.
@@ -558,6 +657,44 @@ func (puo *ProductUpdateOne) sqlSave(ctx context.Context) (pr *Product, err erro
 			Value:  value,
 			Column: product.FieldPrice,
 		})
+	}
+	if nodes := puo.mutation.RemovedProductIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   product.ProductTable,
+			Columns: []string{product.ProductColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: adminrepair.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := puo.mutation.ProductIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   product.ProductTable,
+			Columns: []string{product.ProductColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: adminrepair.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	if puo.mutation.BrandCleared() {
 		edge := &sqlgraph.EdgeSpec{

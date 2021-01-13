@@ -39,6 +39,8 @@ type Fix struct {
 
 // FixEdges holds the relations/edges for other nodes in the graph.
 type FixEdges struct {
+	// Fix holds the value of the fix edge.
+	Fix []*Adminrepair
 	// Brand holds the value of the brand edge.
 	Brand *Brand
 	// Personal holds the value of the personal edge.
@@ -49,13 +51,22 @@ type FixEdges struct {
 	Fixcomtype *Fixcomtype
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [4]bool
+	loadedTypes [5]bool
+}
+
+// FixOrErr returns the Fix value or an error if the edge
+// was not loaded in eager-loading.
+func (e FixEdges) FixOrErr() ([]*Adminrepair, error) {
+	if e.loadedTypes[0] {
+		return e.Fix, nil
+	}
+	return nil, &NotLoadedError{edge: "fix"}
 }
 
 // BrandOrErr returns the Brand value or an error if the edge
 // was not loaded in eager-loading, or loaded but was not found.
 func (e FixEdges) BrandOrErr() (*Brand, error) {
-	if e.loadedTypes[0] {
+	if e.loadedTypes[1] {
 		if e.Brand == nil {
 			// The edge brand was loaded in eager-loading,
 			// but was not found.
@@ -69,7 +80,7 @@ func (e FixEdges) BrandOrErr() (*Brand, error) {
 // PersonalOrErr returns the Personal value or an error if the edge
 // was not loaded in eager-loading, or loaded but was not found.
 func (e FixEdges) PersonalOrErr() (*Personal, error) {
-	if e.loadedTypes[1] {
+	if e.loadedTypes[2] {
 		if e.Personal == nil {
 			// The edge personal was loaded in eager-loading,
 			// but was not found.
@@ -83,7 +94,7 @@ func (e FixEdges) PersonalOrErr() (*Personal, error) {
 // CustomerOrErr returns the Customer value or an error if the edge
 // was not loaded in eager-loading, or loaded but was not found.
 func (e FixEdges) CustomerOrErr() (*Customer, error) {
-	if e.loadedTypes[2] {
+	if e.loadedTypes[3] {
 		if e.Customer == nil {
 			// The edge customer was loaded in eager-loading,
 			// but was not found.
@@ -97,7 +108,7 @@ func (e FixEdges) CustomerOrErr() (*Customer, error) {
 // FixcomtypeOrErr returns the Fixcomtype value or an error if the edge
 // was not loaded in eager-loading, or loaded but was not found.
 func (e FixEdges) FixcomtypeOrErr() (*Fixcomtype, error) {
-	if e.loadedTypes[3] {
+	if e.loadedTypes[4] {
 		if e.Fixcomtype == nil {
 			// The edge fixcomtype was loaded in eager-loading,
 			// but was not found.
@@ -189,6 +200,11 @@ func (f *Fix) assignValues(values ...interface{}) error {
 		}
 	}
 	return nil
+}
+
+// QueryFix queries the fix edge of the Fix.
+func (f *Fix) QueryFix() *AdminrepairQuery {
+	return (&FixClient{config: f.config}).QueryFix(f)
 }
 
 // QueryBrand queries the brand edge of the Fix.

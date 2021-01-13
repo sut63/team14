@@ -12,7 +12,10 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
 	"github.com/tanapon395/playlist-video/ent/adminrepair"
+	"github.com/tanapon395/playlist-video/ent/fix"
+	"github.com/tanapon395/playlist-video/ent/personal"
 	"github.com/tanapon395/playlist-video/ent/predicate"
+	"github.com/tanapon395/playlist-video/ent/product"
 )
 
 // AdminrepairQuery is the builder for querying Adminrepair entities.
@@ -23,6 +26,11 @@ type AdminrepairQuery struct {
 	order      []OrderFunc
 	unique     []string
 	predicates []predicate.Adminrepair
+	// eager-loading edges.
+	withAdminrepairPersonal *PersonalQuery
+	withAdminrepairFix      *FixQuery
+	withAdminrepairProduct  *ProductQuery
+	withFKs                 bool
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -50,6 +58,60 @@ func (aq *AdminrepairQuery) Offset(offset int) *AdminrepairQuery {
 func (aq *AdminrepairQuery) Order(o ...OrderFunc) *AdminrepairQuery {
 	aq.order = append(aq.order, o...)
 	return aq
+}
+
+// QueryAdminrepairPersonal chains the current query on the AdminrepairPersonal edge.
+func (aq *AdminrepairQuery) QueryAdminrepairPersonal() *PersonalQuery {
+	query := &PersonalQuery{config: aq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := aq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(adminrepair.Table, adminrepair.FieldID, aq.sqlQuery()),
+			sqlgraph.To(personal.Table, personal.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, adminrepair.AdminrepairPersonalTable, adminrepair.AdminrepairPersonalColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(aq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryAdminrepairFix chains the current query on the AdminrepairFix edge.
+func (aq *AdminrepairQuery) QueryAdminrepairFix() *FixQuery {
+	query := &FixQuery{config: aq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := aq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(adminrepair.Table, adminrepair.FieldID, aq.sqlQuery()),
+			sqlgraph.To(fix.Table, fix.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, adminrepair.AdminrepairFixTable, adminrepair.AdminrepairFixColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(aq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryAdminrepairProduct chains the current query on the AdminrepairProduct edge.
+func (aq *AdminrepairQuery) QueryAdminrepairProduct() *ProductQuery {
+	query := &ProductQuery{config: aq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := aq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(adminrepair.Table, adminrepair.FieldID, aq.sqlQuery()),
+			sqlgraph.To(product.Table, product.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, adminrepair.AdminrepairProductTable, adminrepair.AdminrepairProductColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(aq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
 }
 
 // First returns the first Adminrepair entity in the query. Returns *NotFoundError when no adminrepair was found.
@@ -231,8 +293,54 @@ func (aq *AdminrepairQuery) Clone() *AdminrepairQuery {
 	}
 }
 
+//  WithAdminrepairPersonal tells the query-builder to eager-loads the nodes that are connected to
+// the "AdminrepairPersonal" edge. The optional arguments used to configure the query builder of the edge.
+func (aq *AdminrepairQuery) WithAdminrepairPersonal(opts ...func(*PersonalQuery)) *AdminrepairQuery {
+	query := &PersonalQuery{config: aq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	aq.withAdminrepairPersonal = query
+	return aq
+}
+
+//  WithAdminrepairFix tells the query-builder to eager-loads the nodes that are connected to
+// the "AdminrepairFix" edge. The optional arguments used to configure the query builder of the edge.
+func (aq *AdminrepairQuery) WithAdminrepairFix(opts ...func(*FixQuery)) *AdminrepairQuery {
+	query := &FixQuery{config: aq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	aq.withAdminrepairFix = query
+	return aq
+}
+
+//  WithAdminrepairProduct tells the query-builder to eager-loads the nodes that are connected to
+// the "AdminrepairProduct" edge. The optional arguments used to configure the query builder of the edge.
+func (aq *AdminrepairQuery) WithAdminrepairProduct(opts ...func(*ProductQuery)) *AdminrepairQuery {
+	query := &ProductQuery{config: aq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	aq.withAdminrepairProduct = query
+	return aq
+}
+
 // GroupBy used to group vertices by one or more fields/columns.
 // It is often used with aggregate functions, like: count, max, mean, min, sum.
+//
+// Example:
+//
+//	var v []struct {
+//		Equipmentdamate string `json:"equipmentdamate,omitempty"`
+//		Count int `json:"count,omitempty"`
+//	}
+//
+//	client.Adminrepair.Query().
+//		GroupBy(adminrepair.FieldEquipmentdamate).
+//		Aggregate(ent.Count()).
+//		Scan(ctx, &v)
+//
 func (aq *AdminrepairQuery) GroupBy(field string, fields ...string) *AdminrepairGroupBy {
 	group := &AdminrepairGroupBy{config: aq.config}
 	group.fields = append([]string{field}, fields...)
@@ -246,6 +354,17 @@ func (aq *AdminrepairQuery) GroupBy(field string, fields ...string) *Adminrepair
 }
 
 // Select one or more fields from the given query.
+//
+// Example:
+//
+//	var v []struct {
+//		Equipmentdamate string `json:"equipmentdamate,omitempty"`
+//	}
+//
+//	client.Adminrepair.Query().
+//		Select(adminrepair.FieldEquipmentdamate).
+//		Scan(ctx, &v)
+//
 func (aq *AdminrepairQuery) Select(field string, fields ...string) *AdminrepairSelect {
 	selector := &AdminrepairSelect{config: aq.config}
 	selector.fields = append([]string{field}, fields...)
@@ -271,13 +390,28 @@ func (aq *AdminrepairQuery) prepareQuery(ctx context.Context) error {
 
 func (aq *AdminrepairQuery) sqlAll(ctx context.Context) ([]*Adminrepair, error) {
 	var (
-		nodes = []*Adminrepair{}
-		_spec = aq.querySpec()
+		nodes       = []*Adminrepair{}
+		withFKs     = aq.withFKs
+		_spec       = aq.querySpec()
+		loadedTypes = [3]bool{
+			aq.withAdminrepairPersonal != nil,
+			aq.withAdminrepairFix != nil,
+			aq.withAdminrepairProduct != nil,
+		}
 	)
+	if aq.withAdminrepairPersonal != nil || aq.withAdminrepairFix != nil || aq.withAdminrepairProduct != nil {
+		withFKs = true
+	}
+	if withFKs {
+		_spec.Node.Columns = append(_spec.Node.Columns, adminrepair.ForeignKeys...)
+	}
 	_spec.ScanValues = func() []interface{} {
 		node := &Adminrepair{config: aq.config}
 		nodes = append(nodes, node)
 		values := node.scanValues()
+		if withFKs {
+			values = append(values, node.fkValues()...)
+		}
 		return values
 	}
 	_spec.Assign = func(values ...interface{}) error {
@@ -285,6 +419,7 @@ func (aq *AdminrepairQuery) sqlAll(ctx context.Context) ([]*Adminrepair, error) 
 			return fmt.Errorf("ent: Assign called without calling ScanValues")
 		}
 		node := nodes[len(nodes)-1]
+		node.Edges.loadedTypes = loadedTypes
 		return node.assignValues(values...)
 	}
 	if err := sqlgraph.QueryNodes(ctx, aq.driver, _spec); err != nil {
@@ -293,6 +428,82 @@ func (aq *AdminrepairQuery) sqlAll(ctx context.Context) ([]*Adminrepair, error) 
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
+
+	if query := aq.withAdminrepairPersonal; query != nil {
+		ids := make([]int, 0, len(nodes))
+		nodeids := make(map[int][]*Adminrepair)
+		for i := range nodes {
+			if fk := nodes[i].personal_id; fk != nil {
+				ids = append(ids, *fk)
+				nodeids[*fk] = append(nodeids[*fk], nodes[i])
+			}
+		}
+		query.Where(personal.IDIn(ids...))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			nodes, ok := nodeids[n.ID]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "personal_id" returned %v`, n.ID)
+			}
+			for i := range nodes {
+				nodes[i].Edges.AdminrepairPersonal = n
+			}
+		}
+	}
+
+	if query := aq.withAdminrepairFix; query != nil {
+		ids := make([]int, 0, len(nodes))
+		nodeids := make(map[int][]*Adminrepair)
+		for i := range nodes {
+			if fk := nodes[i].fix_id; fk != nil {
+				ids = append(ids, *fk)
+				nodeids[*fk] = append(nodeids[*fk], nodes[i])
+			}
+		}
+		query.Where(fix.IDIn(ids...))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			nodes, ok := nodeids[n.ID]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "fix_id" returned %v`, n.ID)
+			}
+			for i := range nodes {
+				nodes[i].Edges.AdminrepairFix = n
+			}
+		}
+	}
+
+	if query := aq.withAdminrepairProduct; query != nil {
+		ids := make([]int, 0, len(nodes))
+		nodeids := make(map[int][]*Adminrepair)
+		for i := range nodes {
+			if fk := nodes[i].product_id; fk != nil {
+				ids = append(ids, *fk)
+				nodeids[*fk] = append(nodeids[*fk], nodes[i])
+			}
+		}
+		query.Where(product.IDIn(ids...))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			nodes, ok := nodeids[n.ID]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "product_id" returned %v`, n.ID)
+			}
+			for i := range nodes {
+				nodes[i].Edges.AdminrepairProduct = n
+			}
+		}
+	}
+
 	return nodes, nil
 }
 

@@ -76,6 +76,38 @@ definitions:
     type: object
   controllers.Title:
     type: object
+  ent.Adminrepair:
+    properties:
+      edges:
+        $ref: '#/definitions/ent.AdminrepairEdges'
+        description: |-
+          Edges holds the relations/edges for other nodes in the graph.
+          The values are being populated by the AdminrepairQuery when eager-loading is set.
+        type: object
+      equipmentdamate:
+        description: Equipmentdamate holds the value of the "equipmentdamate" field.
+        type: string
+      id:
+        description: ID of the ent.
+        type: integer
+    type: object
+  ent.AdminrepairEdges:
+    properties:
+      adminrepairFix:
+        $ref: '#/definitions/ent.Fix'
+        description: AdminrepairFix holds the value of the AdminrepairFix edge.
+        type: object
+      adminrepairPersonal:
+        $ref: '#/definitions/ent.Personal'
+        description: AdminrepairPersonal holds the value of the AdminrepairPersonal
+          edge.
+        type: object
+      adminrepairProduct:
+        $ref: '#/definitions/ent.Product'
+        description: AdminrepairProduct holds the value of the AdminrepairProduct
+          edge.
+        type: object
+    type: object
   ent.Brand:
     properties:
       Brandname:
@@ -207,6 +239,11 @@ definitions:
         $ref: '#/definitions/ent.Customer'
         description: Customer holds the value of the customer edge.
         type: object
+      fix:
+        description: Fix holds the value of the fix edge.
+        items:
+          $ref: '#/definitions/ent.Adminrepair'
+        type: array
       fixcomtype:
         $ref: '#/definitions/ent.Fixcomtype'
         description: Fixcomtype holds the value of the fixcomtype edge.
@@ -308,6 +345,11 @@ definitions:
         $ref: '#/definitions/ent.Gender'
         description: Gender holds the value of the gender edge.
         type: object
+      personal:
+        description: Personal holds the value of the personal edge.
+        items:
+          $ref: '#/definitions/ent.Adminrepair'
+        type: array
       product:
         description: Product holds the value of the product edge.
         items:
@@ -355,6 +397,11 @@ definitions:
         $ref: '#/definitions/ent.Personal'
         description: Personal holds the value of the personal edge.
         type: object
+      product:
+        description: Product holds the value of the product edge.
+        items:
+          $ref: '#/definitions/ent.Adminrepair'
+        type: array
       typeproduct:
         $ref: '#/definitions/ent.Typeproduct'
         description: Typeproduct holds the value of the typeproduct edge.
@@ -459,6 +506,157 @@ paths:
           schema:
             $ref: '#/definitions/gin.H'
       summary: List fixcomtype entities
+  /adminrepairs:
+    get:
+      description: list adminrepair entities
+      operationId: list-adminrepair
+      parameters:
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      - description: Offset
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/ent.Adminrepair'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: List adminrepair entities
+    post:
+      consumes:
+      - application/json
+      description: Create adminrepair
+      operationId: create-adminrepair
+      parameters:
+      - description: Adminrepair entity
+        in: body
+        name: adminrepair
+        required: true
+        schema:
+          $ref: '#/definitions/ent.Adminrepair'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.Adminrepair'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Create adminrepair
+  /adminrepairs/{id}:
+    delete:
+      description: get adminrepair by ID
+      operationId: delete-adminrepair
+      parameters:
+      - description: Adminrepair ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Delete a adminrepair entity by ID
+    get:
+      description: get adminrepair by ID
+      operationId: get-adminrepair
+      parameters:
+      - description: Adminrepair ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.Adminrepair'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Get a adminrepair entity by ID
+    put:
+      consumes:
+      - application/json
+      description: update adminrepair by ID
+      operationId: update-adminrepair
+      parameters:
+      - description: Adminrepair ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Adminrepair entity
+        in: body
+        name: adminrepair
+        required: true
+        schema:
+          $ref: '#/definitions/ent.Adminrepair'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.Adminrepair'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Update a adminrepair entity by ID
   /brand/{id}:
     delete:
       description: get brand by ID

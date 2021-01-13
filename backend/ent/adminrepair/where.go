@@ -4,6 +4,7 @@ package adminrepair
 
 import (
 	"github.com/facebookincubator/ent/dialect/sql"
+	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/tanapon395/playlist-video/ent/predicate"
 )
 
@@ -87,6 +88,208 @@ func IDLT(id int) predicate.Adminrepair {
 func IDLTE(id int) predicate.Adminrepair {
 	return predicate.Adminrepair(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldID), id))
+	})
+}
+
+// Equipmentdamate applies equality check predicate on the "equipmentdamate" field. It's identical to EquipmentdamateEQ.
+func Equipmentdamate(v string) predicate.Adminrepair {
+	return predicate.Adminrepair(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldEquipmentdamate), v))
+	})
+}
+
+// EquipmentdamateEQ applies the EQ predicate on the "equipmentdamate" field.
+func EquipmentdamateEQ(v string) predicate.Adminrepair {
+	return predicate.Adminrepair(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldEquipmentdamate), v))
+	})
+}
+
+// EquipmentdamateNEQ applies the NEQ predicate on the "equipmentdamate" field.
+func EquipmentdamateNEQ(v string) predicate.Adminrepair {
+	return predicate.Adminrepair(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldEquipmentdamate), v))
+	})
+}
+
+// EquipmentdamateIn applies the In predicate on the "equipmentdamate" field.
+func EquipmentdamateIn(vs ...string) predicate.Adminrepair {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Adminrepair(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldEquipmentdamate), v...))
+	})
+}
+
+// EquipmentdamateNotIn applies the NotIn predicate on the "equipmentdamate" field.
+func EquipmentdamateNotIn(vs ...string) predicate.Adminrepair {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Adminrepair(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldEquipmentdamate), v...))
+	})
+}
+
+// EquipmentdamateGT applies the GT predicate on the "equipmentdamate" field.
+func EquipmentdamateGT(v string) predicate.Adminrepair {
+	return predicate.Adminrepair(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldEquipmentdamate), v))
+	})
+}
+
+// EquipmentdamateGTE applies the GTE predicate on the "equipmentdamate" field.
+func EquipmentdamateGTE(v string) predicate.Adminrepair {
+	return predicate.Adminrepair(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldEquipmentdamate), v))
+	})
+}
+
+// EquipmentdamateLT applies the LT predicate on the "equipmentdamate" field.
+func EquipmentdamateLT(v string) predicate.Adminrepair {
+	return predicate.Adminrepair(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldEquipmentdamate), v))
+	})
+}
+
+// EquipmentdamateLTE applies the LTE predicate on the "equipmentdamate" field.
+func EquipmentdamateLTE(v string) predicate.Adminrepair {
+	return predicate.Adminrepair(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldEquipmentdamate), v))
+	})
+}
+
+// EquipmentdamateContains applies the Contains predicate on the "equipmentdamate" field.
+func EquipmentdamateContains(v string) predicate.Adminrepair {
+	return predicate.Adminrepair(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldEquipmentdamate), v))
+	})
+}
+
+// EquipmentdamateHasPrefix applies the HasPrefix predicate on the "equipmentdamate" field.
+func EquipmentdamateHasPrefix(v string) predicate.Adminrepair {
+	return predicate.Adminrepair(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldEquipmentdamate), v))
+	})
+}
+
+// EquipmentdamateHasSuffix applies the HasSuffix predicate on the "equipmentdamate" field.
+func EquipmentdamateHasSuffix(v string) predicate.Adminrepair {
+	return predicate.Adminrepair(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldEquipmentdamate), v))
+	})
+}
+
+// EquipmentdamateEqualFold applies the EqualFold predicate on the "equipmentdamate" field.
+func EquipmentdamateEqualFold(v string) predicate.Adminrepair {
+	return predicate.Adminrepair(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldEquipmentdamate), v))
+	})
+}
+
+// EquipmentdamateContainsFold applies the ContainsFold predicate on the "equipmentdamate" field.
+func EquipmentdamateContainsFold(v string) predicate.Adminrepair {
+	return predicate.Adminrepair(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldEquipmentdamate), v))
+	})
+}
+
+// HasAdminrepairPersonal applies the HasEdge predicate on the "AdminrepairPersonal" edge.
+func HasAdminrepairPersonal() predicate.Adminrepair {
+	return predicate.Adminrepair(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(AdminrepairPersonalTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, AdminrepairPersonalTable, AdminrepairPersonalColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasAdminrepairPersonalWith applies the HasEdge predicate on the "AdminrepairPersonal" edge with a given conditions (other predicates).
+func HasAdminrepairPersonalWith(preds ...predicate.Personal) predicate.Adminrepair {
+	return predicate.Adminrepair(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(AdminrepairPersonalInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, AdminrepairPersonalTable, AdminrepairPersonalColumn),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
+// HasAdminrepairFix applies the HasEdge predicate on the "AdminrepairFix" edge.
+func HasAdminrepairFix() predicate.Adminrepair {
+	return predicate.Adminrepair(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(AdminrepairFixTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, AdminrepairFixTable, AdminrepairFixColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasAdminrepairFixWith applies the HasEdge predicate on the "AdminrepairFix" edge with a given conditions (other predicates).
+func HasAdminrepairFixWith(preds ...predicate.Fix) predicate.Adminrepair {
+	return predicate.Adminrepair(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(AdminrepairFixInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, AdminrepairFixTable, AdminrepairFixColumn),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
+// HasAdminrepairProduct applies the HasEdge predicate on the "AdminrepairProduct" edge.
+func HasAdminrepairProduct() predicate.Adminrepair {
+	return predicate.Adminrepair(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(AdminrepairProductTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, AdminrepairProductTable, AdminrepairProductColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasAdminrepairProductWith applies the HasEdge predicate on the "AdminrepairProduct" edge with a given conditions (other predicates).
+func HasAdminrepairProductWith(preds ...predicate.Product) predicate.Adminrepair {
+	return predicate.Adminrepair(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(AdminrepairProductInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, AdminrepairProductTable, AdminrepairProductColumn),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
 	})
 }
 
