@@ -14,6 +14,7 @@ import (
 	"github.com/tanapon395/playlist-video/ent/personal"
 	"github.com/tanapon395/playlist-video/ent/predicate"
 	"github.com/tanapon395/playlist-video/ent/product"
+	"github.com/tanapon395/playlist-video/ent/receipt"
 )
 
 // AdminrepairUpdate is the builder for updating Adminrepair entities.
@@ -34,6 +35,21 @@ func (au *AdminrepairUpdate) Where(ps ...predicate.Adminrepair) *AdminrepairUpda
 func (au *AdminrepairUpdate) SetEquipmentdamate(s string) *AdminrepairUpdate {
 	au.mutation.SetEquipmentdamate(s)
 	return au
+}
+
+// AddReceiptIDs adds the receipt edge to Receipt by ids.
+func (au *AdminrepairUpdate) AddReceiptIDs(ids ...int) *AdminrepairUpdate {
+	au.mutation.AddReceiptIDs(ids...)
+	return au
+}
+
+// AddReceipt adds the receipt edges to Receipt.
+func (au *AdminrepairUpdate) AddReceipt(r ...*Receipt) *AdminrepairUpdate {
+	ids := make([]int, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
+	}
+	return au.AddReceiptIDs(ids...)
 }
 
 // SetAdminrepairPersonalID sets the AdminrepairPersonal edge to Personal by id.
@@ -96,6 +112,21 @@ func (au *AdminrepairUpdate) SetAdminrepairProduct(p *Product) *AdminrepairUpdat
 // Mutation returns the AdminrepairMutation object of the builder.
 func (au *AdminrepairUpdate) Mutation() *AdminrepairMutation {
 	return au.mutation
+}
+
+// RemoveReceiptIDs removes the receipt edge to Receipt by ids.
+func (au *AdminrepairUpdate) RemoveReceiptIDs(ids ...int) *AdminrepairUpdate {
+	au.mutation.RemoveReceiptIDs(ids...)
+	return au
+}
+
+// RemoveReceipt removes receipt edges to Receipt.
+func (au *AdminrepairUpdate) RemoveReceipt(r ...*Receipt) *AdminrepairUpdate {
+	ids := make([]int, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
+	}
+	return au.RemoveReceiptIDs(ids...)
 }
 
 // ClearAdminrepairPersonal clears the AdminrepairPersonal edge to Personal.
@@ -197,6 +228,44 @@ func (au *AdminrepairUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Value:  value,
 			Column: adminrepair.FieldEquipmentdamate,
 		})
+	}
+	if nodes := au.mutation.RemovedReceiptIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   adminrepair.ReceiptTable,
+			Columns: []string{adminrepair.ReceiptColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: receipt.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := au.mutation.ReceiptIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   adminrepair.ReceiptTable,
+			Columns: []string{adminrepair.ReceiptColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: receipt.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	if au.mutation.AdminrepairPersonalCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -327,6 +396,21 @@ func (auo *AdminrepairUpdateOne) SetEquipmentdamate(s string) *AdminrepairUpdate
 	return auo
 }
 
+// AddReceiptIDs adds the receipt edge to Receipt by ids.
+func (auo *AdminrepairUpdateOne) AddReceiptIDs(ids ...int) *AdminrepairUpdateOne {
+	auo.mutation.AddReceiptIDs(ids...)
+	return auo
+}
+
+// AddReceipt adds the receipt edges to Receipt.
+func (auo *AdminrepairUpdateOne) AddReceipt(r ...*Receipt) *AdminrepairUpdateOne {
+	ids := make([]int, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
+	}
+	return auo.AddReceiptIDs(ids...)
+}
+
 // SetAdminrepairPersonalID sets the AdminrepairPersonal edge to Personal by id.
 func (auo *AdminrepairUpdateOne) SetAdminrepairPersonalID(id int) *AdminrepairUpdateOne {
 	auo.mutation.SetAdminrepairPersonalID(id)
@@ -387,6 +471,21 @@ func (auo *AdminrepairUpdateOne) SetAdminrepairProduct(p *Product) *AdminrepairU
 // Mutation returns the AdminrepairMutation object of the builder.
 func (auo *AdminrepairUpdateOne) Mutation() *AdminrepairMutation {
 	return auo.mutation
+}
+
+// RemoveReceiptIDs removes the receipt edge to Receipt by ids.
+func (auo *AdminrepairUpdateOne) RemoveReceiptIDs(ids ...int) *AdminrepairUpdateOne {
+	auo.mutation.RemoveReceiptIDs(ids...)
+	return auo
+}
+
+// RemoveReceipt removes receipt edges to Receipt.
+func (auo *AdminrepairUpdateOne) RemoveReceipt(r ...*Receipt) *AdminrepairUpdateOne {
+	ids := make([]int, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
+	}
+	return auo.RemoveReceiptIDs(ids...)
 }
 
 // ClearAdminrepairPersonal clears the AdminrepairPersonal edge to Personal.
@@ -486,6 +585,44 @@ func (auo *AdminrepairUpdateOne) sqlSave(ctx context.Context) (a *Adminrepair, e
 			Value:  value,
 			Column: adminrepair.FieldEquipmentdamate,
 		})
+	}
+	if nodes := auo.mutation.RemovedReceiptIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   adminrepair.ReceiptTable,
+			Columns: []string{adminrepair.ReceiptColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: receipt.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := auo.mutation.ReceiptIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   adminrepair.ReceiptTable,
+			Columns: []string{adminrepair.ReceiptColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: receipt.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	if auo.mutation.AdminrepairPersonalCleared() {
 		edge := &sqlgraph.EdgeSpec{

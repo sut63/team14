@@ -28,6 +28,8 @@ const (
 	EdgeFix = "fix"
 	// EdgePersonal holds the string denoting the personal edge name in mutations.
 	EdgePersonal = "personal"
+	// EdgeReceipt holds the string denoting the receipt edge name in mutations.
+	EdgeReceipt = "receipt"
 
 	// Table holds the table name of the personal in the database.
 	Table = "personals"
@@ -80,6 +82,13 @@ const (
 	PersonalInverseTable = "adminrepairs"
 	// PersonalColumn is the table column denoting the personal relation/edge.
 	PersonalColumn = "personal_id"
+	// ReceiptTable is the table the holds the receipt relation/edge.
+	ReceiptTable = "receipts"
+	// ReceiptInverseTable is the table name for the Receipt entity.
+	// It exists in this package in order to avoid circular dependency with the "receipt" package.
+	ReceiptInverseTable = "receipts"
+	// ReceiptColumn is the table column denoting the receipt relation/edge.
+	ReceiptColumn = "personal_id"
 )
 
 // Columns holds all SQL columns for personal fields.

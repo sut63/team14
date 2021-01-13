@@ -99,14 +99,17 @@ definitions:
         type: object
       adminrepairPersonal:
         $ref: '#/definitions/ent.Personal'
-        description: AdminrepairPersonal holds the value of the AdminrepairPersonal
-          edge.
+        description: AdminrepairPersonal holds the value of the AdminrepairPersonal edge.
         type: object
       adminrepairProduct:
         $ref: '#/definitions/ent.Product'
-        description: AdminrepairProduct holds the value of the AdminrepairProduct
-          edge.
+        description: AdminrepairProduct holds the value of the AdminrepairProduct edge.
         type: object
+      receipt:
+        description: Receipt holds the value of the receipt edge.
+        items:
+          $ref: '#/definitions/ent.Receipt'
+        type: array
     type: object
   ent.Brand:
     properties:
@@ -304,6 +307,29 @@ definitions:
           $ref: '#/definitions/ent.Personal'
         type: array
     type: object
+  ent.PaymentType:
+    properties:
+      Typename:
+        description: Typename holds the value of the "Typename" field.
+        type: string
+      edges:
+        $ref: '#/definitions/ent.PaymentTypeEdges'
+        description: |-
+          Edges holds the relations/edges for other nodes in the graph.
+          The values are being populated by the PaymentTypeQuery when eager-loading is set.
+        type: object
+      id:
+        description: ID of the ent.
+        type: integer
+    type: object
+  ent.PaymentTypeEdges:
+    properties:
+      receipt:
+        description: Receipt holds the value of the receipt edge.
+        items:
+          $ref: '#/definitions/ent.Receipt'
+        type: array
+    type: object
   ent.Personal:
     properties:
       Email:
@@ -355,6 +381,11 @@ definitions:
         items:
           $ref: '#/definitions/ent.Product'
         type: array
+      receipt:
+        description: Receipt holds the value of the receipt edge.
+        items:
+          $ref: '#/definitions/ent.Receipt'
+        type: array
       title:
         $ref: '#/definitions/ent.Title'
         description: Title holds the value of the title edge.
@@ -405,6 +436,45 @@ definitions:
       typeproduct:
         $ref: '#/definitions/ent.Typeproduct'
         description: Typeproduct holds the value of the typeproduct edge.
+        type: object
+    type: object
+  ent.Receipt:
+    properties:
+      Cusidentification:
+        description: Cusidentification holds the value of the "Cusidentification" field.
+        type: string
+      Customername:
+        description: Customername holds the value of the "Customername" field.
+        type: string
+      Phonenumber:
+        description: Phonenumber holds the value of the "Phonenumber" field.
+        type: string
+      added_time:
+        description: AddedTime holds the value of the "added_time" field.
+        type: string
+      edges:
+        $ref: '#/definitions/ent.ReceiptEdges'
+        description: |-
+          Edges holds the relations/edges for other nodes in the graph.
+          The values are being populated by the ReceiptQuery when eager-loading is set.
+        type: object
+      id:
+        description: ID of the ent.
+        type: integer
+    type: object
+  ent.ReceiptEdges:
+    properties:
+      adminrepair:
+        $ref: '#/definitions/ent.Adminrepair'
+        description: Adminrepair holds the value of the adminrepair edge.
+        type: object
+      paymenttype:
+        $ref: '#/definitions/ent.PaymentType'
+        description: Paymenttype holds the value of the paymenttype edge.
+        type: object
+      personal:
+        $ref: '#/definitions/ent.Personal'
+        description: Personal holds the value of the personal edge.
         type: object
     type: object
   ent.Title:
@@ -1469,6 +1539,157 @@ paths:
           schema:
             $ref: '#/definitions/gin.H'
       summary: Update a gender entity by ID
+  /paymenttypes:
+    get:
+      description: list paymenttype entities
+      operationId: list-paymenttype
+      parameters:
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      - description: Offset
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/ent.PaymentType'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: List paymenttype entities
+    post:
+      consumes:
+      - application/json
+      description: Create paymenttype
+      operationId: create-paymenttype
+      parameters:
+      - description: PaymentType entity
+        in: body
+        name: paymenttype
+        required: true
+        schema:
+          $ref: '#/definitions/ent.PaymentType'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.PaymentType'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Create paymenttype
+  /paymenttypes/{id}:
+    delete:
+      description: get paymenttype by ID
+      operationId: delete-paymenttype
+      parameters:
+      - description: PaymentType ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Delete a paymenttype entity by ID
+    get:
+      description: get paymenttype by ID
+      operationId: get-paymenttype
+      parameters:
+      - description: PaymentType ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.PaymentType'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Get a paymenttype entity by ID
+    put:
+      consumes:
+      - application/json
+      description: update paymenttype by ID
+      operationId: update-paymenttype
+      parameters:
+      - description: PaymentType ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: PaymentType entity
+        in: body
+        name: paymenttype
+        required: true
+        schema:
+          $ref: '#/definitions/ent.PaymentType'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.PaymentType'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Update a paymenttype entity by ID
   /personals:
     get:
       description: list personal entities
@@ -1709,6 +1930,157 @@ paths:
           schema:
             $ref: '#/definitions/gin.H'
       summary: Delete a product entity by ID
+  /receipts:
+    get:
+      description: list receipt entities
+      operationId: list-receipt
+      parameters:
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      - description: Offset
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/ent.Receipt'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: List receipt entities
+    post:
+      consumes:
+      - application/json
+      description: Create receipt
+      operationId: create-receipt
+      parameters:
+      - description: Receipt entity
+        in: body
+        name: receipt
+        required: true
+        schema:
+          $ref: '#/definitions/ent.Receipt'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.Receipt'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Create receipt
+  /receipts/{id}:
+    delete:
+      description: get receipt by ID
+      operationId: delete-receipt
+      parameters:
+      - description: Receipt ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Delete a receipt entity by ID
+    get:
+      description: get receipt by ID
+      operationId: get-receipt
+      parameters:
+      - description: Receipt ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.Receipt'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Get a receipt entity by ID
+    put:
+      consumes:
+      - application/json
+      description: update receipt by ID
+      operationId: update-receipt
+      parameters:
+      - description: receipt ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Receipt entity
+        in: body
+        name: receipt
+        required: true
+        schema:
+          $ref: '#/definitions/ent.Receipt'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.Receipt'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Update a receipt entity by ID
   /titles:
     get:
       description: list title entities
@@ -1994,7 +2366,6 @@ securityDefinitions:
     tokenUrl: https://example.com/oauth/token
     type: oauth2
   OAuth2Application:
-    authorizationUrl: ""
     flow: application
     scopes:
       admin: ' Grants read and write access to administrative information'
@@ -2009,7 +2380,6 @@ securityDefinitions:
       write: ' Grants write access'
     type: oauth2
   OAuth2Password:
-    authorizationUrl: ""
     flow: password
     scopes:
       admin: ' Grants read and write access to administrative information'

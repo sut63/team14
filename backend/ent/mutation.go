@@ -15,8 +15,10 @@ import (
 	"github.com/tanapon395/playlist-video/ent/fix"
 	"github.com/tanapon395/playlist-video/ent/fixcomtype"
 	"github.com/tanapon395/playlist-video/ent/gender"
+	"github.com/tanapon395/playlist-video/ent/paymenttype"
 	"github.com/tanapon395/playlist-video/ent/personal"
 	"github.com/tanapon395/playlist-video/ent/product"
+	"github.com/tanapon395/playlist-video/ent/receipt"
 	"github.com/tanapon395/playlist-video/ent/title"
 	"github.com/tanapon395/playlist-video/ent/typeproduct"
 
@@ -39,6 +41,7 @@ const (
 	TypeFix         = "Fix"
 	TypeFixcomtype  = "Fixcomtype"
 	TypeGender      = "Gender"
+	TypePaymentType = "PaymentType"
 	TypePersonal    = "Personal"
 	TypeProduct     = "Product"
 	TypeReceipt     = "Receipt"
@@ -55,6 +58,8 @@ type AdminrepairMutation struct {
 	id                          *int
 	equipmentdamate             *string
 	clearedFields               map[string]struct{}
+	receipt                     map[int]struct{}
+	removedreceipt              map[int]struct{}
 	_AdminrepairPersonal        *int
 	cleared_AdminrepairPersonal bool
 	_AdminrepairFix             *int
@@ -179,6 +184,48 @@ func (m *AdminrepairMutation) OldEquipmentdamate(ctx context.Context) (v string,
 // ResetEquipmentdamate reset all changes of the "equipmentdamate" field.
 func (m *AdminrepairMutation) ResetEquipmentdamate() {
 	m.equipmentdamate = nil
+}
+
+// AddReceiptIDs adds the receipt edge to Receipt by ids.
+func (m *AdminrepairMutation) AddReceiptIDs(ids ...int) {
+	if m.receipt == nil {
+		m.receipt = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.receipt[ids[i]] = struct{}{}
+	}
+}
+
+// RemoveReceiptIDs removes the receipt edge to Receipt by ids.
+func (m *AdminrepairMutation) RemoveReceiptIDs(ids ...int) {
+	if m.removedreceipt == nil {
+		m.removedreceipt = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.removedreceipt[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedReceipt returns the removed ids of receipt.
+func (m *AdminrepairMutation) RemovedReceiptIDs() (ids []int) {
+	for id := range m.removedreceipt {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ReceiptIDs returns the receipt ids in the mutation.
+func (m *AdminrepairMutation) ReceiptIDs() (ids []int) {
+	for id := range m.receipt {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetReceipt reset all changes of the "receipt" edge.
+func (m *AdminrepairMutation) ResetReceipt() {
+	m.receipt = nil
+	m.removedreceipt = nil
 }
 
 // SetAdminrepairPersonalID sets the AdminrepairPersonal edge to Personal by id.
@@ -413,7 +460,10 @@ func (m *AdminrepairMutation) ResetField(name string) error {
 // AddedEdges returns all edge names that were set/added in this
 // mutation.
 func (m *AdminrepairMutation) AddedEdges() []string {
-	edges := make([]string, 0, 3)
+	edges := make([]string, 0, 4)
+	if m.receipt != nil {
+		edges = append(edges, adminrepair.EdgeReceipt)
+	}
 	if m._AdminrepairPersonal != nil {
 		edges = append(edges, adminrepair.EdgeAdminrepairPersonal)
 	}
@@ -430,6 +480,12 @@ func (m *AdminrepairMutation) AddedEdges() []string {
 // the given edge name.
 func (m *AdminrepairMutation) AddedIDs(name string) []ent.Value {
 	switch name {
+	case adminrepair.EdgeReceipt:
+		ids := make([]ent.Value, 0, len(m.receipt))
+		for id := range m.receipt {
+			ids = append(ids, id)
+		}
+		return ids
 	case adminrepair.EdgeAdminrepairPersonal:
 		if id := m._AdminrepairPersonal; id != nil {
 			return []ent.Value{*id}
@@ -449,7 +505,10 @@ func (m *AdminrepairMutation) AddedIDs(name string) []ent.Value {
 // RemovedEdges returns all edge names that were removed in this
 // mutation.
 func (m *AdminrepairMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 3)
+	edges := make([]string, 0, 4)
+	if m.removedreceipt != nil {
+		edges = append(edges, adminrepair.EdgeReceipt)
+	}
 	return edges
 }
 
@@ -457,6 +516,12 @@ func (m *AdminrepairMutation) RemovedEdges() []string {
 // the given edge name.
 func (m *AdminrepairMutation) RemovedIDs(name string) []ent.Value {
 	switch name {
+	case adminrepair.EdgeReceipt:
+		ids := make([]ent.Value, 0, len(m.removedreceipt))
+		for id := range m.removedreceipt {
+			ids = append(ids, id)
+		}
+		return ids
 	}
 	return nil
 }
@@ -464,7 +529,7 @@ func (m *AdminrepairMutation) RemovedIDs(name string) []ent.Value {
 // ClearedEdges returns all edge names that were cleared in this
 // mutation.
 func (m *AdminrepairMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 3)
+	edges := make([]string, 0, 4)
 	if m.cleared_AdminrepairPersonal {
 		edges = append(edges, adminrepair.EdgeAdminrepairPersonal)
 	}
@@ -513,6 +578,9 @@ func (m *AdminrepairMutation) ClearEdge(name string) error {
 // defined in the schema.
 func (m *AdminrepairMutation) ResetEdge(name string) error {
 	switch name {
+	case adminrepair.EdgeReceipt:
+		m.ResetReceipt()
+		return nil
 	case adminrepair.EdgeAdminrepairPersonal:
 		m.ResetAdminrepairPersonal()
 		return nil
@@ -3617,6 +3685,374 @@ func (m *GenderMutation) ResetEdge(name string) error {
 	return fmt.Errorf("unknown Gender edge %s", name)
 }
 
+// PaymentTypeMutation represents an operation that mutate the PaymentTypes
+// nodes in the graph.
+type PaymentTypeMutation struct {
+	config
+	op             Op
+	typ            string
+	id             *int
+	_Typename      *string
+	clearedFields  map[string]struct{}
+	receipt        map[int]struct{}
+	removedreceipt map[int]struct{}
+	done           bool
+	oldValue       func(context.Context) (*PaymentType, error)
+}
+
+var _ ent.Mutation = (*PaymentTypeMutation)(nil)
+
+// paymenttypeOption allows to manage the mutation configuration using functional options.
+type paymenttypeOption func(*PaymentTypeMutation)
+
+// newPaymentTypeMutation creates new mutation for $n.Name.
+func newPaymentTypeMutation(c config, op Op, opts ...paymenttypeOption) *PaymentTypeMutation {
+	m := &PaymentTypeMutation{
+		config:        c,
+		op:            op,
+		typ:           TypePaymentType,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withPaymentTypeID sets the id field of the mutation.
+func withPaymentTypeID(id int) paymenttypeOption {
+	return func(m *PaymentTypeMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *PaymentType
+		)
+		m.oldValue = func(ctx context.Context) (*PaymentType, error) {
+			once.Do(func() {
+				if m.done {
+					err = fmt.Errorf("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().PaymentType.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withPaymentType sets the old PaymentType of the mutation.
+func withPaymentType(node *PaymentType) paymenttypeOption {
+	return func(m *PaymentTypeMutation) {
+		m.oldValue = func(context.Context) (*PaymentType, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m PaymentTypeMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m PaymentTypeMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, fmt.Errorf("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// ID returns the id value in the mutation. Note that, the id
+// is available only if it was provided to the builder.
+func (m *PaymentTypeMutation) ID() (id int, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// SetTypename sets the Typename field.
+func (m *PaymentTypeMutation) SetTypename(s string) {
+	m._Typename = &s
+}
+
+// Typename returns the Typename value in the mutation.
+func (m *PaymentTypeMutation) Typename() (r string, exists bool) {
+	v := m._Typename
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldTypename returns the old Typename value of the PaymentType.
+// If the PaymentType object wasn't provided to the builder, the object is fetched
+// from the database.
+// An error is returned if the mutation operation is not UpdateOne, or database query fails.
+func (m *PaymentTypeMutation) OldTypename(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldTypename is allowed only on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldTypename requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldTypename: %w", err)
+	}
+	return oldValue.Typename, nil
+}
+
+// ResetTypename reset all changes of the "Typename" field.
+func (m *PaymentTypeMutation) ResetTypename() {
+	m._Typename = nil
+}
+
+// AddReceiptIDs adds the receipt edge to Receipt by ids.
+func (m *PaymentTypeMutation) AddReceiptIDs(ids ...int) {
+	if m.receipt == nil {
+		m.receipt = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.receipt[ids[i]] = struct{}{}
+	}
+}
+
+// RemoveReceiptIDs removes the receipt edge to Receipt by ids.
+func (m *PaymentTypeMutation) RemoveReceiptIDs(ids ...int) {
+	if m.removedreceipt == nil {
+		m.removedreceipt = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.removedreceipt[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedReceipt returns the removed ids of receipt.
+func (m *PaymentTypeMutation) RemovedReceiptIDs() (ids []int) {
+	for id := range m.removedreceipt {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ReceiptIDs returns the receipt ids in the mutation.
+func (m *PaymentTypeMutation) ReceiptIDs() (ids []int) {
+	for id := range m.receipt {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetReceipt reset all changes of the "receipt" edge.
+func (m *PaymentTypeMutation) ResetReceipt() {
+	m.receipt = nil
+	m.removedreceipt = nil
+}
+
+// Op returns the operation name.
+func (m *PaymentTypeMutation) Op() Op {
+	return m.op
+}
+
+// Type returns the node type of this mutation (PaymentType).
+func (m *PaymentTypeMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during
+// this mutation. Note that, in order to get all numeric
+// fields that were in/decremented, call AddedFields().
+func (m *PaymentTypeMutation) Fields() []string {
+	fields := make([]string, 0, 1)
+	if m._Typename != nil {
+		fields = append(fields, paymenttype.FieldTypename)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name.
+// The second boolean value indicates that this field was
+// not set, or was not define in the schema.
+func (m *PaymentTypeMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case paymenttype.FieldTypename:
+		return m.Typename()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database.
+// An error is returned if the mutation operation is not UpdateOne,
+// or the query to the database was failed.
+func (m *PaymentTypeMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case paymenttype.FieldTypename:
+		return m.OldTypename(ctx)
+	}
+	return nil, fmt.Errorf("unknown PaymentType field %s", name)
+}
+
+// SetField sets the value for the given name. It returns an
+// error if the field is not defined in the schema, or if the
+// type mismatch the field type.
+func (m *PaymentTypeMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case paymenttype.FieldTypename:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetTypename(v)
+		return nil
+	}
+	return fmt.Errorf("unknown PaymentType field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented
+// or decremented during this mutation.
+func (m *PaymentTypeMutation) AddedFields() []string {
+	return nil
+}
+
+// AddedField returns the numeric value that was in/decremented
+// from a field with the given name. The second value indicates
+// that this field was not set, or was not define in the schema.
+func (m *PaymentTypeMutation) AddedField(name string) (ent.Value, bool) {
+	return nil, false
+}
+
+// AddField adds the value for the given name. It returns an
+// error if the field is not defined in the schema, or if the
+// type mismatch the field type.
+func (m *PaymentTypeMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	}
+	return fmt.Errorf("unknown PaymentType numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared
+// during this mutation.
+func (m *PaymentTypeMutation) ClearedFields() []string {
+	return nil
+}
+
+// FieldCleared returns a boolean indicates if this field was
+// cleared in this mutation.
+func (m *PaymentTypeMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value for the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *PaymentTypeMutation) ClearField(name string) error {
+	return fmt.Errorf("unknown PaymentType nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation regarding the
+// given field name. It returns an error if the field is not
+// defined in the schema.
+func (m *PaymentTypeMutation) ResetField(name string) error {
+	switch name {
+	case paymenttype.FieldTypename:
+		m.ResetTypename()
+		return nil
+	}
+	return fmt.Errorf("unknown PaymentType field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this
+// mutation.
+func (m *PaymentTypeMutation) AddedEdges() []string {
+	edges := make([]string, 0, 1)
+	if m.receipt != nil {
+		edges = append(edges, paymenttype.EdgeReceipt)
+	}
+	return edges
+}
+
+// AddedIDs returns all ids (to other nodes) that were added for
+// the given edge name.
+func (m *PaymentTypeMutation) AddedIDs(name string) []ent.Value {
+	switch name {
+	case paymenttype.EdgeReceipt:
+		ids := make([]ent.Value, 0, len(m.receipt))
+		for id := range m.receipt {
+			ids = append(ids, id)
+		}
+		return ids
+	}
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this
+// mutation.
+func (m *PaymentTypeMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 1)
+	if m.removedreceipt != nil {
+		edges = append(edges, paymenttype.EdgeReceipt)
+	}
+	return edges
+}
+
+// RemovedIDs returns all ids (to other nodes) that were removed for
+// the given edge name.
+func (m *PaymentTypeMutation) RemovedIDs(name string) []ent.Value {
+	switch name {
+	case paymenttype.EdgeReceipt:
+		ids := make([]ent.Value, 0, len(m.removedreceipt))
+		for id := range m.removedreceipt {
+			ids = append(ids, id)
+		}
+		return ids
+	}
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this
+// mutation.
+func (m *PaymentTypeMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 1)
+	return edges
+}
+
+// EdgeCleared returns a boolean indicates if this edge was
+// cleared in this mutation.
+func (m *PaymentTypeMutation) EdgeCleared(name string) bool {
+	switch name {
+	}
+	return false
+}
+
+// ClearEdge clears the value for the given name. It returns an
+// error if the edge name is not defined in the schema.
+func (m *PaymentTypeMutation) ClearEdge(name string) error {
+	switch name {
+	}
+	return fmt.Errorf("unknown PaymentType unique edge %s", name)
+}
+
+// ResetEdge resets all changes in the mutation regarding the
+// given edge name. It returns an error if the edge is not
+// defined in the schema.
+func (m *PaymentTypeMutation) ResetEdge(name string) error {
+	switch name {
+	case paymenttype.EdgeReceipt:
+		m.ResetReceipt()
+		return nil
+	}
+	return fmt.Errorf("unknown PaymentType edge %s", name)
+}
+
 // PersonalMutation represents an operation that mutate the Personals
 // nodes in the graph.
 type PersonalMutation struct {
@@ -3642,6 +4078,8 @@ type PersonalMutation struct {
 	removedfix        map[int]struct{}
 	personal          map[int]struct{}
 	removedpersonal   map[int]struct{}
+	receipt           map[int]struct{}
+	removedreceipt    map[int]struct{}
 	done              bool
 	oldValue          func(context.Context) (*Personal, error)
 }
@@ -4121,6 +4559,48 @@ func (m *PersonalMutation) ResetPersonal() {
 	m.removedpersonal = nil
 }
 
+// AddReceiptIDs adds the receipt edge to Receipt by ids.
+func (m *PersonalMutation) AddReceiptIDs(ids ...int) {
+	if m.receipt == nil {
+		m.receipt = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.receipt[ids[i]] = struct{}{}
+	}
+}
+
+// RemoveReceiptIDs removes the receipt edge to Receipt by ids.
+func (m *PersonalMutation) RemoveReceiptIDs(ids ...int) {
+	if m.removedreceipt == nil {
+		m.removedreceipt = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.removedreceipt[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedReceipt returns the removed ids of receipt.
+func (m *PersonalMutation) RemovedReceiptIDs() (ids []int) {
+	for id := range m.removedreceipt {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ReceiptIDs returns the receipt ids in the mutation.
+func (m *PersonalMutation) ReceiptIDs() (ids []int) {
+	for id := range m.receipt {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetReceipt reset all changes of the "receipt" edge.
+func (m *PersonalMutation) ResetReceipt() {
+	m.receipt = nil
+	m.removedreceipt = nil
+}
+
 // Op returns the operation name.
 func (m *PersonalMutation) Op() Op {
 	return m.op
@@ -4270,7 +4750,7 @@ func (m *PersonalMutation) ResetField(name string) error {
 // AddedEdges returns all edge names that were set/added in this
 // mutation.
 func (m *PersonalMutation) AddedEdges() []string {
-	edges := make([]string, 0, 7)
+	edges := make([]string, 0, 8)
 	if m.customer != nil {
 		edges = append(edges, personal.EdgeCustomer)
 	}
@@ -4291,6 +4771,9 @@ func (m *PersonalMutation) AddedEdges() []string {
 	}
 	if m.personal != nil {
 		edges = append(edges, personal.EdgePersonal)
+	}
+	if m.receipt != nil {
+		edges = append(edges, personal.EdgeReceipt)
 	}
 	return edges
 }
@@ -4335,6 +4818,12 @@ func (m *PersonalMutation) AddedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
+	case personal.EdgeReceipt:
+		ids := make([]ent.Value, 0, len(m.receipt))
+		for id := range m.receipt {
+			ids = append(ids, id)
+		}
+		return ids
 	}
 	return nil
 }
@@ -4342,7 +4831,7 @@ func (m *PersonalMutation) AddedIDs(name string) []ent.Value {
 // RemovedEdges returns all edge names that were removed in this
 // mutation.
 func (m *PersonalMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 7)
+	edges := make([]string, 0, 8)
 	if m.removedcustomer != nil {
 		edges = append(edges, personal.EdgeCustomer)
 	}
@@ -4354,6 +4843,9 @@ func (m *PersonalMutation) RemovedEdges() []string {
 	}
 	if m.removedpersonal != nil {
 		edges = append(edges, personal.EdgePersonal)
+	}
+	if m.removedreceipt != nil {
+		edges = append(edges, personal.EdgeReceipt)
 	}
 	return edges
 }
@@ -4386,6 +4878,12 @@ func (m *PersonalMutation) RemovedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
+	case personal.EdgeReceipt:
+		ids := make([]ent.Value, 0, len(m.removedreceipt))
+		for id := range m.removedreceipt {
+			ids = append(ids, id)
+		}
+		return ids
 	}
 	return nil
 }
@@ -4393,7 +4891,7 @@ func (m *PersonalMutation) RemovedIDs(name string) []ent.Value {
 // ClearedEdges returns all edge names that were cleared in this
 // mutation.
 func (m *PersonalMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 7)
+	edges := make([]string, 0, 8)
 	if m.clearedtitle {
 		edges = append(edges, personal.EdgeTitle)
 	}
@@ -4462,6 +4960,9 @@ func (m *PersonalMutation) ResetEdge(name string) error {
 		return nil
 	case personal.EdgePersonal:
 		m.ResetPersonal()
+		return nil
+	case personal.EdgeReceipt:
+		m.ResetReceipt()
 		return nil
 	}
 	return fmt.Errorf("unknown Personal edge %s", name)
@@ -5126,12 +5627,22 @@ func (m *ProductMutation) ResetEdge(name string) error {
 // nodes in the graph.
 type ReceiptMutation struct {
 	config
-	op            Op
-	typ           string
-	id            *int
-	clearedFields map[string]struct{}
-	done          bool
-	oldValue      func(context.Context) (*Receipt, error)
+	op                 Op
+	typ                string
+	id                 *int
+	_Cusidentification *string
+	_Customername      *string
+	_Phonenumber       *string
+	added_time         *time.Time
+	clearedFields      map[string]struct{}
+	paymenttype        *int
+	clearedpaymenttype bool
+	adminrepair        *int
+	clearedadminrepair bool
+	personal           *int
+	clearedpersonal    bool
+	done               bool
+	oldValue           func(context.Context) (*Receipt, error)
 }
 
 var _ ent.Mutation = (*ReceiptMutation)(nil)
@@ -5213,6 +5724,271 @@ func (m *ReceiptMutation) ID() (id int, exists bool) {
 	return *m.id, true
 }
 
+// SetCusidentification sets the Cusidentification field.
+func (m *ReceiptMutation) SetCusidentification(s string) {
+	m._Cusidentification = &s
+}
+
+// Cusidentification returns the Cusidentification value in the mutation.
+func (m *ReceiptMutation) Cusidentification() (r string, exists bool) {
+	v := m._Cusidentification
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCusidentification returns the old Cusidentification value of the Receipt.
+// If the Receipt object wasn't provided to the builder, the object is fetched
+// from the database.
+// An error is returned if the mutation operation is not UpdateOne, or database query fails.
+func (m *ReceiptMutation) OldCusidentification(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldCusidentification is allowed only on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldCusidentification requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCusidentification: %w", err)
+	}
+	return oldValue.Cusidentification, nil
+}
+
+// ResetCusidentification reset all changes of the "Cusidentification" field.
+func (m *ReceiptMutation) ResetCusidentification() {
+	m._Cusidentification = nil
+}
+
+// SetCustomername sets the Customername field.
+func (m *ReceiptMutation) SetCustomername(s string) {
+	m._Customername = &s
+}
+
+// Customername returns the Customername value in the mutation.
+func (m *ReceiptMutation) Customername() (r string, exists bool) {
+	v := m._Customername
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCustomername returns the old Customername value of the Receipt.
+// If the Receipt object wasn't provided to the builder, the object is fetched
+// from the database.
+// An error is returned if the mutation operation is not UpdateOne, or database query fails.
+func (m *ReceiptMutation) OldCustomername(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldCustomername is allowed only on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldCustomername requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCustomername: %w", err)
+	}
+	return oldValue.Customername, nil
+}
+
+// ResetCustomername reset all changes of the "Customername" field.
+func (m *ReceiptMutation) ResetCustomername() {
+	m._Customername = nil
+}
+
+// SetPhonenumber sets the Phonenumber field.
+func (m *ReceiptMutation) SetPhonenumber(s string) {
+	m._Phonenumber = &s
+}
+
+// Phonenumber returns the Phonenumber value in the mutation.
+func (m *ReceiptMutation) Phonenumber() (r string, exists bool) {
+	v := m._Phonenumber
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldPhonenumber returns the old Phonenumber value of the Receipt.
+// If the Receipt object wasn't provided to the builder, the object is fetched
+// from the database.
+// An error is returned if the mutation operation is not UpdateOne, or database query fails.
+func (m *ReceiptMutation) OldPhonenumber(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldPhonenumber is allowed only on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldPhonenumber requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldPhonenumber: %w", err)
+	}
+	return oldValue.Phonenumber, nil
+}
+
+// ResetPhonenumber reset all changes of the "Phonenumber" field.
+func (m *ReceiptMutation) ResetPhonenumber() {
+	m._Phonenumber = nil
+}
+
+// SetAddedTime sets the added_time field.
+func (m *ReceiptMutation) SetAddedTime(t time.Time) {
+	m.added_time = &t
+}
+
+// AddedTime returns the added_time value in the mutation.
+func (m *ReceiptMutation) AddedTime() (r time.Time, exists bool) {
+	v := m.added_time
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldAddedTime returns the old added_time value of the Receipt.
+// If the Receipt object wasn't provided to the builder, the object is fetched
+// from the database.
+// An error is returned if the mutation operation is not UpdateOne, or database query fails.
+func (m *ReceiptMutation) OldAddedTime(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldAddedTime is allowed only on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldAddedTime requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldAddedTime: %w", err)
+	}
+	return oldValue.AddedTime, nil
+}
+
+// ResetAddedTime reset all changes of the "added_time" field.
+func (m *ReceiptMutation) ResetAddedTime() {
+	m.added_time = nil
+}
+
+// SetPaymenttypeID sets the paymenttype edge to PaymentType by id.
+func (m *ReceiptMutation) SetPaymenttypeID(id int) {
+	m.paymenttype = &id
+}
+
+// ClearPaymenttype clears the paymenttype edge to PaymentType.
+func (m *ReceiptMutation) ClearPaymenttype() {
+	m.clearedpaymenttype = true
+}
+
+// PaymenttypeCleared returns if the edge paymenttype was cleared.
+func (m *ReceiptMutation) PaymenttypeCleared() bool {
+	return m.clearedpaymenttype
+}
+
+// PaymenttypeID returns the paymenttype id in the mutation.
+func (m *ReceiptMutation) PaymenttypeID() (id int, exists bool) {
+	if m.paymenttype != nil {
+		return *m.paymenttype, true
+	}
+	return
+}
+
+// PaymenttypeIDs returns the paymenttype ids in the mutation.
+// Note that ids always returns len(ids) <= 1 for unique edges, and you should use
+// PaymenttypeID instead. It exists only for internal usage by the builders.
+func (m *ReceiptMutation) PaymenttypeIDs() (ids []int) {
+	if id := m.paymenttype; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetPaymenttype reset all changes of the "paymenttype" edge.
+func (m *ReceiptMutation) ResetPaymenttype() {
+	m.paymenttype = nil
+	m.clearedpaymenttype = false
+}
+
+// SetAdminrepairID sets the adminrepair edge to Adminrepair by id.
+func (m *ReceiptMutation) SetAdminrepairID(id int) {
+	m.adminrepair = &id
+}
+
+// ClearAdminrepair clears the adminrepair edge to Adminrepair.
+func (m *ReceiptMutation) ClearAdminrepair() {
+	m.clearedadminrepair = true
+}
+
+// AdminrepairCleared returns if the edge adminrepair was cleared.
+func (m *ReceiptMutation) AdminrepairCleared() bool {
+	return m.clearedadminrepair
+}
+
+// AdminrepairID returns the adminrepair id in the mutation.
+func (m *ReceiptMutation) AdminrepairID() (id int, exists bool) {
+	if m.adminrepair != nil {
+		return *m.adminrepair, true
+	}
+	return
+}
+
+// AdminrepairIDs returns the adminrepair ids in the mutation.
+// Note that ids always returns len(ids) <= 1 for unique edges, and you should use
+// AdminrepairID instead. It exists only for internal usage by the builders.
+func (m *ReceiptMutation) AdminrepairIDs() (ids []int) {
+	if id := m.adminrepair; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetAdminrepair reset all changes of the "adminrepair" edge.
+func (m *ReceiptMutation) ResetAdminrepair() {
+	m.adminrepair = nil
+	m.clearedadminrepair = false
+}
+
+// SetPersonalID sets the personal edge to Personal by id.
+func (m *ReceiptMutation) SetPersonalID(id int) {
+	m.personal = &id
+}
+
+// ClearPersonal clears the personal edge to Personal.
+func (m *ReceiptMutation) ClearPersonal() {
+	m.clearedpersonal = true
+}
+
+// PersonalCleared returns if the edge personal was cleared.
+func (m *ReceiptMutation) PersonalCleared() bool {
+	return m.clearedpersonal
+}
+
+// PersonalID returns the personal id in the mutation.
+func (m *ReceiptMutation) PersonalID() (id int, exists bool) {
+	if m.personal != nil {
+		return *m.personal, true
+	}
+	return
+}
+
+// PersonalIDs returns the personal ids in the mutation.
+// Note that ids always returns len(ids) <= 1 for unique edges, and you should use
+// PersonalID instead. It exists only for internal usage by the builders.
+func (m *ReceiptMutation) PersonalIDs() (ids []int) {
+	if id := m.personal; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetPersonal reset all changes of the "personal" edge.
+func (m *ReceiptMutation) ResetPersonal() {
+	m.personal = nil
+	m.clearedpersonal = false
+}
+
 // Op returns the operation name.
 func (m *ReceiptMutation) Op() Op {
 	return m.op
@@ -5227,7 +6003,19 @@ func (m *ReceiptMutation) Type() string {
 // this mutation. Note that, in order to get all numeric
 // fields that were in/decremented, call AddedFields().
 func (m *ReceiptMutation) Fields() []string {
-	fields := make([]string, 0, 0)
+	fields := make([]string, 0, 4)
+	if m._Cusidentification != nil {
+		fields = append(fields, receipt.FieldCusidentification)
+	}
+	if m._Customername != nil {
+		fields = append(fields, receipt.FieldCustomername)
+	}
+	if m._Phonenumber != nil {
+		fields = append(fields, receipt.FieldPhonenumber)
+	}
+	if m.added_time != nil {
+		fields = append(fields, receipt.FieldAddedTime)
+	}
 	return fields
 }
 
@@ -5235,6 +6023,16 @@ func (m *ReceiptMutation) Fields() []string {
 // The second boolean value indicates that this field was
 // not set, or was not define in the schema.
 func (m *ReceiptMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case receipt.FieldCusidentification:
+		return m.Cusidentification()
+	case receipt.FieldCustomername:
+		return m.Customername()
+	case receipt.FieldPhonenumber:
+		return m.Phonenumber()
+	case receipt.FieldAddedTime:
+		return m.AddedTime()
+	}
 	return nil, false
 }
 
@@ -5242,6 +6040,16 @@ func (m *ReceiptMutation) Field(name string) (ent.Value, bool) {
 // An error is returned if the mutation operation is not UpdateOne,
 // or the query to the database was failed.
 func (m *ReceiptMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case receipt.FieldCusidentification:
+		return m.OldCusidentification(ctx)
+	case receipt.FieldCustomername:
+		return m.OldCustomername(ctx)
+	case receipt.FieldPhonenumber:
+		return m.OldPhonenumber(ctx)
+	case receipt.FieldAddedTime:
+		return m.OldAddedTime(ctx)
+	}
 	return nil, fmt.Errorf("unknown Receipt field %s", name)
 }
 
@@ -5250,6 +6058,34 @@ func (m *ReceiptMutation) OldField(ctx context.Context, name string) (ent.Value,
 // type mismatch the field type.
 func (m *ReceiptMutation) SetField(name string, value ent.Value) error {
 	switch name {
+	case receipt.FieldCusidentification:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCusidentification(v)
+		return nil
+	case receipt.FieldCustomername:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCustomername(v)
+		return nil
+	case receipt.FieldPhonenumber:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetPhonenumber(v)
+		return nil
+	case receipt.FieldAddedTime:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetAddedTime(v)
+		return nil
 	}
 	return fmt.Errorf("unknown Receipt field %s", name)
 }
@@ -5271,6 +6107,8 @@ func (m *ReceiptMutation) AddedField(name string) (ent.Value, bool) {
 // error if the field is not defined in the schema, or if the
 // type mismatch the field type.
 func (m *ReceiptMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	}
 	return fmt.Errorf("unknown Receipt numeric field %s", name)
 }
 
@@ -5297,51 +6135,118 @@ func (m *ReceiptMutation) ClearField(name string) error {
 // given field name. It returns an error if the field is not
 // defined in the schema.
 func (m *ReceiptMutation) ResetField(name string) error {
+	switch name {
+	case receipt.FieldCusidentification:
+		m.ResetCusidentification()
+		return nil
+	case receipt.FieldCustomername:
+		m.ResetCustomername()
+		return nil
+	case receipt.FieldPhonenumber:
+		m.ResetPhonenumber()
+		return nil
+	case receipt.FieldAddedTime:
+		m.ResetAddedTime()
+		return nil
+	}
 	return fmt.Errorf("unknown Receipt field %s", name)
 }
 
 // AddedEdges returns all edge names that were set/added in this
 // mutation.
 func (m *ReceiptMutation) AddedEdges() []string {
-	edges := make([]string, 0, 0)
+	edges := make([]string, 0, 3)
+	if m.paymenttype != nil {
+		edges = append(edges, receipt.EdgePaymenttype)
+	}
+	if m.adminrepair != nil {
+		edges = append(edges, receipt.EdgeAdminrepair)
+	}
+	if m.personal != nil {
+		edges = append(edges, receipt.EdgePersonal)
+	}
 	return edges
 }
 
 // AddedIDs returns all ids (to other nodes) that were added for
 // the given edge name.
 func (m *ReceiptMutation) AddedIDs(name string) []ent.Value {
+	switch name {
+	case receipt.EdgePaymenttype:
+		if id := m.paymenttype; id != nil {
+			return []ent.Value{*id}
+		}
+	case receipt.EdgeAdminrepair:
+		if id := m.adminrepair; id != nil {
+			return []ent.Value{*id}
+		}
+	case receipt.EdgePersonal:
+		if id := m.personal; id != nil {
+			return []ent.Value{*id}
+		}
+	}
 	return nil
 }
 
 // RemovedEdges returns all edge names that were removed in this
 // mutation.
 func (m *ReceiptMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 0)
+	edges := make([]string, 0, 3)
 	return edges
 }
 
 // RemovedIDs returns all ids (to other nodes) that were removed for
 // the given edge name.
 func (m *ReceiptMutation) RemovedIDs(name string) []ent.Value {
+	switch name {
+	}
 	return nil
 }
 
 // ClearedEdges returns all edge names that were cleared in this
 // mutation.
 func (m *ReceiptMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 0)
+	edges := make([]string, 0, 3)
+	if m.clearedpaymenttype {
+		edges = append(edges, receipt.EdgePaymenttype)
+	}
+	if m.clearedadminrepair {
+		edges = append(edges, receipt.EdgeAdminrepair)
+	}
+	if m.clearedpersonal {
+		edges = append(edges, receipt.EdgePersonal)
+	}
 	return edges
 }
 
 // EdgeCleared returns a boolean indicates if this edge was
 // cleared in this mutation.
 func (m *ReceiptMutation) EdgeCleared(name string) bool {
+	switch name {
+	case receipt.EdgePaymenttype:
+		return m.clearedpaymenttype
+	case receipt.EdgeAdminrepair:
+		return m.clearedadminrepair
+	case receipt.EdgePersonal:
+		return m.clearedpersonal
+	}
 	return false
 }
 
 // ClearEdge clears the value for the given name. It returns an
 // error if the edge name is not defined in the schema.
 func (m *ReceiptMutation) ClearEdge(name string) error {
+	switch name {
+	case receipt.EdgePaymenttype:
+		m.ClearPaymenttype()
+		return nil
+	case receipt.EdgeAdminrepair:
+		m.ClearAdminrepair()
+		return nil
+	case receipt.EdgePersonal:
+		m.ClearPersonal()
+		return nil
+	}
 	return fmt.Errorf("unknown Receipt unique edge %s", name)
 }
 
@@ -5349,6 +6254,17 @@ func (m *ReceiptMutation) ClearEdge(name string) error {
 // given edge name. It returns an error if the edge is not
 // defined in the schema.
 func (m *ReceiptMutation) ResetEdge(name string) error {
+	switch name {
+	case receipt.EdgePaymenttype:
+		m.ResetPaymenttype()
+		return nil
+	case receipt.EdgeAdminrepair:
+		m.ResetAdminrepair()
+		return nil
+	case receipt.EdgePersonal:
+		m.ResetPersonal()
+		return nil
+	}
 	return fmt.Errorf("unknown Receipt edge %s", name)
 }
 

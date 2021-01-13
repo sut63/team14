@@ -5,10 +5,14 @@ package ent
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
+	"github.com/tanapon395/playlist-video/ent/adminrepair"
+	"github.com/tanapon395/playlist-video/ent/paymenttype"
+	"github.com/tanapon395/playlist-video/ent/personal"
 	"github.com/tanapon395/playlist-video/ent/predicate"
 	"github.com/tanapon395/playlist-video/ent/receipt"
 )
@@ -27,13 +31,136 @@ func (ru *ReceiptUpdate) Where(ps ...predicate.Receipt) *ReceiptUpdate {
 	return ru
 }
 
+// SetCusidentification sets the Cusidentification field.
+func (ru *ReceiptUpdate) SetCusidentification(s string) *ReceiptUpdate {
+	ru.mutation.SetCusidentification(s)
+	return ru
+}
+
+// SetCustomername sets the Customername field.
+func (ru *ReceiptUpdate) SetCustomername(s string) *ReceiptUpdate {
+	ru.mutation.SetCustomername(s)
+	return ru
+}
+
+// SetPhonenumber sets the Phonenumber field.
+func (ru *ReceiptUpdate) SetPhonenumber(s string) *ReceiptUpdate {
+	ru.mutation.SetPhonenumber(s)
+	return ru
+}
+
+// SetAddedTime sets the added_time field.
+func (ru *ReceiptUpdate) SetAddedTime(t time.Time) *ReceiptUpdate {
+	ru.mutation.SetAddedTime(t)
+	return ru
+}
+
+// SetNillableAddedTime sets the added_time field if the given value is not nil.
+func (ru *ReceiptUpdate) SetNillableAddedTime(t *time.Time) *ReceiptUpdate {
+	if t != nil {
+		ru.SetAddedTime(*t)
+	}
+	return ru
+}
+
+// SetPaymenttypeID sets the paymenttype edge to PaymentType by id.
+func (ru *ReceiptUpdate) SetPaymenttypeID(id int) *ReceiptUpdate {
+	ru.mutation.SetPaymenttypeID(id)
+	return ru
+}
+
+// SetNillablePaymenttypeID sets the paymenttype edge to PaymentType by id if the given value is not nil.
+func (ru *ReceiptUpdate) SetNillablePaymenttypeID(id *int) *ReceiptUpdate {
+	if id != nil {
+		ru = ru.SetPaymenttypeID(*id)
+	}
+	return ru
+}
+
+// SetPaymenttype sets the paymenttype edge to PaymentType.
+func (ru *ReceiptUpdate) SetPaymenttype(p *PaymentType) *ReceiptUpdate {
+	return ru.SetPaymenttypeID(p.ID)
+}
+
+// SetAdminrepairID sets the adminrepair edge to Adminrepair by id.
+func (ru *ReceiptUpdate) SetAdminrepairID(id int) *ReceiptUpdate {
+	ru.mutation.SetAdminrepairID(id)
+	return ru
+}
+
+// SetNillableAdminrepairID sets the adminrepair edge to Adminrepair by id if the given value is not nil.
+func (ru *ReceiptUpdate) SetNillableAdminrepairID(id *int) *ReceiptUpdate {
+	if id != nil {
+		ru = ru.SetAdminrepairID(*id)
+	}
+	return ru
+}
+
+// SetAdminrepair sets the adminrepair edge to Adminrepair.
+func (ru *ReceiptUpdate) SetAdminrepair(a *Adminrepair) *ReceiptUpdate {
+	return ru.SetAdminrepairID(a.ID)
+}
+
+// SetPersonalID sets the personal edge to Personal by id.
+func (ru *ReceiptUpdate) SetPersonalID(id int) *ReceiptUpdate {
+	ru.mutation.SetPersonalID(id)
+	return ru
+}
+
+// SetNillablePersonalID sets the personal edge to Personal by id if the given value is not nil.
+func (ru *ReceiptUpdate) SetNillablePersonalID(id *int) *ReceiptUpdate {
+	if id != nil {
+		ru = ru.SetPersonalID(*id)
+	}
+	return ru
+}
+
+// SetPersonal sets the personal edge to Personal.
+func (ru *ReceiptUpdate) SetPersonal(p *Personal) *ReceiptUpdate {
+	return ru.SetPersonalID(p.ID)
+}
+
 // Mutation returns the ReceiptMutation object of the builder.
 func (ru *ReceiptUpdate) Mutation() *ReceiptMutation {
 	return ru.mutation
 }
 
+// ClearPaymenttype clears the paymenttype edge to PaymentType.
+func (ru *ReceiptUpdate) ClearPaymenttype() *ReceiptUpdate {
+	ru.mutation.ClearPaymenttype()
+	return ru
+}
+
+// ClearAdminrepair clears the adminrepair edge to Adminrepair.
+func (ru *ReceiptUpdate) ClearAdminrepair() *ReceiptUpdate {
+	ru.mutation.ClearAdminrepair()
+	return ru
+}
+
+// ClearPersonal clears the personal edge to Personal.
+func (ru *ReceiptUpdate) ClearPersonal() *ReceiptUpdate {
+	ru.mutation.ClearPersonal()
+	return ru
+}
+
 // Save executes the query and returns the number of rows/vertices matched by this operation.
 func (ru *ReceiptUpdate) Save(ctx context.Context) (int, error) {
+	if v, ok := ru.mutation.Cusidentification(); ok {
+		if err := receipt.CusidentificationValidator(v); err != nil {
+			return 0, &ValidationError{Name: "Cusidentification", err: fmt.Errorf("ent: validator failed for field \"Cusidentification\": %w", err)}
+		}
+	}
+	if v, ok := ru.mutation.Customername(); ok {
+		if err := receipt.CustomernameValidator(v); err != nil {
+			return 0, &ValidationError{Name: "Customername", err: fmt.Errorf("ent: validator failed for field \"Customername\": %w", err)}
+		}
+	}
+	if v, ok := ru.mutation.Phonenumber(); ok {
+		if err := receipt.PhonenumberValidator(v); err != nil {
+			return 0, &ValidationError{Name: "Phonenumber", err: fmt.Errorf("ent: validator failed for field \"Phonenumber\": %w", err)}
+		}
+	}
+
 	var (
 		err      error
 		affected int
@@ -101,6 +228,139 @@ func (ru *ReceiptUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			}
 		}
 	}
+	if value, ok := ru.mutation.Cusidentification(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: receipt.FieldCusidentification,
+		})
+	}
+	if value, ok := ru.mutation.Customername(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: receipt.FieldCustomername,
+		})
+	}
+	if value, ok := ru.mutation.Phonenumber(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: receipt.FieldPhonenumber,
+		})
+	}
+	if value, ok := ru.mutation.AddedTime(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeTime,
+			Value:  value,
+			Column: receipt.FieldAddedTime,
+		})
+	}
+	if ru.mutation.PaymenttypeCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   receipt.PaymenttypeTable,
+			Columns: []string{receipt.PaymenttypeColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: paymenttype.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := ru.mutation.PaymenttypeIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   receipt.PaymenttypeTable,
+			Columns: []string{receipt.PaymenttypeColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: paymenttype.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if ru.mutation.AdminrepairCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   receipt.AdminrepairTable,
+			Columns: []string{receipt.AdminrepairColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: adminrepair.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := ru.mutation.AdminrepairIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   receipt.AdminrepairTable,
+			Columns: []string{receipt.AdminrepairColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: adminrepair.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if ru.mutation.PersonalCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   receipt.PersonalTable,
+			Columns: []string{receipt.PersonalColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: personal.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := ru.mutation.PersonalIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   receipt.PersonalTable,
+			Columns: []string{receipt.PersonalColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: personal.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, ru.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{receipt.Label}
@@ -119,13 +379,136 @@ type ReceiptUpdateOne struct {
 	mutation *ReceiptMutation
 }
 
+// SetCusidentification sets the Cusidentification field.
+func (ruo *ReceiptUpdateOne) SetCusidentification(s string) *ReceiptUpdateOne {
+	ruo.mutation.SetCusidentification(s)
+	return ruo
+}
+
+// SetCustomername sets the Customername field.
+func (ruo *ReceiptUpdateOne) SetCustomername(s string) *ReceiptUpdateOne {
+	ruo.mutation.SetCustomername(s)
+	return ruo
+}
+
+// SetPhonenumber sets the Phonenumber field.
+func (ruo *ReceiptUpdateOne) SetPhonenumber(s string) *ReceiptUpdateOne {
+	ruo.mutation.SetPhonenumber(s)
+	return ruo
+}
+
+// SetAddedTime sets the added_time field.
+func (ruo *ReceiptUpdateOne) SetAddedTime(t time.Time) *ReceiptUpdateOne {
+	ruo.mutation.SetAddedTime(t)
+	return ruo
+}
+
+// SetNillableAddedTime sets the added_time field if the given value is not nil.
+func (ruo *ReceiptUpdateOne) SetNillableAddedTime(t *time.Time) *ReceiptUpdateOne {
+	if t != nil {
+		ruo.SetAddedTime(*t)
+	}
+	return ruo
+}
+
+// SetPaymenttypeID sets the paymenttype edge to PaymentType by id.
+func (ruo *ReceiptUpdateOne) SetPaymenttypeID(id int) *ReceiptUpdateOne {
+	ruo.mutation.SetPaymenttypeID(id)
+	return ruo
+}
+
+// SetNillablePaymenttypeID sets the paymenttype edge to PaymentType by id if the given value is not nil.
+func (ruo *ReceiptUpdateOne) SetNillablePaymenttypeID(id *int) *ReceiptUpdateOne {
+	if id != nil {
+		ruo = ruo.SetPaymenttypeID(*id)
+	}
+	return ruo
+}
+
+// SetPaymenttype sets the paymenttype edge to PaymentType.
+func (ruo *ReceiptUpdateOne) SetPaymenttype(p *PaymentType) *ReceiptUpdateOne {
+	return ruo.SetPaymenttypeID(p.ID)
+}
+
+// SetAdminrepairID sets the adminrepair edge to Adminrepair by id.
+func (ruo *ReceiptUpdateOne) SetAdminrepairID(id int) *ReceiptUpdateOne {
+	ruo.mutation.SetAdminrepairID(id)
+	return ruo
+}
+
+// SetNillableAdminrepairID sets the adminrepair edge to Adminrepair by id if the given value is not nil.
+func (ruo *ReceiptUpdateOne) SetNillableAdminrepairID(id *int) *ReceiptUpdateOne {
+	if id != nil {
+		ruo = ruo.SetAdminrepairID(*id)
+	}
+	return ruo
+}
+
+// SetAdminrepair sets the adminrepair edge to Adminrepair.
+func (ruo *ReceiptUpdateOne) SetAdminrepair(a *Adminrepair) *ReceiptUpdateOne {
+	return ruo.SetAdminrepairID(a.ID)
+}
+
+// SetPersonalID sets the personal edge to Personal by id.
+func (ruo *ReceiptUpdateOne) SetPersonalID(id int) *ReceiptUpdateOne {
+	ruo.mutation.SetPersonalID(id)
+	return ruo
+}
+
+// SetNillablePersonalID sets the personal edge to Personal by id if the given value is not nil.
+func (ruo *ReceiptUpdateOne) SetNillablePersonalID(id *int) *ReceiptUpdateOne {
+	if id != nil {
+		ruo = ruo.SetPersonalID(*id)
+	}
+	return ruo
+}
+
+// SetPersonal sets the personal edge to Personal.
+func (ruo *ReceiptUpdateOne) SetPersonal(p *Personal) *ReceiptUpdateOne {
+	return ruo.SetPersonalID(p.ID)
+}
+
 // Mutation returns the ReceiptMutation object of the builder.
 func (ruo *ReceiptUpdateOne) Mutation() *ReceiptMutation {
 	return ruo.mutation
 }
 
+// ClearPaymenttype clears the paymenttype edge to PaymentType.
+func (ruo *ReceiptUpdateOne) ClearPaymenttype() *ReceiptUpdateOne {
+	ruo.mutation.ClearPaymenttype()
+	return ruo
+}
+
+// ClearAdminrepair clears the adminrepair edge to Adminrepair.
+func (ruo *ReceiptUpdateOne) ClearAdminrepair() *ReceiptUpdateOne {
+	ruo.mutation.ClearAdminrepair()
+	return ruo
+}
+
+// ClearPersonal clears the personal edge to Personal.
+func (ruo *ReceiptUpdateOne) ClearPersonal() *ReceiptUpdateOne {
+	ruo.mutation.ClearPersonal()
+	return ruo
+}
+
 // Save executes the query and returns the updated entity.
 func (ruo *ReceiptUpdateOne) Save(ctx context.Context) (*Receipt, error) {
+	if v, ok := ruo.mutation.Cusidentification(); ok {
+		if err := receipt.CusidentificationValidator(v); err != nil {
+			return nil, &ValidationError{Name: "Cusidentification", err: fmt.Errorf("ent: validator failed for field \"Cusidentification\": %w", err)}
+		}
+	}
+	if v, ok := ruo.mutation.Customername(); ok {
+		if err := receipt.CustomernameValidator(v); err != nil {
+			return nil, &ValidationError{Name: "Customername", err: fmt.Errorf("ent: validator failed for field \"Customername\": %w", err)}
+		}
+	}
+	if v, ok := ruo.mutation.Phonenumber(); ok {
+		if err := receipt.PhonenumberValidator(v); err != nil {
+			return nil, &ValidationError{Name: "Phonenumber", err: fmt.Errorf("ent: validator failed for field \"Phonenumber\": %w", err)}
+		}
+	}
+
 	var (
 		err  error
 		node *Receipt
@@ -191,6 +574,139 @@ func (ruo *ReceiptUpdateOne) sqlSave(ctx context.Context) (r *Receipt, err error
 		return nil, &ValidationError{Name: "ID", err: fmt.Errorf("missing Receipt.ID for update")}
 	}
 	_spec.Node.ID.Value = id
+	if value, ok := ruo.mutation.Cusidentification(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: receipt.FieldCusidentification,
+		})
+	}
+	if value, ok := ruo.mutation.Customername(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: receipt.FieldCustomername,
+		})
+	}
+	if value, ok := ruo.mutation.Phonenumber(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: receipt.FieldPhonenumber,
+		})
+	}
+	if value, ok := ruo.mutation.AddedTime(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeTime,
+			Value:  value,
+			Column: receipt.FieldAddedTime,
+		})
+	}
+	if ruo.mutation.PaymenttypeCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   receipt.PaymenttypeTable,
+			Columns: []string{receipt.PaymenttypeColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: paymenttype.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := ruo.mutation.PaymenttypeIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   receipt.PaymenttypeTable,
+			Columns: []string{receipt.PaymenttypeColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: paymenttype.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if ruo.mutation.AdminrepairCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   receipt.AdminrepairTable,
+			Columns: []string{receipt.AdminrepairColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: adminrepair.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := ruo.mutation.AdminrepairIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   receipt.AdminrepairTable,
+			Columns: []string{receipt.AdminrepairColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: adminrepair.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if ruo.mutation.PersonalCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   receipt.PersonalTable,
+			Columns: []string{receipt.PersonalColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: personal.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := ruo.mutation.PersonalIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   receipt.PersonalTable,
+			Columns: []string{receipt.PersonalColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: personal.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	r = &Receipt{config: ruo.config}
 	_spec.Assign = r.assignValues
 	_spec.ScanValues = r.scanValues()

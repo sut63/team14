@@ -100,6 +100,19 @@ func (f GenderFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, erro
 	return f(ctx, mv)
 }
 
+// The PaymentTypeFunc type is an adapter to allow the use of ordinary
+// function as PaymentType mutator.
+type PaymentTypeFunc func(context.Context, *ent.PaymentTypeMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f PaymentTypeFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.PaymentTypeMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.PaymentTypeMutation", m)
+	}
+	return f(ctx, mv)
+}
+
 // The PersonalFunc type is an adapter to allow the use of ordinary
 // function as Personal mutator.
 type PersonalFunc func(context.Context, *ent.PersonalMutation) (ent.Value, error)

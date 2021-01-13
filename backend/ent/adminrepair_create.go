@@ -13,6 +13,7 @@ import (
 	"github.com/tanapon395/playlist-video/ent/fix"
 	"github.com/tanapon395/playlist-video/ent/personal"
 	"github.com/tanapon395/playlist-video/ent/product"
+	"github.com/tanapon395/playlist-video/ent/receipt"
 )
 
 // AdminrepairCreate is the builder for creating a Adminrepair entity.
@@ -26,6 +27,21 @@ type AdminrepairCreate struct {
 func (ac *AdminrepairCreate) SetEquipmentdamate(s string) *AdminrepairCreate {
 	ac.mutation.SetEquipmentdamate(s)
 	return ac
+}
+
+// AddReceiptIDs adds the receipt edge to Receipt by ids.
+func (ac *AdminrepairCreate) AddReceiptIDs(ids ...int) *AdminrepairCreate {
+	ac.mutation.AddReceiptIDs(ids...)
+	return ac
+}
+
+// AddReceipt adds the receipt edges to Receipt.
+func (ac *AdminrepairCreate) AddReceipt(r ...*Receipt) *AdminrepairCreate {
+	ids := make([]int, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
+	}
+	return ac.AddReceiptIDs(ids...)
 }
 
 // SetAdminrepairPersonalID sets the AdminrepairPersonal edge to Personal by id.
@@ -167,6 +183,25 @@ func (ac *AdminrepairCreate) createSpec() (*Adminrepair, *sqlgraph.CreateSpec) {
 			Column: adminrepair.FieldEquipmentdamate,
 		})
 		a.Equipmentdamate = value
+	}
+	if nodes := ac.mutation.ReceiptIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   adminrepair.ReceiptTable,
+			Columns: []string{adminrepair.ReceiptColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: receipt.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
 	}
 	if nodes := ac.mutation.AdminrepairPersonalIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

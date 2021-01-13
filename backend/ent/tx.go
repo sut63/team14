@@ -26,6 +26,8 @@ type Tx struct {
 	Fixcomtype *FixcomtypeClient
 	// Gender is the client for interacting with the Gender builders.
 	Gender *GenderClient
+	// PaymentType is the client for interacting with the PaymentType builders.
+	PaymentType *PaymentTypeClient
 	// Personal is the client for interacting with the Personal builders.
 	Personal *PersonalClient
 	// Product is the client for interacting with the Product builders.
@@ -178,6 +180,7 @@ func (tx *Tx) init() {
 	tx.Fix = NewFixClient(tx.config)
 	tx.Fixcomtype = NewFixcomtypeClient(tx.config)
 	tx.Gender = NewGenderClient(tx.config)
+	tx.PaymentType = NewPaymentTypeClient(tx.config)
 	tx.Personal = NewPersonalClient(tx.config)
 	tx.Product = NewProductClient(tx.config)
 	tx.Receipt = NewReceiptClient(tx.config)

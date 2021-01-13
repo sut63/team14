@@ -188,6 +188,18 @@ var (
 		PrimaryKey:  []*schema.Column{GendersColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{},
 	}
+	// PaymentTypesColumns holds the columns for the "payment_types" table.
+	PaymentTypesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "typename", Type: field.TypeString},
+	}
+	// PaymentTypesTable holds the schema information for the "payment_types" table.
+	PaymentTypesTable = &schema.Table{
+		Name:        "payment_types",
+		Columns:     PaymentTypesColumns,
+		PrimaryKey:  []*schema.Column{PaymentTypesColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{},
+	}
 	// PersonalsColumns holds the columns for the "personals" table.
 	PersonalsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
@@ -269,13 +281,42 @@ var (
 	// ReceiptsColumns holds the columns for the "receipts" table.
 	ReceiptsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "cusidentification", Type: field.TypeString},
+		{Name: "customername", Type: field.TypeString},
+		{Name: "phonenumber", Type: field.TypeString},
+		{Name: "added_time", Type: field.TypeTime},
+		{Name: "adminrepair_id", Type: field.TypeInt, Nullable: true},
+		{Name: "paymenttype_id", Type: field.TypeInt, Nullable: true},
+		{Name: "personal_id", Type: field.TypeInt, Nullable: true},
 	}
 	// ReceiptsTable holds the schema information for the "receipts" table.
 	ReceiptsTable = &schema.Table{
-		Name:        "receipts",
-		Columns:     ReceiptsColumns,
-		PrimaryKey:  []*schema.Column{ReceiptsColumns[0]},
-		ForeignKeys: []*schema.ForeignKey{},
+		Name:       "receipts",
+		Columns:    ReceiptsColumns,
+		PrimaryKey: []*schema.Column{ReceiptsColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:  "receipts_adminrepairs_receipt",
+				Columns: []*schema.Column{ReceiptsColumns[5]},
+
+				RefColumns: []*schema.Column{AdminrepairsColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+			{
+				Symbol:  "receipts_payment_types_receipt",
+				Columns: []*schema.Column{ReceiptsColumns[6]},
+
+				RefColumns: []*schema.Column{PaymentTypesColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+			{
+				Symbol:  "receipts_personals_receipt",
+				Columns: []*schema.Column{ReceiptsColumns[7]},
+
+				RefColumns: []*schema.Column{PersonalsColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+		},
 	}
 	// TitlesColumns holds the columns for the "titles" table.
 	TitlesColumns = []*schema.Column{
@@ -310,6 +351,7 @@ var (
 		FixesTable,
 		FixcomtypesTable,
 		GendersTable,
+		PaymentTypesTable,
 		PersonalsTable,
 		ProductsTable,
 		ReceiptsTable,
@@ -336,4 +378,7 @@ func init() {
 	ProductsTable.ForeignKeys[0].RefTable = BrandsTable
 	ProductsTable.ForeignKeys[1].RefTable = PersonalsTable
 	ProductsTable.ForeignKeys[2].RefTable = TypeproductsTable
+	ReceiptsTable.ForeignKeys[0].RefTable = AdminrepairsTable
+	ReceiptsTable.ForeignKeys[1].RefTable = PaymentTypesTable
+	ReceiptsTable.ForeignKeys[2].RefTable = PersonalsTable
 }

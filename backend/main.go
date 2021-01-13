@@ -73,6 +73,16 @@ type Fixcomtype struct {
 	Fixcomtypename string
 }
 
+// PaymentTypes struct type
+type PaymentTypes struct {
+	PaymentType []PaymentType
+}
+
+// PaymentType struct type
+type PaymentType struct {
+	Typename string
+}
+
 // @title SUT SA Example API Playlist Vidoe
 // @version 1.0
 // @description This is a sample server for SUT SE 2563
@@ -140,6 +150,8 @@ func main() {
 	controllers.NewFixController(v1, client)
 	controllers.NewFixcomtypeController(v1, client)
 	controllers.NewAdminrepairController(v1, client)
+	controllers.NewReceiptController(v1, client)
+	controllers.NewPaymentTypeController(v1, client)
 
 	//Set Title Data
 	titles := []string{"นาย", "นาง", "นางสาว", "ไม่ระบุ"}
@@ -218,6 +230,22 @@ func main() {
 		client.Fixcomtype.
 			Create().
 			SetFixcomtypename(ft.Fixcomtypename).
+			Save(context.Background())
+	}
+
+	// Set PaymentTypes Data
+	paymenttypes := PaymentTypes{
+		PaymentType: []PaymentType{
+			PaymentType{"ชำระผ่านบัตรเครดิต"},
+			PaymentType{"ชำระผ่านธนาคาร/Internet Banking"},
+			PaymentType{"ชำระผ่านตู้ ATM"},
+			PaymentType{"ชำระด้วยเงินสด"},
+		},
+	}
+	for _, pt := range paymenttypes.PaymentType {
+		client.PaymentType.
+			Create().
+			SetTypename(pt.Typename).
 			Save(context.Background())
 	}
 

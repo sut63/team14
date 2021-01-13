@@ -4,6 +4,7 @@ package ent
 
 import (
 	"context"
+	"database/sql/driver"
 	"errors"
 	"fmt"
 	"math"
@@ -16,6 +17,7 @@ import (
 	"github.com/tanapon395/playlist-video/ent/personal"
 	"github.com/tanapon395/playlist-video/ent/predicate"
 	"github.com/tanapon395/playlist-video/ent/product"
+	"github.com/tanapon395/playlist-video/ent/receipt"
 )
 
 // AdminrepairQuery is the builder for querying Adminrepair entities.
@@ -27,6 +29,7 @@ type AdminrepairQuery struct {
 	unique     []string
 	predicates []predicate.Adminrepair
 	// eager-loading edges.
+	withReceipt             *ReceiptQuery
 	withAdminrepairPersonal *PersonalQuery
 	withAdminrepairFix      *FixQuery
 	withAdminrepairProduct  *ProductQuery
@@ -58,6 +61,24 @@ func (aq *AdminrepairQuery) Offset(offset int) *AdminrepairQuery {
 func (aq *AdminrepairQuery) Order(o ...OrderFunc) *AdminrepairQuery {
 	aq.order = append(aq.order, o...)
 	return aq
+}
+
+// QueryReceipt chains the current query on the receipt edge.
+func (aq *AdminrepairQuery) QueryReceipt() *ReceiptQuery {
+	query := &ReceiptQuery{config: aq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := aq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(adminrepair.Table, adminrepair.FieldID, aq.sqlQuery()),
+			sqlgraph.To(receipt.Table, receipt.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, adminrepair.ReceiptTable, adminrepair.ReceiptColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(aq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
 }
 
 // QueryAdminrepairPersonal chains the current query on the AdminrepairPersonal edge.
@@ -293,6 +314,17 @@ func (aq *AdminrepairQuery) Clone() *AdminrepairQuery {
 	}
 }
 
+//  WithReceipt tells the query-builder to eager-loads the nodes that are connected to
+// the "receipt" edge. The optional arguments used to configure the query builder of the edge.
+func (aq *AdminrepairQuery) WithReceipt(opts ...func(*ReceiptQuery)) *AdminrepairQuery {
+	query := &ReceiptQuery{config: aq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	aq.withReceipt = query
+	return aq
+}
+
 //  WithAdminrepairPersonal tells the query-builder to eager-loads the nodes that are connected to
 // the "AdminrepairPersonal" edge. The optional arguments used to configure the query builder of the edge.
 func (aq *AdminrepairQuery) WithAdminrepairPersonal(opts ...func(*PersonalQuery)) *AdminrepairQuery {
@@ -393,7 +425,8 @@ func (aq *AdminrepairQuery) sqlAll(ctx context.Context) ([]*Adminrepair, error) 
 		nodes       = []*Adminrepair{}
 		withFKs     = aq.withFKs
 		_spec       = aq.querySpec()
-		loadedTypes = [3]bool{
+		loadedTypes = [4]bool{
+			aq.withReceipt != nil,
 			aq.withAdminrepairPersonal != nil,
 			aq.withAdminrepairFix != nil,
 			aq.withAdminrepairProduct != nil,
@@ -427,6 +460,34 @@ func (aq *AdminrepairQuery) sqlAll(ctx context.Context) ([]*Adminrepair, error) 
 	}
 	if len(nodes) == 0 {
 		return nodes, nil
+	}
+
+	if query := aq.withReceipt; query != nil {
+		fks := make([]driver.Value, 0, len(nodes))
+		nodeids := make(map[int]*Adminrepair)
+		for i := range nodes {
+			fks = append(fks, nodes[i].ID)
+			nodeids[nodes[i].ID] = nodes[i]
+		}
+		query.withFKs = true
+		query.Where(predicate.Receipt(func(s *sql.Selector) {
+			s.Where(sql.InValues(adminrepair.ReceiptColumn, fks...))
+		}))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			fk := n.adminrepair_id
+			if fk == nil {
+				return nil, fmt.Errorf(`foreign-key "adminrepair_id" is nil for node %v`, n.ID)
+			}
+			node, ok := nodeids[*fk]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "adminrepair_id" returned %v for node %v`, *fk, n.ID)
+			}
+			node.Edges.Receipt = append(node.Edges.Receipt, n)
+		}
 	}
 
 	if query := aq.withAdminrepairPersonal; query != nil {

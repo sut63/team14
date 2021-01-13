@@ -2,17 +2,79 @@
 
 package receipt
 
+import (
+	"time"
+)
+
 const (
 	// Label holds the string label denoting the receipt type in the database.
 	Label = "receipt"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
+	// FieldCusidentification holds the string denoting the cusidentification field in the database.
+	FieldCusidentification = "cusidentification"
+	// FieldCustomername holds the string denoting the customername field in the database.
+	FieldCustomername = "customername"
+	// FieldPhonenumber holds the string denoting the phonenumber field in the database.
+	FieldPhonenumber = "phonenumber"
+	// FieldAddedTime holds the string denoting the added_time field in the database.
+	FieldAddedTime = "added_time"
+
+	// EdgePaymenttype holds the string denoting the paymenttype edge name in mutations.
+	EdgePaymenttype = "paymenttype"
+	// EdgeAdminrepair holds the string denoting the adminrepair edge name in mutations.
+	EdgeAdminrepair = "adminrepair"
+	// EdgePersonal holds the string denoting the personal edge name in mutations.
+	EdgePersonal = "personal"
 
 	// Table holds the table name of the receipt in the database.
 	Table = "receipts"
+	// PaymenttypeTable is the table the holds the paymenttype relation/edge.
+	PaymenttypeTable = "receipts"
+	// PaymenttypeInverseTable is the table name for the PaymentType entity.
+	// It exists in this package in order to avoid circular dependency with the "paymenttype" package.
+	PaymenttypeInverseTable = "payment_types"
+	// PaymenttypeColumn is the table column denoting the paymenttype relation/edge.
+	PaymenttypeColumn = "paymenttype_id"
+	// AdminrepairTable is the table the holds the adminrepair relation/edge.
+	AdminrepairTable = "receipts"
+	// AdminrepairInverseTable is the table name for the Adminrepair entity.
+	// It exists in this package in order to avoid circular dependency with the "adminrepair" package.
+	AdminrepairInverseTable = "adminrepairs"
+	// AdminrepairColumn is the table column denoting the adminrepair relation/edge.
+	AdminrepairColumn = "adminrepair_id"
+	// PersonalTable is the table the holds the personal relation/edge.
+	PersonalTable = "receipts"
+	// PersonalInverseTable is the table name for the Personal entity.
+	// It exists in this package in order to avoid circular dependency with the "personal" package.
+	PersonalInverseTable = "personals"
+	// PersonalColumn is the table column denoting the personal relation/edge.
+	PersonalColumn = "personal_id"
 )
 
 // Columns holds all SQL columns for receipt fields.
 var Columns = []string{
 	FieldID,
+	FieldCusidentification,
+	FieldCustomername,
+	FieldPhonenumber,
+	FieldAddedTime,
 }
+
+// ForeignKeys holds the SQL foreign-keys that are owned by the Receipt type.
+var ForeignKeys = []string{
+	"adminrepair_id",
+	"paymenttype_id",
+	"personal_id",
+}
+
+var (
+	// CusidentificationValidator is a validator for the "Cusidentification" field. It is called by the builders before save.
+	CusidentificationValidator func(string) error
+	// CustomernameValidator is a validator for the "Customername" field. It is called by the builders before save.
+	CustomernameValidator func(string) error
+	// PhonenumberValidator is a validator for the "Phonenumber" field. It is called by the builders before save.
+	PhonenumberValidator func(string) error
+	// DefaultAddedTime holds the default value on creation for the added_time field.
+	DefaultAddedTime func() time.Time
+)
