@@ -1,106 +1,149 @@
-import React, { FC } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
-import {
-  Typography,
-  Grid,
-  List,
-  ListItem,
-  ListItemText,
-  Link,
-} from '@material-ui/core';
-import Timer from '../Timer';
-import {
-  Content,
-  InfoCard,
-  Header,
-  Page,
-  pageTheme,
-  ContentHeader,
-  SupportButton,
-} from '@backstage/core';
+import React, { useState, useEffect } from 'react';
+import Button from '@material-ui/core/Button';
+import { ContentHeader, Content, Header, Page, pageTheme } from '@backstage/core';
+import { TextField } from '@material-ui/core';
+import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
+import { DefaultApi, EntPersonal } from '../../api';
+import { Alert } from '@material-ui/lab';
 
-const WelcomePage: FC<{}> = () => {
-  const profile = { givenName: '' };
+const useStyles = makeStyles((theme: Theme) =>
+ createStyles({
+  root: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+  },
+  margin: {
+    width: 500 ,
+     marginLeft:7,
+     marginRight:-7,
+  },
+  submit: {
+    background: 'linear-gradient(45deg, #20002c 30%, #cbb4d4 90%)',
+    color: 'white',
+  },
+  }),
+);
+
+export default function SignInSide() {
+  const classes = useStyles();
+  const http = new DefaultApi();
+
+  const [status, setStatus] = useState(false);
+  const [alert, setAlert] = useState(Boolean);
+  const [loading, setLoading] = useState(false);
+
+  const [personals, setPersonals] = React.useState<EntPersonal[]>([]);
+  
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
+
+  useEffect(() => {
+    const getPersonals = async () => {
+      const res:any = await http.listPersonal({});
+      setLoading(false);
+      setPersonals(res);
+    }
+    getPersonals();
+
+    const resetPersonalData = async () => {
+      setLoading(false);
+      localStorage.setItem("userdata", JSON.stringify(null));
+    }
+    resetPersonalData();
+
+  }, [loading]);
+
+  const HandleEmailChange = (event:any) => {
+    setEmail(event.target.value as string);
+  };
+
+  const HandlePasswordChange = (event:any) => {
+    setPassword(event.target.value as string);
+  };
+
+  const Checklogin = async () => {
+    personals.map((item: any) => {
+      console.log(item.email);
+      if ((item.email == email) && (item.password == password)) {
+        setAlert(true);
+        localStorage.setItem("personaldata", JSON.stringify(item.id));
+        history.pushState("", "", "/Group14");
+        window.location.reload(false);
+      }
+    })
+    setStatus(true);
+    const timer = setTimeout(() => {
+      setStatus(false);
+    }, 1000);
+  }
 
   return (
-    <Page theme={pageTheme.home}>
-      <Header
-        title={`Welcome ${profile.givenName || 'to Backstage'}`}
-        subtitle="Some quick intro and links."
-      >
-        <Timer />
-      </Header>
-      <Content>
-        <ContentHeader title="Getting Started">
-          <SupportButton />
-        </ContentHeader>
-        <Grid container>
-          <Grid item xs={12} md={6}>
-            <InfoCard>
-              <Typography variant="body1" gutterBottom>
-                You now have a running instance of Backstage!
-                <span role="img" aria-label="confetti">
-                  🎉
-                </span>
-                Let's make sure you get the most out of this platform by walking
-                you through the basics.
-              </Typography>
-              <Typography variant="h6" gutterBottom>
-                The Setup
-              </Typography>
-              <Typography variant="body1" paragraph>
-                Backstage is put together from three base concepts: the core,
-                the app and the plugins.
-              </Typography>
-              <List>
-                <ListItem>
-                  <ListItemText primary="The core is responsible for base functionality." />
-                </ListItem>
-                <ListItem>
-                  <ListItemText primary="The app provides the base UI and connects the plugins." />
-                </ListItem>
-                <ListItem>
-                  <ListItemText
-                    primary="The plugins make Backstage useful for the end users with
-                  specific views and functionality."
-                  />
-                </ListItem>
-              </List>
-              <Typography variant="h6" gutterBottom>
-                Try It Out
-              </Typography>
-              <Typography variant="body1" paragraph>
-                We suggest you either check out the documentation for{' '}
-                <Link href="https://github.com/spotify/backstage/blob/master/docs/getting-started/create-a-plugin.md">
-                  creating a plugin
-                </Link>{' '}
-                or have a look in the code for the{' '}
-                <Link component={RouterLink} to="/home">
-                  Home Page
-                </Link>{' '}
-                in the directory "plugins/home-page/src".
-              </Typography>
-            </InfoCard>
-          </Grid>
-          <Grid item>
-            <InfoCard>
-              <Typography variant="h5">Quick Links</Typography>
-              <List>
-                <ListItem>
-                  <Link href="https://backstage.io">backstage.io</Link>
-                </ListItem>
-                <ListItem>
-                  <Link href="https://github.com/spotify/backstage/blob/master/docs/getting-started/create-a-plugin.md">
-                    Create a plugin
-                  </Link>
-                </ListItem>
-              </List>
-            </InfoCard>
-          </Grid>
-        </Grid>
+    <Page theme={pageTheme.tool}>
+    <Header
+      title="ระบบแจ้งซ่อมคอมพิวเตอร์" type="กลุ่มที่14">
+    </Header>
+    <Content>
+      <ContentHeader title="เข้าสู่ระบบการแจ้งซ่อม">
+      {status ? (
+            <div>
+              {alert ? (
+                <Alert severity="success" onClose={() => { }}>
+                  เข้าสู่ระบบสำเร็จ
+                </Alert>
+              ) : (
+                  <Alert severity="error" onClose={() => { setStatus(false) }}>
+                    เข้าสู่ระบบไม่สำเร็จ กรุณาตรวจสอบ Email หรือ Password
+                  </Alert>
+                )}
+            </div>
+          ) : null}
+      </ContentHeader>
+      <div className={classes.root}>
+      <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="email"
+            label="Email Address"
+            name="email"
+            value={email}
+            onChange={HandleEmailChange}
+            autoComplete="email"
+            autoFocus
+            style={{ width: 400 , marginRight: 400, marginLeft: 400}}
+          />
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            name="password"
+            label="Password"
+            type="password"
+            id="password"
+            value={password}
+            onChange={HandlePasswordChange}
+            autoComplete="current-password"
+            style={{ width: 400 , marginRight: 400, marginLeft: 400}}
+          />
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            size="large"
+            className={classes.submit}
+            style={{ width: 400 , marginRight: 400, marginLeft: 400, marginTop: 2}}
+            onClick={() => {
+              Checklogin();
+            }}
+          >
+            เข้าสู่ระบบ
+          </Button>    
+      </div>
       </Content>
-    </Page>
+   </Page>
   );
-};
-
-export default WelcomePage;
+}
