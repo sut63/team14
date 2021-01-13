@@ -10,6 +10,7 @@ import (
 
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
+	"github.com/tanapon395/playlist-video/ent/adminrepair"
 	"github.com/tanapon395/playlist-video/ent/brand"
 	"github.com/tanapon395/playlist-video/ent/customer"
 	"github.com/tanapon395/playlist-video/ent/fix"
@@ -46,6 +47,21 @@ func (fc *FixCreate) SetQueue(s string) *FixCreate {
 func (fc *FixCreate) SetDate(t time.Time) *FixCreate {
 	fc.mutation.SetDate(t)
 	return fc
+}
+
+// AddFixIDs adds the fix edge to Adminrepair by ids.
+func (fc *FixCreate) AddFixIDs(ids ...int) *FixCreate {
+	fc.mutation.AddFixIDs(ids...)
+	return fc
+}
+
+// AddFix adds the fix edges to Adminrepair.
+func (fc *FixCreate) AddFix(a ...*Adminrepair) *FixCreate {
+	ids := make([]int, len(a))
+	for i := range a {
+		ids[i] = a[i].ID
+	}
+	return fc.AddFixIDs(ids...)
 }
 
 // SetBrandID sets the brand edge to Brand by id.
@@ -249,6 +265,25 @@ func (fc *FixCreate) createSpec() (*Fix, *sqlgraph.CreateSpec) {
 			Column: fix.FieldDate,
 		})
 		f.Date = value
+	}
+	if nodes := fc.mutation.FixIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   fix.FixTable,
+			Columns: []string{fix.FixColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: adminrepair.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
 	}
 	if nodes := fc.mutation.BrandIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

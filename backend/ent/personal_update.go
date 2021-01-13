@@ -9,6 +9,7 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
+	"github.com/tanapon395/playlist-video/ent/adminrepair"
 	"github.com/tanapon395/playlist-video/ent/customer"
 	"github.com/tanapon395/playlist-video/ent/department"
 	"github.com/tanapon395/playlist-video/ent/fix"
@@ -153,6 +154,21 @@ func (pu *PersonalUpdate) AddFix(f ...*Fix) *PersonalUpdate {
 	return pu.AddFixIDs(ids...)
 }
 
+// AddPersonalIDs adds the personal edge to Adminrepair by ids.
+func (pu *PersonalUpdate) AddPersonalIDs(ids ...int) *PersonalUpdate {
+	pu.mutation.AddPersonalIDs(ids...)
+	return pu
+}
+
+// AddPersonal adds the personal edges to Adminrepair.
+func (pu *PersonalUpdate) AddPersonal(a ...*Adminrepair) *PersonalUpdate {
+	ids := make([]int, len(a))
+	for i := range a {
+		ids[i] = a[i].ID
+	}
+	return pu.AddPersonalIDs(ids...)
+}
+
 // Mutation returns the PersonalMutation object of the builder.
 func (pu *PersonalUpdate) Mutation() *PersonalMutation {
 	return pu.mutation
@@ -219,6 +235,21 @@ func (pu *PersonalUpdate) RemoveFix(f ...*Fix) *PersonalUpdate {
 		ids[i] = f[i].ID
 	}
 	return pu.RemoveFixIDs(ids...)
+}
+
+// RemovePersonalIDs removes the personal edge to Adminrepair by ids.
+func (pu *PersonalUpdate) RemovePersonalIDs(ids ...int) *PersonalUpdate {
+	pu.mutation.RemovePersonalIDs(ids...)
+	return pu
+}
+
+// RemovePersonal removes personal edges to Adminrepair.
+func (pu *PersonalUpdate) RemovePersonal(a ...*Adminrepair) *PersonalUpdate {
+	ids := make([]int, len(a))
+	for i := range a {
+		ids[i] = a[i].ID
+	}
+	return pu.RemovePersonalIDs(ids...)
 }
 
 // Save executes the query and returns the number of rows/vertices matched by this operation.
@@ -531,6 +562,44 @@ func (pu *PersonalUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	if nodes := pu.mutation.RemovedPersonalIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   personal.PersonalTable,
+			Columns: []string{personal.PersonalColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: adminrepair.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := pu.mutation.PersonalIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   personal.PersonalTable,
+			Columns: []string{personal.PersonalColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: adminrepair.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, pu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{personal.Label}
@@ -669,6 +738,21 @@ func (puo *PersonalUpdateOne) AddFix(f ...*Fix) *PersonalUpdateOne {
 	return puo.AddFixIDs(ids...)
 }
 
+// AddPersonalIDs adds the personal edge to Adminrepair by ids.
+func (puo *PersonalUpdateOne) AddPersonalIDs(ids ...int) *PersonalUpdateOne {
+	puo.mutation.AddPersonalIDs(ids...)
+	return puo
+}
+
+// AddPersonal adds the personal edges to Adminrepair.
+func (puo *PersonalUpdateOne) AddPersonal(a ...*Adminrepair) *PersonalUpdateOne {
+	ids := make([]int, len(a))
+	for i := range a {
+		ids[i] = a[i].ID
+	}
+	return puo.AddPersonalIDs(ids...)
+}
+
 // Mutation returns the PersonalMutation object of the builder.
 func (puo *PersonalUpdateOne) Mutation() *PersonalMutation {
 	return puo.mutation
@@ -735,6 +819,21 @@ func (puo *PersonalUpdateOne) RemoveFix(f ...*Fix) *PersonalUpdateOne {
 		ids[i] = f[i].ID
 	}
 	return puo.RemoveFixIDs(ids...)
+}
+
+// RemovePersonalIDs removes the personal edge to Adminrepair by ids.
+func (puo *PersonalUpdateOne) RemovePersonalIDs(ids ...int) *PersonalUpdateOne {
+	puo.mutation.RemovePersonalIDs(ids...)
+	return puo
+}
+
+// RemovePersonal removes personal edges to Adminrepair.
+func (puo *PersonalUpdateOne) RemovePersonal(a ...*Adminrepair) *PersonalUpdateOne {
+	ids := make([]int, len(a))
+	for i := range a {
+		ids[i] = a[i].ID
+	}
+	return puo.RemovePersonalIDs(ids...)
 }
 
 // Save executes the query and returns the updated entity.
@@ -1037,6 +1136,44 @@ func (puo *PersonalUpdateOne) sqlSave(ctx context.Context) (pe *Personal, err er
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: fix.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if nodes := puo.mutation.RemovedPersonalIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   personal.PersonalTable,
+			Columns: []string{personal.PersonalColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: adminrepair.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := puo.mutation.PersonalIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   personal.PersonalTable,
+			Columns: []string{personal.PersonalColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: adminrepair.FieldID,
 				},
 			},
 		}

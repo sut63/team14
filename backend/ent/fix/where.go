@@ -530,6 +530,34 @@ func DateLTE(v time.Time) predicate.Fix {
 	})
 }
 
+// HasFix applies the HasEdge predicate on the "fix" edge.
+func HasFix() predicate.Fix {
+	return predicate.Fix(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(FixTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, FixTable, FixColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasFixWith applies the HasEdge predicate on the "fix" edge with a given conditions (other predicates).
+func HasFixWith(preds ...predicate.Adminrepair) predicate.Fix {
+	return predicate.Fix(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(FixInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, FixTable, FixColumn),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
 // HasBrand applies the HasEdge predicate on the "brand" edge.
 func HasBrand() predicate.Fix {
 	return predicate.Fix(func(s *sql.Selector) {

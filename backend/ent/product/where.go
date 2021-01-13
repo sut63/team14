@@ -445,6 +445,34 @@ func PriceContainsFold(v string) predicate.Product {
 	})
 }
 
+// HasProduct applies the HasEdge predicate on the "product" edge.
+func HasProduct() predicate.Product {
+	return predicate.Product(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(ProductTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, ProductTable, ProductColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasProductWith applies the HasEdge predicate on the "product" edge with a given conditions (other predicates).
+func HasProductWith(preds ...predicate.Adminrepair) predicate.Product {
+	return predicate.Product(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(ProductInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, ProductTable, ProductColumn),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
 // HasBrand applies the HasEdge predicate on the "brand" edge.
 func HasBrand() predicate.Product {
 	return predicate.Product(func(s *sql.Selector) {

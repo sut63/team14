@@ -15,17 +15,18 @@ type Product struct {
 func (Product) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("Productname").
-				NotEmpty(),
+			NotEmpty(),
 		field.String("Numberofproduct").
-				NotEmpty(),
+			NotEmpty(),
 		field.String("Price").
-				NotEmpty(),
+			NotEmpty(),
 	}
 }
 
 // Edges of the Product.
 func (Product) Edges() []ent.Edge {
 	return []ent.Edge{
+		edge.To("product", Adminrepair.Type).StorageKey(edge.Column("product_id")),
 		edge.From("brand", Brand.Type).Ref("product").Unique(),
 		edge.From("typeproduct", Typeproduct.Type).Ref("product").Unique(),
 		edge.From("personal", Personal.Type).Ref("product").Unique(),

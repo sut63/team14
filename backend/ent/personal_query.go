@@ -12,6 +12,7 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
+	"github.com/tanapon395/playlist-video/ent/adminrepair"
 	"github.com/tanapon395/playlist-video/ent/customer"
 	"github.com/tanapon395/playlist-video/ent/department"
 	"github.com/tanapon395/playlist-video/ent/fix"
@@ -37,6 +38,7 @@ type PersonalQuery struct {
 	withGender     *GenderQuery
 	withProduct    *ProductQuery
 	withFix        *FixQuery
+	withPersonal   *AdminrepairQuery
 	withFKs        bool
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
@@ -168,6 +170,24 @@ func (pq *PersonalQuery) QueryFix() *FixQuery {
 			sqlgraph.From(personal.Table, personal.FieldID, pq.sqlQuery()),
 			sqlgraph.To(fix.Table, fix.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, personal.FixTable, personal.FixColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(pq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryPersonal chains the current query on the personal edge.
+func (pq *PersonalQuery) QueryPersonal() *AdminrepairQuery {
+	query := &AdminrepairQuery{config: pq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := pq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(personal.Table, personal.FieldID, pq.sqlQuery()),
+			sqlgraph.To(adminrepair.Table, adminrepair.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, personal.PersonalTable, personal.PersonalColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(pq.driver.Dialect(), step)
 		return fromU, nil
@@ -420,6 +440,17 @@ func (pq *PersonalQuery) WithFix(opts ...func(*FixQuery)) *PersonalQuery {
 	return pq
 }
 
+//  WithPersonal tells the query-builder to eager-loads the nodes that are connected to
+// the "personal" edge. The optional arguments used to configure the query builder of the edge.
+func (pq *PersonalQuery) WithPersonal(opts ...func(*AdminrepairQuery)) *PersonalQuery {
+	query := &AdminrepairQuery{config: pq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	pq.withPersonal = query
+	return pq
+}
+
 // GroupBy used to group vertices by one or more fields/columns.
 // It is often used with aggregate functions, like: count, max, mean, min, sum.
 //
@@ -487,13 +518,14 @@ func (pq *PersonalQuery) sqlAll(ctx context.Context) ([]*Personal, error) {
 		nodes       = []*Personal{}
 		withFKs     = pq.withFKs
 		_spec       = pq.querySpec()
-		loadedTypes = [6]bool{
+		loadedTypes = [7]bool{
 			pq.withCustomer != nil,
 			pq.withTitle != nil,
 			pq.withDepartment != nil,
 			pq.withGender != nil,
 			pq.withProduct != nil,
 			pq.withFix != nil,
+			pq.withPersonal != nil,
 		}
 	)
 	if pq.withTitle != nil || pq.withDepartment != nil || pq.withGender != nil {
@@ -682,6 +714,34 @@ func (pq *PersonalQuery) sqlAll(ctx context.Context) ([]*Personal, error) {
 				return nil, fmt.Errorf(`unexpected foreign-key "personal_id" returned %v for node %v`, *fk, n.ID)
 			}
 			node.Edges.Fix = append(node.Edges.Fix, n)
+		}
+	}
+
+	if query := pq.withPersonal; query != nil {
+		fks := make([]driver.Value, 0, len(nodes))
+		nodeids := make(map[int]*Personal)
+		for i := range nodes {
+			fks = append(fks, nodes[i].ID)
+			nodeids[nodes[i].ID] = nodes[i]
+		}
+		query.withFKs = true
+		query.Where(predicate.Adminrepair(func(s *sql.Selector) {
+			s.Where(sql.InValues(personal.PersonalColumn, fks...))
+		}))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			fk := n.personal_id
+			if fk == nil {
+				return nil, fmt.Errorf(`foreign-key "personal_id" is nil for node %v`, n.ID)
+			}
+			node, ok := nodeids[*fk]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "personal_id" returned %v for node %v`, *fk, n.ID)
+			}
+			node.Edges.Personal = append(node.Edges.Personal, n)
 		}
 	}
 

@@ -16,6 +16,8 @@ const (
 	// FieldDate holds the string denoting the date field in the database.
 	FieldDate = "date"
 
+	// EdgeFix holds the string denoting the fix edge name in mutations.
+	EdgeFix = "fix"
 	// EdgeBrand holds the string denoting the brand edge name in mutations.
 	EdgeBrand = "brand"
 	// EdgePersonal holds the string denoting the personal edge name in mutations.
@@ -27,6 +29,13 @@ const (
 
 	// Table holds the table name of the fix in the database.
 	Table = "fixes"
+	// FixTable is the table the holds the fix relation/edge.
+	FixTable = "adminrepairs"
+	// FixInverseTable is the table name for the Adminrepair entity.
+	// It exists in this package in order to avoid circular dependency with the "adminrepair" package.
+	FixInverseTable = "adminrepairs"
+	// FixColumn is the table column denoting the fix relation/edge.
+	FixColumn = "fix_id"
 	// BrandTable is the table the holds the brand relation/edge.
 	BrandTable = "fixes"
 	// BrandInverseTable is the table name for the Brand entity.

@@ -4,6 +4,7 @@ package ent
 
 import (
 	"context"
+	"database/sql/driver"
 	"errors"
 	"fmt"
 	"math"
@@ -11,6 +12,7 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
+	"github.com/tanapon395/playlist-video/ent/adminrepair"
 	"github.com/tanapon395/playlist-video/ent/brand"
 	"github.com/tanapon395/playlist-video/ent/personal"
 	"github.com/tanapon395/playlist-video/ent/predicate"
@@ -27,6 +29,7 @@ type ProductQuery struct {
 	unique     []string
 	predicates []predicate.Product
 	// eager-loading edges.
+	withProduct     *AdminrepairQuery
 	withBrand       *BrandQuery
 	withTypeproduct *TypeproductQuery
 	withPersonal    *PersonalQuery
@@ -58,6 +61,24 @@ func (pq *ProductQuery) Offset(offset int) *ProductQuery {
 func (pq *ProductQuery) Order(o ...OrderFunc) *ProductQuery {
 	pq.order = append(pq.order, o...)
 	return pq
+}
+
+// QueryProduct chains the current query on the product edge.
+func (pq *ProductQuery) QueryProduct() *AdminrepairQuery {
+	query := &AdminrepairQuery{config: pq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := pq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(product.Table, product.FieldID, pq.sqlQuery()),
+			sqlgraph.To(adminrepair.Table, adminrepair.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, product.ProductTable, product.ProductColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(pq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
 }
 
 // QueryBrand chains the current query on the brand edge.
@@ -293,6 +314,17 @@ func (pq *ProductQuery) Clone() *ProductQuery {
 	}
 }
 
+//  WithProduct tells the query-builder to eager-loads the nodes that are connected to
+// the "product" edge. The optional arguments used to configure the query builder of the edge.
+func (pq *ProductQuery) WithProduct(opts ...func(*AdminrepairQuery)) *ProductQuery {
+	query := &AdminrepairQuery{config: pq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	pq.withProduct = query
+	return pq
+}
+
 //  WithBrand tells the query-builder to eager-loads the nodes that are connected to
 // the "brand" edge. The optional arguments used to configure the query builder of the edge.
 func (pq *ProductQuery) WithBrand(opts ...func(*BrandQuery)) *ProductQuery {
@@ -393,7 +425,8 @@ func (pq *ProductQuery) sqlAll(ctx context.Context) ([]*Product, error) {
 		nodes       = []*Product{}
 		withFKs     = pq.withFKs
 		_spec       = pq.querySpec()
-		loadedTypes = [3]bool{
+		loadedTypes = [4]bool{
+			pq.withProduct != nil,
 			pq.withBrand != nil,
 			pq.withTypeproduct != nil,
 			pq.withPersonal != nil,
@@ -427,6 +460,34 @@ func (pq *ProductQuery) sqlAll(ctx context.Context) ([]*Product, error) {
 	}
 	if len(nodes) == 0 {
 		return nodes, nil
+	}
+
+	if query := pq.withProduct; query != nil {
+		fks := make([]driver.Value, 0, len(nodes))
+		nodeids := make(map[int]*Product)
+		for i := range nodes {
+			fks = append(fks, nodes[i].ID)
+			nodeids[nodes[i].ID] = nodes[i]
+		}
+		query.withFKs = true
+		query.Where(predicate.Adminrepair(func(s *sql.Selector) {
+			s.Where(sql.InValues(product.ProductColumn, fks...))
+		}))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			fk := n.product_id
+			if fk == nil {
+				return nil, fmt.Errorf(`foreign-key "product_id" is nil for node %v`, n.ID)
+			}
+			node, ok := nodeids[*fk]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "product_id" returned %v for node %v`, *fk, n.ID)
+			}
+			node.Edges.Product = append(node.Edges.Product, n)
+		}
 	}
 
 	if query := pq.withBrand; query != nil {

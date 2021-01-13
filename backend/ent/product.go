@@ -34,6 +34,8 @@ type Product struct {
 
 // ProductEdges holds the relations/edges for other nodes in the graph.
 type ProductEdges struct {
+	// Product holds the value of the product edge.
+	Product []*Adminrepair
 	// Brand holds the value of the brand edge.
 	Brand *Brand
 	// Typeproduct holds the value of the typeproduct edge.
@@ -42,13 +44,22 @@ type ProductEdges struct {
 	Personal *Personal
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [3]bool
+	loadedTypes [4]bool
+}
+
+// ProductOrErr returns the Product value or an error if the edge
+// was not loaded in eager-loading.
+func (e ProductEdges) ProductOrErr() ([]*Adminrepair, error) {
+	if e.loadedTypes[0] {
+		return e.Product, nil
+	}
+	return nil, &NotLoadedError{edge: "product"}
 }
 
 // BrandOrErr returns the Brand value or an error if the edge
 // was not loaded in eager-loading, or loaded but was not found.
 func (e ProductEdges) BrandOrErr() (*Brand, error) {
-	if e.loadedTypes[0] {
+	if e.loadedTypes[1] {
 		if e.Brand == nil {
 			// The edge brand was loaded in eager-loading,
 			// but was not found.
@@ -62,7 +73,7 @@ func (e ProductEdges) BrandOrErr() (*Brand, error) {
 // TypeproductOrErr returns the Typeproduct value or an error if the edge
 // was not loaded in eager-loading, or loaded but was not found.
 func (e ProductEdges) TypeproductOrErr() (*Typeproduct, error) {
-	if e.loadedTypes[1] {
+	if e.loadedTypes[2] {
 		if e.Typeproduct == nil {
 			// The edge typeproduct was loaded in eager-loading,
 			// but was not found.
@@ -76,7 +87,7 @@ func (e ProductEdges) TypeproductOrErr() (*Typeproduct, error) {
 // PersonalOrErr returns the Personal value or an error if the edge
 // was not loaded in eager-loading, or loaded but was not found.
 func (e ProductEdges) PersonalOrErr() (*Personal, error) {
-	if e.loadedTypes[2] {
+	if e.loadedTypes[3] {
 		if e.Personal == nil {
 			// The edge personal was loaded in eager-loading,
 			// but was not found.
@@ -155,6 +166,11 @@ func (pr *Product) assignValues(values ...interface{}) error {
 		}
 	}
 	return nil
+}
+
+// QueryProduct queries the product edge of the Product.
+func (pr *Product) QueryProduct() *AdminrepairQuery {
+	return (&ProductClient{config: pr.config}).QueryProduct(pr)
 }
 
 // QueryBrand queries the brand edge of the Product.

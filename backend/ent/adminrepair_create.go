@@ -4,11 +4,15 @@ package ent
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
 	"github.com/tanapon395/playlist-video/ent/adminrepair"
+	"github.com/tanapon395/playlist-video/ent/fix"
+	"github.com/tanapon395/playlist-video/ent/personal"
+	"github.com/tanapon395/playlist-video/ent/product"
 )
 
 // AdminrepairCreate is the builder for creating a Adminrepair entity.
@@ -18,6 +22,69 @@ type AdminrepairCreate struct {
 	hooks    []Hook
 }
 
+// SetEquipmentdamate sets the equipmentdamate field.
+func (ac *AdminrepairCreate) SetEquipmentdamate(s string) *AdminrepairCreate {
+	ac.mutation.SetEquipmentdamate(s)
+	return ac
+}
+
+// SetAdminrepairPersonalID sets the AdminrepairPersonal edge to Personal by id.
+func (ac *AdminrepairCreate) SetAdminrepairPersonalID(id int) *AdminrepairCreate {
+	ac.mutation.SetAdminrepairPersonalID(id)
+	return ac
+}
+
+// SetNillableAdminrepairPersonalID sets the AdminrepairPersonal edge to Personal by id if the given value is not nil.
+func (ac *AdminrepairCreate) SetNillableAdminrepairPersonalID(id *int) *AdminrepairCreate {
+	if id != nil {
+		ac = ac.SetAdminrepairPersonalID(*id)
+	}
+	return ac
+}
+
+// SetAdminrepairPersonal sets the AdminrepairPersonal edge to Personal.
+func (ac *AdminrepairCreate) SetAdminrepairPersonal(p *Personal) *AdminrepairCreate {
+	return ac.SetAdminrepairPersonalID(p.ID)
+}
+
+// SetAdminrepairFixID sets the AdminrepairFix edge to Fix by id.
+func (ac *AdminrepairCreate) SetAdminrepairFixID(id int) *AdminrepairCreate {
+	ac.mutation.SetAdminrepairFixID(id)
+	return ac
+}
+
+// SetNillableAdminrepairFixID sets the AdminrepairFix edge to Fix by id if the given value is not nil.
+func (ac *AdminrepairCreate) SetNillableAdminrepairFixID(id *int) *AdminrepairCreate {
+	if id != nil {
+		ac = ac.SetAdminrepairFixID(*id)
+	}
+	return ac
+}
+
+// SetAdminrepairFix sets the AdminrepairFix edge to Fix.
+func (ac *AdminrepairCreate) SetAdminrepairFix(f *Fix) *AdminrepairCreate {
+	return ac.SetAdminrepairFixID(f.ID)
+}
+
+// SetAdminrepairProductID sets the AdminrepairProduct edge to Product by id.
+func (ac *AdminrepairCreate) SetAdminrepairProductID(id int) *AdminrepairCreate {
+	ac.mutation.SetAdminrepairProductID(id)
+	return ac
+}
+
+// SetNillableAdminrepairProductID sets the AdminrepairProduct edge to Product by id if the given value is not nil.
+func (ac *AdminrepairCreate) SetNillableAdminrepairProductID(id *int) *AdminrepairCreate {
+	if id != nil {
+		ac = ac.SetAdminrepairProductID(*id)
+	}
+	return ac
+}
+
+// SetAdminrepairProduct sets the AdminrepairProduct edge to Product.
+func (ac *AdminrepairCreate) SetAdminrepairProduct(p *Product) *AdminrepairCreate {
+	return ac.SetAdminrepairProductID(p.ID)
+}
+
 // Mutation returns the AdminrepairMutation object of the builder.
 func (ac *AdminrepairCreate) Mutation() *AdminrepairMutation {
 	return ac.mutation
@@ -25,6 +92,14 @@ func (ac *AdminrepairCreate) Mutation() *AdminrepairMutation {
 
 // Save creates the Adminrepair in the database.
 func (ac *AdminrepairCreate) Save(ctx context.Context) (*Adminrepair, error) {
+	if _, ok := ac.mutation.Equipmentdamate(); !ok {
+		return nil, &ValidationError{Name: "equipmentdamate", err: errors.New("ent: missing required field \"equipmentdamate\"")}
+	}
+	if v, ok := ac.mutation.Equipmentdamate(); ok {
+		if err := adminrepair.EquipmentdamateValidator(v); err != nil {
+			return nil, &ValidationError{Name: "equipmentdamate", err: fmt.Errorf("ent: validator failed for field \"equipmentdamate\": %w", err)}
+		}
+	}
 	var (
 		err  error
 		node *Adminrepair
@@ -85,5 +160,70 @@ func (ac *AdminrepairCreate) createSpec() (*Adminrepair, *sqlgraph.CreateSpec) {
 			},
 		}
 	)
+	if value, ok := ac.mutation.Equipmentdamate(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: adminrepair.FieldEquipmentdamate,
+		})
+		a.Equipmentdamate = value
+	}
+	if nodes := ac.mutation.AdminrepairPersonalIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   adminrepair.AdminrepairPersonalTable,
+			Columns: []string{adminrepair.AdminrepairPersonalColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: personal.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := ac.mutation.AdminrepairFixIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   adminrepair.AdminrepairFixTable,
+			Columns: []string{adminrepair.AdminrepairFixColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: fix.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := ac.mutation.AdminrepairProductIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   adminrepair.AdminrepairProductTable,
+			Columns: []string{adminrepair.AdminrepairProductColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: product.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
 	return a, _spec
 }

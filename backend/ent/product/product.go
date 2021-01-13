@@ -14,6 +14,8 @@ const (
 	// FieldPrice holds the string denoting the price field in the database.
 	FieldPrice = "price"
 
+	// EdgeProduct holds the string denoting the product edge name in mutations.
+	EdgeProduct = "product"
 	// EdgeBrand holds the string denoting the brand edge name in mutations.
 	EdgeBrand = "brand"
 	// EdgeTypeproduct holds the string denoting the typeproduct edge name in mutations.
@@ -23,6 +25,13 @@ const (
 
 	// Table holds the table name of the product in the database.
 	Table = "products"
+	// ProductTable is the table the holds the product relation/edge.
+	ProductTable = "adminrepairs"
+	// ProductInverseTable is the table name for the Adminrepair entity.
+	// It exists in this package in order to avoid circular dependency with the "adminrepair" package.
+	ProductInverseTable = "adminrepairs"
+	// ProductColumn is the table column denoting the product relation/edge.
+	ProductColumn = "product_id"
 	// BrandTable is the table the holds the brand relation/edge.
 	BrandTable = "products"
 	// BrandInverseTable is the table name for the Brand entity.

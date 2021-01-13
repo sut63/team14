@@ -272,6 +272,54 @@ func (c *AdminrepairClient) GetX(ctx context.Context, id int) *Adminrepair {
 	return a
 }
 
+// QueryAdminrepairPersonal queries the AdminrepairPersonal edge of a Adminrepair.
+func (c *AdminrepairClient) QueryAdminrepairPersonal(a *Adminrepair) *PersonalQuery {
+	query := &PersonalQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := a.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(adminrepair.Table, adminrepair.FieldID, id),
+			sqlgraph.To(personal.Table, personal.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, adminrepair.AdminrepairPersonalTable, adminrepair.AdminrepairPersonalColumn),
+		)
+		fromV = sqlgraph.Neighbors(a.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryAdminrepairFix queries the AdminrepairFix edge of a Adminrepair.
+func (c *AdminrepairClient) QueryAdminrepairFix(a *Adminrepair) *FixQuery {
+	query := &FixQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := a.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(adminrepair.Table, adminrepair.FieldID, id),
+			sqlgraph.To(fix.Table, fix.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, adminrepair.AdminrepairFixTable, adminrepair.AdminrepairFixColumn),
+		)
+		fromV = sqlgraph.Neighbors(a.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryAdminrepairProduct queries the AdminrepairProduct edge of a Adminrepair.
+func (c *AdminrepairClient) QueryAdminrepairProduct(a *Adminrepair) *ProductQuery {
+	query := &ProductQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := a.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(adminrepair.Table, adminrepair.FieldID, id),
+			sqlgraph.To(product.Table, product.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, adminrepair.AdminrepairProductTable, adminrepair.AdminrepairProductColumn),
+		)
+		fromV = sqlgraph.Neighbors(a.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
 // Hooks returns the client hooks.
 func (c *AdminrepairClient) Hooks() []Hook {
 	return c.hooks.Adminrepair
@@ -732,6 +780,22 @@ func (c *FixClient) GetX(ctx context.Context, id int) *Fix {
 	return f
 }
 
+// QueryFix queries the fix edge of a Fix.
+func (c *FixClient) QueryFix(f *Fix) *AdminrepairQuery {
+	query := &AdminrepairQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := f.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(fix.Table, fix.FieldID, id),
+			sqlgraph.To(adminrepair.Table, adminrepair.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, fix.FixTable, fix.FixColumn),
+		)
+		fromV = sqlgraph.Neighbors(f.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
 // QueryBrand queries the brand edge of a Fix.
 func (c *FixClient) QueryBrand(f *Fix) *BrandQuery {
 	query := &BrandQuery{config: c.config}
@@ -1189,6 +1253,22 @@ func (c *PersonalClient) QueryFix(pe *Personal) *FixQuery {
 	return query
 }
 
+// QueryPersonal queries the personal edge of a Personal.
+func (c *PersonalClient) QueryPersonal(pe *Personal) *AdminrepairQuery {
+	query := &AdminrepairQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := pe.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(personal.Table, personal.FieldID, id),
+			sqlgraph.To(adminrepair.Table, adminrepair.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, personal.PersonalTable, personal.PersonalColumn),
+		)
+		fromV = sqlgraph.Neighbors(pe.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
 // Hooks returns the client hooks.
 func (c *PersonalClient) Hooks() []Hook {
 	return c.hooks.Personal
@@ -1270,6 +1350,22 @@ func (c *ProductClient) GetX(ctx context.Context, id int) *Product {
 		panic(err)
 	}
 	return pr
+}
+
+// QueryProduct queries the product edge of a Product.
+func (c *ProductClient) QueryProduct(pr *Product) *AdminrepairQuery {
+	query := &AdminrepairQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := pr.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(product.Table, product.FieldID, id),
+			sqlgraph.To(adminrepair.Table, adminrepair.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, product.ProductTable, product.ProductColumn),
+		)
+		fromV = sqlgraph.Neighbors(pr.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
 }
 
 // QueryBrand queries the brand edge of a Product.
