@@ -143,7 +143,7 @@ var doc = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/ent.Adminrepair"
+                            "$ref": "#/definitions/controllers.Adminrepair"
                         }
                     }
                 ],
@@ -2742,6 +2742,23 @@ var doc = `{
         }
     },
     "definitions": {
+        "controllers.Adminrepair": {
+            "type": "object",
+            "properties": {
+                "equipmentdamate": {
+                    "type": "string"
+                },
+                "fix": {
+                    "type": "integer"
+                },
+                "personal": {
+                    "type": "integer"
+                },
+                "product": {
+                    "type": "integer"
+                }
+            }
+        },
         "controllers.Customer": {
             "type": "object",
             "properties": {
@@ -3476,6 +3493,7 @@ var doc = `{
         "OAuth2Application": {
             "type": "oauth2",
             "flow": "application",
+            "authorizationUrl": "",
             "tokenUrl": "https://example.com/oauth/token",
             "scopes": {
                 "admin": " Grants read and write access to administrative information",
@@ -3494,6 +3512,7 @@ var doc = `{
         "OAuth2Password": {
             "type": "oauth2",
             "flow": "password",
+            "authorizationUrl": "",
             "tokenUrl": "https://example.com/oauth/token",
             "scopes": {
                 "admin": " Grants read and write access to administrative information",

@@ -32,7 +32,7 @@ type Adminrepair struct {
 // @ID create-adminrepair
 // @Accept   json
 // @Produce  json
-// @Param adminrepair body ent.Adminrepair true "Adminrepair entity"
+// @Param adminrepair body Adminrepair true "Adminrepair entity"
 // @Success 200 {object} ent.Adminrepair
 // @Failure 400 {object} gin.H
 // @Failure 500 {object} gin.H
