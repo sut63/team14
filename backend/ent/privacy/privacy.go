@@ -330,6 +330,30 @@ func (f FixMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) e
 	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.FixMutation", m)
 }
 
+// The FixbrandQueryRuleFunc type is an adapter to allow the use of ordinary
+// functions as a query rule.
+type FixbrandQueryRuleFunc func(context.Context, *ent.FixbrandQuery) error
+
+// EvalQuery return f(ctx, q).
+func (f FixbrandQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.FixbrandQuery); ok {
+		return f(ctx, q)
+	}
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.FixbrandQuery", q)
+}
+
+// The FixbrandMutationRuleFunc type is an adapter to allow the use of ordinary
+// functions as a mutation rule.
+type FixbrandMutationRuleFunc func(context.Context, *ent.FixbrandMutation) error
+
+// EvalMutation calls f(ctx, m).
+func (f FixbrandMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.FixbrandMutation); ok {
+		return f(ctx, m)
+	}
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.FixbrandMutation", m)
+}
+
 // The FixcomtypeQueryRuleFunc type is an adapter to allow the use of ordinary
 // functions as a query rule.
 type FixcomtypeQueryRuleFunc func(context.Context, *ent.FixcomtypeQuery) error

@@ -33,53 +33,6 @@ var doc = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/Fixcomtypes": {
-            "get": {
-                "description": "list fixcomtype entities",
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "List fixcomtype entities",
-                "operationId": "list-fixcomtype",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Limit",
-                        "name": "limit",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "Offset",
-                        "name": "offset",
-                        "in": "query"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/ent.Fixcomtype"
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    }
-                }
-            }
-        },
         "/adminrepairs": {
             "get": {
                 "description": "list adminrepair entities",
@@ -937,18 +890,150 @@ var doc = `{
                 }
             }
         },
-        "/fixcomtype/{id}": {
-            "delete": {
-                "description": "get fixcomtype by ID",
+        "/fixbrands": {
+            "get": {
+                "description": "list fixbrand entities",
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Delete a fixcomtype entity by ID",
-                "operationId": "delete-fixcomtype",
+                "summary": "List fixbrand entities",
+                "operationId": "list-fixbrand",
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Fixcomtype ID",
+                        "description": "Limit",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Offset",
+                        "name": "offset",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ent.Fixbrand"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create fixbrand",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create fixbrand",
+                "operationId": "create-fixbrand",
+                "parameters": [
+                    {
+                        "description": "Fixbrand entity",
+                        "name": "fixbrand",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/ent.Fixbrand"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.Fixbrand"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/fixbrands/{id}": {
+            "get": {
+                "description": "get fixbrand by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get a fixbrand entity by ID",
+                "operationId": "get-fixbrand",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Fixbrand ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.Fixbrand"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "get fixbrand by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Delete a fixbrand entity by ID",
+                "operationId": "delete-fixbrand",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Fixbrand ID",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -983,6 +1068,51 @@ var doc = `{
             }
         },
         "/fixcomtypes": {
+            "get": {
+                "description": "list fixcomtype entities",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "List fixcomtype entities",
+                "operationId": "list-fixcomtype",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Limit",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Offset",
+                        "name": "offset",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ent.Fixcomtype"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            },
             "post": {
                 "description": "Create fixcomtype",
                 "consumes": [
@@ -1000,7 +1130,7 @@ var doc = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/ent.Fixcomtype"
+                            "$ref": "#/definitions/controllers.Fixcomtype"
                         }
                     }
                 ],
@@ -1008,7 +1138,7 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/ent.Fixcomtype"
+                            "$ref": "#/definitions/controllers.Fixcomtype"
                         }
                     },
                     "400": {
@@ -1048,6 +1178,98 @@ var doc = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/ent.Fixcomtype"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "update fixcomtype by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Update a fixcomtype entity by ID",
+                "operationId": "update-fixcomtype",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Fixcomtype ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Fixcomtype entity",
+                        "name": "fixcomtype",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/ent.Fixcomtype"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.Fixcomtype"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "get fixcomtype by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Delete a fixcomtype entity by ID",
+                "operationId": "delete-fixcomtype",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Fixcomtype ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
                         }
                     },
                     "400": {
@@ -2793,14 +3015,14 @@ var doc = `{
         "controllers.Fix": {
             "type": "object",
             "properties": {
-                "brand": {
-                    "type": "integer"
-                },
                 "customer": {
                     "type": "integer"
                 },
                 "date": {
                     "type": "string"
+                },
+                "fixbrand": {
+                    "type": "integer"
                 },
                 "fixcomtype": {
                     "type": "integer"
@@ -2815,6 +3037,14 @@ var doc = `{
                     "type": "string"
                 },
                 "queue": {
+                    "type": "string"
+                }
+            }
+        },
+        "controllers.Fixcomtype": {
+            "type": "object",
+            "properties": {
+                "fixcomtypename": {
                     "type": "string"
                 }
             }
@@ -2942,13 +3172,6 @@ var doc = `{
         "ent.BrandEdges": {
             "type": "object",
             "properties": {
-                "fix": {
-                    "description": "Fix holds the value of the fix edge.",
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/ent.Fix"
-                    }
-                },
                 "product": {
                     "description": "Product holds the value of the product edge.",
                     "type": "array",
@@ -3074,11 +3297,6 @@ var doc = `{
         "ent.FixEdges": {
             "type": "object",
             "properties": {
-                "brand": {
-                    "description": "Brand holds the value of the brand edge.",
-                    "type": "object",
-                    "$ref": "#/definitions/ent.Brand"
-                },
                 "customer": {
                     "description": "Customer holds the value of the customer edge.",
                     "type": "object",
@@ -3091,6 +3309,11 @@ var doc = `{
                         "$ref": "#/definitions/ent.Adminrepair"
                     }
                 },
+                "fixbrand": {
+                    "description": "Fixbrand holds the value of the fixbrand edge.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.Fixbrand"
+                },
                 "fixcomtype": {
                     "description": "Fixcomtype holds the value of the fixcomtype edge.",
                     "type": "object",
@@ -3100,6 +3323,36 @@ var doc = `{
                     "description": "Personal holds the value of the personal edge.",
                     "type": "object",
                     "$ref": "#/definitions/ent.Personal"
+                }
+            }
+        },
+        "ent.Fixbrand": {
+            "type": "object",
+            "properties": {
+                "edges": {
+                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the FixbrandQuery when eager-loading is set.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.FixbrandEdges"
+                },
+                "fixbrandname": {
+                    "description": "Fixbrandname holds the value of the \"fixbrandname\" field.",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "ID of the ent.",
+                    "type": "integer"
+                }
+            }
+        },
+        "ent.FixbrandEdges": {
+            "type": "object",
+            "properties": {
+                "fix": {
+                    "description": "Fix holds the value of the fix edge.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.Fix"
+                    }
                 }
             }
         },

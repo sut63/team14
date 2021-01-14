@@ -6,9 +6,9 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/tanapon395/playlist-video/ent/brand"
 	"github.com/tanapon395/playlist-video/ent/customer"
 	"github.com/tanapon395/playlist-video/ent/fix"
+	"github.com/tanapon395/playlist-video/ent/fixbrand"
 	"github.com/tanapon395/playlist-video/ent/fixcomtype"
 	"github.com/tanapon395/playlist-video/ent/personal"
 
@@ -28,7 +28,7 @@ type Fix struct {
 	Problemtype   string
 	Date          string
 	Queue         string
-	Brand         int
+	Fixbrand      int
 	Personal      int
 	Customer      int
 	Fixcomtype    int
@@ -54,14 +54,14 @@ func (ctl *FixController) CreateFix(c *gin.Context) {
 		return
 	}
 
-	b, err := ctl.client.Brand.
+	fb, err := ctl.client.Fixbrand.
 		Query().
-		Where(brand.IDEQ(int(obj.Brand))).
+		Where(fixbrand.IDEQ(int(obj.Fixbrand))).
 		Only(context.Background())
 
 	if err != nil {
 		c.JSON(400, gin.H{
-			"error": "brand not found",
+			"error": "fixbrand not found",
 		})
 		return
 	}
@@ -109,7 +109,7 @@ func (ctl *FixController) CreateFix(c *gin.Context) {
 		SetProblemtype(obj.Problemtype).
 		SetDate(date).
 		SetQueue(obj.Queue).
-		SetBrand(b).
+		SetFixbrand(fb).
 		SetPersonal(p).
 		SetCustomer(cm).
 		SetFixcomtype(ft).
@@ -191,7 +191,7 @@ func (ctl *FixController) ListFix(c *gin.Context) {
 
 	fixs, err := ctl.client.Fix.
 		Query().
-		WithBrand().
+		WithFixbrand().
 		WithPersonal().
 		WithCustomer().
 		WithFixcomtype().

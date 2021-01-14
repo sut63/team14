@@ -73,6 +73,16 @@ type Fixcomtype struct {
 	Fixcomtypename string
 }
 
+// Fixbrands struct type
+type Fixbrands struct {
+	Fixbrand []Fixbrand
+}
+
+// Fixbrand struct type
+type Fixbrand struct {
+	Fixbrandname string
+}
+
 // PaymentTypes struct type
 type PaymentTypes struct {
 	PaymentType []PaymentType
@@ -149,6 +159,7 @@ func main() {
 	controllers.NewBrandController(v1, client)
 	controllers.NewFixController(v1, client)
 	controllers.NewFixcomtypeController(v1, client)
+	controllers.NewFixbrandController(v1, client)
 	controllers.NewAdminrepairController(v1, client)
 	controllers.NewReceiptController(v1, client)
 	controllers.NewPaymentTypeController(v1, client)
@@ -188,10 +199,6 @@ func main() {
 			Brand{"Kingston"},
 			Brand{"MSI"},
 			Brand{"Western Digital"},
-			Brand{"ASUS"},
-			Brand{"ACER"},
-			Brand{"DELL"},
-			Brand{"LENOVO"},
 		},
 	}
 	for _, b := range brands.Brand {
@@ -219,17 +226,28 @@ func main() {
 			Save(context.Background())
 	}
 
-	// Set Fixcomtypes Data
-	fixcomtypes := Fixcomtypes{
-		Fixcomtype: []Fixcomtype{
-			Fixcomtype{"Personal Computer(PC)"},
-			Fixcomtype{"Laptop"},
-		},
-	}
-	for _, ft := range fixcomtypes.Fixcomtype {
+	//Set Fixcomtype Data
+	fixcomtypes := []string{"PC", "Labtop"}
+	for _, ft := range fixcomtypes {
 		client.Fixcomtype.
 			Create().
-			SetFixcomtypename(ft.Fixcomtypename).
+			SetFixcomtypename(ft).
+			Save(context.Background())
+	}
+
+	// Set Fixbrands Data
+	fixbrands := Fixbrands{
+		Fixbrand: []Fixbrand{
+			Fixbrand{"ASUS"},
+			Fixbrand{"ACER"},
+			Fixbrand{"DELL"},
+			Fixbrand{"LENOVO"},
+		},
+	}
+	for _, fb := range fixbrands.Fixbrand {
+		client.Fixbrand.
+			Create().
+			SetFixbrandname(fb.Fixbrandname).
 			Save(context.Background())
 	}
 

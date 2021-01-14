@@ -11,9 +11,9 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
 	"github.com/tanapon395/playlist-video/ent/adminrepair"
-	"github.com/tanapon395/playlist-video/ent/brand"
 	"github.com/tanapon395/playlist-video/ent/customer"
 	"github.com/tanapon395/playlist-video/ent/fix"
+	"github.com/tanapon395/playlist-video/ent/fixbrand"
 	"github.com/tanapon395/playlist-video/ent/fixcomtype"
 	"github.com/tanapon395/playlist-video/ent/personal"
 )
@@ -64,23 +64,23 @@ func (fc *FixCreate) AddFix(a ...*Adminrepair) *FixCreate {
 	return fc.AddFixIDs(ids...)
 }
 
-// SetBrandID sets the brand edge to Brand by id.
-func (fc *FixCreate) SetBrandID(id int) *FixCreate {
-	fc.mutation.SetBrandID(id)
+// SetFixbrandID sets the fixbrand edge to Fixbrand by id.
+func (fc *FixCreate) SetFixbrandID(id int) *FixCreate {
+	fc.mutation.SetFixbrandID(id)
 	return fc
 }
 
-// SetNillableBrandID sets the brand edge to Brand by id if the given value is not nil.
-func (fc *FixCreate) SetNillableBrandID(id *int) *FixCreate {
+// SetNillableFixbrandID sets the fixbrand edge to Fixbrand by id if the given value is not nil.
+func (fc *FixCreate) SetNillableFixbrandID(id *int) *FixCreate {
 	if id != nil {
-		fc = fc.SetBrandID(*id)
+		fc = fc.SetFixbrandID(*id)
 	}
 	return fc
 }
 
-// SetBrand sets the brand edge to Brand.
-func (fc *FixCreate) SetBrand(b *Brand) *FixCreate {
-	return fc.SetBrandID(b.ID)
+// SetFixbrand sets the fixbrand edge to Fixbrand.
+func (fc *FixCreate) SetFixbrand(f *Fixbrand) *FixCreate {
+	return fc.SetFixbrandID(f.ID)
 }
 
 // SetPersonalID sets the personal edge to Personal by id.
@@ -285,17 +285,17 @@ func (fc *FixCreate) createSpec() (*Fix, *sqlgraph.CreateSpec) {
 		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
-	if nodes := fc.mutation.BrandIDs(); len(nodes) > 0 {
+	if nodes := fc.mutation.FixbrandIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   fix.BrandTable,
-			Columns: []string{fix.BrandColumn},
+			Table:   fix.FixbrandTable,
+			Columns: []string{fix.FixbrandColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: brand.FieldID,
+					Column: fixbrand.FieldID,
 				},
 			},
 		}

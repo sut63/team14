@@ -18,8 +18,8 @@ const (
 
 	// EdgeFix holds the string denoting the fix edge name in mutations.
 	EdgeFix = "fix"
-	// EdgeBrand holds the string denoting the brand edge name in mutations.
-	EdgeBrand = "brand"
+	// EdgeFixbrand holds the string denoting the fixbrand edge name in mutations.
+	EdgeFixbrand = "fixbrand"
 	// EdgePersonal holds the string denoting the personal edge name in mutations.
 	EdgePersonal = "personal"
 	// EdgeCustomer holds the string denoting the customer edge name in mutations.
@@ -36,13 +36,13 @@ const (
 	FixInverseTable = "adminrepairs"
 	// FixColumn is the table column denoting the fix relation/edge.
 	FixColumn = "fix_id"
-	// BrandTable is the table the holds the brand relation/edge.
-	BrandTable = "fixes"
-	// BrandInverseTable is the table name for the Brand entity.
-	// It exists in this package in order to avoid circular dependency with the "brand" package.
-	BrandInverseTable = "brands"
-	// BrandColumn is the table column denoting the brand relation/edge.
-	BrandColumn = "brand_id"
+	// FixbrandTable is the table the holds the fixbrand relation/edge.
+	FixbrandTable = "fixes"
+	// FixbrandInverseTable is the table name for the Fixbrand entity.
+	// It exists in this package in order to avoid circular dependency with the "fixbrand" package.
+	FixbrandInverseTable = "fixbrands"
+	// FixbrandColumn is the table column denoting the fixbrand relation/edge.
+	FixbrandColumn = "fixbrand_id"
 	// PersonalTable is the table the holds the personal relation/edge.
 	PersonalTable = "fixes"
 	// PersonalInverseTable is the table name for the Personal entity.
@@ -77,8 +77,8 @@ var Columns = []string{
 
 // ForeignKeys holds the SQL foreign-keys that are owned by the Fix type.
 var ForeignKeys = []string{
-	"brand_id",
 	"customer_id",
+	"fixbrand_id",
 	"fixcomtype_id",
 	"personal_id",
 }

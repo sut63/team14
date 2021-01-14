@@ -10,7 +10,6 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
 	"github.com/tanapon395/playlist-video/ent/brand"
-	"github.com/tanapon395/playlist-video/ent/fix"
 	"github.com/tanapon395/playlist-video/ent/product"
 )
 
@@ -40,21 +39,6 @@ func (bc *BrandCreate) AddProduct(p ...*Product) *BrandCreate {
 		ids[i] = p[i].ID
 	}
 	return bc.AddProductIDs(ids...)
-}
-
-// AddFixIDs adds the fix edge to Fix by ids.
-func (bc *BrandCreate) AddFixIDs(ids ...int) *BrandCreate {
-	bc.mutation.AddFixIDs(ids...)
-	return bc
-}
-
-// AddFix adds the fix edges to Fix.
-func (bc *BrandCreate) AddFix(f ...*Fix) *BrandCreate {
-	ids := make([]int, len(f))
-	for i := range f {
-		ids[i] = f[i].ID
-	}
-	return bc.AddFixIDs(ids...)
 }
 
 // Mutation returns the BrandMutation object of the builder.
@@ -146,25 +130,6 @@ func (bc *BrandCreate) createSpec() (*Brand, *sqlgraph.CreateSpec) {
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: product.FieldID,
-				},
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges = append(_spec.Edges, edge)
-	}
-	if nodes := bc.mutation.FixIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
-			Table:   brand.FixTable,
-			Columns: []string{brand.FixColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
-					Column: fix.FieldID,
 				},
 			},
 		}

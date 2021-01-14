@@ -18,14 +18,14 @@ import {
     EntAdminrepairFromJSON,
     EntAdminrepairFromJSONTyped,
     EntAdminrepairToJSON,
-    EntBrand,
-    EntBrandFromJSON,
-    EntBrandFromJSONTyped,
-    EntBrandToJSON,
     EntCustomer,
     EntCustomerFromJSON,
     EntCustomerFromJSONTyped,
     EntCustomerToJSON,
+    EntFixbrand,
+    EntFixbrandFromJSON,
+    EntFixbrandFromJSONTyped,
+    EntFixbrandToJSON,
     EntFixcomtype,
     EntFixcomtypeFromJSON,
     EntFixcomtypeFromJSONTyped,
@@ -44,12 +44,6 @@ import {
 export interface EntFixEdges {
     /**
      * 
-     * @type {EntBrand}
-     * @memberof EntFixEdges
-     */
-    brand?: EntBrand;
-    /**
-     * 
      * @type {EntCustomer}
      * @memberof EntFixEdges
      */
@@ -60,6 +54,12 @@ export interface EntFixEdges {
      * @memberof EntFixEdges
      */
     fix?: Array<EntAdminrepair>;
+    /**
+     * 
+     * @type {EntFixbrand}
+     * @memberof EntFixEdges
+     */
+    fixbrand?: EntFixbrand;
     /**
      * 
      * @type {EntFixcomtype}
@@ -84,11 +84,11 @@ export function EntFixEdgesFromJSONTyped(json: any, ignoreDiscriminator: boolean
     }
     return {
         
-        'brand': !exists(json, 'brand') ? undefined : EntBrandFromJSON(json['brand']),
-        'customer': !exists(json, 'customer') ? undefined : EntCustomerFromJSON(json['customer']),
-        'fix': !exists(json, 'fix') ? undefined : ((json['fix'] as Array<any>).map(EntAdminrepairFromJSON)),
-        'fixcomtype': !exists(json, 'fixcomtype') ? undefined : EntFixcomtypeFromJSON(json['fixcomtype']),
-        'personal': !exists(json, 'personal') ? undefined : EntPersonalFromJSON(json['personal']),
+        'customer': !exists(json, 'Customer') ? undefined : EntCustomerFromJSON(json['Customer']),
+        'fix': !exists(json, 'Fix') ? undefined : ((json['Fix'] as Array<any>).map(EntAdminrepairFromJSON)),
+        'fixbrand': !exists(json, 'Fixbrand') ? undefined : EntFixbrandFromJSON(json['Fixbrand']),
+        'fixcomtype': !exists(json, 'Fixcomtype') ? undefined : EntFixcomtypeFromJSON(json['Fixcomtype']),
+        'personal': !exists(json, 'Personal') ? undefined : EntPersonalFromJSON(json['Personal']),
     };
 }
 
@@ -101,9 +101,9 @@ export function EntFixEdgesToJSON(value?: EntFixEdges | null): any {
     }
     return {
         
-        'brand': EntBrandToJSON(value.brand),
         'customer': EntCustomerToJSON(value.customer),
         'fix': value.fix === undefined ? undefined : ((value.fix as Array<any>).map(EntAdminrepairToJSON)),
+        'fixbrand': EntFixbrandToJSON(value.fixbrand),
         'fixcomtype': EntFixcomtypeToJSON(value.fixcomtype),
         'personal': EntPersonalToJSON(value.personal),
     };

@@ -24,12 +24,6 @@ export interface ControllersFix {
      * @type {number}
      * @memberof ControllersFix
      */
-    brand?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ControllersFix
-     */
     customer?: number;
     /**
      * 
@@ -37,6 +31,12 @@ export interface ControllersFix {
      * @memberof ControllersFix
      */
     date?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof ControllersFix
+     */
+    fixbrand?: number;
     /**
      * 
      * @type {number}
@@ -79,9 +79,9 @@ export function ControllersFixFromJSONTyped(json: any, ignoreDiscriminator: bool
     }
     return {
         
-        'brand': !exists(json, 'brand') ? undefined : json['brand'],
         'customer': !exists(json, 'customer') ? undefined : json['customer'],
         'date': !exists(json, 'date') ? undefined : json['date'],
+        'fixbrand': !exists(json, 'fixbrand') ? undefined : json['fixbrand'],
         'fixcomtype': !exists(json, 'fixcomtype') ? undefined : json['fixcomtype'],
         'personal': !exists(json, 'personal') ? undefined : json['personal'],
         'problemtype': !exists(json, 'problemtype') ? undefined : json['problemtype'],
@@ -99,9 +99,9 @@ export function ControllersFixToJSON(value?: ControllersFix | null): any {
     }
     return {
         
-        'brand': value.brand,
         'customer': value.customer,
         'date': value.date,
+        'fixbrand': value.fixbrand,
         'fixcomtype': value.fixcomtype,
         'personal': value.personal,
         'problemtype': value.problemtype,
