@@ -34,7 +34,7 @@ export default function SignInSide() {
   const [path, setPath] = React.useState("");
 
   const [status, setStatus] = useState(false);
-  const [alert, setAlert] = useState(Boolean);
+  //const [alert, setAlert] = useState(Boolean);
   const [loading, setLoading] = useState(false);
 
   const [personals, setPersonals] = React.useState<EntPersonal[]>([]);
@@ -68,6 +68,11 @@ export default function SignInSide() {
       ck.SetCookie("id",ck.SetID(personals,email,password),30)
       ck.SetCookie("name",ck.SetName(personals,email,password),30)
       window.location.reload(false)
+      alert("เข้าสู่ระบบสำเร็จ")
+    }
+    else if(check === false){
+      alert("เข้าสู่ระบบไม่สำเร็จ กรุณาตรวจสอบ Email หรือ Password")
+      //setPath("/")
     }
   }
 
@@ -77,21 +82,8 @@ export default function SignInSide() {
       title="ระบบแจ้งซ่อมคอมพิวเตอร์" type="กลุ่มที่14">
     </Header>
     <Content>
-      <ContentHeader title="เข้าสู่ระบบการแจ้งซ่อม">
-      {status ? (
-            <div>
-              {alert ? (
-                <Alert severity="success" onClose={() => { }}>
-                  เข้าสู่ระบบสำเร็จ
-                </Alert>
-              ) : (
-                  <Alert severity="error" onClose={() => { setStatus(false) }}>
-                    เข้าสู่ระบบไม่สำเร็จ กรุณาตรวจสอบ Email หรือ Password
-                  </Alert>
-                )}
-            </div>
-          ) : null}
-      </ContentHeader>
+    <ContentHeader title="เข้าสู่ระบบการแจ้งซ่อม">
+    </ContentHeader>
       <div className={classes.root}>
       <TextField
             variant="outlined"
