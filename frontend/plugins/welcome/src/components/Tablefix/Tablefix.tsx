@@ -21,6 +21,7 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import ComputerTwoToneIcon from '@material-ui/icons/ComputerTwoTone';
 import HomeRoundedIcon from '@material-ui/icons/HomeRounded';
 import { EntFix } from '../../api';
+import moment from 'moment'
 
 const useStyles = makeStyles((theme: Theme) =>
  createStyles({
@@ -110,7 +111,7 @@ export default function Tablefix() {
              <TableCell align="center">{item.edges?.fixcomtype?.fixcomtypename}</TableCell>
              <TableCell align="center">{item.edges?.fixbrand?.fixbrandname}</TableCell>
              <TableCell align="center">{item.productnumber}</TableCell>
-             <TableCell align="center">{item.date}</TableCell>
+             <TableCell align="center">{moment(item.date).format("DD/MM/YYYY HH.mm น.")}</TableCell>
              <TableCell align="center">{item.problemtype}</TableCell>
              <TableCell align="center">{item.queue}</TableCell>
              <TableCell align="center">
