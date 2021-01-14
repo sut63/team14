@@ -69,7 +69,7 @@ const Group14: FC<{}> = () => {
               variant="outlined"
               fullWidth
               size="large" 
-              href="" 
+              href="/Tablefix" 
               startIcon={<ComputerTwoToneIcon />}
               className={classes.systemstlye}> 
               การแจ้งซ่อม

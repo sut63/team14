@@ -7,6 +7,8 @@ import CreateNewCustomer from './components/Customers';
 import CustomerTable from './components/CustomerTables';
 import Productcreates from './components/Productcreates';
 import Producttable from './components/Producttable';
+import Fixpage from './components/Fixpage';
+import Tablefix from './components/Tablefix';
 
  
 export const plugin = createPlugin({
@@ -20,5 +22,7 @@ export const plugin = createPlugin({
     router.registerRoute('/customertable', CustomerTable);
     router.registerRoute('/Producttables', Producttable);
     router.registerRoute('/Productcreate', Productcreates);
+    router.registerRoute('/Fixpage', Fixpage);
+    router.registerRoute('/Tablefix', Tablefix);
   },
 });
