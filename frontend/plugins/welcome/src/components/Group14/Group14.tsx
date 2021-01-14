@@ -78,7 +78,7 @@ const Group14: FC<{}> = () => {
               variant="outlined"
               fullWidth
               size="large" 
-              href="" 
+              href="/AdminrepairUI" 
               startIcon={<PhonelinkSetupTwoToneIcon />}
               className={classes.systemstlye}> 
               การซ่อม-เจ้าหน้าที่ซ่อม

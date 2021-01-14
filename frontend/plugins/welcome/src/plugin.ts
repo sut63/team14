@@ -9,6 +9,7 @@ import Productcreates from './components/Productcreates';
 import Producttable from './components/Producttable';
 import Fixpage from './components/Fixpage';
 import Tablefix from './components/Tablefix';
+import AdminrepairUI from './components/AdminrepairUI';
 
  
 export const plugin = createPlugin({
@@ -24,6 +25,7 @@ export const plugin = createPlugin({
     router.registerRoute('/Productcreate', Productcreates);
     router.registerRoute('/Fixpage', Fixpage);
     router.registerRoute('/Tablefix', Tablefix);
+    router.registerRoute('/AdminrepairUI', AdminrepairUI);
     
 
   },
