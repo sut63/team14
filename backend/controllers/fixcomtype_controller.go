@@ -25,8 +25,8 @@ type Fixcomtype struct {
 // @ID create-fixcomtype
 // @Accept   json
 // @Produce  json
-// @Param fixcomtype body ent.Fixcomtype true "Fixcomtype entity"
-// @Success 200 {object} ent.Fixcomtype
+// @Param fixcomtype body Fixcomtype true "Fixcomtype entity"
+// @Success 200 {object} Fixcomtype
 // @Failure 400 {object} gin.H
 // @Failure 500 {object} gin.H
 // @Router /fixcomtypes [post]
@@ -34,7 +34,7 @@ func (ctl *FixcomtypeController) CreateFixcomtype(c *gin.Context) {
 	obj := Fixcomtype{}
 	if err := c.ShouldBind(&obj); err != nil {
 		c.JSON(400, gin.H{
-			"error": "fixcomtype binding failed",
+			"error": "Fixcomtype binding failed",
 		})
 		return
 	}
@@ -98,7 +98,7 @@ func (ctl *FixcomtypeController) GetFixcomtype(c *gin.Context) {
 // @Success 200 {array} ent.Fixcomtype
 // @Failure 400 {object} gin.H
 // @Failure 500 {object} gin.H
-// @Router /Fixcomtypes [get]
+// @Router /fixcomtypes [get]
 func (ctl *FixcomtypeController) ListFixcomtype(c *gin.Context) {
 	limitQuery := c.Query("limit")
 	limit := 10
@@ -144,7 +144,7 @@ func (ctl *FixcomtypeController) ListFixcomtype(c *gin.Context) {
 // @Failure 400 {object} gin.H
 // @Failure 404 {object} gin.H
 // @Failure 500 {object} gin.H
-// @Router /fixcomtype/{id} [delete]
+// @Router /fixcomtypes/{id} [delete]
 func (ctl *FixcomtypeController) DeleteFixcomtype(c *gin.Context) {
 	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
 	if err != nil {
@@ -167,6 +167,46 @@ func (ctl *FixcomtypeController) DeleteFixcomtype(c *gin.Context) {
 	c.JSON(200, gin.H{"result": fmt.Sprintf("ok deleted %v", id)})
 }
 
+// UpdateFixcomtype handles PUT requests to update a fixcomtype entity
+// @Summary Update a fixcomtype entity by ID
+// @Description update fixcomtype by ID
+// @ID update-fixcomtype
+// @Accept   json
+// @Produce  json
+// @Param id path int true "Fixcomtype ID"
+// @Param fixcomtype body ent.Fixcomtype true "Fixcomtype entity"
+// @Success 200 {object} ent.Fixcomtype
+// @Failure 400 {object} gin.H
+// @Failure 500 {object} gin.H
+// @Router /fixcomtypes/{id} [put]
+func (ctl *FixcomtypeController) UpdateFixcomtype(c *gin.Context) {
+	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
+	if err != nil {
+		c.JSON(400, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	obj := ent.Fixcomtype{}
+	if err := c.ShouldBind(&obj); err != nil {
+		c.JSON(400, gin.H{
+			"error": "fixcomtype binding failed",
+		})
+		return
+	}
+	obj.ID = int(id)
+	ft, err := ctl.client.Fixcomtype.
+		UpdateOne(&obj).
+		Save(context.Background())
+	if err != nil {
+		c.JSON(400, gin.H{"error": "update failed"})
+		return
+	}
+
+	c.JSON(200, ft)
+}
+
 // NewFixcomtypeController creates and registers handles for the fixcomtype controller
 func NewFixcomtypeController(router gin.IRouter, client *ent.Client) *FixcomtypeController {
 	ftc := &FixcomtypeController{
@@ -180,12 +220,15 @@ func NewFixcomtypeController(router gin.IRouter, client *ent.Client) *Fixcomtype
 
 }
 
+// InitFixcomtypeController registers routes to the main engine
 func (ctl *FixcomtypeController) register() {
 	fixcomtypes := ctl.router.Group("/fixcomtypes")
 
+	fixcomtypes.GET("", ctl.ListFixcomtype)
+
+	// CRUD
 	fixcomtypes.POST("", ctl.CreateFixcomtype)
 	fixcomtypes.GET(":id", ctl.GetFixcomtype)
-	fixcomtypes.GET("", ctl.ListFixcomtype)
-	fixcomtypes.DELETE("", ctl.DeleteFixcomtype)
-
+	fixcomtypes.PUT(":id", ctl.UpdateFixcomtype)
+	fixcomtypes.DELETE(":id", ctl.DeleteFixcomtype)
 }

@@ -27,6 +27,9 @@ import {
     ControllersFix,
     ControllersFixFromJSON,
     ControllersFixToJSON,
+    ControllersFixcomtype,
+    ControllersFixcomtypeFromJSON,
+    ControllersFixcomtypeToJSON,
     ControllersGender,
     ControllersGenderFromJSON,
     ControllersGenderToJSON,
@@ -51,6 +54,9 @@ import {
     EntFix,
     EntFixFromJSON,
     EntFixToJSON,
+    EntFixbrand,
+    EntFixbrandFromJSON,
+    EntFixbrandToJSON,
     EntFixcomtype,
     EntFixcomtypeFromJSON,
     EntFixcomtypeToJSON,
@@ -97,8 +103,12 @@ export interface CreateFixRequest {
     fix: ControllersFix;
 }
 
+export interface CreateFixbrandRequest {
+    fixbrand: EntFixbrand;
+}
+
 export interface CreateFixcomtypeRequest {
-    fixcomtype: EntFixcomtype;
+    fixcomtype: ControllersFixcomtype;
 }
 
 export interface CreateGenderRequest {
@@ -146,6 +156,10 @@ export interface DeleteDepartmentRequest {
 }
 
 export interface DeleteFixRequest {
+    id: number;
+}
+
+export interface DeleteFixbrandRequest {
     id: number;
 }
 
@@ -201,6 +215,10 @@ export interface GetFixRequest {
     id: number;
 }
 
+export interface GetFixbrandRequest {
+    id: number;
+}
+
 export interface GetFixcomtypeRequest {
     id: number;
 }
@@ -250,6 +268,11 @@ export interface ListDepartmentRequest {
 }
 
 export interface ListFixRequest {
+    limit?: number;
+    offset?: number;
+}
+
+export interface ListFixbrandRequest {
     limit?: number;
     offset?: number;
 }
@@ -312,6 +335,11 @@ export interface UpdateDepartmentRequest {
 export interface UpdateFixRequest {
     id: number;
     fix: EntFix;
+}
+
+export interface UpdateFixcomtypeRequest {
+    id: number;
+    fixcomtype: EntFixcomtype;
 }
 
 export interface UpdateGenderRequest {
@@ -520,10 +548,45 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
+     * Create fixbrand
+     * Create fixbrand
+     */
+    async createFixbrandRaw(requestParameters: CreateFixbrandRequest): Promise<runtime.ApiResponse<EntFixbrand>> {
+        if (requestParameters.fixbrand === null || requestParameters.fixbrand === undefined) {
+            throw new runtime.RequiredError('fixbrand','Required parameter requestParameters.fixbrand was null or undefined when calling createFixbrand.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/fixbrands`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: EntFixbrandToJSON(requestParameters.fixbrand),
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EntFixbrandFromJSON(jsonValue));
+    }
+
+    /**
+     * Create fixbrand
+     * Create fixbrand
+     */
+    async createFixbrand(requestParameters: CreateFixbrandRequest): Promise<EntFixbrand> {
+        const response = await this.createFixbrandRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
      * Create fixcomtype
      * Create fixcomtype
      */
-    async createFixcomtypeRaw(requestParameters: CreateFixcomtypeRequest): Promise<runtime.ApiResponse<EntFixcomtype>> {
+    async createFixcomtypeRaw(requestParameters: CreateFixcomtypeRequest): Promise<runtime.ApiResponse<ControllersFixcomtype>> {
         if (requestParameters.fixcomtype === null || requestParameters.fixcomtype === undefined) {
             throw new runtime.RequiredError('fixcomtype','Required parameter requestParameters.fixcomtype was null or undefined when calling createFixcomtype.');
         }
@@ -539,17 +602,17 @@ export class DefaultApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: EntFixcomtypeToJSON(requestParameters.fixcomtype),
+            body: ControllersFixcomtypeToJSON(requestParameters.fixcomtype),
         });
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => EntFixcomtypeFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => ControllersFixcomtypeFromJSON(jsonValue));
     }
 
     /**
      * Create fixcomtype
      * Create fixcomtype
      */
-    async createFixcomtype(requestParameters: CreateFixcomtypeRequest): Promise<EntFixcomtype> {
+    async createFixcomtype(requestParameters: CreateFixcomtypeRequest): Promise<ControllersFixcomtype> {
         const response = await this.createFixcomtypeRaw(requestParameters);
         return await response.value();
     }
@@ -960,6 +1023,38 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
+     * get fixbrand by ID
+     * Delete a fixbrand entity by ID
+     */
+    async deleteFixbrandRaw(requestParameters: DeleteFixbrandRequest): Promise<runtime.ApiResponse<object>> {
+        if (requestParameters.id === null || requestParameters.id === undefined) {
+            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling deleteFixbrand.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/fixbrands/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse<any>(response);
+    }
+
+    /**
+     * get fixbrand by ID
+     * Delete a fixbrand entity by ID
+     */
+    async deleteFixbrand(requestParameters: DeleteFixbrandRequest): Promise<object> {
+        const response = await this.deleteFixbrandRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
      * get fixcomtype by ID
      * Delete a fixcomtype entity by ID
      */
@@ -973,7 +1068,7 @@ export class DefaultApi extends runtime.BaseAPI {
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/fixcomtype/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
+            path: `/fixcomtypes/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
@@ -1372,6 +1467,38 @@ export class DefaultApi extends runtime.BaseAPI {
      */
     async getFix(requestParameters: GetFixRequest): Promise<EntFix> {
         const response = await this.getFixRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     * get fixbrand by ID
+     * Get a fixbrand entity by ID
+     */
+    async getFixbrandRaw(requestParameters: GetFixbrandRequest): Promise<runtime.ApiResponse<EntFixbrand>> {
+        if (requestParameters.id === null || requestParameters.id === undefined) {
+            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling getFixbrand.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/fixbrands/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EntFixbrandFromJSON(jsonValue));
+    }
+
+    /**
+     * get fixbrand by ID
+     * Get a fixbrand entity by ID
+     */
+    async getFixbrand(requestParameters: GetFixbrandRequest): Promise<EntFixbrand> {
+        const response = await this.getFixbrandRaw(requestParameters);
         return await response.value();
     }
 
@@ -1780,6 +1907,42 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
+     * list fixbrand entities
+     * List fixbrand entities
+     */
+    async listFixbrandRaw(requestParameters: ListFixbrandRequest): Promise<runtime.ApiResponse<Array<EntFixbrand>>> {
+        const queryParameters: runtime.HTTPQuery = {};
+
+        if (requestParameters.limit !== undefined) {
+            queryParameters['limit'] = requestParameters.limit;
+        }
+
+        if (requestParameters.offset !== undefined) {
+            queryParameters['offset'] = requestParameters.offset;
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/fixbrands`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(EntFixbrandFromJSON));
+    }
+
+    /**
+     * list fixbrand entities
+     * List fixbrand entities
+     */
+    async listFixbrand(requestParameters: ListFixbrandRequest): Promise<Array<EntFixbrand>> {
+        const response = await this.listFixbrandRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
      * list fixcomtype entities
      * List fixcomtype entities
      */
@@ -1797,7 +1960,7 @@ export class DefaultApi extends runtime.BaseAPI {
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/Fixcomtypes`,
+            path: `/fixcomtypes`,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -2220,6 +2383,45 @@ export class DefaultApi extends runtime.BaseAPI {
      */
     async updateFix(requestParameters: UpdateFixRequest): Promise<EntFix> {
         const response = await this.updateFixRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     * update fixcomtype by ID
+     * Update a fixcomtype entity by ID
+     */
+    async updateFixcomtypeRaw(requestParameters: UpdateFixcomtypeRequest): Promise<runtime.ApiResponse<EntFixcomtype>> {
+        if (requestParameters.id === null || requestParameters.id === undefined) {
+            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling updateFixcomtype.');
+        }
+
+        if (requestParameters.fixcomtype === null || requestParameters.fixcomtype === undefined) {
+            throw new runtime.RequiredError('fixcomtype','Required parameter requestParameters.fixcomtype was null or undefined when calling updateFixcomtype.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/fixcomtypes/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: EntFixcomtypeToJSON(requestParameters.fixcomtype),
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EntFixcomtypeFromJSON(jsonValue));
+    }
+
+    /**
+     * update fixcomtype by ID
+     * Update a fixcomtype entity by ID
+     */
+    async updateFixcomtype(requestParameters: UpdateFixcomtypeRequest): Promise<EntFixcomtype> {
+        const response = await this.updateFixcomtypeRaw(requestParameters);
         return await response.value();
     }
 

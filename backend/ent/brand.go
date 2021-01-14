@@ -26,11 +26,9 @@ type Brand struct {
 type BrandEdges struct {
 	// Product holds the value of the product edge.
 	Product []*Product
-	// Fix holds the value of the fix edge.
-	Fix []*Fix
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [2]bool
+	loadedTypes [1]bool
 }
 
 // ProductOrErr returns the Product value or an error if the edge
@@ -40,15 +38,6 @@ func (e BrandEdges) ProductOrErr() ([]*Product, error) {
 		return e.Product, nil
 	}
 	return nil, &NotLoadedError{edge: "product"}
-}
-
-// FixOrErr returns the Fix value or an error if the edge
-// was not loaded in eager-loading.
-func (e BrandEdges) FixOrErr() ([]*Fix, error) {
-	if e.loadedTypes[1] {
-		return e.Fix, nil
-	}
-	return nil, &NotLoadedError{edge: "fix"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -82,11 +71,6 @@ func (b *Brand) assignValues(values ...interface{}) error {
 // QueryProduct queries the product edge of the Brand.
 func (b *Brand) QueryProduct() *ProductQuery {
 	return (&BrandClient{config: b.config}).QueryProduct(b)
-}
-
-// QueryFix queries the fix edge of the Brand.
-func (b *Brand) QueryFix() *FixQuery {
-	return (&BrandClient{config: b.config}).QueryFix(b)
 }
 
 // Update returns a builder for updating this Brand.

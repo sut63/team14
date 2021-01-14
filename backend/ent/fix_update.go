@@ -11,9 +11,9 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
 	"github.com/tanapon395/playlist-video/ent/adminrepair"
-	"github.com/tanapon395/playlist-video/ent/brand"
 	"github.com/tanapon395/playlist-video/ent/customer"
 	"github.com/tanapon395/playlist-video/ent/fix"
+	"github.com/tanapon395/playlist-video/ent/fixbrand"
 	"github.com/tanapon395/playlist-video/ent/fixcomtype"
 	"github.com/tanapon395/playlist-video/ent/personal"
 	"github.com/tanapon395/playlist-video/ent/predicate"
@@ -72,23 +72,23 @@ func (fu *FixUpdate) AddFix(a ...*Adminrepair) *FixUpdate {
 	return fu.AddFixIDs(ids...)
 }
 
-// SetBrandID sets the brand edge to Brand by id.
-func (fu *FixUpdate) SetBrandID(id int) *FixUpdate {
-	fu.mutation.SetBrandID(id)
+// SetFixbrandID sets the fixbrand edge to Fixbrand by id.
+func (fu *FixUpdate) SetFixbrandID(id int) *FixUpdate {
+	fu.mutation.SetFixbrandID(id)
 	return fu
 }
 
-// SetNillableBrandID sets the brand edge to Brand by id if the given value is not nil.
-func (fu *FixUpdate) SetNillableBrandID(id *int) *FixUpdate {
+// SetNillableFixbrandID sets the fixbrand edge to Fixbrand by id if the given value is not nil.
+func (fu *FixUpdate) SetNillableFixbrandID(id *int) *FixUpdate {
 	if id != nil {
-		fu = fu.SetBrandID(*id)
+		fu = fu.SetFixbrandID(*id)
 	}
 	return fu
 }
 
-// SetBrand sets the brand edge to Brand.
-func (fu *FixUpdate) SetBrand(b *Brand) *FixUpdate {
-	return fu.SetBrandID(b.ID)
+// SetFixbrand sets the fixbrand edge to Fixbrand.
+func (fu *FixUpdate) SetFixbrand(f *Fixbrand) *FixUpdate {
+	return fu.SetFixbrandID(f.ID)
 }
 
 // SetPersonalID sets the personal edge to Personal by id.
@@ -168,9 +168,9 @@ func (fu *FixUpdate) RemoveFix(a ...*Adminrepair) *FixUpdate {
 	return fu.RemoveFixIDs(ids...)
 }
 
-// ClearBrand clears the brand edge to Brand.
-func (fu *FixUpdate) ClearBrand() *FixUpdate {
-	fu.mutation.ClearBrand()
+// ClearFixbrand clears the fixbrand edge to Fixbrand.
+func (fu *FixUpdate) ClearFixbrand() *FixUpdate {
+	fu.mutation.ClearFixbrand()
 	return fu
 }
 
@@ -343,33 +343,33 @@ func (fu *FixUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if fu.mutation.BrandCleared() {
+	if fu.mutation.FixbrandCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   fix.BrandTable,
-			Columns: []string{fix.BrandColumn},
+			Table:   fix.FixbrandTable,
+			Columns: []string{fix.FixbrandColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: brand.FieldID,
+					Column: fixbrand.FieldID,
 				},
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := fu.mutation.BrandIDs(); len(nodes) > 0 {
+	if nodes := fu.mutation.FixbrandIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   fix.BrandTable,
-			Columns: []string{fix.BrandColumn},
+			Table:   fix.FixbrandTable,
+			Columns: []string{fix.FixbrandColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: brand.FieldID,
+					Column: fixbrand.FieldID,
 				},
 			},
 		}
@@ -540,23 +540,23 @@ func (fuo *FixUpdateOne) AddFix(a ...*Adminrepair) *FixUpdateOne {
 	return fuo.AddFixIDs(ids...)
 }
 
-// SetBrandID sets the brand edge to Brand by id.
-func (fuo *FixUpdateOne) SetBrandID(id int) *FixUpdateOne {
-	fuo.mutation.SetBrandID(id)
+// SetFixbrandID sets the fixbrand edge to Fixbrand by id.
+func (fuo *FixUpdateOne) SetFixbrandID(id int) *FixUpdateOne {
+	fuo.mutation.SetFixbrandID(id)
 	return fuo
 }
 
-// SetNillableBrandID sets the brand edge to Brand by id if the given value is not nil.
-func (fuo *FixUpdateOne) SetNillableBrandID(id *int) *FixUpdateOne {
+// SetNillableFixbrandID sets the fixbrand edge to Fixbrand by id if the given value is not nil.
+func (fuo *FixUpdateOne) SetNillableFixbrandID(id *int) *FixUpdateOne {
 	if id != nil {
-		fuo = fuo.SetBrandID(*id)
+		fuo = fuo.SetFixbrandID(*id)
 	}
 	return fuo
 }
 
-// SetBrand sets the brand edge to Brand.
-func (fuo *FixUpdateOne) SetBrand(b *Brand) *FixUpdateOne {
-	return fuo.SetBrandID(b.ID)
+// SetFixbrand sets the fixbrand edge to Fixbrand.
+func (fuo *FixUpdateOne) SetFixbrand(f *Fixbrand) *FixUpdateOne {
+	return fuo.SetFixbrandID(f.ID)
 }
 
 // SetPersonalID sets the personal edge to Personal by id.
@@ -636,9 +636,9 @@ func (fuo *FixUpdateOne) RemoveFix(a ...*Adminrepair) *FixUpdateOne {
 	return fuo.RemoveFixIDs(ids...)
 }
 
-// ClearBrand clears the brand edge to Brand.
-func (fuo *FixUpdateOne) ClearBrand() *FixUpdateOne {
-	fuo.mutation.ClearBrand()
+// ClearFixbrand clears the fixbrand edge to Fixbrand.
+func (fuo *FixUpdateOne) ClearFixbrand() *FixUpdateOne {
+	fuo.mutation.ClearFixbrand()
 	return fuo
 }
 
@@ -809,33 +809,33 @@ func (fuo *FixUpdateOne) sqlSave(ctx context.Context) (f *Fix, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if fuo.mutation.BrandCleared() {
+	if fuo.mutation.FixbrandCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   fix.BrandTable,
-			Columns: []string{fix.BrandColumn},
+			Table:   fix.FixbrandTable,
+			Columns: []string{fix.FixbrandColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: brand.FieldID,
+					Column: fixbrand.FieldID,
 				},
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := fuo.mutation.BrandIDs(); len(nodes) > 0 {
+	if nodes := fuo.mutation.FixbrandIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   fix.BrandTable,
-			Columns: []string{fix.BrandColumn},
+			Table:   fix.FixbrandTable,
+			Columns: []string{fix.FixbrandColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: brand.FieldID,
+					Column: fixbrand.FieldID,
 				},
 			},
 		}

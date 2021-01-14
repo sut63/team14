@@ -14,6 +14,7 @@ import (
 	"github.com/tanapon395/playlist-video/ent/customer"
 	"github.com/tanapon395/playlist-video/ent/department"
 	"github.com/tanapon395/playlist-video/ent/fix"
+	"github.com/tanapon395/playlist-video/ent/fixbrand"
 	"github.com/tanapon395/playlist-video/ent/fixcomtype"
 	"github.com/tanapon395/playlist-video/ent/gender"
 	"github.com/tanapon395/playlist-video/ent/paymenttype"
@@ -43,6 +44,8 @@ type Client struct {
 	Department *DepartmentClient
 	// Fix is the client for interacting with the Fix builders.
 	Fix *FixClient
+	// Fixbrand is the client for interacting with the Fixbrand builders.
+	Fixbrand *FixbrandClient
 	// Fixcomtype is the client for interacting with the Fixcomtype builders.
 	Fixcomtype *FixcomtypeClient
 	// Gender is the client for interacting with the Gender builders.
@@ -77,6 +80,7 @@ func (c *Client) init() {
 	c.Customer = NewCustomerClient(c.config)
 	c.Department = NewDepartmentClient(c.config)
 	c.Fix = NewFixClient(c.config)
+	c.Fixbrand = NewFixbrandClient(c.config)
 	c.Fixcomtype = NewFixcomtypeClient(c.config)
 	c.Gender = NewGenderClient(c.config)
 	c.PaymentType = NewPaymentTypeClient(c.config)
@@ -122,6 +126,7 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		Customer:    NewCustomerClient(cfg),
 		Department:  NewDepartmentClient(cfg),
 		Fix:         NewFixClient(cfg),
+		Fixbrand:    NewFixbrandClient(cfg),
 		Fixcomtype:  NewFixcomtypeClient(cfg),
 		Gender:      NewGenderClient(cfg),
 		PaymentType: NewPaymentTypeClient(cfg),
@@ -150,6 +155,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		Customer:    NewCustomerClient(cfg),
 		Department:  NewDepartmentClient(cfg),
 		Fix:         NewFixClient(cfg),
+		Fixbrand:    NewFixbrandClient(cfg),
 		Fixcomtype:  NewFixcomtypeClient(cfg),
 		Gender:      NewGenderClient(cfg),
 		PaymentType: NewPaymentTypeClient(cfg),
@@ -191,6 +197,7 @@ func (c *Client) Use(hooks ...Hook) {
 	c.Customer.Use(hooks...)
 	c.Department.Use(hooks...)
 	c.Fix.Use(hooks...)
+	c.Fixbrand.Use(hooks...)
 	c.Fixcomtype.Use(hooks...)
 	c.Gender.Use(hooks...)
 	c.PaymentType.Use(hooks...)
@@ -435,22 +442,6 @@ func (c *BrandClient) QueryProduct(b *Brand) *ProductQuery {
 			sqlgraph.From(brand.Table, brand.FieldID, id),
 			sqlgraph.To(product.Table, product.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, brand.ProductTable, brand.ProductColumn),
-		)
-		fromV = sqlgraph.Neighbors(b.driver.Dialect(), step)
-		return fromV, nil
-	}
-	return query
-}
-
-// QueryFix queries the fix edge of a Brand.
-func (c *BrandClient) QueryFix(b *Brand) *FixQuery {
-	query := &FixQuery{config: c.config}
-	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
-		id := b.ID
-		step := sqlgraph.NewStep(
-			sqlgraph.From(brand.Table, brand.FieldID, id),
-			sqlgraph.To(fix.Table, fix.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, brand.FixTable, brand.FixColumn),
 		)
 		fromV = sqlgraph.Neighbors(b.driver.Dialect(), step)
 		return fromV, nil
@@ -803,15 +794,15 @@ func (c *FixClient) QueryFix(f *Fix) *AdminrepairQuery {
 	return query
 }
 
-// QueryBrand queries the brand edge of a Fix.
-func (c *FixClient) QueryBrand(f *Fix) *BrandQuery {
-	query := &BrandQuery{config: c.config}
+// QueryFixbrand queries the fixbrand edge of a Fix.
+func (c *FixClient) QueryFixbrand(f *Fix) *FixbrandQuery {
+	query := &FixbrandQuery{config: c.config}
 	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
 		id := f.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(fix.Table, fix.FieldID, id),
-			sqlgraph.To(brand.Table, brand.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, fix.BrandTable, fix.BrandColumn),
+			sqlgraph.To(fixbrand.Table, fixbrand.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, fix.FixbrandTable, fix.FixbrandColumn),
 		)
 		fromV = sqlgraph.Neighbors(f.driver.Dialect(), step)
 		return fromV, nil
@@ -870,6 +861,105 @@ func (c *FixClient) QueryFixcomtype(f *Fix) *FixcomtypeQuery {
 // Hooks returns the client hooks.
 func (c *FixClient) Hooks() []Hook {
 	return c.hooks.Fix
+}
+
+// FixbrandClient is a client for the Fixbrand schema.
+type FixbrandClient struct {
+	config
+}
+
+// NewFixbrandClient returns a client for the Fixbrand from the given config.
+func NewFixbrandClient(c config) *FixbrandClient {
+	return &FixbrandClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `fixbrand.Hooks(f(g(h())))`.
+func (c *FixbrandClient) Use(hooks ...Hook) {
+	c.hooks.Fixbrand = append(c.hooks.Fixbrand, hooks...)
+}
+
+// Create returns a create builder for Fixbrand.
+func (c *FixbrandClient) Create() *FixbrandCreate {
+	mutation := newFixbrandMutation(c.config, OpCreate)
+	return &FixbrandCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Update returns an update builder for Fixbrand.
+func (c *FixbrandClient) Update() *FixbrandUpdate {
+	mutation := newFixbrandMutation(c.config, OpUpdate)
+	return &FixbrandUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *FixbrandClient) UpdateOne(f *Fixbrand) *FixbrandUpdateOne {
+	mutation := newFixbrandMutation(c.config, OpUpdateOne, withFixbrand(f))
+	return &FixbrandUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *FixbrandClient) UpdateOneID(id int) *FixbrandUpdateOne {
+	mutation := newFixbrandMutation(c.config, OpUpdateOne, withFixbrandID(id))
+	return &FixbrandUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for Fixbrand.
+func (c *FixbrandClient) Delete() *FixbrandDelete {
+	mutation := newFixbrandMutation(c.config, OpDelete)
+	return &FixbrandDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a delete builder for the given entity.
+func (c *FixbrandClient) DeleteOne(f *Fixbrand) *FixbrandDeleteOne {
+	return c.DeleteOneID(f.ID)
+}
+
+// DeleteOneID returns a delete builder for the given id.
+func (c *FixbrandClient) DeleteOneID(id int) *FixbrandDeleteOne {
+	builder := c.Delete().Where(fixbrand.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &FixbrandDeleteOne{builder}
+}
+
+// Create returns a query builder for Fixbrand.
+func (c *FixbrandClient) Query() *FixbrandQuery {
+	return &FixbrandQuery{config: c.config}
+}
+
+// Get returns a Fixbrand entity by its id.
+func (c *FixbrandClient) Get(ctx context.Context, id int) (*Fixbrand, error) {
+	return c.Query().Where(fixbrand.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *FixbrandClient) GetX(ctx context.Context, id int) *Fixbrand {
+	f, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return f
+}
+
+// QueryFix queries the fix edge of a Fixbrand.
+func (c *FixbrandClient) QueryFix(f *Fixbrand) *FixQuery {
+	query := &FixQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := f.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(fixbrand.Table, fixbrand.FieldID, id),
+			sqlgraph.To(fix.Table, fix.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, fixbrand.FixTable, fixbrand.FixColumn),
+		)
+		fromV = sqlgraph.Neighbors(f.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// Hooks returns the client hooks.
+func (c *FixbrandClient) Hooks() []Hook {
+	return c.hooks.Fixbrand
 }
 
 // FixcomtypeClient is a client for the Fixcomtype schema.

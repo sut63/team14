@@ -13,9 +13,9 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
 	"github.com/tanapon395/playlist-video/ent/adminrepair"
-	"github.com/tanapon395/playlist-video/ent/brand"
 	"github.com/tanapon395/playlist-video/ent/customer"
 	"github.com/tanapon395/playlist-video/ent/fix"
+	"github.com/tanapon395/playlist-video/ent/fixbrand"
 	"github.com/tanapon395/playlist-video/ent/fixcomtype"
 	"github.com/tanapon395/playlist-video/ent/personal"
 	"github.com/tanapon395/playlist-video/ent/predicate"
@@ -31,7 +31,7 @@ type FixQuery struct {
 	predicates []predicate.Fix
 	// eager-loading edges.
 	withFix        *AdminrepairQuery
-	withBrand      *BrandQuery
+	withFixbrand   *FixbrandQuery
 	withPersonal   *PersonalQuery
 	withCustomer   *CustomerQuery
 	withFixcomtype *FixcomtypeQuery
@@ -83,17 +83,17 @@ func (fq *FixQuery) QueryFix() *AdminrepairQuery {
 	return query
 }
 
-// QueryBrand chains the current query on the brand edge.
-func (fq *FixQuery) QueryBrand() *BrandQuery {
-	query := &BrandQuery{config: fq.config}
+// QueryFixbrand chains the current query on the fixbrand edge.
+func (fq *FixQuery) QueryFixbrand() *FixbrandQuery {
+	query := &FixbrandQuery{config: fq.config}
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
 		if err := fq.prepareQuery(ctx); err != nil {
 			return nil, err
 		}
 		step := sqlgraph.NewStep(
 			sqlgraph.From(fix.Table, fix.FieldID, fq.sqlQuery()),
-			sqlgraph.To(brand.Table, brand.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, fix.BrandTable, fix.BrandColumn),
+			sqlgraph.To(fixbrand.Table, fixbrand.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, fix.FixbrandTable, fix.FixbrandColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(fq.driver.Dialect(), step)
 		return fromU, nil
@@ -345,14 +345,14 @@ func (fq *FixQuery) WithFix(opts ...func(*AdminrepairQuery)) *FixQuery {
 	return fq
 }
 
-//  WithBrand tells the query-builder to eager-loads the nodes that are connected to
-// the "brand" edge. The optional arguments used to configure the query builder of the edge.
-func (fq *FixQuery) WithBrand(opts ...func(*BrandQuery)) *FixQuery {
-	query := &BrandQuery{config: fq.config}
+//  WithFixbrand tells the query-builder to eager-loads the nodes that are connected to
+// the "fixbrand" edge. The optional arguments used to configure the query builder of the edge.
+func (fq *FixQuery) WithFixbrand(opts ...func(*FixbrandQuery)) *FixQuery {
+	query := &FixbrandQuery{config: fq.config}
 	for _, opt := range opts {
 		opt(query)
 	}
-	fq.withBrand = query
+	fq.withFixbrand = query
 	return fq
 }
 
@@ -458,13 +458,13 @@ func (fq *FixQuery) sqlAll(ctx context.Context) ([]*Fix, error) {
 		_spec       = fq.querySpec()
 		loadedTypes = [5]bool{
 			fq.withFix != nil,
-			fq.withBrand != nil,
+			fq.withFixbrand != nil,
 			fq.withPersonal != nil,
 			fq.withCustomer != nil,
 			fq.withFixcomtype != nil,
 		}
 	)
-	if fq.withBrand != nil || fq.withPersonal != nil || fq.withCustomer != nil || fq.withFixcomtype != nil {
+	if fq.withFixbrand != nil || fq.withPersonal != nil || fq.withCustomer != nil || fq.withFixcomtype != nil {
 		withFKs = true
 	}
 	if withFKs {
@@ -522,16 +522,16 @@ func (fq *FixQuery) sqlAll(ctx context.Context) ([]*Fix, error) {
 		}
 	}
 
-	if query := fq.withBrand; query != nil {
+	if query := fq.withFixbrand; query != nil {
 		ids := make([]int, 0, len(nodes))
 		nodeids := make(map[int][]*Fix)
 		for i := range nodes {
-			if fk := nodes[i].brand_id; fk != nil {
+			if fk := nodes[i].fixbrand_id; fk != nil {
 				ids = append(ids, *fk)
 				nodeids[*fk] = append(nodeids[*fk], nodes[i])
 			}
 		}
-		query.Where(brand.IDIn(ids...))
+		query.Where(fixbrand.IDIn(ids...))
 		neighbors, err := query.All(ctx)
 		if err != nil {
 			return nil, err
@@ -539,10 +539,10 @@ func (fq *FixQuery) sqlAll(ctx context.Context) ([]*Fix, error) {
 		for _, n := range neighbors {
 			nodes, ok := nodeids[n.ID]
 			if !ok {
-				return nil, fmt.Errorf(`unexpected foreign-key "brand_id" returned %v`, n.ID)
+				return nil, fmt.Errorf(`unexpected foreign-key "fixbrand_id" returned %v`, n.ID)
 			}
 			for i := range nodes {
-				nodes[i].Edges.Brand = n
+				nodes[i].Edges.Fixbrand = n
 			}
 		}
 	}

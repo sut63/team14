@@ -74,6 +74,19 @@ func (f FixFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) 
 	return f(ctx, mv)
 }
 
+// The FixbrandFunc type is an adapter to allow the use of ordinary
+// function as Fixbrand mutator.
+type FixbrandFunc func(context.Context, *ent.FixbrandMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f FixbrandFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.FixbrandMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.FixbrandMutation", m)
+	}
+	return f(ctx, mv)
+}
+
 // The FixcomtypeFunc type is an adapter to allow the use of ordinary
 // function as Fixcomtype mutator.
 type FixcomtypeFunc func(context.Context, *ent.FixcomtypeMutation) (ent.Value, error)

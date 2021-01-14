@@ -14,10 +14,6 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    EntFix,
-    EntFixFromJSON,
-    EntFixFromJSONTyped,
-    EntFixToJSON,
     EntProduct,
     EntProductFromJSON,
     EntProductFromJSONTyped,
@@ -30,12 +26,6 @@ import {
  * @interface EntBrandEdges
  */
 export interface EntBrandEdges {
-    /**
-     * Fix holds the value of the fix edge.
-     * @type {Array<EntFix>}
-     * @memberof EntBrandEdges
-     */
-    fix?: Array<EntFix>;
     /**
      * Product holds the value of the product edge.
      * @type {Array<EntProduct>}
@@ -54,7 +44,6 @@ export function EntBrandEdgesFromJSONTyped(json: any, ignoreDiscriminator: boole
     }
     return {
         
-        'fix': !exists(json, 'fix') ? undefined : ((json['fix'] as Array<any>).map(EntFixFromJSON)),
         'product': !exists(json, 'product') ? undefined : ((json['product'] as Array<any>).map(EntProductFromJSON)),
     };
 }
@@ -68,7 +57,6 @@ export function EntBrandEdgesToJSON(value?: EntBrandEdges | null): any {
     }
     return {
         
-        'fix': value.fix === undefined ? undefined : ((value.fix as Array<any>).map(EntFixToJSON)),
         'product': value.product === undefined ? undefined : ((value.product as Array<any>).map(EntProductToJSON)),
     };
 }

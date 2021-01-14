@@ -33,12 +33,12 @@ definitions:
     type: object
   controllers.Fix:
     properties:
-      brand:
-        type: integer
       customer:
         type: integer
       date:
         type: string
+      fixbrand:
+        type: integer
       fixcomtype:
         type: integer
       personal:
@@ -48,6 +48,11 @@ definitions:
       productnumber:
         type: string
       queue:
+        type: string
+    type: object
+  controllers.Fixcomtype:
+    properties:
+      fixcomtypename:
         type: string
     type: object
   controllers.Gender:
@@ -141,11 +146,6 @@ definitions:
     type: object
   ent.BrandEdges:
     properties:
-      fix:
-        description: Fix holds the value of the fix edge.
-        items:
-          $ref: '#/definitions/ent.Fix'
-        type: array
       product:
         description: Product holds the value of the product edge.
         items:
@@ -242,10 +242,6 @@ definitions:
     type: object
   ent.FixEdges:
     properties:
-      brand:
-        $ref: '#/definitions/ent.Brand'
-        description: Brand holds the value of the brand edge.
-        type: object
       customer:
         $ref: '#/definitions/ent.Customer'
         description: Customer holds the value of the customer edge.
@@ -255,6 +251,10 @@ definitions:
         items:
           $ref: '#/definitions/ent.Adminrepair'
         type: array
+      fixbrand:
+        $ref: '#/definitions/ent.Fixbrand'
+        description: Fixbrand holds the value of the fixbrand edge.
+        type: object
       fixcomtype:
         $ref: '#/definitions/ent.Fixcomtype'
         description: Fixcomtype holds the value of the fixcomtype edge.
@@ -263,6 +263,29 @@ definitions:
         $ref: '#/definitions/ent.Personal'
         description: Personal holds the value of the personal edge.
         type: object
+    type: object
+  ent.Fixbrand:
+    properties:
+      edges:
+        $ref: '#/definitions/ent.FixbrandEdges'
+        description: |-
+          Edges holds the relations/edges for other nodes in the graph.
+          The values are being populated by the FixbrandQuery when eager-loading is set.
+        type: object
+      fixbrandname:
+        description: Fixbrandname holds the value of the "fixbrandname" field.
+        type: string
+      id:
+        description: ID of the ent.
+        type: integer
+    type: object
+  ent.FixbrandEdges:
+    properties:
+      fix:
+        description: Fix holds the value of the fix edge.
+        items:
+          $ref: '#/definitions/ent.Fix'
+        type: array
     type: object
   ent.Fixcomtype:
     properties:
@@ -554,37 +577,6 @@ info:
   title: SUT SA Example API Playlist Vidoe
   version: "1.0"
 paths:
-  /Fixcomtypes:
-    get:
-      description: list fixcomtype entities
-      operationId: list-fixcomtype
-      parameters:
-      - description: Limit
-        in: query
-        name: limit
-        type: integer
-      - description: Offset
-        in: query
-        name: offset
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/ent.Fixcomtype'
-            type: array
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/gin.H'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/gin.H'
-      summary: List fixcomtype entities
   /adminrepairs:
     get:
       description: list adminrepair entities
@@ -1157,7 +1149,184 @@ paths:
           schema:
             $ref: '#/definitions/gin.H'
       summary: Update a department entity by ID
-  /fixcomtype/{id}:
+  /fixbrands:
+    get:
+      description: list fixbrand entities
+      operationId: list-fixbrand
+      parameters:
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      - description: Offset
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/ent.Fixbrand'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: List fixbrand entities
+    post:
+      consumes:
+      - application/json
+      description: Create fixbrand
+      operationId: create-fixbrand
+      parameters:
+      - description: Fixbrand entity
+        in: body
+        name: fixbrand
+        required: true
+        schema:
+          $ref: '#/definitions/ent.Fixbrand'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.Fixbrand'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Create fixbrand
+  /fixbrands/{id}:
+    delete:
+      description: get fixbrand by ID
+      operationId: delete-fixbrand
+      parameters:
+      - description: Fixbrand ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Delete a fixbrand entity by ID
+    get:
+      description: get fixbrand by ID
+      operationId: get-fixbrand
+      parameters:
+      - description: Fixbrand ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.Fixbrand'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Get a fixbrand entity by ID
+  /fixcomtypes:
+    get:
+      description: list fixcomtype entities
+      operationId: list-fixcomtype
+      parameters:
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      - description: Offset
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/ent.Fixcomtype'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: List fixcomtype entities
+    post:
+      consumes:
+      - application/json
+      description: Create fixcomtype
+      operationId: create-fixcomtype
+      parameters:
+      - description: Fixcomtype entity
+        in: body
+        name: fixcomtype
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.Fixcomtype'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.Fixcomtype'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Create fixcomtype
+  /fixcomtypes/{id}:
     delete:
       description: get fixcomtype by ID
       operationId: delete-fixcomtype
@@ -1187,36 +1356,6 @@ paths:
           schema:
             $ref: '#/definitions/gin.H'
       summary: Delete a fixcomtype entity by ID
-  /fixcomtypes:
-    post:
-      consumes:
-      - application/json
-      description: Create fixcomtype
-      operationId: create-fixcomtype
-      parameters:
-      - description: Fixcomtype entity
-        in: body
-        name: fixcomtype
-        required: true
-        schema:
-          $ref: '#/definitions/ent.Fixcomtype'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/ent.Fixcomtype'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/gin.H'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/gin.H'
-      summary: Create fixcomtype
-  /fixcomtypes/{id}:
     get:
       description: get fixcomtype by ID
       operationId: get-fixcomtype
@@ -1246,6 +1385,39 @@ paths:
           schema:
             $ref: '#/definitions/gin.H'
       summary: Get a fixcomtype entity by ID
+    put:
+      consumes:
+      - application/json
+      description: update fixcomtype by ID
+      operationId: update-fixcomtype
+      parameters:
+      - description: Fixcomtype ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Fixcomtype entity
+        in: body
+        name: fixcomtype
+        required: true
+        schema:
+          $ref: '#/definitions/ent.Fixcomtype'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.Fixcomtype'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Update a fixcomtype entity by ID
   /fixs:
     get:
       description: list fix entities

@@ -22,6 +22,8 @@ type Tx struct {
 	Department *DepartmentClient
 	// Fix is the client for interacting with the Fix builders.
 	Fix *FixClient
+	// Fixbrand is the client for interacting with the Fixbrand builders.
+	Fixbrand *FixbrandClient
 	// Fixcomtype is the client for interacting with the Fixcomtype builders.
 	Fixcomtype *FixcomtypeClient
 	// Gender is the client for interacting with the Gender builders.
@@ -178,6 +180,7 @@ func (tx *Tx) init() {
 	tx.Customer = NewCustomerClient(tx.config)
 	tx.Department = NewDepartmentClient(tx.config)
 	tx.Fix = NewFixClient(tx.config)
+	tx.Fixbrand = NewFixbrandClient(tx.config)
 	tx.Fixcomtype = NewFixcomtypeClient(tx.config)
 	tx.Gender = NewGenderClient(tx.config)
 	tx.PaymentType = NewPaymentTypeClient(tx.config)

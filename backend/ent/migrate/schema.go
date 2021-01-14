@@ -115,8 +115,8 @@ var (
 		{Name: "problemtype", Type: field.TypeString},
 		{Name: "queue", Type: field.TypeString},
 		{Name: "date", Type: field.TypeTime},
-		{Name: "brand_id", Type: field.TypeInt, Nullable: true},
 		{Name: "customer_id", Type: field.TypeInt, Nullable: true},
+		{Name: "fixbrand_id", Type: field.TypeInt, Nullable: true},
 		{Name: "fixcomtype_id", Type: field.TypeInt, Nullable: true},
 		{Name: "personal_id", Type: field.TypeInt, Nullable: true},
 	}
@@ -127,17 +127,17 @@ var (
 		PrimaryKey: []*schema.Column{FixesColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{
 			{
-				Symbol:  "fixes_brands_fix",
+				Symbol:  "fixes_customers_fix",
 				Columns: []*schema.Column{FixesColumns[5]},
 
-				RefColumns: []*schema.Column{BrandsColumns[0]},
+				RefColumns: []*schema.Column{CustomersColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
-				Symbol:  "fixes_customers_fix",
+				Symbol:  "fixes_fixbrands_fix",
 				Columns: []*schema.Column{FixesColumns[6]},
 
-				RefColumns: []*schema.Column{CustomersColumns[0]},
+				RefColumns: []*schema.Column{FixbrandsColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
@@ -155,6 +155,18 @@ var (
 				OnDelete:   schema.SetNull,
 			},
 		},
+	}
+	// FixbrandsColumns holds the columns for the "fixbrands" table.
+	FixbrandsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "fixbrandname", Type: field.TypeString, Unique: true},
+	}
+	// FixbrandsTable holds the schema information for the "fixbrands" table.
+	FixbrandsTable = &schema.Table{
+		Name:        "fixbrands",
+		Columns:     FixbrandsColumns,
+		PrimaryKey:  []*schema.Column{FixbrandsColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{},
 	}
 	// FixcomtypesColumns holds the columns for the "fixcomtypes" table.
 	FixcomtypesColumns = []*schema.Column{
@@ -341,6 +353,7 @@ var (
 		CustomersTable,
 		DepartmentsTable,
 		FixesTable,
+		FixbrandsTable,
 		FixcomtypesTable,
 		GendersTable,
 		PaymentTypesTable,
@@ -359,8 +372,8 @@ func init() {
 	CustomersTable.ForeignKeys[0].RefTable = GendersTable
 	CustomersTable.ForeignKeys[1].RefTable = PersonalsTable
 	CustomersTable.ForeignKeys[2].RefTable = TitlesTable
-	FixesTable.ForeignKeys[0].RefTable = BrandsTable
-	FixesTable.ForeignKeys[1].RefTable = CustomersTable
+	FixesTable.ForeignKeys[0].RefTable = CustomersTable
+	FixesTable.ForeignKeys[1].RefTable = FixbrandsTable
 	FixesTable.ForeignKeys[2].RefTable = FixcomtypesTable
 	FixesTable.ForeignKeys[3].RefTable = PersonalsTable
 	PersonalsTable.ForeignKeys[0].RefTable = DepartmentsTable

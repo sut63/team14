@@ -8,9 +8,9 @@ import (
 	"time"
 
 	"github.com/facebookincubator/ent/dialect/sql"
-	"github.com/tanapon395/playlist-video/ent/brand"
 	"github.com/tanapon395/playlist-video/ent/customer"
 	"github.com/tanapon395/playlist-video/ent/fix"
+	"github.com/tanapon395/playlist-video/ent/fixbrand"
 	"github.com/tanapon395/playlist-video/ent/fixcomtype"
 	"github.com/tanapon395/playlist-video/ent/personal"
 )
@@ -31,8 +31,8 @@ type Fix struct {
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the FixQuery when eager-loading is set.
 	Edges         FixEdges `json:"edges"`
-	brand_id      *int
 	customer_id   *int
+	fixbrand_id   *int
 	fixcomtype_id *int
 	personal_id   *int
 }
@@ -41,8 +41,8 @@ type Fix struct {
 type FixEdges struct {
 	// Fix holds the value of the fix edge.
 	Fix []*Adminrepair
-	// Brand holds the value of the brand edge.
-	Brand *Brand
+	// Fixbrand holds the value of the fixbrand edge.
+	Fixbrand *Fixbrand
 	// Personal holds the value of the personal edge.
 	Personal *Personal
 	// Customer holds the value of the customer edge.
@@ -63,18 +63,18 @@ func (e FixEdges) FixOrErr() ([]*Adminrepair, error) {
 	return nil, &NotLoadedError{edge: "fix"}
 }
 
-// BrandOrErr returns the Brand value or an error if the edge
+// FixbrandOrErr returns the Fixbrand value or an error if the edge
 // was not loaded in eager-loading, or loaded but was not found.
-func (e FixEdges) BrandOrErr() (*Brand, error) {
+func (e FixEdges) FixbrandOrErr() (*Fixbrand, error) {
 	if e.loadedTypes[1] {
-		if e.Brand == nil {
-			// The edge brand was loaded in eager-loading,
+		if e.Fixbrand == nil {
+			// The edge fixbrand was loaded in eager-loading,
 			// but was not found.
-			return nil, &NotFoundError{label: brand.Label}
+			return nil, &NotFoundError{label: fixbrand.Label}
 		}
-		return e.Brand, nil
+		return e.Fixbrand, nil
 	}
-	return nil, &NotLoadedError{edge: "brand"}
+	return nil, &NotLoadedError{edge: "fixbrand"}
 }
 
 // PersonalOrErr returns the Personal value or an error if the edge
@@ -133,8 +133,8 @@ func (*Fix) scanValues() []interface{} {
 // fkValues returns the types for scanning foreign-keys values from sql.Rows.
 func (*Fix) fkValues() []interface{} {
 	return []interface{}{
-		&sql.NullInt64{}, // brand_id
 		&sql.NullInt64{}, // customer_id
+		&sql.NullInt64{}, // fixbrand_id
 		&sql.NullInt64{}, // fixcomtype_id
 		&sql.NullInt64{}, // personal_id
 	}
@@ -175,16 +175,16 @@ func (f *Fix) assignValues(values ...interface{}) error {
 	values = values[4:]
 	if len(values) == len(fix.ForeignKeys) {
 		if value, ok := values[0].(*sql.NullInt64); !ok {
-			return fmt.Errorf("unexpected type %T for edge-field brand_id", value)
-		} else if value.Valid {
-			f.brand_id = new(int)
-			*f.brand_id = int(value.Int64)
-		}
-		if value, ok := values[1].(*sql.NullInt64); !ok {
 			return fmt.Errorf("unexpected type %T for edge-field customer_id", value)
 		} else if value.Valid {
 			f.customer_id = new(int)
 			*f.customer_id = int(value.Int64)
+		}
+		if value, ok := values[1].(*sql.NullInt64); !ok {
+			return fmt.Errorf("unexpected type %T for edge-field fixbrand_id", value)
+		} else if value.Valid {
+			f.fixbrand_id = new(int)
+			*f.fixbrand_id = int(value.Int64)
 		}
 		if value, ok := values[2].(*sql.NullInt64); !ok {
 			return fmt.Errorf("unexpected type %T for edge-field fixcomtype_id", value)
@@ -207,9 +207,9 @@ func (f *Fix) QueryFix() *AdminrepairQuery {
 	return (&FixClient{config: f.config}).QueryFix(f)
 }
 
-// QueryBrand queries the brand edge of the Fix.
-func (f *Fix) QueryBrand() *BrandQuery {
-	return (&FixClient{config: f.config}).QueryBrand(f)
+// QueryFixbrand queries the fixbrand edge of the Fix.
+func (f *Fix) QueryFixbrand() *FixbrandQuery {
+	return (&FixClient{config: f.config}).QueryFixbrand(f)
 }
 
 // QueryPersonal queries the personal edge of the Fix.

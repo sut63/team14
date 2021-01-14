@@ -558,25 +558,25 @@ func HasFixWith(preds ...predicate.Adminrepair) predicate.Fix {
 	})
 }
 
-// HasBrand applies the HasEdge predicate on the "brand" edge.
-func HasBrand() predicate.Fix {
+// HasFixbrand applies the HasEdge predicate on the "fixbrand" edge.
+func HasFixbrand() predicate.Fix {
 	return predicate.Fix(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(BrandTable, FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, BrandTable, BrandColumn),
+			sqlgraph.To(FixbrandTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, FixbrandTable, FixbrandColumn),
 		)
 		sqlgraph.HasNeighbors(s, step)
 	})
 }
 
-// HasBrandWith applies the HasEdge predicate on the "brand" edge with a given conditions (other predicates).
-func HasBrandWith(preds ...predicate.Brand) predicate.Fix {
+// HasFixbrandWith applies the HasEdge predicate on the "fixbrand" edge with a given conditions (other predicates).
+func HasFixbrandWith(preds ...predicate.Fixbrand) predicate.Fix {
 	return predicate.Fix(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(BrandInverseTable, FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, BrandTable, BrandColumn),
+			sqlgraph.To(FixbrandInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, FixbrandTable, FixbrandColumn),
 		)
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
