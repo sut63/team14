@@ -173,13 +173,13 @@ const CreateCustomer = async () => {
      <Content>
        {status ? ( 
         <div>
-          {alert ? ( 
-              <Alert severity="success"> 
-                <AlertTitle> บันทึกข้อมูลสำเร็จ </AlertTitle></Alert>) 
-        : (     
-              <Alert severity="warning" > 
-               <AlertTitle> ไม่สามารถบันทึกข้อมูลได้ กรุณาลองใหม่อีกครั้ง </AlertTitle></Alert>)}
-        </div>
+        {alert ? ( 
+            <Alert severity="success"  onClose={() => { }}> 
+              <AlertTitle> บันทึกข้อมูลสำเร็จ </AlertTitle></Alert>) 
+      : (     
+        <Alert severity="error" onClose={() => { setStatus(false) }}> 
+          <AlertTitle> ไม่สามารถบันทึกข้อมูลได้ กรุณาลองใหม่อีกครั้ง </AlertTitle></Alert>)}
+      </div>
           ) : null}
      <div className={classes.root}>
         <form noValidate autoComplete="off">
