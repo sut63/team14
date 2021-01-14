@@ -72,7 +72,6 @@ export default function SignInSide() {
     }
     else if(check === false){
       alert("เข้าสู่ระบบไม่สำเร็จ กรุณาตรวจสอบ Email หรือ Password")
-      //setPath("/")
     }
   }
 
