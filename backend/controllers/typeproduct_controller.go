@@ -181,7 +181,7 @@ func NewTypeproductController(router gin.IRouter, client *ent.Client) *Typeprodu
 }
 
 func (ctl *TypeproductController) register() {
-	typeproducts := ctl.router.Group("/types")
+	typeproducts := ctl.router.Group("/typeproducts")
 
 	typeproducts.POST("", ctl.CreateTypeproduct)
 	typeproducts.GET(":id", ctl.GetTypeproduct)

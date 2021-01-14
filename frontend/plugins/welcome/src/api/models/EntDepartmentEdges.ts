@@ -14,10 +14,6 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    EntCustomer,
-    EntCustomerFromJSON,
-    EntCustomerFromJSONTyped,
-    EntCustomerToJSON,
     EntPersonal,
     EntPersonalFromJSON,
     EntPersonalFromJSONTyped,
@@ -30,12 +26,6 @@ import {
  * @interface EntDepartmentEdges
  */
 export interface EntDepartmentEdges {
-    /**
-     * Customer holds the value of the customer edge.
-     * @type {Array<EntCustomer>}
-     * @memberof EntDepartmentEdges
-     */
-    customer?: Array<EntCustomer>;
     /**
      * Personal holds the value of the personal edge.
      * @type {Array<EntPersonal>}
@@ -54,7 +44,6 @@ export function EntDepartmentEdgesFromJSONTyped(json: any, ignoreDiscriminator: 
     }
     return {
         
-        'customer': !exists(json, 'customer') ? undefined : ((json['customer'] as Array<any>).map(EntCustomerFromJSON)),
         'personal': !exists(json, 'personal') ? undefined : ((json['personal'] as Array<any>).map(EntPersonalFromJSON)),
     };
 }
@@ -68,7 +57,6 @@ export function EntDepartmentEdgesToJSON(value?: EntDepartmentEdges | null): any
     }
     return {
         
-        'customer': value.customer === undefined ? undefined : ((value.customer as Array<any>).map(EntCustomerToJSON)),
         'personal': value.personal === undefined ? undefined : ((value.personal as Array<any>).map(EntPersonalToJSON)),
     };
 }

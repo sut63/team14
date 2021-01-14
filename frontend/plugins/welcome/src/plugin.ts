@@ -5,6 +5,8 @@ import Personalpage from './components/Personalpage';
 import Tablepersonal from './components/Tablepersonal';
 import CreateNewCustomer from './components/Customers';
 import CustomerTable from './components/CustomerTables';
+import Productcreates from './components/Productcreates';
+import Producttable from './components/Producttable';
 
  
 export const plugin = createPlugin({
@@ -16,5 +18,7 @@ export const plugin = createPlugin({
     router.registerRoute('/Tablepersonal', Tablepersonal);
     router.registerRoute('/createnewcustomer', CreateNewCustomer);
     router.registerRoute('/customertable', CustomerTable);
+    router.registerRoute('/Producttables', Producttable);
+    router.registerRoute('/Productcreate', Productcreates);
   },
 });

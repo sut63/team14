@@ -96,7 +96,7 @@ const Group14: FC<{}> = () => {
               variant="outlined"
               fullWidth
               size="large" 
-              href="" 
+              href="/Producttables" 
               startIcon={<SettingsTwoToneIcon />}
               className={classes.systemstlye}> 
               ข้อมูลอะไหล่
