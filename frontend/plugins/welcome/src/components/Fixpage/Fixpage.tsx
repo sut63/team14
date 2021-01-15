@@ -11,6 +11,7 @@ import ComputerTwoToneIcon from '@material-ui/icons/ComputerTwoTone';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { DefaultApi } from '../../api/apis';
 import { EntPersonal, EntFixcomtype, EntCustomer, EntFixbrand, EntFix} from '../../api';
+import { Cookies } from '../WelcomePage/Cookie'
 
 const useStyles = makeStyles((theme: Theme) =>
  createStyles({
@@ -49,6 +50,11 @@ const useStyles = makeStyles((theme: Theme) =>
    },
   }),
 );
+
+//Cookies
+var ck = new Cookies()
+  var cookieName = ck.GetCookie()
+  var cookieID = ck.GetID()
 
 export default function Fixpage() {
   const classes = useStyles();
@@ -157,7 +163,7 @@ const CreateFix = async () => {
     date : date + ":00+07:00",
     problemtype : problemtype,
     queue : queue,
-    personal : personal,
+    personal : Number(cookieID),
     customer : customer,
     fixcomtype : fixcomtype,
     fixbrand : fixbrand,
@@ -191,15 +197,15 @@ const timer = setTimeout(() => {
      </Header>
 
      <Content>
-       {status ? ( 
+     {status ? ( 
         <div>
-          {alert ? ( 
-              <Alert severity="success"> 
-                <AlertTitle> บันทึกข้อมูลสำเร็จ </AlertTitle></Alert>) 
-        : (     
-          <Alert severity="warning"> 
-            <AlertTitle> ไม่สามารถบันทึกข้อมูลได้ กรุณาลองใหม่อีกครั้ง </AlertTitle></Alert>)}
-        </div>
+        {alert ? ( 
+            <Alert severity="success"  onClose={() => { }}> 
+              <AlertTitle> บันทึกข้อมูลสำเร็จ </AlertTitle></Alert>) 
+      : (     
+        <Alert severity="error" onClose={() => { setStatus(false) }}> 
+          <AlertTitle> ไม่สามารถบันทึกข้อมูลได้ กรุณาลองใหม่อีกครั้ง </AlertTitle></Alert>)}
+      </div>
           ) : null}
      <div className={classes.root}>
         <form noValidate autoComplete="off">
@@ -208,22 +214,7 @@ const timer = setTimeout(() => {
             className={classes.margin}
             variant="outlined"
           >
-            <div className={classes.paper}><strong>แอดมิน</strong></div>
-            <Select className={classes.select}
-              //style={{ width: 500 ,marginLeft:7,marginRight:-7,marginTop:10}}
-              color="secondary"
-              labelId="personalname-label"
-              id="personalname"
-              value={personal}
-              onChange={PersonalhandleChange}
-            >
-              <InputLabel className={classes.insideLabel} id="faculty-label">แอดมิน</InputLabel>
-
-              {personals.map((item: EntPersonal) => (
-                <MenuItem value={item.id}>{item.personalname}</MenuItem>
-              ))}
-            </Select>
-
+           
             <div className={classes.paper}><strong>ชื่อลูกค้า</strong></div>
             <Select className={classes.select}
               //style={{ width: 500 ,marginLeft:7,marginRight:-7,marginTop:10}}
