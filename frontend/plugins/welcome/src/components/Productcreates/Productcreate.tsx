@@ -17,6 +17,7 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import Typography from '@material-ui/core/Typography';
+import { Cookies } from '../WelcomePage/Cookie'
 
 import { DefaultApi } from '../../api/apis';
 import { EntBrand } from '../../api/models/EntBrand'; // import interface Brand
@@ -52,6 +53,10 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   }),
 );
+
+var ck = new Cookies()
+var cookieName = ck.GetCookie()
+var cookieID = ck.GetID()
 
 /* interface CreateProduct {
   productname: string;
@@ -137,26 +142,33 @@ export default function CreateProductRecord() {
     setTypeproduct(event.target.value as number);
   };
   
-  const PersonalhandleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setPersonal(event.target.value as number);
-  };
-  
   // create product
   const CreateProduct = async () => {
+    if ((productname != null) && (productname != "") && (numberofproduct != null) && (numberofproduct != "") && (price != null) && (price != "") && (brand != null) && (typeproduct != null)  && (personal != null) ) {
     const product = {
       productname : productname,
       numberofproduct : numberofproduct,
       price : price,
       brand : brand,
       typeproduct : typeproduct,
-      personal : personal,
+      personal : Number(cookieID),
     };
     console.log(product);
     const res: any = await api.createProduct({ product : product });
     console.log("bruhhhhhhhhh");
     setStatus(true);
-    
-  };
+    if (res.id != '') {
+      setAlert(true);
+    } 
+  }
+    else {
+      setStatus(true);
+      setAlert(false);
+    }
+  const timer = setTimeout(() => {
+    setStatus(false);
+  }, 3000);
+};
 
   return (
     <Page theme={pageTheme.tool}>
@@ -179,19 +191,18 @@ export default function CreateProductRecord() {
             </Button>
           </Link>
           </div>
-          {status ? (
-            <div>
-              {alert ? (
-                <Alert severity="success">
-                  <AlertTitle>บันทึกสำเร็จ</AlertTitle>
-                </Alert>
-              ) : (
-                  <Alert severity="warning">
-                    <AlertTitle>ไม่สามารถบันทึกข้อมูลได้ กรุณาลองใหม่อีกครั้ง</AlertTitle>
-                  </Alert>
-                )}
-            </div>
+
+          {status ? ( 
+        <div>
+        {alert ? ( 
+            <Alert severity="success"  onClose={() => { }}> 
+              <AlertTitle> บันทึกข้อมูลสำเร็จ </AlertTitle></Alert>) 
+      : (     
+        <Alert severity="error" onClose={() => { setStatus(false) }}> 
+          <AlertTitle> ไม่สามารถบันทึกข้อมูลได้ กรุณาลองใหม่อีกครั้ง </AlertTitle></Alert>)}
+      </div>
           ) : null}
+
         </ContentHeader>
 
         <div className={classes.root}>
@@ -297,30 +308,6 @@ export default function CreateProductRecord() {
               >
                 {typeproducts.map((item: EntTypeproduct) => (
                   <MenuItem value={item.id}>{item.typeproductname}</MenuItem>
-                ))}
-              </Select>
-              </Typography>
-                </Typography>
-            </FormControl>
-            </div>
-
-            <div>
-            <FormControl
-              className={classes.margin}
-              variant="outlined"
-            >
-              <Typography gutterBottom  align="left">
-                เจ้าหน้าที่ที่ทำการบันทึก :   
-              <Typography variant="body1" gutterBottom> 
-              <Select
-                labelId="personal"
-                id="personal"
-                value={personal}
-                onChange={PersonalhandleChange}
-                style={{ width: 400 }}
-              >
-                {personals.map((item: EntPersonal) => (
-                  <MenuItem value={item.id}>{item.personalname}</MenuItem>
                 ))}
               </Select>
               </Typography>
