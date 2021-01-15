@@ -123,7 +123,7 @@ export default function Tablefix() {
                  variant="contained"
                  color="secondary"
                  startIcon={<DeleteIcon/>}
-                 href="/table"
+                 href="/Tablefix"
                >
                  Delete
                </Button>

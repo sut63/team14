@@ -150,6 +150,8 @@ export default function Fixpage() {
 
   // create fix
 const CreateFix = async () => {
+  if ((personal != null) && (customer != null) && (fixcomtype != null) && (fixbrand != null) && (productnumber != "")
+      && (date != "") && (problemtype != "") && (queue != "")){
   const fix = {
     productnumber : productnumber,
     date : date + ":00+07:00",
@@ -160,19 +162,21 @@ const CreateFix = async () => {
     fixcomtype : fixcomtype,
     fixbrand : fixbrand,
   };
-  console.log(fixs);
+  console.log(fix);
   const res: any = await http.createFix({ fix: fix });
-  console.log("hi");
+ 
   setStatus(true);
-  
   if (res.id != '') {
     setAlert(true);
-  } else {
+  } 
+}
+  else {
+    setStatus(true);
     setAlert(false);
   }
-  const timer = setTimeout(() => {
-    setStatus(false);
-  }, 3000);
+const timer = setTimeout(() => {
+  setStatus(false);
+}, 3000);
 };
 
  return (
