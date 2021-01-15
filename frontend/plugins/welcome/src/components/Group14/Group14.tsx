@@ -87,7 +87,7 @@ const Group14: FC<{}> = () => {
               variant="outlined"
               fullWidth
               size="large" 
-              href="" 
+              href="/createreceipt" 
               startIcon={<NoteTwoToneIcon />}
               className={classes.systemstlye}> 
               ใบเสร็จ

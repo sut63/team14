@@ -26,6 +26,10 @@ import {
     EntPersonalFromJSON,
     EntPersonalFromJSONTyped,
     EntPersonalToJSON,
+    EntReceipt,
+    EntReceiptFromJSON,
+    EntReceiptFromJSONTyped,
+    EntReceiptToJSON,
     EntTitle,
     EntTitleFromJSON,
     EntTitleFromJSONTyped,
@@ -57,6 +61,12 @@ export interface EntCustomerEdges {
      */
     personal?: EntPersonal;
     /**
+     * Receipt holds the value of the receipt edge.
+     * @type {Array<EntReceipt>}
+     * @memberof EntCustomerEdges
+     */
+    receipt?: Array<EntReceipt>;
+    /**
      * 
      * @type {EntTitle}
      * @memberof EntCustomerEdges
@@ -74,10 +84,11 @@ export function EntCustomerEdgesFromJSONTyped(json: any, ignoreDiscriminator: bo
     }
     return {
         
-        'fix': !exists(json, 'Fix') ? undefined : ((json['Fix'] as Array<any>).map(EntFixFromJSON)),
-        'gender': !exists(json, 'Gender') ? undefined : EntGenderFromJSON(json['Gender']),
-        'personal': !exists(json, 'Personal') ? undefined : EntPersonalFromJSON(json['Personal']),
-        'title': !exists(json, 'Title') ? undefined : EntTitleFromJSON(json['Title']),
+        'fix': !exists(json, 'fix') ? undefined : ((json['fix'] as Array<any>).map(EntFixFromJSON)),
+        'gender': !exists(json, 'gender') ? undefined : EntGenderFromJSON(json['gender']),
+        'personal': !exists(json, 'personal') ? undefined : EntPersonalFromJSON(json['personal']),
+        'receipt': !exists(json, 'receipt') ? undefined : ((json['receipt'] as Array<any>).map(EntReceiptFromJSON)),
+        'title': !exists(json, 'title') ? undefined : EntTitleFromJSON(json['title']),
     };
 }
 
@@ -93,6 +104,7 @@ export function EntCustomerEdgesToJSON(value?: EntCustomerEdges | null): any {
         'fix': value.fix === undefined ? undefined : ((value.fix as Array<any>).map(EntFixToJSON)),
         'gender': EntGenderToJSON(value.gender),
         'personal': EntPersonalToJSON(value.personal),
+        'receipt': value.receipt === undefined ? undefined : ((value.receipt as Array<any>).map(EntReceiptToJSON)),
         'title': EntTitleToJSON(value.title),
     };
 }

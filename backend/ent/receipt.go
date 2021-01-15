@@ -9,6 +9,7 @@ import (
 
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/tanapon395/playlist-video/ent/adminrepair"
+	"github.com/tanapon395/playlist-video/ent/customer"
 	"github.com/tanapon395/playlist-video/ent/paymenttype"
 	"github.com/tanapon395/playlist-video/ent/personal"
 	"github.com/tanapon395/playlist-video/ent/receipt"
@@ -19,18 +20,13 @@ type Receipt struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
-	// Cusidentification holds the value of the "Cusidentification" field.
-	Cusidentification string `json:"Cusidentification,omitempty"`
-	// Customername holds the value of the "Customername" field.
-	Customername string `json:"Customername,omitempty"`
-	// Phonenumber holds the value of the "Phonenumber" field.
-	Phonenumber string `json:"Phonenumber,omitempty"`
 	// AddedTime holds the value of the "added_time" field.
 	AddedTime time.Time `json:"added_time,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the ReceiptQuery when eager-loading is set.
 	Edges          ReceiptEdges `json:"edges"`
 	adminrepair_id *int
+	customer_id    *int
 	paymenttype_id *int
 	personal_id    *int
 }
@@ -43,9 +39,11 @@ type ReceiptEdges struct {
 	Adminrepair *Adminrepair
 	// Personal holds the value of the personal edge.
 	Personal *Personal
+	// Customer holds the value of the customer edge.
+	Customer *Customer
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [3]bool
+	loadedTypes [4]bool
 }
 
 // PaymenttypeOrErr returns the Paymenttype value or an error if the edge
@@ -90,14 +88,25 @@ func (e ReceiptEdges) PersonalOrErr() (*Personal, error) {
 	return nil, &NotLoadedError{edge: "personal"}
 }
 
+// CustomerOrErr returns the Customer value or an error if the edge
+// was not loaded in eager-loading, or loaded but was not found.
+func (e ReceiptEdges) CustomerOrErr() (*Customer, error) {
+	if e.loadedTypes[3] {
+		if e.Customer == nil {
+			// The edge customer was loaded in eager-loading,
+			// but was not found.
+			return nil, &NotFoundError{label: customer.Label}
+		}
+		return e.Customer, nil
+	}
+	return nil, &NotLoadedError{edge: "customer"}
+}
+
 // scanValues returns the types for scanning values from sql.Rows.
 func (*Receipt) scanValues() []interface{} {
 	return []interface{}{
-		&sql.NullInt64{},  // id
-		&sql.NullString{}, // Cusidentification
-		&sql.NullString{}, // Customername
-		&sql.NullString{}, // Phonenumber
-		&sql.NullTime{},   // added_time
+		&sql.NullInt64{}, // id
+		&sql.NullTime{},  // added_time
 	}
 }
 
@@ -105,6 +114,7 @@ func (*Receipt) scanValues() []interface{} {
 func (*Receipt) fkValues() []interface{} {
 	return []interface{}{
 		&sql.NullInt64{}, // adminrepair_id
+		&sql.NullInt64{}, // customer_id
 		&sql.NullInt64{}, // paymenttype_id
 		&sql.NullInt64{}, // personal_id
 	}
@@ -122,27 +132,12 @@ func (r *Receipt) assignValues(values ...interface{}) error {
 	}
 	r.ID = int(value.Int64)
 	values = values[1:]
-	if value, ok := values[0].(*sql.NullString); !ok {
-		return fmt.Errorf("unexpected type %T for field Cusidentification", values[0])
-	} else if value.Valid {
-		r.Cusidentification = value.String
-	}
-	if value, ok := values[1].(*sql.NullString); !ok {
-		return fmt.Errorf("unexpected type %T for field Customername", values[1])
-	} else if value.Valid {
-		r.Customername = value.String
-	}
-	if value, ok := values[2].(*sql.NullString); !ok {
-		return fmt.Errorf("unexpected type %T for field Phonenumber", values[2])
-	} else if value.Valid {
-		r.Phonenumber = value.String
-	}
-	if value, ok := values[3].(*sql.NullTime); !ok {
-		return fmt.Errorf("unexpected type %T for field added_time", values[3])
+	if value, ok := values[0].(*sql.NullTime); !ok {
+		return fmt.Errorf("unexpected type %T for field added_time", values[0])
 	} else if value.Valid {
 		r.AddedTime = value.Time
 	}
-	values = values[4:]
+	values = values[1:]
 	if len(values) == len(receipt.ForeignKeys) {
 		if value, ok := values[0].(*sql.NullInt64); !ok {
 			return fmt.Errorf("unexpected type %T for edge-field adminrepair_id", value)
@@ -151,12 +146,18 @@ func (r *Receipt) assignValues(values ...interface{}) error {
 			*r.adminrepair_id = int(value.Int64)
 		}
 		if value, ok := values[1].(*sql.NullInt64); !ok {
+			return fmt.Errorf("unexpected type %T for edge-field customer_id", value)
+		} else if value.Valid {
+			r.customer_id = new(int)
+			*r.customer_id = int(value.Int64)
+		}
+		if value, ok := values[2].(*sql.NullInt64); !ok {
 			return fmt.Errorf("unexpected type %T for edge-field paymenttype_id", value)
 		} else if value.Valid {
 			r.paymenttype_id = new(int)
 			*r.paymenttype_id = int(value.Int64)
 		}
-		if value, ok := values[2].(*sql.NullInt64); !ok {
+		if value, ok := values[3].(*sql.NullInt64); !ok {
 			return fmt.Errorf("unexpected type %T for edge-field personal_id", value)
 		} else if value.Valid {
 			r.personal_id = new(int)
@@ -179,6 +180,11 @@ func (r *Receipt) QueryAdminrepair() *AdminrepairQuery {
 // QueryPersonal queries the personal edge of the Receipt.
 func (r *Receipt) QueryPersonal() *PersonalQuery {
 	return (&ReceiptClient{config: r.config}).QueryPersonal(r)
+}
+
+// QueryCustomer queries the customer edge of the Receipt.
+func (r *Receipt) QueryCustomer() *CustomerQuery {
+	return (&ReceiptClient{config: r.config}).QueryCustomer(r)
 }
 
 // Update returns a builder for updating this Receipt.
@@ -204,12 +210,6 @@ func (r *Receipt) String() string {
 	var builder strings.Builder
 	builder.WriteString("Receipt(")
 	builder.WriteString(fmt.Sprintf("id=%v", r.ID))
-	builder.WriteString(", Cusidentification=")
-	builder.WriteString(r.Cusidentification)
-	builder.WriteString(", Customername=")
-	builder.WriteString(r.Customername)
-	builder.WriteString(", Phonenumber=")
-	builder.WriteString(r.Phonenumber)
 	builder.WriteString(", added_time=")
 	builder.WriteString(r.AddedTime.Format(time.ANSIC))
 	builder.WriteByte(')')

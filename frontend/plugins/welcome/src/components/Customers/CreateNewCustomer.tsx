@@ -168,7 +168,7 @@ const CreateCustomer = async () => {
      <Header
        title="Customer System" type="Computer Repair System">
       <div>&nbsp;&nbsp;&nbsp;</div>
-      <Button onClick={() => {CreateCustomer();}} variant="contained" href="/customertable" color="primary" startIcon={<AddCircleOutlinedIcon/>}> Create new customer </Button>
+      <Button onClick={() => {CreateCustomer();}} variant="contained" color="primary" startIcon={<AddCircleOutlinedIcon/>}> Create new customer </Button>
       <div>&nbsp;&nbsp;&nbsp;</div>
      
       <Button style={{ marginLeft: 20 }} component={RouterLink} to="/customertable" variant="contained" startIcon={<CancelRoundedIcon/>}>  Table </Button>

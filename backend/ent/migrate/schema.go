@@ -195,7 +195,7 @@ var (
 	// PaymentTypesColumns holds the columns for the "payment_types" table.
 	PaymentTypesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
-		{Name: "typename", Type: field.TypeString},
+		{Name: "typename", Type: field.TypeString, Unique: true},
 	}
 	// PaymentTypesTable holds the schema information for the "payment_types" table.
 	PaymentTypesTable = &schema.Table{
@@ -285,11 +285,9 @@ var (
 	// ReceiptsColumns holds the columns for the "receipts" table.
 	ReceiptsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
-		{Name: "cusidentification", Type: field.TypeString},
-		{Name: "customername", Type: field.TypeString},
-		{Name: "phonenumber", Type: field.TypeString},
 		{Name: "added_time", Type: field.TypeTime},
 		{Name: "adminrepair_id", Type: field.TypeInt, Nullable: true},
+		{Name: "customer_id", Type: field.TypeInt, Nullable: true},
 		{Name: "paymenttype_id", Type: field.TypeInt, Nullable: true},
 		{Name: "personal_id", Type: field.TypeInt, Nullable: true},
 	}
@@ -301,21 +299,28 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:  "receipts_adminrepairs_receipt",
-				Columns: []*schema.Column{ReceiptsColumns[5]},
+				Columns: []*schema.Column{ReceiptsColumns[2]},
 
 				RefColumns: []*schema.Column{AdminrepairsColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
+				Symbol:  "receipts_customers_receipt",
+				Columns: []*schema.Column{ReceiptsColumns[3]},
+
+				RefColumns: []*schema.Column{CustomersColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+			{
 				Symbol:  "receipts_payment_types_receipt",
-				Columns: []*schema.Column{ReceiptsColumns[6]},
+				Columns: []*schema.Column{ReceiptsColumns[4]},
 
 				RefColumns: []*schema.Column{PaymentTypesColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:  "receipts_personals_receipt",
-				Columns: []*schema.Column{ReceiptsColumns[7]},
+				Columns: []*schema.Column{ReceiptsColumns[5]},
 
 				RefColumns: []*schema.Column{PersonalsColumns[0]},
 				OnDelete:   schema.SetNull,
@@ -383,6 +388,7 @@ func init() {
 	ProductsTable.ForeignKeys[1].RefTable = PersonalsTable
 	ProductsTable.ForeignKeys[2].RefTable = TypeproductsTable
 	ReceiptsTable.ForeignKeys[0].RefTable = AdminrepairsTable
-	ReceiptsTable.ForeignKeys[1].RefTable = PaymentTypesTable
-	ReceiptsTable.ForeignKeys[2].RefTable = PersonalsTable
+	ReceiptsTable.ForeignKeys[1].RefTable = CustomersTable
+	ReceiptsTable.ForeignKeys[2].RefTable = PaymentTypesTable
+	ReceiptsTable.ForeignKeys[3].RefTable = PersonalsTable
 }

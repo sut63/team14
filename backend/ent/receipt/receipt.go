@@ -11,12 +11,6 @@ const (
 	Label = "receipt"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
-	// FieldCusidentification holds the string denoting the cusidentification field in the database.
-	FieldCusidentification = "cusidentification"
-	// FieldCustomername holds the string denoting the customername field in the database.
-	FieldCustomername = "customername"
-	// FieldPhonenumber holds the string denoting the phonenumber field in the database.
-	FieldPhonenumber = "phonenumber"
 	// FieldAddedTime holds the string denoting the added_time field in the database.
 	FieldAddedTime = "added_time"
 
@@ -26,6 +20,8 @@ const (
 	EdgeAdminrepair = "adminrepair"
 	// EdgePersonal holds the string denoting the personal edge name in mutations.
 	EdgePersonal = "personal"
+	// EdgeCustomer holds the string denoting the customer edge name in mutations.
+	EdgeCustomer = "customer"
 
 	// Table holds the table name of the receipt in the database.
 	Table = "receipts"
@@ -50,31 +46,30 @@ const (
 	PersonalInverseTable = "personals"
 	// PersonalColumn is the table column denoting the personal relation/edge.
 	PersonalColumn = "personal_id"
+	// CustomerTable is the table the holds the customer relation/edge.
+	CustomerTable = "receipts"
+	// CustomerInverseTable is the table name for the Customer entity.
+	// It exists in this package in order to avoid circular dependency with the "customer" package.
+	CustomerInverseTable = "customers"
+	// CustomerColumn is the table column denoting the customer relation/edge.
+	CustomerColumn = "customer_id"
 )
 
 // Columns holds all SQL columns for receipt fields.
 var Columns = []string{
 	FieldID,
-	FieldCusidentification,
-	FieldCustomername,
-	FieldPhonenumber,
 	FieldAddedTime,
 }
 
 // ForeignKeys holds the SQL foreign-keys that are owned by the Receipt type.
 var ForeignKeys = []string{
 	"adminrepair_id",
+	"customer_id",
 	"paymenttype_id",
 	"personal_id",
 }
 
 var (
-	// CusidentificationValidator is a validator for the "Cusidentification" field. It is called by the builders before save.
-	CusidentificationValidator func(string) error
-	// CustomernameValidator is a validator for the "Customername" field. It is called by the builders before save.
-	CustomernameValidator func(string) error
-	// PhonenumberValidator is a validator for the "Phonenumber" field. It is called by the builders before save.
-	PhonenumberValidator func(string) error
 	// DefaultAddedTime holds the default value on creation for the added_time field.
 	DefaultAddedTime func() time.Time
 )

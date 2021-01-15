@@ -3227,6 +3227,13 @@ var doc = `{
                     "type": "object",
                     "$ref": "#/definitions/ent.Personal"
                 },
+                "receipt": {
+                    "description": "Receipt holds the value of the receipt edge.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.Receipt"
+                    }
+                },
                 "title": {
                     "description": "Title holds the value of the title edge.",
                     "type": "object",
@@ -3597,18 +3604,6 @@ var doc = `{
         "ent.Receipt": {
             "type": "object",
             "properties": {
-                "Cusidentification": {
-                    "description": "Cusidentification holds the value of the \"Cusidentification\" field.",
-                    "type": "string"
-                },
-                "Customername": {
-                    "description": "Customername holds the value of the \"Customername\" field.",
-                    "type": "string"
-                },
-                "Phonenumber": {
-                    "description": "Phonenumber holds the value of the \"Phonenumber\" field.",
-                    "type": "string"
-                },
                 "added_time": {
                     "description": "AddedTime holds the value of the \"added_time\" field.",
                     "type": "string"
@@ -3631,6 +3626,11 @@ var doc = `{
                     "description": "Adminrepair holds the value of the adminrepair edge.",
                     "type": "object",
                     "$ref": "#/definitions/ent.Adminrepair"
+                },
+                "customer": {
+                    "description": "Customer holds the value of the customer edge.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.Customer"
                 },
                 "paymenttype": {
                     "description": "Paymenttype holds the value of the paymenttype edge.",
@@ -3737,7 +3737,6 @@ var doc = `{
         "OAuth2Application": {
             "type": "oauth2",
             "flow": "application",
-            "authorizationUrl": "",
             "tokenUrl": "https://example.com/oauth/token",
             "scopes": {
                 "admin": " Grants read and write access to administrative information",
@@ -3756,7 +3755,6 @@ var doc = `{
         "OAuth2Password": {
             "type": "oauth2",
             "flow": "password",
-            "authorizationUrl": "",
             "tokenUrl": "https://example.com/oauth/token",
             "scopes": {
                 "admin": " Grants read and write access to administrative information",

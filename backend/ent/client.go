@@ -596,6 +596,22 @@ func (c *CustomerClient) QueryFix(cu *Customer) *FixQuery {
 	return query
 }
 
+// QueryReceipt queries the receipt edge of a Customer.
+func (c *CustomerClient) QueryReceipt(cu *Customer) *ReceiptQuery {
+	query := &ReceiptQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := cu.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(customer.Table, customer.FieldID, id),
+			sqlgraph.To(receipt.Table, receipt.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, customer.ReceiptTable, customer.ReceiptColumn),
+		)
+		fromV = sqlgraph.Neighbors(cu.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
 // Hooks returns the client hooks.
 func (c *CustomerClient) Hooks() []Hook {
 	return c.hooks.Customer
@@ -1752,6 +1768,22 @@ func (c *ReceiptClient) QueryPersonal(r *Receipt) *PersonalQuery {
 			sqlgraph.From(receipt.Table, receipt.FieldID, id),
 			sqlgraph.To(personal.Table, personal.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, true, receipt.PersonalTable, receipt.PersonalColumn),
+		)
+		fromV = sqlgraph.Neighbors(r.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryCustomer queries the customer edge of a Receipt.
+func (c *ReceiptClient) QueryCustomer(r *Receipt) *CustomerQuery {
+	query := &CustomerQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := r.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(receipt.Table, receipt.FieldID, id),
+			sqlgraph.To(customer.Table, customer.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, receipt.CustomerTable, receipt.CustomerColumn),
 		)
 		fromV = sqlgraph.Neighbors(r.driver.Dialect(), step)
 		return fromV, nil

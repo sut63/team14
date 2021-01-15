@@ -18,6 +18,10 @@ import {
     EntAdminrepairFromJSON,
     EntAdminrepairFromJSONTyped,
     EntAdminrepairToJSON,
+    EntCustomer,
+    EntCustomerFromJSON,
+    EntCustomerFromJSONTyped,
+    EntCustomerToJSON,
     EntPaymentType,
     EntPaymentTypeFromJSON,
     EntPaymentTypeFromJSONTyped,
@@ -40,6 +44,12 @@ export interface EntReceiptEdges {
      * @memberof EntReceiptEdges
      */
     adminrepair?: EntAdminrepair;
+    /**
+     * 
+     * @type {EntCustomer}
+     * @memberof EntReceiptEdges
+     */
+    customer?: EntCustomer;
     /**
      * 
      * @type {EntPaymentType}
@@ -65,6 +75,7 @@ export function EntReceiptEdgesFromJSONTyped(json: any, ignoreDiscriminator: boo
     return {
         
         'adminrepair': !exists(json, 'adminrepair') ? undefined : EntAdminrepairFromJSON(json['adminrepair']),
+        'customer': !exists(json, 'customer') ? undefined : EntCustomerFromJSON(json['customer']),
         'paymenttype': !exists(json, 'paymenttype') ? undefined : EntPaymentTypeFromJSON(json['paymenttype']),
         'personal': !exists(json, 'personal') ? undefined : EntPersonalFromJSON(json['personal']),
     };
@@ -80,6 +91,7 @@ export function EntReceiptEdgesToJSON(value?: EntReceiptEdges | null): any {
     return {
         
         'adminrepair': EntAdminrepairToJSON(value.adminrepair),
+        'customer': EntCustomerToJSON(value.customer),
         'paymenttype': EntPaymentTypeToJSON(value.paymenttype),
         'personal': EntPersonalToJSON(value.personal),
     };

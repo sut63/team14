@@ -27,5 +27,6 @@ func (Customer) Edges() []ent.Edge {
 		edge.From("personal", Personal.Type).Ref("customer").Unique(),
 		edge.From("title", Title.Type).Ref("customer").Unique(),
 		edge.To("fix", Fix.Type).StorageKey(edge.Column("customer_id")),
+		edge.To("receipt", Receipt.Type).StorageKey(edge.Column("customer_id")),
 	}
 }

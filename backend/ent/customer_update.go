@@ -14,6 +14,7 @@ import (
 	"github.com/tanapon395/playlist-video/ent/gender"
 	"github.com/tanapon395/playlist-video/ent/personal"
 	"github.com/tanapon395/playlist-video/ent/predicate"
+	"github.com/tanapon395/playlist-video/ent/receipt"
 	"github.com/tanapon395/playlist-video/ent/title"
 )
 
@@ -121,6 +122,21 @@ func (cu *CustomerUpdate) AddFix(f ...*Fix) *CustomerUpdate {
 	return cu.AddFixIDs(ids...)
 }
 
+// AddReceiptIDs adds the receipt edge to Receipt by ids.
+func (cu *CustomerUpdate) AddReceiptIDs(ids ...int) *CustomerUpdate {
+	cu.mutation.AddReceiptIDs(ids...)
+	return cu
+}
+
+// AddReceipt adds the receipt edges to Receipt.
+func (cu *CustomerUpdate) AddReceipt(r ...*Receipt) *CustomerUpdate {
+	ids := make([]int, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
+	}
+	return cu.AddReceiptIDs(ids...)
+}
+
 // Mutation returns the CustomerMutation object of the builder.
 func (cu *CustomerUpdate) Mutation() *CustomerMutation {
 	return cu.mutation
@@ -157,6 +173,21 @@ func (cu *CustomerUpdate) RemoveFix(f ...*Fix) *CustomerUpdate {
 		ids[i] = f[i].ID
 	}
 	return cu.RemoveFixIDs(ids...)
+}
+
+// RemoveReceiptIDs removes the receipt edge to Receipt by ids.
+func (cu *CustomerUpdate) RemoveReceiptIDs(ids ...int) *CustomerUpdate {
+	cu.mutation.RemoveReceiptIDs(ids...)
+	return cu
+}
+
+// RemoveReceipt removes receipt edges to Receipt.
+func (cu *CustomerUpdate) RemoveReceipt(r ...*Receipt) *CustomerUpdate {
+	ids := make([]int, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
+	}
+	return cu.RemoveReceiptIDs(ids...)
 }
 
 // Save executes the query and returns the number of rows/vertices matched by this operation.
@@ -393,6 +424,44 @@ func (cu *CustomerUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	if nodes := cu.mutation.RemovedReceiptIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   customer.ReceiptTable,
+			Columns: []string{customer.ReceiptColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: receipt.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := cu.mutation.ReceiptIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   customer.ReceiptTable,
+			Columns: []string{customer.ReceiptColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: receipt.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, cu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{customer.Label}
@@ -501,6 +570,21 @@ func (cuo *CustomerUpdateOne) AddFix(f ...*Fix) *CustomerUpdateOne {
 	return cuo.AddFixIDs(ids...)
 }
 
+// AddReceiptIDs adds the receipt edge to Receipt by ids.
+func (cuo *CustomerUpdateOne) AddReceiptIDs(ids ...int) *CustomerUpdateOne {
+	cuo.mutation.AddReceiptIDs(ids...)
+	return cuo
+}
+
+// AddReceipt adds the receipt edges to Receipt.
+func (cuo *CustomerUpdateOne) AddReceipt(r ...*Receipt) *CustomerUpdateOne {
+	ids := make([]int, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
+	}
+	return cuo.AddReceiptIDs(ids...)
+}
+
 // Mutation returns the CustomerMutation object of the builder.
 func (cuo *CustomerUpdateOne) Mutation() *CustomerMutation {
 	return cuo.mutation
@@ -537,6 +621,21 @@ func (cuo *CustomerUpdateOne) RemoveFix(f ...*Fix) *CustomerUpdateOne {
 		ids[i] = f[i].ID
 	}
 	return cuo.RemoveFixIDs(ids...)
+}
+
+// RemoveReceiptIDs removes the receipt edge to Receipt by ids.
+func (cuo *CustomerUpdateOne) RemoveReceiptIDs(ids ...int) *CustomerUpdateOne {
+	cuo.mutation.RemoveReceiptIDs(ids...)
+	return cuo
+}
+
+// RemoveReceipt removes receipt edges to Receipt.
+func (cuo *CustomerUpdateOne) RemoveReceipt(r ...*Receipt) *CustomerUpdateOne {
+	ids := make([]int, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
+	}
+	return cuo.RemoveReceiptIDs(ids...)
 }
 
 // Save executes the query and returns the updated entity.
@@ -763,6 +862,44 @@ func (cuo *CustomerUpdateOne) sqlSave(ctx context.Context) (c *Customer, err err
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: fix.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if nodes := cuo.mutation.RemovedReceiptIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   customer.ReceiptTable,
+			Columns: []string{customer.ReceiptColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: receipt.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := cuo.mutation.ReceiptIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   customer.ReceiptTable,
+			Columns: []string{customer.ReceiptColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: receipt.FieldID,
 				},
 			},
 		}

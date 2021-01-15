@@ -27,24 +27,6 @@ import {
  */
 export interface EntReceipt {
     /**
-     * Cusidentification holds the value of the "Cusidentification" field.
-     * @type {string}
-     * @memberof EntReceipt
-     */
-    cusidentification?: string;
-    /**
-     * Customername holds the value of the "Customername" field.
-     * @type {string}
-     * @memberof EntReceipt
-     */
-    customername?: string;
-    /**
-     * Phonenumber holds the value of the "Phonenumber" field.
-     * @type {string}
-     * @memberof EntReceipt
-     */
-    phonenumber?: string;
-    /**
      * AddedTime holds the value of the "added_time" field.
      * @type {string}
      * @memberof EntReceipt
@@ -74,9 +56,6 @@ export function EntReceiptFromJSONTyped(json: any, ignoreDiscriminator: boolean)
     }
     return {
         
-        'cusidentification': !exists(json, 'Cusidentification') ? undefined : json['Cusidentification'],
-        'customername': !exists(json, 'Customername') ? undefined : json['Customername'],
-        'phonenumber': !exists(json, 'Phonenumber') ? undefined : json['Phonenumber'],
         'addedTime': !exists(json, 'added_time') ? undefined : json['added_time'],
         'edges': !exists(json, 'edges') ? undefined : EntReceiptEdgesFromJSON(json['edges']),
         'id': !exists(json, 'id') ? undefined : json['id'],
@@ -92,9 +71,6 @@ export function EntReceiptToJSON(value?: EntReceipt | null): any {
     }
     return {
         
-        'Cusidentification': value.cusidentification,
-        'Customername': value.customername,
-        'Phonenumber': value.phonenumber,
         'added_time': value.addedTime,
         'edges': EntReceiptEdgesToJSON(value.edges),
         'id': value.id,

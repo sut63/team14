@@ -13,6 +13,7 @@ import (
 	"github.com/tanapon395/playlist-video/ent/fix"
 	"github.com/tanapon395/playlist-video/ent/gender"
 	"github.com/tanapon395/playlist-video/ent/personal"
+	"github.com/tanapon395/playlist-video/ent/receipt"
 	"github.com/tanapon395/playlist-video/ent/title"
 )
 
@@ -111,6 +112,21 @@ func (cc *CustomerCreate) AddFix(f ...*Fix) *CustomerCreate {
 		ids[i] = f[i].ID
 	}
 	return cc.AddFixIDs(ids...)
+}
+
+// AddReceiptIDs adds the receipt edge to Receipt by ids.
+func (cc *CustomerCreate) AddReceiptIDs(ids ...int) *CustomerCreate {
+	cc.mutation.AddReceiptIDs(ids...)
+	return cc
+}
+
+// AddReceipt adds the receipt edges to Receipt.
+func (cc *CustomerCreate) AddReceipt(r ...*Receipt) *CustomerCreate {
+	ids := make([]int, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
+	}
+	return cc.AddReceiptIDs(ids...)
 }
 
 // Mutation returns the CustomerMutation object of the builder.
@@ -281,6 +297,25 @@ func (cc *CustomerCreate) createSpec() (*Customer, *sqlgraph.CreateSpec) {
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: fix.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := cc.mutation.ReceiptIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   customer.ReceiptTable,
+			Columns: []string{customer.ReceiptColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: receipt.FieldID,
 				},
 			},
 		}

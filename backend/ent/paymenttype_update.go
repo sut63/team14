@@ -71,11 +71,6 @@ func (ptu *PaymentTypeUpdate) RemoveReceipt(r ...*Receipt) *PaymentTypeUpdate {
 
 // Save executes the query and returns the number of rows/vertices matched by this operation.
 func (ptu *PaymentTypeUpdate) Save(ctx context.Context) (int, error) {
-	if v, ok := ptu.mutation.Typename(); ok {
-		if err := paymenttype.TypenameValidator(v); err != nil {
-			return 0, &ValidationError{Name: "Typename", err: fmt.Errorf("ent: validator failed for field \"Typename\": %w", err)}
-		}
-	}
 
 	var (
 		err      error
@@ -250,11 +245,6 @@ func (ptuo *PaymentTypeUpdateOne) RemoveReceipt(r ...*Receipt) *PaymentTypeUpdat
 
 // Save executes the query and returns the updated entity.
 func (ptuo *PaymentTypeUpdateOne) Save(ctx context.Context) (*PaymentType, error) {
-	if v, ok := ptuo.mutation.Typename(); ok {
-		if err := paymenttype.TypenameValidator(v); err != nil {
-			return nil, &ValidationError{Name: "Typename", err: fmt.Errorf("ent: validator failed for field \"Typename\": %w", err)}
-		}
-	}
 
 	var (
 		err  error

@@ -16,9 +16,6 @@ type Receipt struct {
 // Fields of the Receipt.
 func (Receipt) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("Cusidentification").NotEmpty(),
-		field.String("Customername").NotEmpty(),
-		field.String("Phonenumber").NotEmpty(),
 		field.Time("added_time").
 			Default(time.Now),
 	}
@@ -30,5 +27,6 @@ func (Receipt) Edges() []ent.Edge {
 		edge.From("paymenttype", PaymentType.Type).Ref("receipt").Unique(),
 		edge.From("adminrepair", Adminrepair.Type).Ref("receipt").Unique(),
 		edge.From("personal", Personal.Type).Ref("receipt").Unique(),
+		edge.From("customer", Customer.Type).Ref("receipt").Unique(),
 	}
 }

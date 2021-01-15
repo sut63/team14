@@ -10,7 +10,8 @@ import Producttable from './components/Producttable';
 import Fixpage from './components/Fixpage';
 import Tablefix from './components/Tablefix';
 import AdminrepairUI from './components/AdminrepairUI';
-
+import Receiptcreate from './components/Createreceipts';
+import Tablereceipt from './components/Tablereceipt';
  
 export const plugin = createPlugin({
   id: 'welcome',
@@ -26,7 +27,8 @@ export const plugin = createPlugin({
     router.registerRoute('/Fixpage', Fixpage);
     router.registerRoute('/Tablefix', Tablefix);
     router.registerRoute('/AdminrepairUI', AdminrepairUI);
-    
+    router.registerRoute('/createreceipt', Receiptcreate);
+    router.registerRoute('/Tablereceipt', Tablereceipt)
 
   },
 });

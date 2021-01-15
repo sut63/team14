@@ -93,364 +93,10 @@ func IDLTE(id int) predicate.Receipt {
 	})
 }
 
-// Cusidentification applies equality check predicate on the "Cusidentification" field. It's identical to CusidentificationEQ.
-func Cusidentification(v string) predicate.Receipt {
-	return predicate.Receipt(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldCusidentification), v))
-	})
-}
-
-// Customername applies equality check predicate on the "Customername" field. It's identical to CustomernameEQ.
-func Customername(v string) predicate.Receipt {
-	return predicate.Receipt(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldCustomername), v))
-	})
-}
-
-// Phonenumber applies equality check predicate on the "Phonenumber" field. It's identical to PhonenumberEQ.
-func Phonenumber(v string) predicate.Receipt {
-	return predicate.Receipt(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldPhonenumber), v))
-	})
-}
-
 // AddedTime applies equality check predicate on the "added_time" field. It's identical to AddedTimeEQ.
 func AddedTime(v time.Time) predicate.Receipt {
 	return predicate.Receipt(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldAddedTime), v))
-	})
-}
-
-// CusidentificationEQ applies the EQ predicate on the "Cusidentification" field.
-func CusidentificationEQ(v string) predicate.Receipt {
-	return predicate.Receipt(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldCusidentification), v))
-	})
-}
-
-// CusidentificationNEQ applies the NEQ predicate on the "Cusidentification" field.
-func CusidentificationNEQ(v string) predicate.Receipt {
-	return predicate.Receipt(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldCusidentification), v))
-	})
-}
-
-// CusidentificationIn applies the In predicate on the "Cusidentification" field.
-func CusidentificationIn(vs ...string) predicate.Receipt {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.Receipt(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
-		s.Where(sql.In(s.C(FieldCusidentification), v...))
-	})
-}
-
-// CusidentificationNotIn applies the NotIn predicate on the "Cusidentification" field.
-func CusidentificationNotIn(vs ...string) predicate.Receipt {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.Receipt(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
-		s.Where(sql.NotIn(s.C(FieldCusidentification), v...))
-	})
-}
-
-// CusidentificationGT applies the GT predicate on the "Cusidentification" field.
-func CusidentificationGT(v string) predicate.Receipt {
-	return predicate.Receipt(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldCusidentification), v))
-	})
-}
-
-// CusidentificationGTE applies the GTE predicate on the "Cusidentification" field.
-func CusidentificationGTE(v string) predicate.Receipt {
-	return predicate.Receipt(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldCusidentification), v))
-	})
-}
-
-// CusidentificationLT applies the LT predicate on the "Cusidentification" field.
-func CusidentificationLT(v string) predicate.Receipt {
-	return predicate.Receipt(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldCusidentification), v))
-	})
-}
-
-// CusidentificationLTE applies the LTE predicate on the "Cusidentification" field.
-func CusidentificationLTE(v string) predicate.Receipt {
-	return predicate.Receipt(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldCusidentification), v))
-	})
-}
-
-// CusidentificationContains applies the Contains predicate on the "Cusidentification" field.
-func CusidentificationContains(v string) predicate.Receipt {
-	return predicate.Receipt(func(s *sql.Selector) {
-		s.Where(sql.Contains(s.C(FieldCusidentification), v))
-	})
-}
-
-// CusidentificationHasPrefix applies the HasPrefix predicate on the "Cusidentification" field.
-func CusidentificationHasPrefix(v string) predicate.Receipt {
-	return predicate.Receipt(func(s *sql.Selector) {
-		s.Where(sql.HasPrefix(s.C(FieldCusidentification), v))
-	})
-}
-
-// CusidentificationHasSuffix applies the HasSuffix predicate on the "Cusidentification" field.
-func CusidentificationHasSuffix(v string) predicate.Receipt {
-	return predicate.Receipt(func(s *sql.Selector) {
-		s.Where(sql.HasSuffix(s.C(FieldCusidentification), v))
-	})
-}
-
-// CusidentificationEqualFold applies the EqualFold predicate on the "Cusidentification" field.
-func CusidentificationEqualFold(v string) predicate.Receipt {
-	return predicate.Receipt(func(s *sql.Selector) {
-		s.Where(sql.EqualFold(s.C(FieldCusidentification), v))
-	})
-}
-
-// CusidentificationContainsFold applies the ContainsFold predicate on the "Cusidentification" field.
-func CusidentificationContainsFold(v string) predicate.Receipt {
-	return predicate.Receipt(func(s *sql.Selector) {
-		s.Where(sql.ContainsFold(s.C(FieldCusidentification), v))
-	})
-}
-
-// CustomernameEQ applies the EQ predicate on the "Customername" field.
-func CustomernameEQ(v string) predicate.Receipt {
-	return predicate.Receipt(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldCustomername), v))
-	})
-}
-
-// CustomernameNEQ applies the NEQ predicate on the "Customername" field.
-func CustomernameNEQ(v string) predicate.Receipt {
-	return predicate.Receipt(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldCustomername), v))
-	})
-}
-
-// CustomernameIn applies the In predicate on the "Customername" field.
-func CustomernameIn(vs ...string) predicate.Receipt {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.Receipt(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
-		s.Where(sql.In(s.C(FieldCustomername), v...))
-	})
-}
-
-// CustomernameNotIn applies the NotIn predicate on the "Customername" field.
-func CustomernameNotIn(vs ...string) predicate.Receipt {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.Receipt(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
-		s.Where(sql.NotIn(s.C(FieldCustomername), v...))
-	})
-}
-
-// CustomernameGT applies the GT predicate on the "Customername" field.
-func CustomernameGT(v string) predicate.Receipt {
-	return predicate.Receipt(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldCustomername), v))
-	})
-}
-
-// CustomernameGTE applies the GTE predicate on the "Customername" field.
-func CustomernameGTE(v string) predicate.Receipt {
-	return predicate.Receipt(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldCustomername), v))
-	})
-}
-
-// CustomernameLT applies the LT predicate on the "Customername" field.
-func CustomernameLT(v string) predicate.Receipt {
-	return predicate.Receipt(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldCustomername), v))
-	})
-}
-
-// CustomernameLTE applies the LTE predicate on the "Customername" field.
-func CustomernameLTE(v string) predicate.Receipt {
-	return predicate.Receipt(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldCustomername), v))
-	})
-}
-
-// CustomernameContains applies the Contains predicate on the "Customername" field.
-func CustomernameContains(v string) predicate.Receipt {
-	return predicate.Receipt(func(s *sql.Selector) {
-		s.Where(sql.Contains(s.C(FieldCustomername), v))
-	})
-}
-
-// CustomernameHasPrefix applies the HasPrefix predicate on the "Customername" field.
-func CustomernameHasPrefix(v string) predicate.Receipt {
-	return predicate.Receipt(func(s *sql.Selector) {
-		s.Where(sql.HasPrefix(s.C(FieldCustomername), v))
-	})
-}
-
-// CustomernameHasSuffix applies the HasSuffix predicate on the "Customername" field.
-func CustomernameHasSuffix(v string) predicate.Receipt {
-	return predicate.Receipt(func(s *sql.Selector) {
-		s.Where(sql.HasSuffix(s.C(FieldCustomername), v))
-	})
-}
-
-// CustomernameEqualFold applies the EqualFold predicate on the "Customername" field.
-func CustomernameEqualFold(v string) predicate.Receipt {
-	return predicate.Receipt(func(s *sql.Selector) {
-		s.Where(sql.EqualFold(s.C(FieldCustomername), v))
-	})
-}
-
-// CustomernameContainsFold applies the ContainsFold predicate on the "Customername" field.
-func CustomernameContainsFold(v string) predicate.Receipt {
-	return predicate.Receipt(func(s *sql.Selector) {
-		s.Where(sql.ContainsFold(s.C(FieldCustomername), v))
-	})
-}
-
-// PhonenumberEQ applies the EQ predicate on the "Phonenumber" field.
-func PhonenumberEQ(v string) predicate.Receipt {
-	return predicate.Receipt(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldPhonenumber), v))
-	})
-}
-
-// PhonenumberNEQ applies the NEQ predicate on the "Phonenumber" field.
-func PhonenumberNEQ(v string) predicate.Receipt {
-	return predicate.Receipt(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldPhonenumber), v))
-	})
-}
-
-// PhonenumberIn applies the In predicate on the "Phonenumber" field.
-func PhonenumberIn(vs ...string) predicate.Receipt {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.Receipt(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
-		s.Where(sql.In(s.C(FieldPhonenumber), v...))
-	})
-}
-
-// PhonenumberNotIn applies the NotIn predicate on the "Phonenumber" field.
-func PhonenumberNotIn(vs ...string) predicate.Receipt {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.Receipt(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
-		s.Where(sql.NotIn(s.C(FieldPhonenumber), v...))
-	})
-}
-
-// PhonenumberGT applies the GT predicate on the "Phonenumber" field.
-func PhonenumberGT(v string) predicate.Receipt {
-	return predicate.Receipt(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldPhonenumber), v))
-	})
-}
-
-// PhonenumberGTE applies the GTE predicate on the "Phonenumber" field.
-func PhonenumberGTE(v string) predicate.Receipt {
-	return predicate.Receipt(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldPhonenumber), v))
-	})
-}
-
-// PhonenumberLT applies the LT predicate on the "Phonenumber" field.
-func PhonenumberLT(v string) predicate.Receipt {
-	return predicate.Receipt(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldPhonenumber), v))
-	})
-}
-
-// PhonenumberLTE applies the LTE predicate on the "Phonenumber" field.
-func PhonenumberLTE(v string) predicate.Receipt {
-	return predicate.Receipt(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldPhonenumber), v))
-	})
-}
-
-// PhonenumberContains applies the Contains predicate on the "Phonenumber" field.
-func PhonenumberContains(v string) predicate.Receipt {
-	return predicate.Receipt(func(s *sql.Selector) {
-		s.Where(sql.Contains(s.C(FieldPhonenumber), v))
-	})
-}
-
-// PhonenumberHasPrefix applies the HasPrefix predicate on the "Phonenumber" field.
-func PhonenumberHasPrefix(v string) predicate.Receipt {
-	return predicate.Receipt(func(s *sql.Selector) {
-		s.Where(sql.HasPrefix(s.C(FieldPhonenumber), v))
-	})
-}
-
-// PhonenumberHasSuffix applies the HasSuffix predicate on the "Phonenumber" field.
-func PhonenumberHasSuffix(v string) predicate.Receipt {
-	return predicate.Receipt(func(s *sql.Selector) {
-		s.Where(sql.HasSuffix(s.C(FieldPhonenumber), v))
-	})
-}
-
-// PhonenumberEqualFold applies the EqualFold predicate on the "Phonenumber" field.
-func PhonenumberEqualFold(v string) predicate.Receipt {
-	return predicate.Receipt(func(s *sql.Selector) {
-		s.Where(sql.EqualFold(s.C(FieldPhonenumber), v))
-	})
-}
-
-// PhonenumberContainsFold applies the ContainsFold predicate on the "Phonenumber" field.
-func PhonenumberContainsFold(v string) predicate.Receipt {
-	return predicate.Receipt(func(s *sql.Selector) {
-		s.Where(sql.ContainsFold(s.C(FieldPhonenumber), v))
 	})
 }
 
@@ -605,6 +251,34 @@ func HasPersonalWith(preds ...predicate.Personal) predicate.Receipt {
 			sqlgraph.From(Table, FieldID),
 			sqlgraph.To(PersonalInverseTable, FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, true, PersonalTable, PersonalColumn),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
+// HasCustomer applies the HasEdge predicate on the "customer" edge.
+func HasCustomer() predicate.Receipt {
+	return predicate.Receipt(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(CustomerTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, CustomerTable, CustomerColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasCustomerWith applies the HasEdge predicate on the "customer" edge with a given conditions (other predicates).
+func HasCustomerWith(preds ...predicate.Customer) predicate.Receipt {
+	return predicate.Receipt(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(CustomerInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, CustomerTable, CustomerColumn),
 		)
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {

@@ -29,8 +29,3 @@ var Columns = []string{
 	FieldID,
 	FieldTypename,
 }
-
-var (
-	// TypenameValidator is a validator for the "Typename" field. It is called by the builders before save.
-	TypenameValidator func(string) error
-)

@@ -12,6 +12,7 @@ import (
 	"github.com/tanapon395/playlist-video/ent/paymenttype"
 	"github.com/tanapon395/playlist-video/ent/personal"
 	"github.com/tanapon395/playlist-video/ent/receipt"
+	"github.com/tanapon395/playlist-video/ent/customer"
 )
 
 // ReceiptController defines the struct for the receipt controller
@@ -21,13 +22,11 @@ type ReceiptController struct {
 }
 
 type Receipt struct {
-	Cusidentification string
-	Customername      string
-	Phonenumber       string
-	Added             string
-	Personal          int
-	PaymentType       int
-	Adminrepair       int
+	Added       string
+	Customer    int
+	Personal    int
+	PaymentType int
+	Adminrepair int
 }
 
 // CreateReceipt handles POST requests for adding receipt entities
@@ -80,13 +79,22 @@ func (ctl *ReceiptController) CreateReceipt(c *gin.Context) {
 		return
 	}
 
+	cm, err := ctl.client.Customer.
+		Query().
+		Where(customer.IDEQ(int(obj.Customer))).
+		Only(context.Background())
+	if err != nil {
+		c.JSON(400, gin.H{
+			"error": "customer not found",
+		})
+		return
+	}
+
 	times, err := time.Parse(time.RFC3339, obj.Added)
 	r, err := ctl.client.Receipt.
 		Create().
-		SetCusidentification(obj.Cusidentification).
-		SetCustomername(obj.Customername).
-		SetPhonenumber(obj.Phonenumber).
 		SetAddedTime(times).
+		SetCustomer(cm).
 		SetPersonal(p).
 		SetAdminrepair(a).
 		SetPaymenttype(pt).
@@ -124,7 +132,6 @@ func (ctl *ReceiptController) GetReceipt(c *gin.Context) {
 		Query().
 		Where(receipt.IDEQ(int(id))).
 		Only(context.Background())
-
 	if err != nil {
 		c.JSON(404, gin.H{
 			"error": err.Error(),
@@ -167,6 +174,10 @@ func (ctl *ReceiptController) ListReceipt(c *gin.Context) {
 
 	receipts, err := ctl.client.Receipt.
 		Query().
+		WithPaymenttype().
+		WithPersonal().
+		WithAdminrepair().
+		WithCustomer().
 		Limit(limit).
 		Offset(offset).
 		All(context.Background())

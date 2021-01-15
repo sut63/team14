@@ -51,11 +51,6 @@ func (ptc *PaymentTypeCreate) Save(ctx context.Context) (*PaymentType, error) {
 	if _, ok := ptc.mutation.Typename(); !ok {
 		return nil, &ValidationError{Name: "Typename", err: errors.New("ent: missing required field \"Typename\"")}
 	}
-	if v, ok := ptc.mutation.Typename(); ok {
-		if err := paymenttype.TypenameValidator(v); err != nil {
-			return nil, &ValidationError{Name: "Typename", err: fmt.Errorf("ent: validator failed for field \"Typename\": %w", err)}
-		}
-	}
 	var (
 		err  error
 		node *PaymentType

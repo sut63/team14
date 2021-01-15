@@ -22,6 +22,8 @@ const (
 	EdgeTitle = "title"
 	// EdgeFix holds the string denoting the fix edge name in mutations.
 	EdgeFix = "fix"
+	// EdgeReceipt holds the string denoting the receipt edge name in mutations.
+	EdgeReceipt = "receipt"
 
 	// Table holds the table name of the customer in the database.
 	Table = "customers"
@@ -53,6 +55,13 @@ const (
 	FixInverseTable = "fixes"
 	// FixColumn is the table column denoting the fix relation/edge.
 	FixColumn = "customer_id"
+	// ReceiptTable is the table the holds the receipt relation/edge.
+	ReceiptTable = "receipts"
+	// ReceiptInverseTable is the table name for the Receipt entity.
+	// It exists in this package in order to avoid circular dependency with the "receipt" package.
+	ReceiptInverseTable = "receipts"
+	// ReceiptColumn is the table column denoting the receipt relation/edge.
+	ReceiptColumn = "customer_id"
 )
 
 // Columns holds all SQL columns for customer fields.

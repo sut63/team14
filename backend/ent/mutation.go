@@ -983,6 +983,8 @@ type CustomerMutation struct {
 	clearedtitle    bool
 	fix             map[int]struct{}
 	removedfix      map[int]struct{}
+	receipt         map[int]struct{}
+	removedreceipt  map[int]struct{}
 	done            bool
 	oldValue        func(context.Context) (*Customer, error)
 }
@@ -1336,6 +1338,48 @@ func (m *CustomerMutation) ResetFix() {
 	m.removedfix = nil
 }
 
+// AddReceiptIDs adds the receipt edge to Receipt by ids.
+func (m *CustomerMutation) AddReceiptIDs(ids ...int) {
+	if m.receipt == nil {
+		m.receipt = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.receipt[ids[i]] = struct{}{}
+	}
+}
+
+// RemoveReceiptIDs removes the receipt edge to Receipt by ids.
+func (m *CustomerMutation) RemoveReceiptIDs(ids ...int) {
+	if m.removedreceipt == nil {
+		m.removedreceipt = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.removedreceipt[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedReceipt returns the removed ids of receipt.
+func (m *CustomerMutation) RemovedReceiptIDs() (ids []int) {
+	for id := range m.removedreceipt {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ReceiptIDs returns the receipt ids in the mutation.
+func (m *CustomerMutation) ReceiptIDs() (ids []int) {
+	for id := range m.receipt {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetReceipt reset all changes of the "receipt" edge.
+func (m *CustomerMutation) ResetReceipt() {
+	m.receipt = nil
+	m.removedreceipt = nil
+}
+
 // Op returns the operation name.
 func (m *CustomerMutation) Op() Op {
 	return m.op
@@ -1485,7 +1529,7 @@ func (m *CustomerMutation) ResetField(name string) error {
 // AddedEdges returns all edge names that were set/added in this
 // mutation.
 func (m *CustomerMutation) AddedEdges() []string {
-	edges := make([]string, 0, 4)
+	edges := make([]string, 0, 5)
 	if m.gender != nil {
 		edges = append(edges, customer.EdgeGender)
 	}
@@ -1497,6 +1541,9 @@ func (m *CustomerMutation) AddedEdges() []string {
 	}
 	if m.fix != nil {
 		edges = append(edges, customer.EdgeFix)
+	}
+	if m.receipt != nil {
+		edges = append(edges, customer.EdgeReceipt)
 	}
 	return edges
 }
@@ -1523,6 +1570,12 @@ func (m *CustomerMutation) AddedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
+	case customer.EdgeReceipt:
+		ids := make([]ent.Value, 0, len(m.receipt))
+		for id := range m.receipt {
+			ids = append(ids, id)
+		}
+		return ids
 	}
 	return nil
 }
@@ -1530,9 +1583,12 @@ func (m *CustomerMutation) AddedIDs(name string) []ent.Value {
 // RemovedEdges returns all edge names that were removed in this
 // mutation.
 func (m *CustomerMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 4)
+	edges := make([]string, 0, 5)
 	if m.removedfix != nil {
 		edges = append(edges, customer.EdgeFix)
+	}
+	if m.removedreceipt != nil {
+		edges = append(edges, customer.EdgeReceipt)
 	}
 	return edges
 }
@@ -1547,6 +1603,12 @@ func (m *CustomerMutation) RemovedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
+	case customer.EdgeReceipt:
+		ids := make([]ent.Value, 0, len(m.removedreceipt))
+		for id := range m.removedreceipt {
+			ids = append(ids, id)
+		}
+		return ids
 	}
 	return nil
 }
@@ -1554,7 +1616,7 @@ func (m *CustomerMutation) RemovedIDs(name string) []ent.Value {
 // ClearedEdges returns all edge names that were cleared in this
 // mutation.
 func (m *CustomerMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 4)
+	edges := make([]string, 0, 5)
 	if m.clearedgender {
 		edges = append(edges, customer.EdgeGender)
 	}
@@ -1614,6 +1676,9 @@ func (m *CustomerMutation) ResetEdge(name string) error {
 		return nil
 	case customer.EdgeFix:
 		m.ResetFix()
+		return nil
+	case customer.EdgeReceipt:
+		m.ResetReceipt()
 		return nil
 	}
 	return fmt.Errorf("unknown Customer edge %s", name)
@@ -5864,9 +5929,6 @@ type ReceiptMutation struct {
 	op                 Op
 	typ                string
 	id                 *int
-	_Cusidentification *string
-	_Customername      *string
-	_Phonenumber       *string
 	added_time         *time.Time
 	clearedFields      map[string]struct{}
 	paymenttype        *int
@@ -5875,6 +5937,8 @@ type ReceiptMutation struct {
 	clearedadminrepair bool
 	personal           *int
 	clearedpersonal    bool
+	customer           *int
+	clearedcustomer    bool
 	done               bool
 	oldValue           func(context.Context) (*Receipt, error)
 }
@@ -5956,117 +6020,6 @@ func (m *ReceiptMutation) ID() (id int, exists bool) {
 		return
 	}
 	return *m.id, true
-}
-
-// SetCusidentification sets the Cusidentification field.
-func (m *ReceiptMutation) SetCusidentification(s string) {
-	m._Cusidentification = &s
-}
-
-// Cusidentification returns the Cusidentification value in the mutation.
-func (m *ReceiptMutation) Cusidentification() (r string, exists bool) {
-	v := m._Cusidentification
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldCusidentification returns the old Cusidentification value of the Receipt.
-// If the Receipt object wasn't provided to the builder, the object is fetched
-// from the database.
-// An error is returned if the mutation operation is not UpdateOne, or database query fails.
-func (m *ReceiptMutation) OldCusidentification(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, fmt.Errorf("OldCusidentification is allowed only on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, fmt.Errorf("OldCusidentification requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldCusidentification: %w", err)
-	}
-	return oldValue.Cusidentification, nil
-}
-
-// ResetCusidentification reset all changes of the "Cusidentification" field.
-func (m *ReceiptMutation) ResetCusidentification() {
-	m._Cusidentification = nil
-}
-
-// SetCustomername sets the Customername field.
-func (m *ReceiptMutation) SetCustomername(s string) {
-	m._Customername = &s
-}
-
-// Customername returns the Customername value in the mutation.
-func (m *ReceiptMutation) Customername() (r string, exists bool) {
-	v := m._Customername
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldCustomername returns the old Customername value of the Receipt.
-// If the Receipt object wasn't provided to the builder, the object is fetched
-// from the database.
-// An error is returned if the mutation operation is not UpdateOne, or database query fails.
-func (m *ReceiptMutation) OldCustomername(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, fmt.Errorf("OldCustomername is allowed only on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, fmt.Errorf("OldCustomername requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldCustomername: %w", err)
-	}
-	return oldValue.Customername, nil
-}
-
-// ResetCustomername reset all changes of the "Customername" field.
-func (m *ReceiptMutation) ResetCustomername() {
-	m._Customername = nil
-}
-
-// SetPhonenumber sets the Phonenumber field.
-func (m *ReceiptMutation) SetPhonenumber(s string) {
-	m._Phonenumber = &s
-}
-
-// Phonenumber returns the Phonenumber value in the mutation.
-func (m *ReceiptMutation) Phonenumber() (r string, exists bool) {
-	v := m._Phonenumber
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldPhonenumber returns the old Phonenumber value of the Receipt.
-// If the Receipt object wasn't provided to the builder, the object is fetched
-// from the database.
-// An error is returned if the mutation operation is not UpdateOne, or database query fails.
-func (m *ReceiptMutation) OldPhonenumber(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, fmt.Errorf("OldPhonenumber is allowed only on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, fmt.Errorf("OldPhonenumber requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldPhonenumber: %w", err)
-	}
-	return oldValue.Phonenumber, nil
-}
-
-// ResetPhonenumber reset all changes of the "Phonenumber" field.
-func (m *ReceiptMutation) ResetPhonenumber() {
-	m._Phonenumber = nil
 }
 
 // SetAddedTime sets the added_time field.
@@ -6223,6 +6176,45 @@ func (m *ReceiptMutation) ResetPersonal() {
 	m.clearedpersonal = false
 }
 
+// SetCustomerID sets the customer edge to Customer by id.
+func (m *ReceiptMutation) SetCustomerID(id int) {
+	m.customer = &id
+}
+
+// ClearCustomer clears the customer edge to Customer.
+func (m *ReceiptMutation) ClearCustomer() {
+	m.clearedcustomer = true
+}
+
+// CustomerCleared returns if the edge customer was cleared.
+func (m *ReceiptMutation) CustomerCleared() bool {
+	return m.clearedcustomer
+}
+
+// CustomerID returns the customer id in the mutation.
+func (m *ReceiptMutation) CustomerID() (id int, exists bool) {
+	if m.customer != nil {
+		return *m.customer, true
+	}
+	return
+}
+
+// CustomerIDs returns the customer ids in the mutation.
+// Note that ids always returns len(ids) <= 1 for unique edges, and you should use
+// CustomerID instead. It exists only for internal usage by the builders.
+func (m *ReceiptMutation) CustomerIDs() (ids []int) {
+	if id := m.customer; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetCustomer reset all changes of the "customer" edge.
+func (m *ReceiptMutation) ResetCustomer() {
+	m.customer = nil
+	m.clearedcustomer = false
+}
+
 // Op returns the operation name.
 func (m *ReceiptMutation) Op() Op {
 	return m.op
@@ -6237,16 +6229,7 @@ func (m *ReceiptMutation) Type() string {
 // this mutation. Note that, in order to get all numeric
 // fields that were in/decremented, call AddedFields().
 func (m *ReceiptMutation) Fields() []string {
-	fields := make([]string, 0, 4)
-	if m._Cusidentification != nil {
-		fields = append(fields, receipt.FieldCusidentification)
-	}
-	if m._Customername != nil {
-		fields = append(fields, receipt.FieldCustomername)
-	}
-	if m._Phonenumber != nil {
-		fields = append(fields, receipt.FieldPhonenumber)
-	}
+	fields := make([]string, 0, 1)
 	if m.added_time != nil {
 		fields = append(fields, receipt.FieldAddedTime)
 	}
@@ -6258,12 +6241,6 @@ func (m *ReceiptMutation) Fields() []string {
 // not set, or was not define in the schema.
 func (m *ReceiptMutation) Field(name string) (ent.Value, bool) {
 	switch name {
-	case receipt.FieldCusidentification:
-		return m.Cusidentification()
-	case receipt.FieldCustomername:
-		return m.Customername()
-	case receipt.FieldPhonenumber:
-		return m.Phonenumber()
 	case receipt.FieldAddedTime:
 		return m.AddedTime()
 	}
@@ -6275,12 +6252,6 @@ func (m *ReceiptMutation) Field(name string) (ent.Value, bool) {
 // or the query to the database was failed.
 func (m *ReceiptMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
 	switch name {
-	case receipt.FieldCusidentification:
-		return m.OldCusidentification(ctx)
-	case receipt.FieldCustomername:
-		return m.OldCustomername(ctx)
-	case receipt.FieldPhonenumber:
-		return m.OldPhonenumber(ctx)
 	case receipt.FieldAddedTime:
 		return m.OldAddedTime(ctx)
 	}
@@ -6292,27 +6263,6 @@ func (m *ReceiptMutation) OldField(ctx context.Context, name string) (ent.Value,
 // type mismatch the field type.
 func (m *ReceiptMutation) SetField(name string, value ent.Value) error {
 	switch name {
-	case receipt.FieldCusidentification:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetCusidentification(v)
-		return nil
-	case receipt.FieldCustomername:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetCustomername(v)
-		return nil
-	case receipt.FieldPhonenumber:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetPhonenumber(v)
-		return nil
 	case receipt.FieldAddedTime:
 		v, ok := value.(time.Time)
 		if !ok {
@@ -6370,15 +6320,6 @@ func (m *ReceiptMutation) ClearField(name string) error {
 // defined in the schema.
 func (m *ReceiptMutation) ResetField(name string) error {
 	switch name {
-	case receipt.FieldCusidentification:
-		m.ResetCusidentification()
-		return nil
-	case receipt.FieldCustomername:
-		m.ResetCustomername()
-		return nil
-	case receipt.FieldPhonenumber:
-		m.ResetPhonenumber()
-		return nil
 	case receipt.FieldAddedTime:
 		m.ResetAddedTime()
 		return nil
@@ -6389,7 +6330,7 @@ func (m *ReceiptMutation) ResetField(name string) error {
 // AddedEdges returns all edge names that were set/added in this
 // mutation.
 func (m *ReceiptMutation) AddedEdges() []string {
-	edges := make([]string, 0, 3)
+	edges := make([]string, 0, 4)
 	if m.paymenttype != nil {
 		edges = append(edges, receipt.EdgePaymenttype)
 	}
@@ -6398,6 +6339,9 @@ func (m *ReceiptMutation) AddedEdges() []string {
 	}
 	if m.personal != nil {
 		edges = append(edges, receipt.EdgePersonal)
+	}
+	if m.customer != nil {
+		edges = append(edges, receipt.EdgeCustomer)
 	}
 	return edges
 }
@@ -6418,6 +6362,10 @@ func (m *ReceiptMutation) AddedIDs(name string) []ent.Value {
 		if id := m.personal; id != nil {
 			return []ent.Value{*id}
 		}
+	case receipt.EdgeCustomer:
+		if id := m.customer; id != nil {
+			return []ent.Value{*id}
+		}
 	}
 	return nil
 }
@@ -6425,7 +6373,7 @@ func (m *ReceiptMutation) AddedIDs(name string) []ent.Value {
 // RemovedEdges returns all edge names that were removed in this
 // mutation.
 func (m *ReceiptMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 3)
+	edges := make([]string, 0, 4)
 	return edges
 }
 
@@ -6440,7 +6388,7 @@ func (m *ReceiptMutation) RemovedIDs(name string) []ent.Value {
 // ClearedEdges returns all edge names that were cleared in this
 // mutation.
 func (m *ReceiptMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 3)
+	edges := make([]string, 0, 4)
 	if m.clearedpaymenttype {
 		edges = append(edges, receipt.EdgePaymenttype)
 	}
@@ -6449,6 +6397,9 @@ func (m *ReceiptMutation) ClearedEdges() []string {
 	}
 	if m.clearedpersonal {
 		edges = append(edges, receipt.EdgePersonal)
+	}
+	if m.clearedcustomer {
+		edges = append(edges, receipt.EdgeCustomer)
 	}
 	return edges
 }
@@ -6463,6 +6414,8 @@ func (m *ReceiptMutation) EdgeCleared(name string) bool {
 		return m.clearedadminrepair
 	case receipt.EdgePersonal:
 		return m.clearedpersonal
+	case receipt.EdgeCustomer:
+		return m.clearedcustomer
 	}
 	return false
 }
@@ -6479,6 +6432,9 @@ func (m *ReceiptMutation) ClearEdge(name string) error {
 		return nil
 	case receipt.EdgePersonal:
 		m.ClearPersonal()
+		return nil
+	case receipt.EdgeCustomer:
+		m.ClearCustomer()
 		return nil
 	}
 	return fmt.Errorf("unknown Receipt unique edge %s", name)
@@ -6497,6 +6453,9 @@ func (m *ReceiptMutation) ResetEdge(name string) error {
 		return nil
 	case receipt.EdgePersonal:
 		m.ResetPersonal()
+		return nil
+	case receipt.EdgeCustomer:
+		m.ResetCustomer()
 		return nil
 	}
 	return fmt.Errorf("unknown Receipt edge %s", name)

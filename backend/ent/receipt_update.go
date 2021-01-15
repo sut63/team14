@@ -11,6 +11,7 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
 	"github.com/tanapon395/playlist-video/ent/adminrepair"
+	"github.com/tanapon395/playlist-video/ent/customer"
 	"github.com/tanapon395/playlist-video/ent/paymenttype"
 	"github.com/tanapon395/playlist-video/ent/personal"
 	"github.com/tanapon395/playlist-video/ent/predicate"
@@ -28,24 +29,6 @@ type ReceiptUpdate struct {
 // Where adds a new predicate for the builder.
 func (ru *ReceiptUpdate) Where(ps ...predicate.Receipt) *ReceiptUpdate {
 	ru.predicates = append(ru.predicates, ps...)
-	return ru
-}
-
-// SetCusidentification sets the Cusidentification field.
-func (ru *ReceiptUpdate) SetCusidentification(s string) *ReceiptUpdate {
-	ru.mutation.SetCusidentification(s)
-	return ru
-}
-
-// SetCustomername sets the Customername field.
-func (ru *ReceiptUpdate) SetCustomername(s string) *ReceiptUpdate {
-	ru.mutation.SetCustomername(s)
-	return ru
-}
-
-// SetPhonenumber sets the Phonenumber field.
-func (ru *ReceiptUpdate) SetPhonenumber(s string) *ReceiptUpdate {
-	ru.mutation.SetPhonenumber(s)
 	return ru
 }
 
@@ -120,6 +103,25 @@ func (ru *ReceiptUpdate) SetPersonal(p *Personal) *ReceiptUpdate {
 	return ru.SetPersonalID(p.ID)
 }
 
+// SetCustomerID sets the customer edge to Customer by id.
+func (ru *ReceiptUpdate) SetCustomerID(id int) *ReceiptUpdate {
+	ru.mutation.SetCustomerID(id)
+	return ru
+}
+
+// SetNillableCustomerID sets the customer edge to Customer by id if the given value is not nil.
+func (ru *ReceiptUpdate) SetNillableCustomerID(id *int) *ReceiptUpdate {
+	if id != nil {
+		ru = ru.SetCustomerID(*id)
+	}
+	return ru
+}
+
+// SetCustomer sets the customer edge to Customer.
+func (ru *ReceiptUpdate) SetCustomer(c *Customer) *ReceiptUpdate {
+	return ru.SetCustomerID(c.ID)
+}
+
 // Mutation returns the ReceiptMutation object of the builder.
 func (ru *ReceiptUpdate) Mutation() *ReceiptMutation {
 	return ru.mutation
@@ -143,23 +145,14 @@ func (ru *ReceiptUpdate) ClearPersonal() *ReceiptUpdate {
 	return ru
 }
 
+// ClearCustomer clears the customer edge to Customer.
+func (ru *ReceiptUpdate) ClearCustomer() *ReceiptUpdate {
+	ru.mutation.ClearCustomer()
+	return ru
+}
+
 // Save executes the query and returns the number of rows/vertices matched by this operation.
 func (ru *ReceiptUpdate) Save(ctx context.Context) (int, error) {
-	if v, ok := ru.mutation.Cusidentification(); ok {
-		if err := receipt.CusidentificationValidator(v); err != nil {
-			return 0, &ValidationError{Name: "Cusidentification", err: fmt.Errorf("ent: validator failed for field \"Cusidentification\": %w", err)}
-		}
-	}
-	if v, ok := ru.mutation.Customername(); ok {
-		if err := receipt.CustomernameValidator(v); err != nil {
-			return 0, &ValidationError{Name: "Customername", err: fmt.Errorf("ent: validator failed for field \"Customername\": %w", err)}
-		}
-	}
-	if v, ok := ru.mutation.Phonenumber(); ok {
-		if err := receipt.PhonenumberValidator(v); err != nil {
-			return 0, &ValidationError{Name: "Phonenumber", err: fmt.Errorf("ent: validator failed for field \"Phonenumber\": %w", err)}
-		}
-	}
 
 	var (
 		err      error
@@ -227,27 +220,6 @@ func (ru *ReceiptUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				ps[i](selector)
 			}
 		}
-	}
-	if value, ok := ru.mutation.Cusidentification(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: receipt.FieldCusidentification,
-		})
-	}
-	if value, ok := ru.mutation.Customername(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: receipt.FieldCustomername,
-		})
-	}
-	if value, ok := ru.mutation.Phonenumber(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: receipt.FieldPhonenumber,
-		})
 	}
 	if value, ok := ru.mutation.AddedTime(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
@@ -361,6 +333,41 @@ func (ru *ReceiptUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	if ru.mutation.CustomerCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   receipt.CustomerTable,
+			Columns: []string{receipt.CustomerColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: customer.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := ru.mutation.CustomerIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   receipt.CustomerTable,
+			Columns: []string{receipt.CustomerColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: customer.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, ru.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{receipt.Label}
@@ -377,24 +384,6 @@ type ReceiptUpdateOne struct {
 	config
 	hooks    []Hook
 	mutation *ReceiptMutation
-}
-
-// SetCusidentification sets the Cusidentification field.
-func (ruo *ReceiptUpdateOne) SetCusidentification(s string) *ReceiptUpdateOne {
-	ruo.mutation.SetCusidentification(s)
-	return ruo
-}
-
-// SetCustomername sets the Customername field.
-func (ruo *ReceiptUpdateOne) SetCustomername(s string) *ReceiptUpdateOne {
-	ruo.mutation.SetCustomername(s)
-	return ruo
-}
-
-// SetPhonenumber sets the Phonenumber field.
-func (ruo *ReceiptUpdateOne) SetPhonenumber(s string) *ReceiptUpdateOne {
-	ruo.mutation.SetPhonenumber(s)
-	return ruo
 }
 
 // SetAddedTime sets the added_time field.
@@ -468,6 +457,25 @@ func (ruo *ReceiptUpdateOne) SetPersonal(p *Personal) *ReceiptUpdateOne {
 	return ruo.SetPersonalID(p.ID)
 }
 
+// SetCustomerID sets the customer edge to Customer by id.
+func (ruo *ReceiptUpdateOne) SetCustomerID(id int) *ReceiptUpdateOne {
+	ruo.mutation.SetCustomerID(id)
+	return ruo
+}
+
+// SetNillableCustomerID sets the customer edge to Customer by id if the given value is not nil.
+func (ruo *ReceiptUpdateOne) SetNillableCustomerID(id *int) *ReceiptUpdateOne {
+	if id != nil {
+		ruo = ruo.SetCustomerID(*id)
+	}
+	return ruo
+}
+
+// SetCustomer sets the customer edge to Customer.
+func (ruo *ReceiptUpdateOne) SetCustomer(c *Customer) *ReceiptUpdateOne {
+	return ruo.SetCustomerID(c.ID)
+}
+
 // Mutation returns the ReceiptMutation object of the builder.
 func (ruo *ReceiptUpdateOne) Mutation() *ReceiptMutation {
 	return ruo.mutation
@@ -491,23 +499,14 @@ func (ruo *ReceiptUpdateOne) ClearPersonal() *ReceiptUpdateOne {
 	return ruo
 }
 
+// ClearCustomer clears the customer edge to Customer.
+func (ruo *ReceiptUpdateOne) ClearCustomer() *ReceiptUpdateOne {
+	ruo.mutation.ClearCustomer()
+	return ruo
+}
+
 // Save executes the query and returns the updated entity.
 func (ruo *ReceiptUpdateOne) Save(ctx context.Context) (*Receipt, error) {
-	if v, ok := ruo.mutation.Cusidentification(); ok {
-		if err := receipt.CusidentificationValidator(v); err != nil {
-			return nil, &ValidationError{Name: "Cusidentification", err: fmt.Errorf("ent: validator failed for field \"Cusidentification\": %w", err)}
-		}
-	}
-	if v, ok := ruo.mutation.Customername(); ok {
-		if err := receipt.CustomernameValidator(v); err != nil {
-			return nil, &ValidationError{Name: "Customername", err: fmt.Errorf("ent: validator failed for field \"Customername\": %w", err)}
-		}
-	}
-	if v, ok := ruo.mutation.Phonenumber(); ok {
-		if err := receipt.PhonenumberValidator(v); err != nil {
-			return nil, &ValidationError{Name: "Phonenumber", err: fmt.Errorf("ent: validator failed for field \"Phonenumber\": %w", err)}
-		}
-	}
 
 	var (
 		err  error
@@ -574,27 +573,6 @@ func (ruo *ReceiptUpdateOne) sqlSave(ctx context.Context) (r *Receipt, err error
 		return nil, &ValidationError{Name: "ID", err: fmt.Errorf("missing Receipt.ID for update")}
 	}
 	_spec.Node.ID.Value = id
-	if value, ok := ruo.mutation.Cusidentification(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: receipt.FieldCusidentification,
-		})
-	}
-	if value, ok := ruo.mutation.Customername(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: receipt.FieldCustomername,
-		})
-	}
-	if value, ok := ruo.mutation.Phonenumber(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: receipt.FieldPhonenumber,
-		})
-	}
 	if value, ok := ruo.mutation.AddedTime(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeTime,
@@ -699,6 +677,41 @@ func (ruo *ReceiptUpdateOne) sqlSave(ctx context.Context) (r *Receipt, err error
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: personal.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if ruo.mutation.CustomerCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   receipt.CustomerTable,
+			Columns: []string{receipt.CustomerColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: customer.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := ruo.mutation.CustomerIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   receipt.CustomerTable,
+			Columns: []string{receipt.CustomerColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: customer.FieldID,
 				},
 			},
 		}

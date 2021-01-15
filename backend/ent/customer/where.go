@@ -557,6 +557,34 @@ func HasFixWith(preds ...predicate.Fix) predicate.Customer {
 	})
 }
 
+// HasReceipt applies the HasEdge predicate on the "receipt" edge.
+func HasReceipt() predicate.Customer {
+	return predicate.Customer(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(ReceiptTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, ReceiptTable, ReceiptColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasReceiptWith applies the HasEdge predicate on the "receipt" edge with a given conditions (other predicates).
+func HasReceiptWith(preds ...predicate.Receipt) predicate.Customer {
+	return predicate.Customer(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(ReceiptInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, ReceiptTable, ReceiptColumn),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
 // And groups list of predicates with the AND operator between them.
 func And(predicates ...predicate.Customer) predicate.Customer {
 	return predicate.Customer(func(s *sql.Selector) {

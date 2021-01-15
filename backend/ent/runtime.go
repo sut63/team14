@@ -7,7 +7,6 @@ import (
 
 	"github.com/tanapon395/playlist-video/ent/adminrepair"
 	"github.com/tanapon395/playlist-video/ent/fix"
-	"github.com/tanapon395/playlist-video/ent/paymenttype"
 	"github.com/tanapon395/playlist-video/ent/product"
 	"github.com/tanapon395/playlist-video/ent/receipt"
 	"github.com/tanapon395/playlist-video/ent/schema"
@@ -37,12 +36,6 @@ func init() {
 	fixDescQueue := fixFields[2].Descriptor()
 	// fix.QueueValidator is a validator for the "queue" field. It is called by the builders before save.
 	fix.QueueValidator = fixDescQueue.Validators[0].(func(string) error)
-	paymenttypeFields := schema.PaymentType{}.Fields()
-	_ = paymenttypeFields
-	// paymenttypeDescTypename is the schema descriptor for Typename field.
-	paymenttypeDescTypename := paymenttypeFields[0].Descriptor()
-	// paymenttype.TypenameValidator is a validator for the "Typename" field. It is called by the builders before save.
-	paymenttype.TypenameValidator = paymenttypeDescTypename.Validators[0].(func(string) error)
 	productFields := schema.Product{}.Fields()
 	_ = productFields
 	// productDescProductname is the schema descriptor for Productname field.
@@ -59,20 +52,8 @@ func init() {
 	product.PriceValidator = productDescPrice.Validators[0].(func(string) error)
 	receiptFields := schema.Receipt{}.Fields()
 	_ = receiptFields
-	// receiptDescCusidentification is the schema descriptor for Cusidentification field.
-	receiptDescCusidentification := receiptFields[0].Descriptor()
-	// receipt.CusidentificationValidator is a validator for the "Cusidentification" field. It is called by the builders before save.
-	receipt.CusidentificationValidator = receiptDescCusidentification.Validators[0].(func(string) error)
-	// receiptDescCustomername is the schema descriptor for Customername field.
-	receiptDescCustomername := receiptFields[1].Descriptor()
-	// receipt.CustomernameValidator is a validator for the "Customername" field. It is called by the builders before save.
-	receipt.CustomernameValidator = receiptDescCustomername.Validators[0].(func(string) error)
-	// receiptDescPhonenumber is the schema descriptor for Phonenumber field.
-	receiptDescPhonenumber := receiptFields[2].Descriptor()
-	// receipt.PhonenumberValidator is a validator for the "Phonenumber" field. It is called by the builders before save.
-	receipt.PhonenumberValidator = receiptDescPhonenumber.Validators[0].(func(string) error)
 	// receiptDescAddedTime is the schema descriptor for added_time field.
-	receiptDescAddedTime := receiptFields[3].Descriptor()
+	receiptDescAddedTime := receiptFields[0].Descriptor()
 	// receipt.DefaultAddedTime holds the default value on creation for the added_time field.
 	receipt.DefaultAddedTime = receiptDescAddedTime.Default.(func() time.Time)
 }

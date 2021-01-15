@@ -12,6 +12,7 @@ import (
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
 	"github.com/tanapon395/playlist-video/ent/adminrepair"
+	"github.com/tanapon395/playlist-video/ent/customer"
 	"github.com/tanapon395/playlist-video/ent/paymenttype"
 	"github.com/tanapon395/playlist-video/ent/personal"
 	"github.com/tanapon395/playlist-video/ent/predicate"
@@ -30,6 +31,7 @@ type ReceiptQuery struct {
 	withPaymenttype *PaymentTypeQuery
 	withAdminrepair *AdminrepairQuery
 	withPersonal    *PersonalQuery
+	withCustomer    *CustomerQuery
 	withFKs         bool
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
@@ -107,6 +109,24 @@ func (rq *ReceiptQuery) QueryPersonal() *PersonalQuery {
 			sqlgraph.From(receipt.Table, receipt.FieldID, rq.sqlQuery()),
 			sqlgraph.To(personal.Table, personal.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, true, receipt.PersonalTable, receipt.PersonalColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(rq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryCustomer chains the current query on the customer edge.
+func (rq *ReceiptQuery) QueryCustomer() *CustomerQuery {
+	query := &CustomerQuery{config: rq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := rq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(receipt.Table, receipt.FieldID, rq.sqlQuery()),
+			sqlgraph.To(customer.Table, customer.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, receipt.CustomerTable, receipt.CustomerColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(rq.driver.Dialect(), step)
 		return fromU, nil
@@ -326,18 +346,29 @@ func (rq *ReceiptQuery) WithPersonal(opts ...func(*PersonalQuery)) *ReceiptQuery
 	return rq
 }
 
+//  WithCustomer tells the query-builder to eager-loads the nodes that are connected to
+// the "customer" edge. The optional arguments used to configure the query builder of the edge.
+func (rq *ReceiptQuery) WithCustomer(opts ...func(*CustomerQuery)) *ReceiptQuery {
+	query := &CustomerQuery{config: rq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	rq.withCustomer = query
+	return rq
+}
+
 // GroupBy used to group vertices by one or more fields/columns.
 // It is often used with aggregate functions, like: count, max, mean, min, sum.
 //
 // Example:
 //
 //	var v []struct {
-//		Cusidentification string `json:"Cusidentification,omitempty"`
+//		AddedTime time.Time `json:"added_time,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
 //	client.Receipt.Query().
-//		GroupBy(receipt.FieldCusidentification).
+//		GroupBy(receipt.FieldAddedTime).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 //
@@ -358,11 +389,11 @@ func (rq *ReceiptQuery) GroupBy(field string, fields ...string) *ReceiptGroupBy 
 // Example:
 //
 //	var v []struct {
-//		Cusidentification string `json:"Cusidentification,omitempty"`
+//		AddedTime time.Time `json:"added_time,omitempty"`
 //	}
 //
 //	client.Receipt.Query().
-//		Select(receipt.FieldCusidentification).
+//		Select(receipt.FieldAddedTime).
 //		Scan(ctx, &v)
 //
 func (rq *ReceiptQuery) Select(field string, fields ...string) *ReceiptSelect {
@@ -393,13 +424,14 @@ func (rq *ReceiptQuery) sqlAll(ctx context.Context) ([]*Receipt, error) {
 		nodes       = []*Receipt{}
 		withFKs     = rq.withFKs
 		_spec       = rq.querySpec()
-		loadedTypes = [3]bool{
+		loadedTypes = [4]bool{
 			rq.withPaymenttype != nil,
 			rq.withAdminrepair != nil,
 			rq.withPersonal != nil,
+			rq.withCustomer != nil,
 		}
 	)
-	if rq.withPaymenttype != nil || rq.withAdminrepair != nil || rq.withPersonal != nil {
+	if rq.withPaymenttype != nil || rq.withAdminrepair != nil || rq.withPersonal != nil || rq.withCustomer != nil {
 		withFKs = true
 	}
 	if withFKs {
@@ -500,6 +532,31 @@ func (rq *ReceiptQuery) sqlAll(ctx context.Context) ([]*Receipt, error) {
 			}
 			for i := range nodes {
 				nodes[i].Edges.Personal = n
+			}
+		}
+	}
+
+	if query := rq.withCustomer; query != nil {
+		ids := make([]int, 0, len(nodes))
+		nodeids := make(map[int][]*Receipt)
+		for i := range nodes {
+			if fk := nodes[i].customer_id; fk != nil {
+				ids = append(ids, *fk)
+				nodeids[*fk] = append(nodeids[*fk], nodes[i])
+			}
+		}
+		query.Where(customer.IDIn(ids...))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			nodes, ok := nodeids[n.ID]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "customer_id" returned %v`, n.ID)
+			}
+			for i := range nodes {
+				nodes[i].Edges.Customer = n
 			}
 		}
 	}
