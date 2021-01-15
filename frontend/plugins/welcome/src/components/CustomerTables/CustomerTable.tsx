@@ -76,6 +76,8 @@ const deleteCustomer = async (id: number) => {
            <TableCell align="center">เพศ</TableCell>
            <TableCell align="center">เบอร์โทร</TableCell>
            <TableCell align="center">ที่อยู่</TableCell>
+           <TableCell align="center">เจ้าหน้าที่แจ้งซ่อม</TableCell>
+
          </TableRow>
        </TableHead>
        <TableBody>
@@ -87,6 +89,7 @@ const deleteCustomer = async (id: number) => {
              <TableCell align="center">{item.edges?.gender?.gendername}</TableCell>
              <TableCell align="center">{item.phonenumber}</TableCell>
              <TableCell align="center">{item.address}</TableCell>
+             <TableCell align="center">{item.edges?.personal.personalname}</TableCell>
              <TableCell align="center">
              <Button
                  onClick={() => {
