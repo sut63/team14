@@ -36,6 +36,7 @@ export default function ComponentsTable() {
  const deleteAdminrepairs = async (id: number) => {
    const res = await api.deleteAdminrepair({ id: id });
    setLoading(true);
+   window.location.reload(false);
  };
  
  return (
