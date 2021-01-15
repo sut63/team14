@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/facebookincubator/ent/dialect/sql"
+	"github.com/tanapon395/playlist-video/ent/adminrepair"
 	"github.com/tanapon395/playlist-video/ent/customer"
 	"github.com/tanapon395/playlist-video/ent/fix"
 	"github.com/tanapon395/playlist-video/ent/fixbrand"
@@ -40,7 +41,7 @@ type Fix struct {
 // FixEdges holds the relations/edges for other nodes in the graph.
 type FixEdges struct {
 	// Fix holds the value of the fix edge.
-	Fix []*Adminrepair
+	Fix *Adminrepair
 	// Fixbrand holds the value of the fixbrand edge.
 	Fixbrand *Fixbrand
 	// Personal holds the value of the personal edge.
@@ -55,9 +56,14 @@ type FixEdges struct {
 }
 
 // FixOrErr returns the Fix value or an error if the edge
-// was not loaded in eager-loading.
-func (e FixEdges) FixOrErr() ([]*Adminrepair, error) {
+// was not loaded in eager-loading, or loaded but was not found.
+func (e FixEdges) FixOrErr() (*Adminrepair, error) {
 	if e.loadedTypes[0] {
+		if e.Fix == nil {
+			// The edge fix was loaded in eager-loading,
+			// but was not found.
+			return nil, &NotFoundError{label: adminrepair.Label}
+		}
 		return e.Fix, nil
 	}
 	return nil, &NotLoadedError{edge: "fix"}

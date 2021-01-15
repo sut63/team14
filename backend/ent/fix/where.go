@@ -536,7 +536,7 @@ func HasFix() predicate.Fix {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
 			sqlgraph.To(FixTable, FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, FixTable, FixColumn),
+			sqlgraph.Edge(sqlgraph.O2O, false, FixTable, FixColumn),
 		)
 		sqlgraph.HasNeighbors(s, step)
 	})
@@ -548,7 +548,7 @@ func HasFixWith(preds ...predicate.Adminrepair) predicate.Fix {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
 			sqlgraph.To(FixInverseTable, FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, FixTable, FixColumn),
+			sqlgraph.Edge(sqlgraph.O2O, false, FixTable, FixColumn),
 		)
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {

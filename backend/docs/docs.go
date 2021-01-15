@@ -3304,10 +3304,8 @@ var doc = `{
                 },
                 "fix": {
                     "description": "Fix holds the value of the fix edge.",
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/ent.Adminrepair"
-                    }
+                    "type": "object",
+                    "$ref": "#/definitions/ent.Adminrepair"
                 },
                 "fixbrand": {
                     "description": "Fixbrand holds the value of the fixbrand edge.",

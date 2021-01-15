@@ -75,7 +75,7 @@ func (fq *FixQuery) QueryFix() *AdminrepairQuery {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(fix.Table, fix.FieldID, fq.sqlQuery()),
 			sqlgraph.To(adminrepair.Table, adminrepair.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, fix.FixTable, fix.FixColumn),
+			sqlgraph.Edge(sqlgraph.O2O, false, fix.FixTable, fix.FixColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(fq.driver.Dialect(), step)
 		return fromU, nil
@@ -518,7 +518,7 @@ func (fq *FixQuery) sqlAll(ctx context.Context) ([]*Fix, error) {
 			if !ok {
 				return nil, fmt.Errorf(`unexpected foreign-key "fix_id" returned %v for node %v`, *fk, n.ID)
 			}
-			node.Edges.Fix = append(node.Edges.Fix, n)
+			node.Edges.Fix = n
 		}
 	}
 

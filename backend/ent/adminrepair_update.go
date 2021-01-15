@@ -304,7 +304,7 @@ func (au *AdminrepairUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if au.mutation.AdminrepairFixCleared() {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
+			Rel:     sqlgraph.O2O,
 			Inverse: true,
 			Table:   adminrepair.AdminrepairFixTable,
 			Columns: []string{adminrepair.AdminrepairFixColumn},
@@ -320,7 +320,7 @@ func (au *AdminrepairUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if nodes := au.mutation.AdminrepairFixIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
+			Rel:     sqlgraph.O2O,
 			Inverse: true,
 			Table:   adminrepair.AdminrepairFixTable,
 			Columns: []string{adminrepair.AdminrepairFixColumn},
@@ -661,7 +661,7 @@ func (auo *AdminrepairUpdateOne) sqlSave(ctx context.Context) (a *Adminrepair, e
 	}
 	if auo.mutation.AdminrepairFixCleared() {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
+			Rel:     sqlgraph.O2O,
 			Inverse: true,
 			Table:   adminrepair.AdminrepairFixTable,
 			Columns: []string{adminrepair.AdminrepairFixColumn},
@@ -677,7 +677,7 @@ func (auo *AdminrepairUpdateOne) sqlSave(ctx context.Context) (a *Adminrepair, e
 	}
 	if nodes := auo.mutation.AdminrepairFixIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
+			Rel:     sqlgraph.O2O,
 			Inverse: true,
 			Table:   adminrepair.AdminrepairFixTable,
 			Columns: []string{adminrepair.AdminrepairFixColumn},

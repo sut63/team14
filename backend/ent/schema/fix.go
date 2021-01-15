@@ -26,7 +26,7 @@ func (Fix) Fields() []ent.Field {
 // Edges of the Fix.
 func (Fix) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.To("fix", Adminrepair.Type).StorageKey(edge.Column("fix_id")),
+		edge.To("fix", Adminrepair.Type).StorageKey(edge.Column("fix_id")).Unique(),
 		edge.From("fixbrand", Fixbrand.Type).Ref("fix").Unique(),
 		edge.From("personal", Personal.Type).Ref("fix").Unique(),
 		edge.From("customer", Customer.Type).Ref("fix").Unique(),

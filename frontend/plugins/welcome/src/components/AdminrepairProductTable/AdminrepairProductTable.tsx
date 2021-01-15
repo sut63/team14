@@ -39,7 +39,6 @@ export default function ComponentsTable() {
          <TableRow>
            <TableCell align="center">No.</TableCell>
            <TableCell align="center">Product Name</TableCell>
-           <TableCell align="center">Number of product</TableCell>
            <TableCell align="center">Product type</TableCell>
            <TableCell align="center">Product brand</TableCell>
          </TableRow>
@@ -49,7 +48,6 @@ export default function ComponentsTable() {
            <TableRow key={item.id}>
              <TableCell align="center">{item.id}</TableCell>
              <TableCell align="center">{item.productname}</TableCell>
-             <TableCell align="center">{item.numberofproduct}</TableCell>
              <TableCell align="center">{item.edges.typeproduct.typeproductname}</TableCell>
              <TableCell align="center">{item.edges.brand.brandname}</TableCell>
            </TableRow>

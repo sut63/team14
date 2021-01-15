@@ -1999,8 +1999,8 @@ type FixMutation struct {
 	queue             *string
 	date              *time.Time
 	clearedFields     map[string]struct{}
-	fix               map[int]struct{}
-	removedfix        map[int]struct{}
+	fix               *int
+	clearedfix        bool
 	fixbrand          *int
 	clearedfixbrand   bool
 	personal          *int
@@ -2240,38 +2240,35 @@ func (m *FixMutation) ResetDate() {
 	m.date = nil
 }
 
-// AddFixIDs adds the fix edge to Adminrepair by ids.
-func (m *FixMutation) AddFixIDs(ids ...int) {
-	if m.fix == nil {
-		m.fix = make(map[int]struct{})
-	}
-	for i := range ids {
-		m.fix[ids[i]] = struct{}{}
-	}
+// SetFixID sets the fix edge to Adminrepair by id.
+func (m *FixMutation) SetFixID(id int) {
+	m.fix = &id
 }
 
-// RemoveFixIDs removes the fix edge to Adminrepair by ids.
-func (m *FixMutation) RemoveFixIDs(ids ...int) {
-	if m.removedfix == nil {
-		m.removedfix = make(map[int]struct{})
-	}
-	for i := range ids {
-		m.removedfix[ids[i]] = struct{}{}
-	}
+// ClearFix clears the fix edge to Adminrepair.
+func (m *FixMutation) ClearFix() {
+	m.clearedfix = true
 }
 
-// RemovedFix returns the removed ids of fix.
-func (m *FixMutation) RemovedFixIDs() (ids []int) {
-	for id := range m.removedfix {
-		ids = append(ids, id)
+// FixCleared returns if the edge fix was cleared.
+func (m *FixMutation) FixCleared() bool {
+	return m.clearedfix
+}
+
+// FixID returns the fix id in the mutation.
+func (m *FixMutation) FixID() (id int, exists bool) {
+	if m.fix != nil {
+		return *m.fix, true
 	}
 	return
 }
 
 // FixIDs returns the fix ids in the mutation.
+// Note that ids always returns len(ids) <= 1 for unique edges, and you should use
+// FixID instead. It exists only for internal usage by the builders.
 func (m *FixMutation) FixIDs() (ids []int) {
-	for id := range m.fix {
-		ids = append(ids, id)
+	if id := m.fix; id != nil {
+		ids = append(ids, *id)
 	}
 	return
 }
@@ -2279,7 +2276,7 @@ func (m *FixMutation) FixIDs() (ids []int) {
 // ResetFix reset all changes of the "fix" edge.
 func (m *FixMutation) ResetFix() {
 	m.fix = nil
-	m.removedfix = nil
+	m.clearedfix = false
 }
 
 // SetFixbrandID sets the fixbrand edge to Fixbrand by id.
@@ -2628,11 +2625,9 @@ func (m *FixMutation) AddedEdges() []string {
 func (m *FixMutation) AddedIDs(name string) []ent.Value {
 	switch name {
 	case fix.EdgeFix:
-		ids := make([]ent.Value, 0, len(m.fix))
-		for id := range m.fix {
-			ids = append(ids, id)
+		if id := m.fix; id != nil {
+			return []ent.Value{*id}
 		}
-		return ids
 	case fix.EdgeFixbrand:
 		if id := m.fixbrand; id != nil {
 			return []ent.Value{*id}
@@ -2657,9 +2652,6 @@ func (m *FixMutation) AddedIDs(name string) []ent.Value {
 // mutation.
 func (m *FixMutation) RemovedEdges() []string {
 	edges := make([]string, 0, 5)
-	if m.removedfix != nil {
-		edges = append(edges, fix.EdgeFix)
-	}
 	return edges
 }
 
@@ -2667,12 +2659,6 @@ func (m *FixMutation) RemovedEdges() []string {
 // the given edge name.
 func (m *FixMutation) RemovedIDs(name string) []ent.Value {
 	switch name {
-	case fix.EdgeFix:
-		ids := make([]ent.Value, 0, len(m.removedfix))
-		for id := range m.removedfix {
-			ids = append(ids, id)
-		}
-		return ids
 	}
 	return nil
 }
@@ -2681,6 +2667,9 @@ func (m *FixMutation) RemovedIDs(name string) []ent.Value {
 // mutation.
 func (m *FixMutation) ClearedEdges() []string {
 	edges := make([]string, 0, 5)
+	if m.clearedfix {
+		edges = append(edges, fix.EdgeFix)
+	}
 	if m.clearedfixbrand {
 		edges = append(edges, fix.EdgeFixbrand)
 	}
@@ -2700,6 +2689,8 @@ func (m *FixMutation) ClearedEdges() []string {
 // cleared in this mutation.
 func (m *FixMutation) EdgeCleared(name string) bool {
 	switch name {
+	case fix.EdgeFix:
+		return m.clearedfix
 	case fix.EdgeFixbrand:
 		return m.clearedfixbrand
 	case fix.EdgePersonal:
@@ -2716,6 +2707,9 @@ func (m *FixMutation) EdgeCleared(name string) bool {
 // error if the edge name is not defined in the schema.
 func (m *FixMutation) ClearEdge(name string) error {
 	switch name {
+	case fix.EdgeFix:
+		m.ClearFix()
+		return nil
 	case fix.EdgeFixbrand:
 		m.ClearFixbrand()
 		return nil

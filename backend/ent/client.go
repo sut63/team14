@@ -326,7 +326,7 @@ func (c *AdminrepairClient) QueryAdminrepairFix(a *Adminrepair) *FixQuery {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(adminrepair.Table, adminrepair.FieldID, id),
 			sqlgraph.To(fix.Table, fix.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, adminrepair.AdminrepairFixTable, adminrepair.AdminrepairFixColumn),
+			sqlgraph.Edge(sqlgraph.O2O, true, adminrepair.AdminrepairFixTable, adminrepair.AdminrepairFixColumn),
 		)
 		fromV = sqlgraph.Neighbors(a.driver.Dialect(), step)
 		return fromV, nil
@@ -786,7 +786,7 @@ func (c *FixClient) QueryFix(f *Fix) *AdminrepairQuery {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(fix.Table, fix.FieldID, id),
 			sqlgraph.To(adminrepair.Table, adminrepair.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, fix.FixTable, fix.FixColumn),
+			sqlgraph.Edge(sqlgraph.O2O, false, fix.FixTable, fix.FixColumn),
 		)
 		fromV = sqlgraph.Neighbors(f.driver.Dialect(), step)
 		return fromV, nil
