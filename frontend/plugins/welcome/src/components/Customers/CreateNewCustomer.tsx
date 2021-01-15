@@ -10,6 +10,7 @@ import PersonIcon from '@material-ui/icons/Person';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { DefaultApi } from '../../api/apis';
 import { EntPersonal, EntGender, EntTitle, EntCustomer} from '../../api';
+import { Cookies } from '../WelcomePage/Cookie';
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -49,6 +50,9 @@ const useStyles = makeStyles((theme: Theme) =>
    },
   }),
 );
+var ck = new Cookies()
+var cookieName = ck.GetCookie()
+var cookieID = ck.GetID()
 
 export default function CreateNewCustomer() {
   const classes = useStyles();
@@ -131,14 +135,14 @@ export default function CreateNewCustomer() {
  
   // create personal
 const CreateCustomer = async () => {
-  if ((customername != null) && (customername != "") && (address != null) && (address != "") && (phonenumber != null) && (phonenumber != "") && (title != null) && (personal != null)  && (gender != null) ) {
+  if ((customername != null) && (customername != "") && (address != null) && (address != "") && (phonenumber != null) && (phonenumber != "") && (title != null) && (personal != null) && (gender != null) ) {
   
     const customer = {
     customername : customername,
     address : address,
     phonenumber : phonenumber,
     title : title,
-    personal : personal,
+    personal : Number(cookieID),
     gender : gender,
     };
   console.log(customers);
@@ -275,26 +279,10 @@ const CreateCustomer = async () => {
                 <MenuItem value={item.id}>{item.gendername}</MenuItem>
               ))}
             </Select>
-            
-            <div className={classes.paper}><strong>เจ้าหน้าที่</strong></div>
-            <Select className={classes.select}
-              //style={{ width: 500 ,marginLeft:7,marginRight:-7,marginTop:10}}
-              color="secondary"
-              id="personal"
-              value={personal}
-              onChange={PersonalhandleChange}
-            >
-              <InputLabel className={classes.insideLabel}>เลือกเจ้าหน้าที่</InputLabel>
-
-              {personals.map((item: EntPersonal) => (
-                <MenuItem value={item.id}>{item.personalname}</MenuItem>
-              ))}
-            </Select>
 
           
           </FormControl>
-          
-          <Button style={{ marginLeft: 20 }} component={RouterLink} to="/welcome" variant="contained" >  BACK </Button>
+    
 
         </form>
       </div>
