@@ -49,19 +49,23 @@ func (fc *FixCreate) SetDate(t time.Time) *FixCreate {
 	return fc
 }
 
-// AddFixIDs adds the fix edge to Adminrepair by ids.
-func (fc *FixCreate) AddFixIDs(ids ...int) *FixCreate {
-	fc.mutation.AddFixIDs(ids...)
+// SetFixID sets the fix edge to Adminrepair by id.
+func (fc *FixCreate) SetFixID(id int) *FixCreate {
+	fc.mutation.SetFixID(id)
 	return fc
 }
 
-// AddFix adds the fix edges to Adminrepair.
-func (fc *FixCreate) AddFix(a ...*Adminrepair) *FixCreate {
-	ids := make([]int, len(a))
-	for i := range a {
-		ids[i] = a[i].ID
+// SetNillableFixID sets the fix edge to Adminrepair by id if the given value is not nil.
+func (fc *FixCreate) SetNillableFixID(id *int) *FixCreate {
+	if id != nil {
+		fc = fc.SetFixID(*id)
 	}
-	return fc.AddFixIDs(ids...)
+	return fc
+}
+
+// SetFix sets the fix edge to Adminrepair.
+func (fc *FixCreate) SetFix(a *Adminrepair) *FixCreate {
+	return fc.SetFixID(a.ID)
 }
 
 // SetFixbrandID sets the fixbrand edge to Fixbrand by id.
@@ -268,7 +272,7 @@ func (fc *FixCreate) createSpec() (*Fix, *sqlgraph.CreateSpec) {
 	}
 	if nodes := fc.mutation.FixIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
+			Rel:     sqlgraph.O2O,
 			Inverse: false,
 			Table:   fix.FixTable,
 			Columns: []string{fix.FixColumn},

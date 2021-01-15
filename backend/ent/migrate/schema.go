@@ -12,7 +12,7 @@ var (
 	AdminrepairsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "equipmentdamate", Type: field.TypeString},
-		{Name: "fix_id", Type: field.TypeInt, Nullable: true},
+		{Name: "fix_id", Type: field.TypeInt, Unique: true, Nullable: true},
 		{Name: "personal_id", Type: field.TypeInt, Nullable: true},
 		{Name: "product_id", Type: field.TypeInt, Nullable: true},
 	}

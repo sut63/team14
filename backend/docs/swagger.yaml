@@ -247,10 +247,9 @@ definitions:
         description: Customer holds the value of the customer edge.
         type: object
       fix:
+        $ref: '#/definitions/ent.Adminrepair'
         description: Fix holds the value of the fix edge.
-        items:
-          $ref: '#/definitions/ent.Adminrepair'
-        type: array
+        type: object
       fixbrand:
         $ref: '#/definitions/ent.Fixbrand'
         description: Fixbrand holds the value of the fixbrand edge.

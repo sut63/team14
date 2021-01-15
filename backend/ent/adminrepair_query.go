@@ -109,7 +109,7 @@ func (aq *AdminrepairQuery) QueryAdminrepairFix() *FixQuery {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(adminrepair.Table, adminrepair.FieldID, aq.sqlQuery()),
 			sqlgraph.To(fix.Table, fix.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, adminrepair.AdminrepairFixTable, adminrepair.AdminrepairFixColumn),
+			sqlgraph.Edge(sqlgraph.O2O, true, adminrepair.AdminrepairFixTable, adminrepair.AdminrepairFixColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(aq.driver.Dialect(), step)
 		return fromU, nil

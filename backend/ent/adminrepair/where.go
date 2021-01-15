@@ -271,7 +271,7 @@ func HasAdminrepairFix() predicate.Adminrepair {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
 			sqlgraph.To(AdminrepairFixTable, FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, AdminrepairFixTable, AdminrepairFixColumn),
+			sqlgraph.Edge(sqlgraph.O2O, true, AdminrepairFixTable, AdminrepairFixColumn),
 		)
 		sqlgraph.HasNeighbors(s, step)
 	})
@@ -283,7 +283,7 @@ func HasAdminrepairFixWith(preds ...predicate.Fix) predicate.Adminrepair {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
 			sqlgraph.To(AdminrepairFixInverseTable, FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, AdminrepairFixTable, AdminrepairFixColumn),
+			sqlgraph.Edge(sqlgraph.O2O, true, AdminrepairFixTable, AdminrepairFixColumn),
 		)
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {

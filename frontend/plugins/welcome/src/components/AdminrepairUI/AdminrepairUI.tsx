@@ -24,7 +24,7 @@ import Button from '@material-ui/core/Button';
 import AdminrepairTable from '../AdminrepairTable';
 import AdminrepairFixTable from '../AdminrepairFixTable';
 import AdminrepairProductTable from '../AdminrepairProductTable';
-
+import { Cookies } from '../WelcomePage/Cookie'
 
 const HeaderCustom = {
   minHeight: '50px',
@@ -54,6 +54,10 @@ const useStyles = makeStyles(theme => ({
     width: 300,
   },
 }));
+
+  var ck = new Cookies()
+  var cookieName = ck.GetCookie()
+  var cookieID = ck.GetID()
 
 const Adminrepair: FC<{}> = () =>{
   //const UI = { giveName : 'Confirmation'}
@@ -119,11 +123,11 @@ const Adminrepair: FC<{}> = () =>{
     setFixtable(false)
     setProducttable(true)
   }
-
+  
   const CreateAdminrepair = async ()=>{
-    if ((fixid != null) && (equipmentdamate != null) && (equipmentdamate != "") && (productid != null)){
+    if ((fixid != null)  && (equipmentdamate != null) && (equipmentdamate != "") && (productid != null) ){
     const Adminrepair = {
-      personal :  2,
+      personal :  Number(cookieID),
       fix : fixid,
       equipmentdamate : equipmentdamate,
       product : productid,
@@ -209,7 +213,7 @@ const Adminrepair: FC<{}> = () =>{
               <InputLabel>เลือกบันทึกแจ้งซ่อมแซมคอมพิวเตอร์</InputLabel>
               <Select
                 name="fix"
-                value={ fixid || ""}
+                value={ fixid }
                 onChange={Fixhandlechange}
               >
                 {fixs.map(item => {
@@ -246,7 +250,7 @@ const Adminrepair: FC<{}> = () =>{
               <InputLabel>เลือกอะไหล่คอมพิวเตอร์</InputLabel>
               <Select
                 name="product"
-                value={ productid || ''}
+                value={ productid }
                 onChange={Producthandlechange}
               >
                 {products.map(item => {

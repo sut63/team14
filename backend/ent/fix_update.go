@@ -57,19 +57,23 @@ func (fu *FixUpdate) SetDate(t time.Time) *FixUpdate {
 	return fu
 }
 
-// AddFixIDs adds the fix edge to Adminrepair by ids.
-func (fu *FixUpdate) AddFixIDs(ids ...int) *FixUpdate {
-	fu.mutation.AddFixIDs(ids...)
+// SetFixID sets the fix edge to Adminrepair by id.
+func (fu *FixUpdate) SetFixID(id int) *FixUpdate {
+	fu.mutation.SetFixID(id)
 	return fu
 }
 
-// AddFix adds the fix edges to Adminrepair.
-func (fu *FixUpdate) AddFix(a ...*Adminrepair) *FixUpdate {
-	ids := make([]int, len(a))
-	for i := range a {
-		ids[i] = a[i].ID
+// SetNillableFixID sets the fix edge to Adminrepair by id if the given value is not nil.
+func (fu *FixUpdate) SetNillableFixID(id *int) *FixUpdate {
+	if id != nil {
+		fu = fu.SetFixID(*id)
 	}
-	return fu.AddFixIDs(ids...)
+	return fu
+}
+
+// SetFix sets the fix edge to Adminrepair.
+func (fu *FixUpdate) SetFix(a *Adminrepair) *FixUpdate {
+	return fu.SetFixID(a.ID)
 }
 
 // SetFixbrandID sets the fixbrand edge to Fixbrand by id.
@@ -153,19 +157,10 @@ func (fu *FixUpdate) Mutation() *FixMutation {
 	return fu.mutation
 }
 
-// RemoveFixIDs removes the fix edge to Adminrepair by ids.
-func (fu *FixUpdate) RemoveFixIDs(ids ...int) *FixUpdate {
-	fu.mutation.RemoveFixIDs(ids...)
+// ClearFix clears the fix edge to Adminrepair.
+func (fu *FixUpdate) ClearFix() *FixUpdate {
+	fu.mutation.ClearFix()
 	return fu
-}
-
-// RemoveFix removes fix edges to Adminrepair.
-func (fu *FixUpdate) RemoveFix(a ...*Adminrepair) *FixUpdate {
-	ids := make([]int, len(a))
-	for i := range a {
-		ids[i] = a[i].ID
-	}
-	return fu.RemoveFixIDs(ids...)
 }
 
 // ClearFixbrand clears the fixbrand edge to Fixbrand.
@@ -305,9 +300,9 @@ func (fu *FixUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: fix.FieldDate,
 		})
 	}
-	if nodes := fu.mutation.RemovedFixIDs(); len(nodes) > 0 {
+	if fu.mutation.FixCleared() {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
+			Rel:     sqlgraph.O2O,
 			Inverse: false,
 			Table:   fix.FixTable,
 			Columns: []string{fix.FixColumn},
@@ -319,14 +314,11 @@ func (fu *FixUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				},
 			},
 		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := fu.mutation.FixIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
+			Rel:     sqlgraph.O2O,
 			Inverse: false,
 			Table:   fix.FixTable,
 			Columns: []string{fix.FixColumn},
@@ -525,19 +517,23 @@ func (fuo *FixUpdateOne) SetDate(t time.Time) *FixUpdateOne {
 	return fuo
 }
 
-// AddFixIDs adds the fix edge to Adminrepair by ids.
-func (fuo *FixUpdateOne) AddFixIDs(ids ...int) *FixUpdateOne {
-	fuo.mutation.AddFixIDs(ids...)
+// SetFixID sets the fix edge to Adminrepair by id.
+func (fuo *FixUpdateOne) SetFixID(id int) *FixUpdateOne {
+	fuo.mutation.SetFixID(id)
 	return fuo
 }
 
-// AddFix adds the fix edges to Adminrepair.
-func (fuo *FixUpdateOne) AddFix(a ...*Adminrepair) *FixUpdateOne {
-	ids := make([]int, len(a))
-	for i := range a {
-		ids[i] = a[i].ID
+// SetNillableFixID sets the fix edge to Adminrepair by id if the given value is not nil.
+func (fuo *FixUpdateOne) SetNillableFixID(id *int) *FixUpdateOne {
+	if id != nil {
+		fuo = fuo.SetFixID(*id)
 	}
-	return fuo.AddFixIDs(ids...)
+	return fuo
+}
+
+// SetFix sets the fix edge to Adminrepair.
+func (fuo *FixUpdateOne) SetFix(a *Adminrepair) *FixUpdateOne {
+	return fuo.SetFixID(a.ID)
 }
 
 // SetFixbrandID sets the fixbrand edge to Fixbrand by id.
@@ -621,19 +617,10 @@ func (fuo *FixUpdateOne) Mutation() *FixMutation {
 	return fuo.mutation
 }
 
-// RemoveFixIDs removes the fix edge to Adminrepair by ids.
-func (fuo *FixUpdateOne) RemoveFixIDs(ids ...int) *FixUpdateOne {
-	fuo.mutation.RemoveFixIDs(ids...)
+// ClearFix clears the fix edge to Adminrepair.
+func (fuo *FixUpdateOne) ClearFix() *FixUpdateOne {
+	fuo.mutation.ClearFix()
 	return fuo
-}
-
-// RemoveFix removes fix edges to Adminrepair.
-func (fuo *FixUpdateOne) RemoveFix(a ...*Adminrepair) *FixUpdateOne {
-	ids := make([]int, len(a))
-	for i := range a {
-		ids[i] = a[i].ID
-	}
-	return fuo.RemoveFixIDs(ids...)
 }
 
 // ClearFixbrand clears the fixbrand edge to Fixbrand.
@@ -771,9 +758,9 @@ func (fuo *FixUpdateOne) sqlSave(ctx context.Context) (f *Fix, err error) {
 			Column: fix.FieldDate,
 		})
 	}
-	if nodes := fuo.mutation.RemovedFixIDs(); len(nodes) > 0 {
+	if fuo.mutation.FixCleared() {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
+			Rel:     sqlgraph.O2O,
 			Inverse: false,
 			Table:   fix.FixTable,
 			Columns: []string{fix.FixColumn},
@@ -785,14 +772,11 @@ func (fuo *FixUpdateOne) sqlSave(ctx context.Context) (f *Fix, err error) {
 				},
 			},
 		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := fuo.mutation.FixIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
+			Rel:     sqlgraph.O2O,
 			Inverse: false,
 			Table:   fix.FixTable,
 			Columns: []string{fix.FixColumn},
