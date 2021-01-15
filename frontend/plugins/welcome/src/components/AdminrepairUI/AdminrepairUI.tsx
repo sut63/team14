@@ -133,8 +133,10 @@ const Adminrepair: FC<{}> = () =>{
       product : productid,
     };
     console.log(Adminrepair);
-    const res: any = await api.createAdminrepair({ adminrepair : Adminrepair});
     setStatus(true);
+    setAlert(false);
+    const res: any = await api.createAdminrepair({ adminrepair : Adminrepair});
+    setAlert(true);
       if (res.id != '') {
         const timer = setTimeout(() => {
           window.location.reload(false);
