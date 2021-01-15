@@ -58,6 +58,7 @@ export default function ComponentsTable() {
              <TableCell align="center">{item.edges.adminrepairFix.id}</TableCell>
              <TableCell align="center">{item.edges.adminrepairProduct.productname}</TableCell>
              <TableCell align="center">{item.equipmentdamate}</TableCell>
+             <TableCell align="center">รับทำเรื่องเรียบร้อยแล้ว</TableCell>
              <TableCell align="center">
                <Button
                  onClick={() => {
