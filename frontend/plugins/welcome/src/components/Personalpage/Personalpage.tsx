@@ -180,7 +180,6 @@ return (
       <div>&nbsp;&nbsp;&nbsp;</div>
         <Button  
         onClick={() => {CreatePersonal();}}
-        href="/Tablepersonal"
         variant="contained" 
         color="secondary" 
         startIcon={<AddCircleTwoToneIcon/>}
