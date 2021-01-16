@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta content="text/html; charset=UTF-8" http-equiv="content-type" />
+	<title>Receipt Test Suite</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Success Test Case</td></tr>
+</thead>
+<tbody>
+<tr><td>open</td><td>http://localhost:3000/createreceipt<datalist><option>http://localhost:3000/createreceipt</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>id=customerid<datalist><option>//body</option><option>css=body</option><option>id=customerid</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='menu-']/div[3]/ul/li<datalist><option>//div[@id='menu-']/div[3]/ul/li</option><option>//li</option><option>css=li.MuiButtonBase-root.MuiListItem-root.MuiMenuItem-root.MuiMenuItem-gutters.MuiListItem-gutters.MuiListItem-button.Mui-focusVisible.Mui-focusVisible</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>id=adminrepair<datalist><option>//body</option><option>css=body</option><option>id=adminrepair</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='menu-']/div[3]/ul/li<datalist><option>//div[@id='menu-']/div[3]/ul/li</option><option>//li</option><option>css=li.MuiButtonBase-root.MuiListItem-root.MuiMenuItem-root.MuiMenuItem-gutters.MuiListItem-gutters.MuiListItem-button.Mui-focusVisible.Mui-focusVisible</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>id=price<datalist><option>//body</option><option>css=body</option><option>id=price</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='menu-']/div[3]/ul/li[2]<datalist><option>//div[@id='menu-']/div[3]/ul/li[2]</option><option>//li[2]</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>id=paymenttype<datalist><option>//body</option><option>css=body</option><option>id=paymenttype</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='menu-']/div[3]/ul/li[3]<datalist><option>//div[@id='menu-']/div[3]/ul/li[3]</option><option>//li[3]</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>id=date<datalist><option>id=date</option><option>//input[@id='date']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[14]/div/input</option><option>//div[14]/div/input</option><option>css=#date</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>date<datalist><option>id=date</option><option>//input[@id='date']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[14]/div/input</option><option>//div[14]/div/input</option><option>css=#date</option><option>date</option></datalist></td><td>2021-01-16</td>
+</tr>
+<tr><td>click</td><td>//div[@id='root']/div/div[2]/article/div/div[2]/button/span<datalist><option>//div[@id='root']/div/div[2]/article/div/div[2]/button/span</option><option>//button/span</option><option>css=button.MuiButtonBase-root.MuiButton-root.MuiButton-contained.MuiButton-containedSecondary &gt; span.MuiButton-label</option></datalist></td><td></td>
+</tr>
+<tr><td>assertText</td><td>//div[@id='root']/div/div[2]/article/div[2]/div/div[2]/div<datalist><option>//div[@id='root']/div/div[2]/article/div[2]/div/div[2]/div</option><option>//div[2]/div/div[2]/div</option><option>css=div.MuiTypography-root.MuiAlertTitle-root.MuiTypography-body1.MuiTypography-gutterBottom</option></datalist></td><td>บันทึกข้อมูลสำเร็จ</td>
+</tr>
+</tbody></table>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Failure Test Case</td></tr>
+</thead>
+<tbody>
+<tr><td>open</td><td>http://localhost:3000/createreceipt<datalist><option>http://localhost:3000/createreceipt</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>id=customerid<datalist><option>//body</option><option>css=body</option><option>id=customerid</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='menu-']/div[3]/ul/li[2]<datalist><option>//div[@id='menu-']/div[3]/ul/li[2]</option><option>//li[2]</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='root']/div/div[2]/article/div/div[2]/button/span<datalist><option>//div[@id='root']/div/div[2]/article/div/div[2]/button/span</option><option>//button/span</option><option>css=button.MuiButtonBase-root.MuiButton-root.MuiButton-contained.MuiButton-containedSecondary &gt; span.MuiButton-label</option></datalist></td><td></td>
+</tr>
+<tr><td>assertText</td><td>//div[@id='root']/div/div[2]/article/div[2]/div/div[2]/div<datalist><option>//div[@id='root']/div/div[2]/article/div[2]/div/div[2]/div</option><option>//div[2]/div/div[2]/div</option><option>css=div.MuiTypography-root.MuiAlertTitle-root.MuiTypography-body1.MuiTypography-gutterBottom</option></datalist></td><td>ไม่สามารถบันทึกข้อมูลได้ กรุณาลองใหม่อีกครั้ง</td>
+</tr>
+</tbody></table>
+</body>
+</html>
