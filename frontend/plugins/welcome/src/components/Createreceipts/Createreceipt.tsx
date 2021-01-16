@@ -10,7 +10,7 @@ import { Alert, AlertTitle } from '@material-ui/lab';
 import { DefaultApi } from '../../api/apis';
 
 //Entity
-import { EntPersonal, EntPaymentType, EntReceipt, EntAdminrepair, EntCustomer } from '../../api';
+import { EntPersonal, EntPaymentType, EntReceipt, EntAdminrepair, EntCustomer, EntProduct } from '../../api';
 
 //icon
 import NoteTwoToneIcon from '@material-ui/icons/NoteTwoTone';
@@ -74,11 +74,13 @@ export default function Personalpage() {
   const [adminrepairs, setAdminrepairs] = React.useState<EntAdminrepair[]>([]);
   const [paymenttypes, setPaymenttypes] = React.useState<EntPaymentType[]>([]);
   const [customers, setCustomers] = React.useState<EntCustomer[]>([]);
+  const [products, setProducts] = React.useState<EntProduct[]>([]);
 
   const [personal, setPersonal] = useState(Number);
   const [adminrepair, setAdminrepair] = useState(Number);
   const [paymenttype, setPaymenttype] = useState(Number);
   const [customer, setCustomer] = useState(Number);
+  const [product, setProduct] = useState(Number);
 
   const [addedTime, setAddedTime] = useState(String);
   
@@ -116,7 +118,15 @@ export default function Personalpage() {
     };
     getPersonals();
 
-  }, [loading]);
+  const getProducts = async () => {
+    const res = await http.listProduct({ limit: 10, offset: 0 });
+    setLoading(false);
+    setProducts(res);
+    console.log(res);
+  };
+  getProducts();
+
+}, [loading]);
 
   const addedTimeChange = (event: any) => {
     setAddedTime(event.target.value as string);
@@ -138,14 +148,19 @@ export default function Personalpage() {
     setCustomer(event.target.value as number);
   };
 
+  const productchange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    setProduct(event.target.value as number);
+  };
+
   const CreateReceipt = async () => {
-    if ( (customer != null) && (personal != null) && (adminrepair != null) && (paymenttype != null) && (addedTime != "") &&(addedTime != null)){
+    if ( (customer != null) && (personal != null) && (adminrepair != null) && (paymenttype != null) && (product != null) && (addedTime != "") &&(addedTime != null)){
     const receipt = {
       customer: customer,
       personal: Number(cookieID),
       adminrepair: adminrepair,
-      paymenttype: paymenttype,
-      addedTime : addedTime + ":00+07:00", 
+      paymentType: paymenttype,
+      product: product,
+      added : addedTime + ":00+07:00", 
     };
     console.log(receipt)
     const res: any = await http.createReceipt({ receipt: receipt });
@@ -219,7 +234,21 @@ return (
               style={{ width: 500 ,marginLeft:7,marginRight:-7,marginTop:10}}
               color="primary"
               labelId="nametitle-label"
-              id="nametitle"
+              id="customerid"
+              value={customer}
+              onChange={customerchange}
+            >
+              {customers.map((item: EntCustomer) => (
+                <MenuItem value={item.id}>{item.id}</MenuItem>
+              ))}
+            </Select>
+
+            <div className={classes.paper}><strong>ชื่อ-นามสกุล</strong></div>
+              <Select className={classes.select}
+              style={{ width: 500 ,marginLeft:7,marginRight:-7,marginTop:10}}
+              color="primary"
+              labelId="nametitle-label"
+              id="namecustomer"
               value={customer}
               onChange={customerchange}
             >
@@ -228,16 +257,43 @@ return (
               ))}
             </Select>
 
+            <div className={classes.paper}><strong>เบอร์โทรศัพท์</strong></div>
+              <Select className={classes.select}
+              style={{ width: 500 ,marginLeft:7,marginRight:-7,marginTop:10}}
+              color="primary"
+              labelId="nametitle-label"
+              id="phonenumber"
+              value={customer}
+              onChange={customerchange}
+            >
+              {customers.map((item: EntCustomer) => (
+                <MenuItem value={item.id}>{item.phonenumber}</MenuItem>
+              ))}
+            </Select>
+
             <div className={classes.paper}><strong>รายละเอียดการซ่อม</strong></div>
             <Select className={classes.select}
               style={{ width: 500 ,marginLeft:7,marginRight:-7,marginTop:10}}
               color="primary"
-              id="gender"
+              id="adminrepair"
               value={adminrepair}
               onChange={adminrepairchange}
             >
               {adminrepairs.map((item: EntAdminrepair) => (
                 <MenuItem value={item.id}>{item.equipmentdamate}</MenuItem>
+              ))}
+            </Select>
+
+            <div className={classes.paper}><strong>ราคา</strong></div>
+            <Select className={classes.select}
+              style={{ width: 500 ,marginLeft:7,marginRight:-7,marginTop:10}}
+              color="primary"
+              id="price"
+              value={product}
+              onChange={productchange}
+            >
+              {products.map((item: EntProduct) => (
+                <MenuItem value={item.id}>{item.price}</MenuItem>
               ))}
             </Select>
             
@@ -246,7 +302,7 @@ return (
             <Select className={classes.select}
               style={{ width: 500 ,marginLeft:7,marginRight:-7,marginTop:10}}
               color="primary"
-              id="department"
+              id="paymenttype"
               value={paymenttype}
               onChange={paymenttypechange}
             >
@@ -270,7 +326,7 @@ return (
               id="date"
               variant="standard"
               color="secondary"
-              type="datetime-local"
+              type="date"
               size="medium"
               value={addedTime}
               onChange={addedTimeChange}

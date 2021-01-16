@@ -91,24 +91,25 @@ export default function Tablepersonal() {
        <TableHead>
          <TableRow>
            <TableCell align="center">No</TableCell>
-           <TableCell align="center">คำนำหน้าชื่อ</TableCell>
+           <TableCell align="center">รหัสลูกค้า</TableCell>
            <TableCell align="center">ชื่อ-นามสกุล</TableCell>
-           <TableCell align="center">เพศ</TableCell>
-           <TableCell align="center">อีเมลล์</TableCell>
-           <TableCell align="center">แผนก</TableCell>
-           <TableCell align="center">จัดการ</TableCell>
+           <TableCell align="center">เบอร์โทรศัพท์</TableCell>
+           <TableCell align="center">รายละเอียดการซ่อม</TableCell>
+           <TableCell align="center">ราคา</TableCell>
+           <TableCell align="center">ประเภทการจ่ายเงิน</TableCell>
          </TableRow>
        </TableHead>
 
        <TableBody>
-         {receipts.map((item:any) => (
+       {receipts.map((item:any) => (
            <TableRow key={item.id}>
              <TableCell align="center">{item.id}</TableCell>
-             <TableCell align="center">{item.id}</TableCell>
-             <TableCell align="center">{item.personalname}</TableCell>
-             <TableCell align="center">{item.edges?.gender?.gendername}</TableCell>
-             <TableCell align="center">{item.email}</TableCell>
-             <TableCell align="center">{item.edges?.department?.departmentname}</TableCell>
+             <TableCell align="center">{item.edges?.customer?.id}</TableCell>
+             <TableCell align="center">{item.edges?.customer?.customername}</TableCell>
+             <TableCell align="center">{item.edges?.customer?.phonenumber}</TableCell>
+             <TableCell align="center">{item.edges?.adminrepair?.equipmentdamate}</TableCell>
+             <TableCell align="center">{item.edges?.product?.price}</TableCell>
+             <TableCell align="center">{item.edges?.paymenttype?.typename}</TableCell>
              <TableCell align="center">
              <Button
                  onClick={() => {
@@ -116,9 +117,7 @@ export default function Tablepersonal() {
                  }}
                  style={{ marginLeft: 10 }}
                  variant="contained"
-                 color="primary"
-                 startIcon={<DeleteIcon/>}
-                 href="/Tablereceipt"
+                 color="secondary"
                >
                  Delete
                </Button>

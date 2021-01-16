@@ -39,6 +39,9 @@ import {
     ControllersProduct,
     ControllersProductFromJSON,
     ControllersProductToJSON,
+    ControllersReceipt,
+    ControllersReceiptFromJSON,
+    ControllersReceiptToJSON,
     EntAdminrepair,
     EntAdminrepairFromJSON,
     EntAdminrepairToJSON,
@@ -128,7 +131,7 @@ export interface CreateProductRequest {
 }
 
 export interface CreateReceiptRequest {
-    receipt: EntReceipt;
+    receipt: ControllersReceipt;
 }
 
 export interface CreateTitleRequest {
@@ -761,7 +764,7 @@ export class DefaultApi extends runtime.BaseAPI {
      * Create receipt
      * Create receipt
      */
-    async createReceiptRaw(requestParameters: CreateReceiptRequest): Promise<runtime.ApiResponse<EntReceipt>> {
+    async createReceiptRaw(requestParameters: CreateReceiptRequest): Promise<runtime.ApiResponse<ControllersReceipt>> {
         if (requestParameters.receipt === null || requestParameters.receipt === undefined) {
             throw new runtime.RequiredError('receipt','Required parameter requestParameters.receipt was null or undefined when calling createReceipt.');
         }
@@ -777,17 +780,17 @@ export class DefaultApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: EntReceiptToJSON(requestParameters.receipt),
+            body: ControllersReceiptToJSON(requestParameters.receipt),
         });
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => EntReceiptFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => ControllersReceiptFromJSON(jsonValue));
     }
 
     /**
      * Create receipt
      * Create receipt
      */
-    async createReceipt(requestParameters: CreateReceiptRequest): Promise<EntReceipt> {
+    async createReceipt(requestParameters: CreateReceiptRequest): Promise<ControllersReceipt> {
         const response = await this.createReceiptRaw(requestParameters);
         return await response.value();
     }

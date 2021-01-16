@@ -15,6 +15,7 @@ import (
 	"github.com/tanapon395/playlist-video/ent/paymenttype"
 	"github.com/tanapon395/playlist-video/ent/personal"
 	"github.com/tanapon395/playlist-video/ent/predicate"
+	"github.com/tanapon395/playlist-video/ent/product"
 	"github.com/tanapon395/playlist-video/ent/receipt"
 )
 
@@ -122,6 +123,25 @@ func (ru *ReceiptUpdate) SetCustomer(c *Customer) *ReceiptUpdate {
 	return ru.SetCustomerID(c.ID)
 }
 
+// SetProductID sets the product edge to Product by id.
+func (ru *ReceiptUpdate) SetProductID(id int) *ReceiptUpdate {
+	ru.mutation.SetProductID(id)
+	return ru
+}
+
+// SetNillableProductID sets the product edge to Product by id if the given value is not nil.
+func (ru *ReceiptUpdate) SetNillableProductID(id *int) *ReceiptUpdate {
+	if id != nil {
+		ru = ru.SetProductID(*id)
+	}
+	return ru
+}
+
+// SetProduct sets the product edge to Product.
+func (ru *ReceiptUpdate) SetProduct(p *Product) *ReceiptUpdate {
+	return ru.SetProductID(p.ID)
+}
+
 // Mutation returns the ReceiptMutation object of the builder.
 func (ru *ReceiptUpdate) Mutation() *ReceiptMutation {
 	return ru.mutation
@@ -148,6 +168,12 @@ func (ru *ReceiptUpdate) ClearPersonal() *ReceiptUpdate {
 // ClearCustomer clears the customer edge to Customer.
 func (ru *ReceiptUpdate) ClearCustomer() *ReceiptUpdate {
 	ru.mutation.ClearCustomer()
+	return ru
+}
+
+// ClearProduct clears the product edge to Product.
+func (ru *ReceiptUpdate) ClearProduct() *ReceiptUpdate {
+	ru.mutation.ClearProduct()
 	return ru
 }
 
@@ -368,6 +394,41 @@ func (ru *ReceiptUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	if ru.mutation.ProductCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   receipt.ProductTable,
+			Columns: []string{receipt.ProductColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: product.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := ru.mutation.ProductIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   receipt.ProductTable,
+			Columns: []string{receipt.ProductColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: product.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, ru.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{receipt.Label}
@@ -476,6 +537,25 @@ func (ruo *ReceiptUpdateOne) SetCustomer(c *Customer) *ReceiptUpdateOne {
 	return ruo.SetCustomerID(c.ID)
 }
 
+// SetProductID sets the product edge to Product by id.
+func (ruo *ReceiptUpdateOne) SetProductID(id int) *ReceiptUpdateOne {
+	ruo.mutation.SetProductID(id)
+	return ruo
+}
+
+// SetNillableProductID sets the product edge to Product by id if the given value is not nil.
+func (ruo *ReceiptUpdateOne) SetNillableProductID(id *int) *ReceiptUpdateOne {
+	if id != nil {
+		ruo = ruo.SetProductID(*id)
+	}
+	return ruo
+}
+
+// SetProduct sets the product edge to Product.
+func (ruo *ReceiptUpdateOne) SetProduct(p *Product) *ReceiptUpdateOne {
+	return ruo.SetProductID(p.ID)
+}
+
 // Mutation returns the ReceiptMutation object of the builder.
 func (ruo *ReceiptUpdateOne) Mutation() *ReceiptMutation {
 	return ruo.mutation
@@ -502,6 +582,12 @@ func (ruo *ReceiptUpdateOne) ClearPersonal() *ReceiptUpdateOne {
 // ClearCustomer clears the customer edge to Customer.
 func (ruo *ReceiptUpdateOne) ClearCustomer() *ReceiptUpdateOne {
 	ruo.mutation.ClearCustomer()
+	return ruo
+}
+
+// ClearProduct clears the product edge to Product.
+func (ruo *ReceiptUpdateOne) ClearProduct() *ReceiptUpdateOne {
+	ruo.mutation.ClearProduct()
 	return ruo
 }
 
@@ -712,6 +798,41 @@ func (ruo *ReceiptUpdateOne) sqlSave(ctx context.Context) (r *Receipt, err error
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: customer.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if ruo.mutation.ProductCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   receipt.ProductTable,
+			Columns: []string{receipt.ProductColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: product.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := ruo.mutation.ProductIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   receipt.ProductTable,
+			Columns: []string{receipt.ProductColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: product.FieldID,
 				},
 			},
 		}

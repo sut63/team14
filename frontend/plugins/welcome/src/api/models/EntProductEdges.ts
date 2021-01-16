@@ -26,6 +26,10 @@ import {
     EntPersonalFromJSON,
     EntPersonalFromJSONTyped,
     EntPersonalToJSON,
+    EntReceipt,
+    EntReceiptFromJSON,
+    EntReceiptFromJSONTyped,
+    EntReceiptToJSON,
     EntTypeproduct,
     EntTypeproductFromJSON,
     EntTypeproductFromJSONTyped,
@@ -57,6 +61,12 @@ export interface EntProductEdges {
      */
     product?: Array<EntAdminrepair>;
     /**
+     * Receipt holds the value of the receipt edge.
+     * @type {Array<EntReceipt>}
+     * @memberof EntProductEdges
+     */
+    receipt?: Array<EntReceipt>;
+    /**
      * 
      * @type {EntTypeproduct}
      * @memberof EntProductEdges
@@ -74,10 +84,11 @@ export function EntProductEdgesFromJSONTyped(json: any, ignoreDiscriminator: boo
     }
     return {
         
-        'brand': !exists(json, 'brand') ? undefined : EntBrandFromJSON(json['brand']),
-        'personal': !exists(json, 'personal') ? undefined : EntPersonalFromJSON(json['personal']),
+        'brand': !exists(json, 'Brand') ? undefined : EntBrandFromJSON(json['Brand']),
+        'personal': !exists(json, 'Personal') ? undefined : EntPersonalFromJSON(json['Personal']),
         'product': !exists(json, 'product') ? undefined : ((json['product'] as Array<any>).map(EntAdminrepairFromJSON)),
-        'typeproduct': !exists(json, 'typeproduct') ? undefined : EntTypeproductFromJSON(json['typeproduct']),
+        'receipt': !exists(json, 'receipt') ? undefined : ((json['receipt'] as Array<any>).map(EntReceiptFromJSON)),
+        'typeproduct': !exists(json, 'Typeproduct') ? undefined : EntTypeproductFromJSON(json['Typeproduct']),
     };
 }
 
@@ -93,6 +104,7 @@ export function EntProductEdgesToJSON(value?: EntProductEdges | null): any {
         'brand': EntBrandToJSON(value.brand),
         'personal': EntPersonalToJSON(value.personal),
         'product': value.product === undefined ? undefined : ((value.product as Array<any>).map(EntAdminrepairToJSON)),
+        'receipt': value.receipt === undefined ? undefined : ((value.receipt as Array<any>).map(EntReceiptToJSON)),
         'typeproduct': EntTypeproductToJSON(value.typeproduct),
     };
 }

@@ -30,6 +30,10 @@ import {
     EntPersonalFromJSON,
     EntPersonalFromJSONTyped,
     EntPersonalToJSON,
+    EntProduct,
+    EntProductFromJSON,
+    EntProductFromJSONTyped,
+    EntProductToJSON,
 } from './';
 
 /**
@@ -62,6 +66,12 @@ export interface EntReceiptEdges {
      * @memberof EntReceiptEdges
      */
     personal?: EntPersonal;
+    /**
+     * 
+     * @type {EntProduct}
+     * @memberof EntReceiptEdges
+     */
+    product?: EntProduct;
 }
 
 export function EntReceiptEdgesFromJSON(json: any): EntReceiptEdges {
@@ -74,10 +84,11 @@ export function EntReceiptEdgesFromJSONTyped(json: any, ignoreDiscriminator: boo
     }
     return {
         
-        'adminrepair': !exists(json, 'adminrepair') ? undefined : EntAdminrepairFromJSON(json['adminrepair']),
-        'customer': !exists(json, 'customer') ? undefined : EntCustomerFromJSON(json['customer']),
-        'paymenttype': !exists(json, 'paymenttype') ? undefined : EntPaymentTypeFromJSON(json['paymenttype']),
-        'personal': !exists(json, 'personal') ? undefined : EntPersonalFromJSON(json['personal']),
+        'adminrepair': !exists(json, 'Adminrepair') ? undefined : EntAdminrepairFromJSON(json['Adminrepair']),
+        'customer': !exists(json, 'Customer') ? undefined : EntCustomerFromJSON(json['Customer']),
+        'paymenttype': !exists(json, 'Paymenttype') ? undefined : EntPaymentTypeFromJSON(json['Paymenttype']),
+        'personal': !exists(json, 'Personal') ? undefined : EntPersonalFromJSON(json['Personal']),
+        'product': !exists(json, 'Product') ? undefined : EntProductFromJSON(json['Product']),
     };
 }
 
@@ -94,6 +105,7 @@ export function EntReceiptEdgesToJSON(value?: EntReceiptEdges | null): any {
         'customer': EntCustomerToJSON(value.customer),
         'paymenttype': EntPaymentTypeToJSON(value.paymenttype),
         'personal': EntPersonalToJSON(value.personal),
+        'product': EntProductToJSON(value.product),
     };
 }
 

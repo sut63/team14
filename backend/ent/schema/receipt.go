@@ -28,5 +28,6 @@ func (Receipt) Edges() []ent.Edge {
 		edge.From("adminrepair", Adminrepair.Type).Ref("receipt").Unique(),
 		edge.From("personal", Personal.Type).Ref("receipt").Unique(),
 		edge.From("customer", Customer.Type).Ref("receipt").Unique(),
+		edge.From("product", Product.Type).Ref("receipt").Unique(),
 	}
 }

@@ -13,6 +13,7 @@ import (
 	"github.com/tanapon395/playlist-video/ent/customer"
 	"github.com/tanapon395/playlist-video/ent/paymenttype"
 	"github.com/tanapon395/playlist-video/ent/personal"
+	"github.com/tanapon395/playlist-video/ent/product"
 	"github.com/tanapon395/playlist-video/ent/receipt"
 )
 
@@ -111,6 +112,25 @@ func (rc *ReceiptCreate) SetNillableCustomerID(id *int) *ReceiptCreate {
 // SetCustomer sets the customer edge to Customer.
 func (rc *ReceiptCreate) SetCustomer(c *Customer) *ReceiptCreate {
 	return rc.SetCustomerID(c.ID)
+}
+
+// SetProductID sets the product edge to Product by id.
+func (rc *ReceiptCreate) SetProductID(id int) *ReceiptCreate {
+	rc.mutation.SetProductID(id)
+	return rc
+}
+
+// SetNillableProductID sets the product edge to Product by id if the given value is not nil.
+func (rc *ReceiptCreate) SetNillableProductID(id *int) *ReceiptCreate {
+	if id != nil {
+		rc = rc.SetProductID(*id)
+	}
+	return rc
+}
+
+// SetProduct sets the product edge to Product.
+func (rc *ReceiptCreate) SetProduct(p *Product) *ReceiptCreate {
+	return rc.SetProductID(p.ID)
 }
 
 // Mutation returns the ReceiptMutation object of the builder.
@@ -260,6 +280,25 @@ func (rc *ReceiptCreate) createSpec() (*Receipt, *sqlgraph.CreateSpec) {
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: customer.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := rc.mutation.ProductIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   receipt.ProductTable,
+			Columns: []string{receipt.ProductColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: product.FieldID,
 				},
 			},
 		}

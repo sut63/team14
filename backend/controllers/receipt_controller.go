@@ -9,10 +9,11 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/tanapon395/playlist-video/ent"
 	"github.com/tanapon395/playlist-video/ent/adminrepair"
+	"github.com/tanapon395/playlist-video/ent/customer"
 	"github.com/tanapon395/playlist-video/ent/paymenttype"
 	"github.com/tanapon395/playlist-video/ent/personal"
+	"github.com/tanapon395/playlist-video/ent/product"
 	"github.com/tanapon395/playlist-video/ent/receipt"
-	"github.com/tanapon395/playlist-video/ent/customer"
 )
 
 // ReceiptController defines the struct for the receipt controller
@@ -27,6 +28,7 @@ type Receipt struct {
 	Personal    int
 	PaymentType int
 	Adminrepair int
+	Product     int
 }
 
 // CreateReceipt handles POST requests for adding receipt entities
@@ -35,8 +37,8 @@ type Receipt struct {
 // @ID create-receipt
 // @Accept   json
 // @Produce  json
-// @Param receipt body ent.Receipt true "Receipt entity"
-// @Success 200 {object} ent.Receipt
+// @Param receipt body Receipt true "Receipt entity"
+// @Success 200 {object} Receipt
 // @Failure 400 {object} gin.H
 // @Failure 500 {object} gin.H
 // @Router /receipts [post]
@@ -90,6 +92,17 @@ func (ctl *ReceiptController) CreateReceipt(c *gin.Context) {
 		return
 	}
 
+	pr, err := ctl.client.Product.
+		Query().
+		Where(product.IDEQ(int(obj.Product))).
+		Only(context.Background())
+	if err != nil {
+		c.JSON(400, gin.H{
+			"error": "product not found",
+		})
+		return
+	}
+
 	times, err := time.Parse(time.RFC3339, obj.Added)
 	r, err := ctl.client.Receipt.
 		Create().
@@ -98,6 +111,7 @@ func (ctl *ReceiptController) CreateReceipt(c *gin.Context) {
 		SetPersonal(p).
 		SetAdminrepair(a).
 		SetPaymenttype(pt).
+		SetProduct(pr).
 		Save(context.Background())
 	if err != nil {
 		c.JSON(400, gin.H{
@@ -178,6 +192,7 @@ func (ctl *ReceiptController) ListReceipt(c *gin.Context) {
 		WithPersonal().
 		WithAdminrepair().
 		WithCustomer().
+		WithProduct().
 		Limit(limit).
 		Offset(offset).
 		All(context.Background())

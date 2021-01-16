@@ -5286,6 +5286,8 @@ type ProductMutation struct {
 	clearedtypeproduct bool
 	personal           *int
 	clearedpersonal    bool
+	receipt            map[int]struct{}
+	removedreceipt     map[int]struct{}
 	done               bool
 	oldValue           func(context.Context) (*Product, error)
 }
@@ -5639,6 +5641,48 @@ func (m *ProductMutation) ResetPersonal() {
 	m.clearedpersonal = false
 }
 
+// AddReceiptIDs adds the receipt edge to Receipt by ids.
+func (m *ProductMutation) AddReceiptIDs(ids ...int) {
+	if m.receipt == nil {
+		m.receipt = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.receipt[ids[i]] = struct{}{}
+	}
+}
+
+// RemoveReceiptIDs removes the receipt edge to Receipt by ids.
+func (m *ProductMutation) RemoveReceiptIDs(ids ...int) {
+	if m.removedreceipt == nil {
+		m.removedreceipt = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.removedreceipt[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedReceipt returns the removed ids of receipt.
+func (m *ProductMutation) RemovedReceiptIDs() (ids []int) {
+	for id := range m.removedreceipt {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ReceiptIDs returns the receipt ids in the mutation.
+func (m *ProductMutation) ReceiptIDs() (ids []int) {
+	for id := range m.receipt {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetReceipt reset all changes of the "receipt" edge.
+func (m *ProductMutation) ResetReceipt() {
+	m.receipt = nil
+	m.removedreceipt = nil
+}
+
 // Op returns the operation name.
 func (m *ProductMutation) Op() Op {
 	return m.op
@@ -5788,7 +5832,7 @@ func (m *ProductMutation) ResetField(name string) error {
 // AddedEdges returns all edge names that were set/added in this
 // mutation.
 func (m *ProductMutation) AddedEdges() []string {
-	edges := make([]string, 0, 4)
+	edges := make([]string, 0, 5)
 	if m.product != nil {
 		edges = append(edges, product.EdgeProduct)
 	}
@@ -5800,6 +5844,9 @@ func (m *ProductMutation) AddedEdges() []string {
 	}
 	if m.personal != nil {
 		edges = append(edges, product.EdgePersonal)
+	}
+	if m.receipt != nil {
+		edges = append(edges, product.EdgeReceipt)
 	}
 	return edges
 }
@@ -5826,6 +5873,12 @@ func (m *ProductMutation) AddedIDs(name string) []ent.Value {
 		if id := m.personal; id != nil {
 			return []ent.Value{*id}
 		}
+	case product.EdgeReceipt:
+		ids := make([]ent.Value, 0, len(m.receipt))
+		for id := range m.receipt {
+			ids = append(ids, id)
+		}
+		return ids
 	}
 	return nil
 }
@@ -5833,9 +5886,12 @@ func (m *ProductMutation) AddedIDs(name string) []ent.Value {
 // RemovedEdges returns all edge names that were removed in this
 // mutation.
 func (m *ProductMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 4)
+	edges := make([]string, 0, 5)
 	if m.removedproduct != nil {
 		edges = append(edges, product.EdgeProduct)
+	}
+	if m.removedreceipt != nil {
+		edges = append(edges, product.EdgeReceipt)
 	}
 	return edges
 }
@@ -5850,6 +5906,12 @@ func (m *ProductMutation) RemovedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
+	case product.EdgeReceipt:
+		ids := make([]ent.Value, 0, len(m.removedreceipt))
+		for id := range m.removedreceipt {
+			ids = append(ids, id)
+		}
+		return ids
 	}
 	return nil
 }
@@ -5857,7 +5919,7 @@ func (m *ProductMutation) RemovedIDs(name string) []ent.Value {
 // ClearedEdges returns all edge names that were cleared in this
 // mutation.
 func (m *ProductMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 4)
+	edges := make([]string, 0, 5)
 	if m.clearedbrand {
 		edges = append(edges, product.EdgeBrand)
 	}
@@ -5918,6 +5980,9 @@ func (m *ProductMutation) ResetEdge(name string) error {
 	case product.EdgePersonal:
 		m.ResetPersonal()
 		return nil
+	case product.EdgeReceipt:
+		m.ResetReceipt()
+		return nil
 	}
 	return fmt.Errorf("unknown Product edge %s", name)
 }
@@ -5939,6 +6004,8 @@ type ReceiptMutation struct {
 	clearedpersonal    bool
 	customer           *int
 	clearedcustomer    bool
+	product            *int
+	clearedproduct     bool
 	done               bool
 	oldValue           func(context.Context) (*Receipt, error)
 }
@@ -6215,6 +6282,45 @@ func (m *ReceiptMutation) ResetCustomer() {
 	m.clearedcustomer = false
 }
 
+// SetProductID sets the product edge to Product by id.
+func (m *ReceiptMutation) SetProductID(id int) {
+	m.product = &id
+}
+
+// ClearProduct clears the product edge to Product.
+func (m *ReceiptMutation) ClearProduct() {
+	m.clearedproduct = true
+}
+
+// ProductCleared returns if the edge product was cleared.
+func (m *ReceiptMutation) ProductCleared() bool {
+	return m.clearedproduct
+}
+
+// ProductID returns the product id in the mutation.
+func (m *ReceiptMutation) ProductID() (id int, exists bool) {
+	if m.product != nil {
+		return *m.product, true
+	}
+	return
+}
+
+// ProductIDs returns the product ids in the mutation.
+// Note that ids always returns len(ids) <= 1 for unique edges, and you should use
+// ProductID instead. It exists only for internal usage by the builders.
+func (m *ReceiptMutation) ProductIDs() (ids []int) {
+	if id := m.product; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetProduct reset all changes of the "product" edge.
+func (m *ReceiptMutation) ResetProduct() {
+	m.product = nil
+	m.clearedproduct = false
+}
+
 // Op returns the operation name.
 func (m *ReceiptMutation) Op() Op {
 	return m.op
@@ -6330,7 +6436,7 @@ func (m *ReceiptMutation) ResetField(name string) error {
 // AddedEdges returns all edge names that were set/added in this
 // mutation.
 func (m *ReceiptMutation) AddedEdges() []string {
-	edges := make([]string, 0, 4)
+	edges := make([]string, 0, 5)
 	if m.paymenttype != nil {
 		edges = append(edges, receipt.EdgePaymenttype)
 	}
@@ -6342,6 +6448,9 @@ func (m *ReceiptMutation) AddedEdges() []string {
 	}
 	if m.customer != nil {
 		edges = append(edges, receipt.EdgeCustomer)
+	}
+	if m.product != nil {
+		edges = append(edges, receipt.EdgeProduct)
 	}
 	return edges
 }
@@ -6366,6 +6475,10 @@ func (m *ReceiptMutation) AddedIDs(name string) []ent.Value {
 		if id := m.customer; id != nil {
 			return []ent.Value{*id}
 		}
+	case receipt.EdgeProduct:
+		if id := m.product; id != nil {
+			return []ent.Value{*id}
+		}
 	}
 	return nil
 }
@@ -6373,7 +6486,7 @@ func (m *ReceiptMutation) AddedIDs(name string) []ent.Value {
 // RemovedEdges returns all edge names that were removed in this
 // mutation.
 func (m *ReceiptMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 4)
+	edges := make([]string, 0, 5)
 	return edges
 }
 
@@ -6388,7 +6501,7 @@ func (m *ReceiptMutation) RemovedIDs(name string) []ent.Value {
 // ClearedEdges returns all edge names that were cleared in this
 // mutation.
 func (m *ReceiptMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 4)
+	edges := make([]string, 0, 5)
 	if m.clearedpaymenttype {
 		edges = append(edges, receipt.EdgePaymenttype)
 	}
@@ -6400,6 +6513,9 @@ func (m *ReceiptMutation) ClearedEdges() []string {
 	}
 	if m.clearedcustomer {
 		edges = append(edges, receipt.EdgeCustomer)
+	}
+	if m.clearedproduct {
+		edges = append(edges, receipt.EdgeProduct)
 	}
 	return edges
 }
@@ -6416,6 +6532,8 @@ func (m *ReceiptMutation) EdgeCleared(name string) bool {
 		return m.clearedpersonal
 	case receipt.EdgeCustomer:
 		return m.clearedcustomer
+	case receipt.EdgeProduct:
+		return m.clearedproduct
 	}
 	return false
 }
@@ -6435,6 +6553,9 @@ func (m *ReceiptMutation) ClearEdge(name string) error {
 		return nil
 	case receipt.EdgeCustomer:
 		m.ClearCustomer()
+		return nil
+	case receipt.EdgeProduct:
+		m.ClearProduct()
 		return nil
 	}
 	return fmt.Errorf("unknown Receipt unique edge %s", name)
@@ -6456,6 +6577,9 @@ func (m *ReceiptMutation) ResetEdge(name string) error {
 		return nil
 	case receipt.EdgeCustomer:
 		m.ResetCustomer()
+		return nil
+	case receipt.EdgeProduct:
+		m.ResetProduct()
 		return nil
 	}
 	return fmt.Errorf("unknown Receipt edge %s", name)

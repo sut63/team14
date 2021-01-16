@@ -42,9 +42,11 @@ type ProductEdges struct {
 	Typeproduct *Typeproduct
 	// Personal holds the value of the personal edge.
 	Personal *Personal
+	// Receipt holds the value of the receipt edge.
+	Receipt []*Receipt
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [4]bool
+	loadedTypes [5]bool
 }
 
 // ProductOrErr returns the Product value or an error if the edge
@@ -96,6 +98,15 @@ func (e ProductEdges) PersonalOrErr() (*Personal, error) {
 		return e.Personal, nil
 	}
 	return nil, &NotLoadedError{edge: "personal"}
+}
+
+// ReceiptOrErr returns the Receipt value or an error if the edge
+// was not loaded in eager-loading.
+func (e ProductEdges) ReceiptOrErr() ([]*Receipt, error) {
+	if e.loadedTypes[4] {
+		return e.Receipt, nil
+	}
+	return nil, &NotLoadedError{edge: "receipt"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -186,6 +197,11 @@ func (pr *Product) QueryTypeproduct() *TypeproductQuery {
 // QueryPersonal queries the personal edge of the Product.
 func (pr *Product) QueryPersonal() *PersonalQuery {
 	return (&ProductClient{config: pr.config}).QueryPersonal(pr)
+}
+
+// QueryReceipt queries the receipt edge of the Product.
+func (pr *Product) QueryReceipt() *ReceiptQuery {
+	return (&ProductClient{config: pr.config}).QueryReceipt(pr)
 }
 
 // Update returns a builder for updating this Product.
