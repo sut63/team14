@@ -113,7 +113,7 @@ var (
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "productnumber", Type: field.TypeString},
 		{Name: "problemtype", Type: field.TypeString},
-		{Name: "queue", Type: field.TypeString},
+		{Name: "queue", Type: field.TypeString, Unique: true},
 		{Name: "date", Type: field.TypeTime},
 		{Name: "customer_id", Type: field.TypeInt, Nullable: true},
 		{Name: "fixbrand_id", Type: field.TypeInt, Nullable: true},
@@ -290,6 +290,7 @@ var (
 		{Name: "customer_id", Type: field.TypeInt, Nullable: true},
 		{Name: "paymenttype_id", Type: field.TypeInt, Nullable: true},
 		{Name: "personal_id", Type: field.TypeInt, Nullable: true},
+		{Name: "product_id", Type: field.TypeInt, Nullable: true},
 	}
 	// ReceiptsTable holds the schema information for the "receipts" table.
 	ReceiptsTable = &schema.Table{
@@ -323,6 +324,13 @@ var (
 				Columns: []*schema.Column{ReceiptsColumns[5]},
 
 				RefColumns: []*schema.Column{PersonalsColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+			{
+				Symbol:  "receipts_products_receipt",
+				Columns: []*schema.Column{ReceiptsColumns[6]},
+
+				RefColumns: []*schema.Column{ProductsColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 		},
@@ -391,4 +399,5 @@ func init() {
 	ReceiptsTable.ForeignKeys[1].RefTable = CustomersTable
 	ReceiptsTable.ForeignKeys[2].RefTable = PaymentTypesTable
 	ReceiptsTable.ForeignKeys[3].RefTable = PersonalsTable
+	ReceiptsTable.ForeignKeys[4].RefTable = ProductsTable
 }

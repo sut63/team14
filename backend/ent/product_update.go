@@ -14,6 +14,7 @@ import (
 	"github.com/tanapon395/playlist-video/ent/personal"
 	"github.com/tanapon395/playlist-video/ent/predicate"
 	"github.com/tanapon395/playlist-video/ent/product"
+	"github.com/tanapon395/playlist-video/ent/receipt"
 	"github.com/tanapon395/playlist-video/ent/typeproduct"
 )
 
@@ -121,6 +122,21 @@ func (pu *ProductUpdate) SetPersonal(p *Personal) *ProductUpdate {
 	return pu.SetPersonalID(p.ID)
 }
 
+// AddReceiptIDs adds the receipt edge to Receipt by ids.
+func (pu *ProductUpdate) AddReceiptIDs(ids ...int) *ProductUpdate {
+	pu.mutation.AddReceiptIDs(ids...)
+	return pu
+}
+
+// AddReceipt adds the receipt edges to Receipt.
+func (pu *ProductUpdate) AddReceipt(r ...*Receipt) *ProductUpdate {
+	ids := make([]int, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
+	}
+	return pu.AddReceiptIDs(ids...)
+}
+
 // Mutation returns the ProductMutation object of the builder.
 func (pu *ProductUpdate) Mutation() *ProductMutation {
 	return pu.mutation
@@ -157,6 +173,21 @@ func (pu *ProductUpdate) ClearTypeproduct() *ProductUpdate {
 func (pu *ProductUpdate) ClearPersonal() *ProductUpdate {
 	pu.mutation.ClearPersonal()
 	return pu
+}
+
+// RemoveReceiptIDs removes the receipt edge to Receipt by ids.
+func (pu *ProductUpdate) RemoveReceiptIDs(ids ...int) *ProductUpdate {
+	pu.mutation.RemoveReceiptIDs(ids...)
+	return pu
+}
+
+// RemoveReceipt removes receipt edges to Receipt.
+func (pu *ProductUpdate) RemoveReceipt(r ...*Receipt) *ProductUpdate {
+	ids := make([]int, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
+	}
+	return pu.RemoveReceiptIDs(ids...)
 }
 
 // Save executes the query and returns the number of rows/vertices matched by this operation.
@@ -408,6 +439,44 @@ func (pu *ProductUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	if nodes := pu.mutation.RemovedReceiptIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   product.ReceiptTable,
+			Columns: []string{product.ReceiptColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: receipt.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := pu.mutation.ReceiptIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   product.ReceiptTable,
+			Columns: []string{product.ReceiptColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: receipt.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, pu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{product.Label}
@@ -516,6 +585,21 @@ func (puo *ProductUpdateOne) SetPersonal(p *Personal) *ProductUpdateOne {
 	return puo.SetPersonalID(p.ID)
 }
 
+// AddReceiptIDs adds the receipt edge to Receipt by ids.
+func (puo *ProductUpdateOne) AddReceiptIDs(ids ...int) *ProductUpdateOne {
+	puo.mutation.AddReceiptIDs(ids...)
+	return puo
+}
+
+// AddReceipt adds the receipt edges to Receipt.
+func (puo *ProductUpdateOne) AddReceipt(r ...*Receipt) *ProductUpdateOne {
+	ids := make([]int, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
+	}
+	return puo.AddReceiptIDs(ids...)
+}
+
 // Mutation returns the ProductMutation object of the builder.
 func (puo *ProductUpdateOne) Mutation() *ProductMutation {
 	return puo.mutation
@@ -552,6 +636,21 @@ func (puo *ProductUpdateOne) ClearTypeproduct() *ProductUpdateOne {
 func (puo *ProductUpdateOne) ClearPersonal() *ProductUpdateOne {
 	puo.mutation.ClearPersonal()
 	return puo
+}
+
+// RemoveReceiptIDs removes the receipt edge to Receipt by ids.
+func (puo *ProductUpdateOne) RemoveReceiptIDs(ids ...int) *ProductUpdateOne {
+	puo.mutation.RemoveReceiptIDs(ids...)
+	return puo
+}
+
+// RemoveReceipt removes receipt edges to Receipt.
+func (puo *ProductUpdateOne) RemoveReceipt(r ...*Receipt) *ProductUpdateOne {
+	ids := make([]int, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
+	}
+	return puo.RemoveReceiptIDs(ids...)
 }
 
 // Save executes the query and returns the updated entity.
@@ -793,6 +892,44 @@ func (puo *ProductUpdateOne) sqlSave(ctx context.Context) (pr *Product, err erro
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: personal.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if nodes := puo.mutation.RemovedReceiptIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   product.ReceiptTable,
+			Columns: []string{product.ReceiptColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: receipt.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := puo.mutation.ReceiptIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   product.ReceiptTable,
+			Columns: []string{product.ReceiptColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: receipt.FieldID,
 				},
 			},
 		}

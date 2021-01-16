@@ -30,5 +30,6 @@ func (Product) Edges() []ent.Edge {
 		edge.From("brand", Brand.Type).Ref("product").Unique(),
 		edge.From("typeproduct", Typeproduct.Type).Ref("product").Unique(),
 		edge.From("personal", Personal.Type).Ref("product").Unique(),
+		edge.To("receipt", Receipt.Type).StorageKey(edge.Column("product_id")),
 	}
 }

@@ -2394,7 +2394,7 @@ var doc = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/ent.Receipt"
+                            "$ref": "#/definitions/controllers.Receipt"
                         }
                     }
                 ],
@@ -2402,7 +2402,7 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/ent.Receipt"
+                            "$ref": "#/definitions/controllers.Receipt"
                         }
                     },
                     "400": {
@@ -3103,6 +3103,29 @@ var doc = `{
                 }
             }
         },
+        "controllers.Receipt": {
+            "type": "object",
+            "properties": {
+                "added": {
+                    "type": "string"
+                },
+                "adminrepair": {
+                    "type": "integer"
+                },
+                "customer": {
+                    "type": "integer"
+                },
+                "paymentType": {
+                    "type": "integer"
+                },
+                "personal": {
+                    "type": "integer"
+                },
+                "product": {
+                    "type": "integer"
+                }
+            }
+        },
         "controllers.Title": {
             "type": "object"
         },
@@ -3594,6 +3617,13 @@ var doc = `{
                         "$ref": "#/definitions/ent.Adminrepair"
                     }
                 },
+                "receipt": {
+                    "description": "Receipt holds the value of the receipt edge.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.Receipt"
+                    }
+                },
                 "typeproduct": {
                     "description": "Typeproduct holds the value of the typeproduct edge.",
                     "type": "object",
@@ -3641,6 +3671,11 @@ var doc = `{
                     "description": "Personal holds the value of the personal edge.",
                     "type": "object",
                     "$ref": "#/definitions/ent.Personal"
+                },
+                "product": {
+                    "description": "Product holds the value of the product edge.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.Product"
                 }
             }
         },

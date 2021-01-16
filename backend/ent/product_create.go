@@ -13,6 +13,7 @@ import (
 	"github.com/tanapon395/playlist-video/ent/brand"
 	"github.com/tanapon395/playlist-video/ent/personal"
 	"github.com/tanapon395/playlist-video/ent/product"
+	"github.com/tanapon395/playlist-video/ent/receipt"
 	"github.com/tanapon395/playlist-video/ent/typeproduct"
 )
 
@@ -111,6 +112,21 @@ func (pc *ProductCreate) SetNillablePersonalID(id *int) *ProductCreate {
 // SetPersonal sets the personal edge to Personal.
 func (pc *ProductCreate) SetPersonal(p *Personal) *ProductCreate {
 	return pc.SetPersonalID(p.ID)
+}
+
+// AddReceiptIDs adds the receipt edge to Receipt by ids.
+func (pc *ProductCreate) AddReceiptIDs(ids ...int) *ProductCreate {
+	pc.mutation.AddReceiptIDs(ids...)
+	return pc
+}
+
+// AddReceipt adds the receipt edges to Receipt.
+func (pc *ProductCreate) AddReceipt(r ...*Receipt) *ProductCreate {
+	ids := make([]int, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
+	}
+	return pc.AddReceiptIDs(ids...)
 }
 
 // Mutation returns the ProductMutation object of the builder.
@@ -296,6 +312,25 @@ func (pc *ProductCreate) createSpec() (*Product, *sqlgraph.CreateSpec) {
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: personal.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := pc.mutation.ReceiptIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   product.ReceiptTable,
+			Columns: []string{product.ReceiptColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: receipt.FieldID,
 				},
 			},
 		}

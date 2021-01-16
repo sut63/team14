@@ -22,6 +22,8 @@ const (
 	EdgeTypeproduct = "typeproduct"
 	// EdgePersonal holds the string denoting the personal edge name in mutations.
 	EdgePersonal = "personal"
+	// EdgeReceipt holds the string denoting the receipt edge name in mutations.
+	EdgeReceipt = "receipt"
 
 	// Table holds the table name of the product in the database.
 	Table = "products"
@@ -53,6 +55,13 @@ const (
 	PersonalInverseTable = "personals"
 	// PersonalColumn is the table column denoting the personal relation/edge.
 	PersonalColumn = "Personal"
+	// ReceiptTable is the table the holds the receipt relation/edge.
+	ReceiptTable = "receipts"
+	// ReceiptInverseTable is the table name for the Receipt entity.
+	// It exists in this package in order to avoid circular dependency with the "receipt" package.
+	ReceiptInverseTable = "receipts"
+	// ReceiptColumn is the table column denoting the receipt relation/edge.
+	ReceiptColumn = "product_id"
 )
 
 // Columns holds all SQL columns for product fields.

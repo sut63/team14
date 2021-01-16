@@ -17,7 +17,7 @@ func (Fix) Fields() []ent.Field {
 		NotEmpty(),
 		field.String("problemtype").
 		NotEmpty(),
-		field.String("queue").
+		field.String("queue").Unique().
 		NotEmpty(),
 		field.Time("date"),
 	}

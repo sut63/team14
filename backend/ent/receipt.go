@@ -12,6 +12,7 @@ import (
 	"github.com/tanapon395/playlist-video/ent/customer"
 	"github.com/tanapon395/playlist-video/ent/paymenttype"
 	"github.com/tanapon395/playlist-video/ent/personal"
+	"github.com/tanapon395/playlist-video/ent/product"
 	"github.com/tanapon395/playlist-video/ent/receipt"
 )
 
@@ -29,6 +30,7 @@ type Receipt struct {
 	customer_id    *int
 	paymenttype_id *int
 	personal_id    *int
+	product_id     *int
 }
 
 // ReceiptEdges holds the relations/edges for other nodes in the graph.
@@ -41,9 +43,11 @@ type ReceiptEdges struct {
 	Personal *Personal
 	// Customer holds the value of the customer edge.
 	Customer *Customer
+	// Product holds the value of the product edge.
+	Product *Product
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [4]bool
+	loadedTypes [5]bool
 }
 
 // PaymenttypeOrErr returns the Paymenttype value or an error if the edge
@@ -102,6 +106,20 @@ func (e ReceiptEdges) CustomerOrErr() (*Customer, error) {
 	return nil, &NotLoadedError{edge: "customer"}
 }
 
+// ProductOrErr returns the Product value or an error if the edge
+// was not loaded in eager-loading, or loaded but was not found.
+func (e ReceiptEdges) ProductOrErr() (*Product, error) {
+	if e.loadedTypes[4] {
+		if e.Product == nil {
+			// The edge product was loaded in eager-loading,
+			// but was not found.
+			return nil, &NotFoundError{label: product.Label}
+		}
+		return e.Product, nil
+	}
+	return nil, &NotLoadedError{edge: "product"}
+}
+
 // scanValues returns the types for scanning values from sql.Rows.
 func (*Receipt) scanValues() []interface{} {
 	return []interface{}{
@@ -117,6 +135,7 @@ func (*Receipt) fkValues() []interface{} {
 		&sql.NullInt64{}, // customer_id
 		&sql.NullInt64{}, // paymenttype_id
 		&sql.NullInt64{}, // personal_id
+		&sql.NullInt64{}, // product_id
 	}
 }
 
@@ -163,6 +182,12 @@ func (r *Receipt) assignValues(values ...interface{}) error {
 			r.personal_id = new(int)
 			*r.personal_id = int(value.Int64)
 		}
+		if value, ok := values[4].(*sql.NullInt64); !ok {
+			return fmt.Errorf("unexpected type %T for edge-field product_id", value)
+		} else if value.Valid {
+			r.product_id = new(int)
+			*r.product_id = int(value.Int64)
+		}
 	}
 	return nil
 }
@@ -185,6 +210,11 @@ func (r *Receipt) QueryPersonal() *PersonalQuery {
 // QueryCustomer queries the customer edge of the Receipt.
 func (r *Receipt) QueryCustomer() *CustomerQuery {
 	return (&ReceiptClient{config: r.config}).QueryCustomer(r)
+}
+
+// QueryProduct queries the product edge of the Receipt.
+func (r *Receipt) QueryProduct() *ProductQuery {
+	return (&ReceiptClient{config: r.config}).QueryProduct(r)
 }
 
 // Update returns a builder for updating this Receipt.

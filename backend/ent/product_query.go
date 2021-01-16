@@ -17,6 +17,7 @@ import (
 	"github.com/tanapon395/playlist-video/ent/personal"
 	"github.com/tanapon395/playlist-video/ent/predicate"
 	"github.com/tanapon395/playlist-video/ent/product"
+	"github.com/tanapon395/playlist-video/ent/receipt"
 	"github.com/tanapon395/playlist-video/ent/typeproduct"
 )
 
@@ -33,6 +34,7 @@ type ProductQuery struct {
 	withBrand       *BrandQuery
 	withTypeproduct *TypeproductQuery
 	withPersonal    *PersonalQuery
+	withReceipt     *ReceiptQuery
 	withFKs         bool
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
@@ -128,6 +130,24 @@ func (pq *ProductQuery) QueryPersonal() *PersonalQuery {
 			sqlgraph.From(product.Table, product.FieldID, pq.sqlQuery()),
 			sqlgraph.To(personal.Table, personal.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, true, product.PersonalTable, product.PersonalColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(pq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryReceipt chains the current query on the receipt edge.
+func (pq *ProductQuery) QueryReceipt() *ReceiptQuery {
+	query := &ReceiptQuery{config: pq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := pq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(product.Table, product.FieldID, pq.sqlQuery()),
+			sqlgraph.To(receipt.Table, receipt.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, product.ReceiptTable, product.ReceiptColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(pq.driver.Dialect(), step)
 		return fromU, nil
@@ -358,6 +378,17 @@ func (pq *ProductQuery) WithPersonal(opts ...func(*PersonalQuery)) *ProductQuery
 	return pq
 }
 
+//  WithReceipt tells the query-builder to eager-loads the nodes that are connected to
+// the "receipt" edge. The optional arguments used to configure the query builder of the edge.
+func (pq *ProductQuery) WithReceipt(opts ...func(*ReceiptQuery)) *ProductQuery {
+	query := &ReceiptQuery{config: pq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	pq.withReceipt = query
+	return pq
+}
+
 // GroupBy used to group vertices by one or more fields/columns.
 // It is often used with aggregate functions, like: count, max, mean, min, sum.
 //
@@ -425,11 +456,12 @@ func (pq *ProductQuery) sqlAll(ctx context.Context) ([]*Product, error) {
 		nodes       = []*Product{}
 		withFKs     = pq.withFKs
 		_spec       = pq.querySpec()
-		loadedTypes = [4]bool{
+		loadedTypes = [5]bool{
 			pq.withProduct != nil,
 			pq.withBrand != nil,
 			pq.withTypeproduct != nil,
 			pq.withPersonal != nil,
+			pq.withReceipt != nil,
 		}
 	)
 	if pq.withBrand != nil || pq.withTypeproduct != nil || pq.withPersonal != nil {
@@ -562,6 +594,34 @@ func (pq *ProductQuery) sqlAll(ctx context.Context) ([]*Product, error) {
 			for i := range nodes {
 				nodes[i].Edges.Personal = n
 			}
+		}
+	}
+
+	if query := pq.withReceipt; query != nil {
+		fks := make([]driver.Value, 0, len(nodes))
+		nodeids := make(map[int]*Product)
+		for i := range nodes {
+			fks = append(fks, nodes[i].ID)
+			nodeids[nodes[i].ID] = nodes[i]
+		}
+		query.withFKs = true
+		query.Where(predicate.Receipt(func(s *sql.Selector) {
+			s.Where(sql.InValues(product.ReceiptColumn, fks...))
+		}))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			fk := n.product_id
+			if fk == nil {
+				return nil, fmt.Errorf(`foreign-key "product_id" is nil for node %v`, n.ID)
+			}
+			node, ok := nodeids[*fk]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "product_id" returned %v for node %v`, *fk, n.ID)
+			}
+			node.Edges.Receipt = append(node.Edges.Receipt, n)
 		}
 	}
 

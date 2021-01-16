@@ -6,6 +6,7 @@ export * from './ControllersFixcomtype';
 export * from './ControllersGender';
 export * from './ControllersPersonal';
 export * from './ControllersProduct';
+export * from './ControllersReceipt';
 export * from './EntAdminrepair';
 export * from './EntAdminrepairEdges';
 export * from './EntBrand';

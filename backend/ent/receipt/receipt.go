@@ -22,6 +22,8 @@ const (
 	EdgePersonal = "personal"
 	// EdgeCustomer holds the string denoting the customer edge name in mutations.
 	EdgeCustomer = "customer"
+	// EdgeProduct holds the string denoting the product edge name in mutations.
+	EdgeProduct = "product"
 
 	// Table holds the table name of the receipt in the database.
 	Table = "receipts"
@@ -53,6 +55,13 @@ const (
 	CustomerInverseTable = "customers"
 	// CustomerColumn is the table column denoting the customer relation/edge.
 	CustomerColumn = "customer_id"
+	// ProductTable is the table the holds the product relation/edge.
+	ProductTable = "receipts"
+	// ProductInverseTable is the table name for the Product entity.
+	// It exists in this package in order to avoid circular dependency with the "product" package.
+	ProductInverseTable = "products"
+	// ProductColumn is the table column denoting the product relation/edge.
+	ProductColumn = "product_id"
 )
 
 // Columns holds all SQL columns for receipt fields.
@@ -67,6 +76,7 @@ var ForeignKeys = []string{
 	"customer_id",
 	"paymenttype_id",
 	"personal_id",
+	"product_id",
 }
 
 var (

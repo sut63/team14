@@ -155,7 +155,6 @@ export default function CreateProductRecord() {
     };
     console.log(product);
     const res: any = await api.createProduct({ product : product });
-    console.log("bruhhhhhhhhh");
     setStatus(true);
     if (res.id != '') {
       setAlert(true);
@@ -165,9 +164,6 @@ export default function CreateProductRecord() {
       setStatus(true);
       setAlert(false);
     }
-  const timer = setTimeout(() => {
-    setStatus(false);
-  }, 3000);
 };
 
   return (

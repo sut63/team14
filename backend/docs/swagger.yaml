@@ -90,6 +90,21 @@ definitions:
       typeproduct:
         type: integer
     type: object
+  controllers.Receipt:
+    properties:
+      added:
+        type: string
+      adminrepair:
+        type: integer
+      customer:
+        type: integer
+      paymentType:
+        type: integer
+      personal:
+        type: integer
+      product:
+        type: integer
+    type: object
   controllers.Title:
     type: object
   ent.Adminrepair:
@@ -466,6 +481,11 @@ definitions:
         items:
           $ref: '#/definitions/ent.Adminrepair'
         type: array
+      receipt:
+        description: Receipt holds the value of the receipt edge.
+        items:
+          $ref: '#/definitions/ent.Receipt'
+        type: array
       typeproduct:
         $ref: '#/definitions/ent.Typeproduct'
         description: Typeproduct holds the value of the typeproduct edge.
@@ -503,6 +523,10 @@ definitions:
       personal:
         $ref: '#/definitions/ent.Personal'
         description: Personal holds the value of the personal edge.
+        type: object
+      product:
+        $ref: '#/definitions/ent.Product'
+        description: Product holds the value of the product edge.
         type: object
     type: object
   ent.Title:
@@ -2149,14 +2173,14 @@ paths:
         name: receipt
         required: true
         schema:
-          $ref: '#/definitions/ent.Receipt'
+          $ref: '#/definitions/controllers.Receipt'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/ent.Receipt'
+            $ref: '#/definitions/controllers.Receipt'
         "400":
           description: Bad Request
           schema:
