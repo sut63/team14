@@ -191,7 +191,6 @@ export default function CreateProductRecord() {
           <AlertTitle> ไม่สามารถบันทึกข้อมูลได้ กรุณาลองใหม่อีกครั้ง </AlertTitle></Alert>)}
       </div>
           ) : null}
-
         </ContentHeader>
 
         <div className={classes.root}>
@@ -220,7 +219,7 @@ export default function CreateProductRecord() {
 
             <div className={classes.paper}><strong>จำนวนสินค้า</strong></div>
               <TextField className={classes.textField}
-              style={{ width: 400 ,marginLeft:7,marginRight:-7}}
+              style={{ width: 400 ,marginLeft:9,marginRight:-9}}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -239,7 +238,7 @@ export default function CreateProductRecord() {
 
             <div className={classes.paper}><strong>ราคา</strong></div>
               <TextField className={classes.textField}
-               style={{ width: 400 ,marginLeft:9,marginRight:-9}}
+               style={{ width: 400 ,marginLeft:7,marginRight:-7}}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
