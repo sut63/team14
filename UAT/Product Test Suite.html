@@ -8,6 +8,44 @@
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
+<tr><td rowspan="1" colspan="3">Login success</td></tr>
+</thead>
+<tbody>
+<tr><td>open</td><td>http://localhost:3000/<datalist><option>http://localhost:3000/</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>id=email<datalist><option>id=email</option><option>name=email</option><option>//input[@id='email']</option><option>//div[@id='root']/div/div[2]/article/div[2]/div/div/input</option><option>//input</option><option>css=#email</option></datalist></td><td>d@mail.com</td>
+</tr>
+<tr><td>click</td><td>id=password<datalist><option>id=password</option><option>name=password</option><option>//input[@id='password']</option><option>//div[@id='root']/div/div[2]/article/div[2]/div[2]/div/input</option><option>//div[2]/div/input</option><option>css=#password</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>id=password<datalist><option>id=password</option><option>name=password</option><option>//input[@id='password']</option><option>//div[@id='root']/div/div[2]/article/div[2]/div[2]/div/input</option><option>//div[2]/div/input</option><option>css=#password</option></datalist></td><td>1234</td>
+</tr>
+<tr><td>click</td><td>//button[@type='submit']<datalist><option>//button[@type='submit']</option><option>//div[@id='root']/div/div[2]/article/div[2]/button</option><option>//button</option><option>css=button.MuiButtonBase-root.MuiButton-root.MuiButton-contained.makeStyles-submit-22.MuiButton-containedPrimary.MuiButton-containedSizeLarge.MuiButton-sizeLarge.MuiButton-fullWidth</option></datalist></td><td></td>
+</tr>
+<tr><td>assertText</td><td>//div[@id='root']/div/div[2]/header<datalist><option>//div[@id='root']/div/div[2]/header</option><option>//header</option><option>css=header.makeStyles-header-23.makeStyles-header-29</option></datalist></td><td>กลุ่มที่ 14ระบบแจ้งซ่อมคอมพิวเตอร์    ออกจากระบบ</td>
+</tr>
+</tbody></table>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Login fail</td></tr>
+</thead>
+<tbody>
+<tr><td>open</td><td>http://localhost:3000/<datalist><option>http://localhost:3000/</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>id=email<datalist><option>id=email</option><option>name=email</option><option>//input[@id='email']</option><option>//div[@id='root']/div/div[2]/article/div[2]/div/div/input</option><option>//input</option><option>css=#email</option></datalist></td><td>d@mail.com</td>
+</tr>
+<tr><td>click</td><td>id=password<datalist><option>id=password</option><option>name=password</option><option>//input[@id='password']</option><option>//div[@id='root']/div/div[2]/article/div[2]/div[2]/div/input</option><option>//div[2]/div/input</option><option>css=#password</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>id=password<datalist><option>id=password</option><option>name=password</option><option>//input[@id='password']</option><option>//div[@id='root']/div/div[2]/article/div[2]/div[2]/div/input</option><option>//div[2]/div/input</option><option>css=#password</option></datalist></td><td>3659</td>
+</tr>
+<tr><td>click</td><td>//div[@id='root']/div/div[2]/article/div[2]/button/span<datalist><option>//div[@id='root']/div/div[2]/article/div[2]/button/span</option><option>//button/span</option><option>css=span.MuiButton-label</option></datalist></td><td></td>
+</tr>
+<tr><td>assertAlert</td><td>เข้าสู่ระบบไม่สำเร็จ กรุณาตรวจสอบ Email หรือ Password<datalist><option>เข้าสู่ระบบไม่สำเร็จ กรุณาตรวจสอบ Email หรือ Password</option></datalist></td><td></td>
+</tr>
+<tr><td>assertText</td><td>//div[@id='root']/div/div[2]/header<datalist><option>//div[@id='root']/div/div[2]/header</option><option>//header</option><option>css=header.makeStyles-header-24.makeStyles-header-30</option></datalist></td><td>กลุ่มที่14ระบบแจ้งซ่อมคอมพิวเตอร์</td>
+</tr>
+</tbody></table>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
 <tr><td rowspan="1" colspan="3">Success Test Case</td></tr>
 </thead>
 <tbody>
@@ -15,29 +53,25 @@
 </tr>
 <tr><td>click</td><td>id=productname<datalist><option>id=productname</option><option>//input[@id='productname']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[2]/div/input</option><option>//input</option><option>css=#productname</option></datalist></td><td></td>
 </tr>
-<tr><td>type</td><td>id=productname<datalist><option>id=productname</option><option>//input[@id='productname']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[2]/div/input</option><option>//input</option><option>css=#productname</option></datalist></td><td>MSI GT730</td>
+<tr><td>type</td><td>id=productname<datalist><option>id=productname</option><option>//input[@id='productname']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[2]/div/input</option><option>//input</option><option>css=#productname</option></datalist></td><td>Western Digital Purple 4TB</td>
 </tr>
 <tr><td>click</td><td>id=numberofproduct<datalist><option>id=numberofproduct</option><option>//input[@id='numberofproduct']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[4]/div/input</option><option>//div[4]/div/input</option><option>css=#numberofproduct</option></datalist></td><td></td>
 </tr>
-<tr><td>type</td><td>id=numberofproduct<datalist><option>id=numberofproduct</option><option>//input[@id='numberofproduct']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[4]/div/input</option><option>//div[4]/div/input</option><option>css=#numberofproduct</option></datalist></td><td>10</td>
+<tr><td>type</td><td>id=numberofproduct<datalist><option>id=numberofproduct</option><option>//input[@id='numberofproduct']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[4]/div/input</option><option>//div[4]/div/input</option><option>css=#numberofproduct</option></datalist></td><td>1</td>
 </tr>
 <tr><td>click</td><td>id=price<datalist><option>id=price</option><option>//input[@id='price']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[6]/div/input</option><option>//div[6]/div/input</option><option>css=#price</option></datalist></td><td></td>
 </tr>
-<tr><td>type</td><td>id=price<datalist><option>id=price</option><option>//input[@id='price']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[6]/div/input</option><option>//div[6]/div/input</option><option>css=#price</option></datalist></td><td>12000</td>
+<tr><td>type</td><td>id=price<datalist><option>id=price</option><option>//input[@id='price']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[6]/div/input</option><option>//div[6]/div/input</option><option>css=#price</option></datalist></td><td>1950</td>
 </tr>
-<tr><td>click</td><td>id=brand<datalist><option>//div[@id='menu-']/div</option><option>//div[3]/div</option><option>css=#menu- &gt; div</option><option>id=brand</option></datalist></td><td></td>
-</tr>
-<tr><td>click</td><td>//div[@id='menu-']/div[3]/ul/li[4]<datalist><option>//div[@id='menu-']/div[3]/ul/li[4]</option><option>//li[4]</option></datalist></td><td></td>
-</tr>
-<tr><td>click</td><td>id=typeproduct<datalist><option>//body</option><option>css=body</option><option>id=typeproduct</option></datalist></td><td></td>
+<tr><td>click</td><td>id=brand<datalist><option>//body</option><option>css=body</option><option>id=brand</option></datalist></td><td></td>
 </tr>
 <tr><td>click</td><td>//div[@id='menu-']/div[3]/ul/li[5]<datalist><option>//div[@id='menu-']/div[3]/ul/li[5]</option><option>//li[5]</option></datalist></td><td></td>
 </tr>
-<tr><td>click</td><td>id=personal<datalist><option>//body</option><option>css=body</option><option>id=personal</option></datalist></td><td></td>
+<tr><td>click</td><td>id=typeproduct<datalist><option>//body</option><option>css=body</option><option>id=typeproduct</option></datalist></td><td></td>
 </tr>
-<tr><td>click</td><td>//div[@id='menu-']/div[3]/ul/li[6]<datalist><option>//div[@id='menu-']/div[3]/ul/li[6]</option><option>//li[6]</option></datalist></td><td></td>
+<tr><td>click</td><td>//div[@id='menu-']/div[3]/ul/li[4]<datalist><option>//div[@id='menu-']/div[3]/ul/li[4]</option><option>//li[4]</option></datalist></td><td></td>
 </tr>
-<tr><td>click</td><td>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[10]/h6/button/span<datalist><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[10]/h6/button/span</option><option>//button/span</option><option>css=button.MuiButtonBase-root.MuiButton-root.MuiButton-contained.MuiButton-containedPrimary &gt; span.MuiButton-label</option></datalist></td><td></td>
+<tr><td>click</td><td>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[9]/h6/button/span<datalist><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[9]/h6/button/span</option><option>//button/span</option><option>css=button.MuiButtonBase-root.MuiButton-root.MuiButton-contained.MuiButton-containedPrimary &gt; span.MuiButton-label</option></datalist></td><td></td>
 </tr>
 <tr><td>assertText</td><td>//div[@id='root']/div/div[2]/article/div/div[2]/div[2]/div/div[2]/div<datalist><option>//div[@id='root']/div/div[2]/article/div/div[2]/div[2]/div/div[2]/div</option><option>//div[2]/div/div[2]/div</option><option>css=div.MuiTypography-root.MuiAlertTitle-root.MuiTypography-body1.MuiTypography-gutterBottom</option></datalist></td><td>บันทึกข้อมูลสำเร็จ</td>
 </tr>
@@ -51,27 +85,23 @@
 </tr>
 <tr><td>click</td><td>id=productname<datalist><option>id=productname</option><option>//input[@id='productname']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[2]/div/input</option><option>//input</option><option>css=#productname</option></datalist></td><td></td>
 </tr>
-<tr><td>type</td><td>id=productname<datalist><option>id=productname</option><option>//input[@id='productname']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[2]/div/input</option><option>//input</option><option>css=#productname</option></datalist></td><td>Western Digital Purple 4TB</td>
+<tr><td>type</td><td>id=productname<datalist><option>id=productname</option><option>//input[@id='productname']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[2]/div/input</option><option>//input</option><option>css=#productname</option></datalist></td><td>Kingston SSD 120GB</td>
 </tr>
 <tr><td>click</td><td>id=numberofproduct<datalist><option>id=numberofproduct</option><option>//input[@id='numberofproduct']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[4]/div/input</option><option>//div[4]/div/input</option><option>css=#numberofproduct</option></datalist></td><td></td>
 </tr>
-<tr><td>type</td><td>id=numberofproduct<datalist><option>id=numberofproduct</option><option>//input[@id='numberofproduct']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[4]/div/input</option><option>//div[4]/div/input</option><option>css=#numberofproduct</option></datalist></td><td>10</td>
+<tr><td>type</td><td>id=numberofproduct<datalist><option>id=numberofproduct</option><option>//input[@id='numberofproduct']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[4]/div/input</option><option>//div[4]/div/input</option><option>css=#numberofproduct</option></datalist></td><td>1</td>
 </tr>
 <tr><td>click</td><td>id=price<datalist><option>id=price</option><option>//input[@id='price']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[6]/div/input</option><option>//div[6]/div/input</option><option>css=#price</option></datalist></td><td></td>
 </tr>
-<tr><td>type</td><td>id=price<datalist><option>id=price</option><option>//input[@id='price']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[6]/div/input</option><option>//div[6]/div/input</option><option>css=#price</option></datalist></td><td>32500</td>
+<tr><td>type</td><td>id=price<datalist><option>id=price</option><option>//input[@id='price']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[6]/div/input</option><option>//div[6]/div/input</option><option>css=#price</option></datalist></td><td>1990</td>
 </tr>
 <tr><td>click</td><td>id=brand<datalist><option>//body</option><option>css=body</option><option>id=brand</option></datalist></td><td></td>
 </tr>
-<tr><td>click</td><td>//div[@id='menu-']/div[3]/ul/li[5]<datalist><option>//div[@id='menu-']/div[3]/ul/li[5]</option><option>//li[5]</option></datalist></td><td></td>
-</tr>
-<tr><td>click</td><td>id=personal<datalist><option>//body</option><option>css=body</option><option>id=personal</option></datalist></td><td></td>
-</tr>
 <tr><td>click</td><td>//div[@id='menu-']/div[3]/ul/li[3]<datalist><option>//div[@id='menu-']/div[3]/ul/li[3]</option><option>//li[3]</option></datalist></td><td></td>
 </tr>
-<tr><td>click</td><td>//button[@type='button']<datalist><option>//button[@type='button']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[10]/h6/button</option><option>//button</option><option>css=button.MuiButtonBase-root.MuiButton-root.MuiButton-contained.MuiButton-containedPrimary</option></datalist></td><td></td>
+<tr><td>click</td><td>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[9]/h6/button/span<datalist><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[9]/h6/button/span</option><option>//button/span</option><option>css=button.MuiButtonBase-root.MuiButton-root.MuiButton-contained.MuiButton-containedPrimary &gt; span.MuiButton-label</option></datalist></td><td></td>
 </tr>
-<tr><td>assertText</td><td>//div[@id='root']/div/div[2]/article/div/div[2]/div/a/a/span<datalist><option>//div[@id='root']/div/div[2]/article/div/div[2]/div/a/a/span</option><option>//a/a/span</option><option>css=span.MuiButton-label</option></datalist></td><td>ย้อนกลับ</td>
+<tr><td>assertText</td><td>//div[@id='root']/div/div[2]/article/div/div<datalist><option>//div[@id='root']/div/div[2]/article/div/div</option><option>//article/div/div</option><option>css=div.makeStyles-leftItemsBox-292</option></datalist></td><td>กรอกข้อมูลอะไหล่คอมพิวเตอร์</td>
 </tr>
 </tbody></table>
 </body>
