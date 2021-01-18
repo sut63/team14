@@ -58,15 +58,6 @@ var ck = new Cookies()
 var cookieName = ck.GetCookie()
 var cookieID = ck.GetID()
 
-/* interface CreateProduct {
-  productname: string;
-  numberofproduct: string;
-  price: string;
-  brand: number;
-  typeproduct: number;
-  personal: number;
-} */
-
 export default function CreateProductRecord() {
   const classes = useStyles();
   const api = new DefaultApi();
@@ -145,7 +136,8 @@ export default function CreateProductRecord() {
   // create product
   const CreateProduct = async () => {
     if ((productname != null) && (productname != "") && (numberofproduct != null) && (numberofproduct != "") && (price != null) && (price != "") && (brand != null) && (typeproduct != null)  && (personal != null) ) {
-    const product = {
+    
+      const product = {
       productname : productname,
       numberofproduct : numberofproduct,
       price : price,
@@ -153,8 +145,9 @@ export default function CreateProductRecord() {
       typeproduct : typeproduct,
       personal : Number(cookieID),
     };
-    console.log(product);
-    const res: any = await api.createProduct({ product : product });
+    console.log(products);
+    const res: any = await api.createProduct({ product: product });
+   
     setStatus(true);
     if (res.id != '') {
       setAlert(true);
