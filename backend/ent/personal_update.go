@@ -285,6 +285,16 @@ func (pu *PersonalUpdate) RemoveReceipt(r ...*Receipt) *PersonalUpdate {
 
 // Save executes the query and returns the number of rows/vertices matched by this operation.
 func (pu *PersonalUpdate) Save(ctx context.Context) (int, error) {
+	if v, ok := pu.mutation.Personalname(); ok {
+		if err := personal.PersonalnameValidator(v); err != nil {
+			return 0, &ValidationError{Name: "Personalname", err: fmt.Errorf("ent: validator failed for field \"Personalname\": %w", err)}
+		}
+	}
+	if v, ok := pu.mutation.Password(); ok {
+		if err := personal.PasswordValidator(v); err != nil {
+			return 0, &ValidationError{Name: "Password", err: fmt.Errorf("ent: validator failed for field \"Password\": %w", err)}
+		}
+	}
 
 	var (
 		err      error
@@ -937,6 +947,16 @@ func (puo *PersonalUpdateOne) RemoveReceipt(r ...*Receipt) *PersonalUpdateOne {
 
 // Save executes the query and returns the updated entity.
 func (puo *PersonalUpdateOne) Save(ctx context.Context) (*Personal, error) {
+	if v, ok := puo.mutation.Personalname(); ok {
+		if err := personal.PersonalnameValidator(v); err != nil {
+			return nil, &ValidationError{Name: "Personalname", err: fmt.Errorf("ent: validator failed for field \"Personalname\": %w", err)}
+		}
+	}
+	if v, ok := puo.mutation.Password(); ok {
+		if err := personal.PasswordValidator(v); err != nil {
+			return nil, &ValidationError{Name: "Password", err: fmt.Errorf("ent: validator failed for field \"Password\": %w", err)}
+		}
+	}
 
 	var (
 		err  error

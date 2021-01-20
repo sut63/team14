@@ -84,11 +84,11 @@ export function EntFixEdgesFromJSONTyped(json: any, ignoreDiscriminator: boolean
     }
     return {
         
-        'customer': !exists(json, 'Customer') ? undefined : EntCustomerFromJSON(json['Customer']),
+        'customer': !exists(json, 'customer') ? undefined : EntCustomerFromJSON(json['customer']),
         'fix': !exists(json, 'fix') ? undefined : EntAdminrepairFromJSON(json['fix']),
-        'fixbrand': !exists(json, 'Fixbrand') ? undefined : EntFixbrandFromJSON(json['Fixbrand']),
-        'fixcomtype': !exists(json, 'Fixcomtype') ? undefined : EntFixcomtypeFromJSON(json['Fixcomtype']),
-        'personal': !exists(json, 'Personal') ? undefined : EntPersonalFromJSON(json['Personal']),
+        'fixbrand': !exists(json, 'fixbrand') ? undefined : EntFixbrandFromJSON(json['fixbrand']),
+        'fixcomtype': !exists(json, 'fixcomtype') ? undefined : EntFixcomtypeFromJSON(json['fixcomtype']),
+        'personal': !exists(json, 'personal') ? undefined : EntPersonalFromJSON(json['personal']),
     };
 }
 

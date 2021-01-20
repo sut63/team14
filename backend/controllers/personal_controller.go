@@ -92,14 +92,20 @@ func (ctl *PersonalController) CreatePersonal(c *gin.Context) {
 		SetDepartment(d).
 		SetGender(g).
 		Save(context.Background())
+
 	if err != nil {
+		fmt.Println(err)
 		c.JSON(400, gin.H{
-			"error": "saving failed",
+			"status": false,
+			"error":  err,
 		})
 		return
 	}
 
-	c.JSON(200, p)
+	c.JSON(200, gin.H{
+		"status": true,
+		"data":   p,
+	})
 }
 
 // GetPersonal handles GET requests to retrieve a personal entity

@@ -84,11 +84,11 @@ export function EntReceiptEdgesFromJSONTyped(json: any, ignoreDiscriminator: boo
     }
     return {
         
-        'adminrepair': !exists(json, 'Adminrepair') ? undefined : EntAdminrepairFromJSON(json['Adminrepair']),
-        'customer': !exists(json, 'Customer') ? undefined : EntCustomerFromJSON(json['Customer']),
-        'paymenttype': !exists(json, 'Paymenttype') ? undefined : EntPaymentTypeFromJSON(json['Paymenttype']),
-        'personal': !exists(json, 'Personal') ? undefined : EntPersonalFromJSON(json['Personal']),
-        'product': !exists(json, 'Product') ? undefined : EntProductFromJSON(json['Product']),
+        'adminrepair': !exists(json, 'adminrepair') ? undefined : EntAdminrepairFromJSON(json['adminrepair']),
+        'customer': !exists(json, 'customer') ? undefined : EntCustomerFromJSON(json['customer']),
+        'paymenttype': !exists(json, 'paymenttype') ? undefined : EntPaymentTypeFromJSON(json['paymenttype']),
+        'personal': !exists(json, 'personal') ? undefined : EntPersonalFromJSON(json['personal']),
+        'product': !exists(json, 'product') ? undefined : EntProductFromJSON(json['product']),
     };
 }
 

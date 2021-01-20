@@ -105,3 +105,10 @@ var ForeignKeys = []string{
 	"gender_id",
 	"title_id",
 }
+
+var (
+	// PersonalnameValidator is a validator for the "Personalname" field. It is called by the builders before save.
+	PersonalnameValidator func(string) error
+	// PasswordValidator is a validator for the "Password" field. It is called by the builders before save.
+	PasswordValidator func(string) error
+)
