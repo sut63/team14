@@ -7,6 +7,7 @@ import (
 
 	"github.com/tanapon395/playlist-video/ent/adminrepair"
 	"github.com/tanapon395/playlist-video/ent/fix"
+	"github.com/tanapon395/playlist-video/ent/personal"
 	"github.com/tanapon395/playlist-video/ent/product"
 	"github.com/tanapon395/playlist-video/ent/receipt"
 	"github.com/tanapon395/playlist-video/ent/schema"
@@ -36,6 +37,30 @@ func init() {
 	fixDescQueue := fixFields[2].Descriptor()
 	// fix.QueueValidator is a validator for the "queue" field. It is called by the builders before save.
 	fix.QueueValidator = fixDescQueue.Validators[0].(func(string) error)
+	personalFields := schema.Personal{}.Fields()
+	_ = personalFields
+	// personalDescPersonalname is the schema descriptor for Personalname field.
+	personalDescPersonalname := personalFields[0].Descriptor()
+	// personal.PersonalnameValidator is a validator for the "Personalname" field. It is called by the builders before save.
+	personal.PersonalnameValidator = personalDescPersonalname.Validators[0].(func(string) error)
+	// personalDescPassword is the schema descriptor for Password field.
+	personalDescPassword := personalFields[2].Descriptor()
+	// personal.PasswordValidator is a validator for the "Password" field. It is called by the builders before save.
+	personal.PasswordValidator = func() func(string) error {
+		validators := personalDescPassword.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(_Password string) error {
+			for _, fn := range fns {
+				if err := fn(_Password); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
 	productFields := schema.Product{}.Fields()
 	_ = productFields
 	// productDescProductname is the schema descriptor for Productname field.

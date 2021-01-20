@@ -1,6 +1,8 @@
 package schema
 
 import (
+	"regexp"
+
 	"github.com/facebookincubator/ent"
 	"github.com/facebookincubator/ent/schema/edge"
 	"github.com/facebookincubator/ent/schema/field"
@@ -14,9 +16,9 @@ type Personal struct {
 // Fields of the Personal.
 func (Personal) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("Personalname"),
+		field.String("Personalname").Match(regexp.MustCompile("[a-zA-Zก-ฮ]")),
 		field.String("Email"),
-		field.String("Password"),
+		field.String("Password").MinLen(4).Match(regexp.MustCompile("[0-9]")),
 	}
 }
 

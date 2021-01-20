@@ -63,6 +63,7 @@ export default function Personalpage() {
 
   const [status, setStatus] = useState(false);
   const [alert, setAlert] = useState(true);
+  const [alert2, setAlert2] = useState(true);
   const [loading, setLoading] = useState(true);
 
   const [personals, setPersonals] = React.useState<EntPersonal[]>([]);
@@ -139,27 +140,28 @@ export default function Personalpage() {
 
   // create personal
   const CreatePersonal = async () => {
-    if ((personalname != null) && (personalname != "") && (email != null) && (email != "") && (password != null) && (password != "") && (title != null) && (department != null) && (gender != null)){
-    const personal = {
-      personalname : personalname,
-      email : email,
-      password : password,
-      title : title,
-      department : department,
-      gender : gender,
-    };
-    console.log(personals);
-    const res: any = await http.createPersonal({ personal: personal });
-    console.log("hi");
+    if ((personalname != null) && (personalname != "") && (email != null) && (email != "") && (password != null) && (password != "") && (title != null) && (department != null) && (gender != null) 
+    && (personalname.match("[a-zA-Zก-ฮ]")) && (password.match("[0-9]")) && (password.length > 3)){
+      const personal = {
+        personalname : personalname,
+        email : email,
+        password : password,
+        title : title,
+        department : department,
+        gender : gender,
+      };
+      console.log(personals);
+      const res: any = await http.createPersonal({ personal: personal });
+      console.log("hi");
       setStatus(true);
       if (res.id != '') {
         setAlert(true);
       } 
     }
-      else {
-        setStatus(true);
-        setAlert(false);
-      }
+    else {
+      setStatus(true);
+      setAlert(false);
+    }
   };
 
 return (
@@ -232,7 +234,7 @@ return (
               ))}
             </Select>
             
-            <div className={classes.paper}><strong>ชื่อ-นามสกุล</strong></div>
+            <div className={classes.paper}><strong>ชื่อ-นามสกุล (ไม่ใส่ตัวเลข)</strong></div>
             <TextField
             style={{ width: 500 ,marginLeft:7,marginRight:-7,marginTop:10}}
             className={classes.textField}
@@ -272,7 +274,7 @@ return (
               onChange={handleEmailChange}
             />
 
-            <div className={classes.paper}><strong>รหัสผ่าน</strong></div>
+            <div className={classes.paper}><strong>รหัสผ่าน (ไม่น้อยกว่า 4 ตัว และ ไม่ใส่ตัวอักษร)</strong></div>
             <TextField
             style={{ width: 500 ,marginLeft:7,marginRight:-7,marginTop:10}}
             className={classes.textField}
