@@ -17,7 +17,7 @@ type Personal struct {
 func (Personal) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("Personalname").Match(regexp.MustCompile("[a-zA-Zก-ฮ]")),
-		field.String("Email"),
+		field.String("Email").Match(regexp.MustCompile("[a-zA-Z0-9]+@([a-zA-Z0-9]+.)+[A-Za-z]")),
 		field.String("Password").MinLen(4).Match(regexp.MustCompile("[0-9]")),
 	}
 }

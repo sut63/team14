@@ -290,6 +290,11 @@ func (pu *PersonalUpdate) Save(ctx context.Context) (int, error) {
 			return 0, &ValidationError{Name: "Personalname", err: fmt.Errorf("ent: validator failed for field \"Personalname\": %w", err)}
 		}
 	}
+	if v, ok := pu.mutation.Email(); ok {
+		if err := personal.EmailValidator(v); err != nil {
+			return 0, &ValidationError{Name: "Email", err: fmt.Errorf("ent: validator failed for field \"Email\": %w", err)}
+		}
+	}
 	if v, ok := pu.mutation.Password(); ok {
 		if err := personal.PasswordValidator(v); err != nil {
 			return 0, &ValidationError{Name: "Password", err: fmt.Errorf("ent: validator failed for field \"Password\": %w", err)}
@@ -950,6 +955,11 @@ func (puo *PersonalUpdateOne) Save(ctx context.Context) (*Personal, error) {
 	if v, ok := puo.mutation.Personalname(); ok {
 		if err := personal.PersonalnameValidator(v); err != nil {
 			return nil, &ValidationError{Name: "Personalname", err: fmt.Errorf("ent: validator failed for field \"Personalname\": %w", err)}
+		}
+	}
+	if v, ok := puo.mutation.Email(); ok {
+		if err := personal.EmailValidator(v); err != nil {
+			return nil, &ValidationError{Name: "Email", err: fmt.Errorf("ent: validator failed for field \"Email\": %w", err)}
 		}
 	}
 	if v, ok := puo.mutation.Password(); ok {

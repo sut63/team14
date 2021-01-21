@@ -4,14 +4,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import { ContentHeader, Content, Header, Page, pageTheme } from '@backstage/core';
 import { FormControl, Select, InputLabel, MenuItem, TextField, Button, InputAdornment } from '@material-ui/core';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
-import { Alert, AlertTitle } from '@material-ui/lab';
-
-//api
 import { DefaultApi } from '../../api/apis';
-
-//Entity
-import { EntPersonal, EntGender, EntTitle, EntDepartment} from '../../api';
-
 //icon
 import EmailTwoToneIcon from '@material-ui/icons/EmailTwoTone';
 import PersonOutlineTwoToneIcon from '@material-ui/icons/PersonOutlineTwoTone';
@@ -19,6 +12,13 @@ import VpnKeyTwoToneIcon from '@material-ui/icons/VpnKeyTwoTone';
 import AddCircleTwoToneIcon from '@material-ui/icons/AddCircleTwoTone';
 import CancelTwoToneIcon from '@material-ui/icons/CancelTwoTone';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+//alert
+import Swal from 'sweetalert2';
+//entity
+import { EntPersonal } from '../../api/models/EntPersonal';
+import { EntGender } from '../../api/models/EntGender';
+import { EntTitle } from '../../api/models/EntTitle';
+import { EntDepartment } from '../../api/models/EntDepartment';
 
 const useStyles = makeStyles((theme: Theme) =>
  createStyles({
@@ -57,13 +57,24 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
+const Toast = Swal.mixin({
+  toast: true,
+  position: 'top-end',
+  showConfirmButton: false,
+  timer: 3000,
+  timerProgressBar: true,
+  didOpen: toast => {
+    toast.addEventListener('mouseenter', Swal.stopTimer);
+    toast.addEventListener('mouseleave', Swal.resumeTimer);
+  },
+});
+
 export default function Personalpage() {
   const classes = useStyles();
   const http = new DefaultApi();
 
   const [status, setStatus] = useState(false);
   const [alert, setAlert] = useState(true);
-  const [alert2, setAlert2] = useState(true);
   const [loading, setLoading] = useState(true);
 
   const [personals, setPersonals] = React.useState<EntPersonal[]>([]);
@@ -104,14 +115,6 @@ export default function Personalpage() {
     };
     getGenders();
 
-    const getPersonals = async () => {
-      const res = await http.listPersonal({ limit: 10, offset: 0 });
-      setLoading(false);
-      setPersonals(res);
-      console.log(res);
-    };
-    getPersonals();
-
   }, [loading]);
 
   const handlePersonalnameChange = (event: any) => {
@@ -138,31 +141,67 @@ export default function Personalpage() {
     setGender(event.target.value as number);
   };
 
-  // create personal
-  const CreatePersonal = async () => {
-    if ((personalname != null) && (personalname != "") && (email != null) && (email != "") && (password != null) && (password != "") && (title != null) && (department != null) && (gender != null) 
-    && (personalname.match("[a-zA-Zก-ฮ]")) && (password.match("[0-9]")) && (password.length > 3)){
-      const personal = {
-        personalname : personalname,
-        email : email,
-        password : password,
-        title : title,
-        department : department,
-        gender : gender,
-      };
-      console.log(personals);
-      const res: any = await http.createPersonal({ personal: personal });
-      console.log("hi");
-      setStatus(true);
-      if (res.id != '') {
-        setAlert(true);
-      } 
-    }
-    else {
-      setStatus(true);
-      setAlert(false);
-    }
+  const personal = {
+    personalname : personalname,
+    email : email,
+    password : password,
+    title : title,
+    department : department,
+    gender : gender,
   };
+  const alertMessage = (icon: any, title: any) => {
+    Toast.fire({
+      icon: icon,
+      title: title,
+    });
+  }
+
+    const checkCaseSaveError = (field: string) => {
+      switch(field) {
+        case 'Personalname':
+          alertMessage("error","รูปแบบชื่อไม่ถูกต้อง");
+          return;
+        case 'Password':
+          alertMessage("error","รหัสผ่านน้อยกว่า 4 ตัว");
+          return;
+        case 'Email':
+          alertMessage("error","รูปแบบ email ไม่ถูกต้อง");
+          return;
+        default:
+          alertMessage("error","บันทึกข้อมูลไม่สำเร็จ");
+          return;
+      }
+    }
+  
+  console.log(personal)
+  function save() {
+    const apiUrl = 'http://localhost:8080/api/v1/personals';
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(personal),
+    };
+  
+    console.log(personal); 
+  
+    fetch(apiUrl, requestOptions)
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+        if (data.status == true) {
+          Toast.fire({
+            icon: 'success',
+            title: 'บันทึกข้อมูลสำเร็จ',
+  
+          });
+        } else {
+          checkCaseSaveError(data.error.Name)
+        }
+      });
+      const timer = setTimeout(() => {
+        setStatus(false);
+      }, 1000);
+    };
 
 return (
   <Page theme={pageTheme.tool}>
@@ -181,7 +220,7 @@ return (
       <ContentHeader title="เพิ่มข้อมูลบุคลากร">
       <div>&nbsp;&nbsp;&nbsp;</div>
         <Button  
-        onClick={() => {CreatePersonal();}}
+        onClick={() => {save();}}
         variant="contained" 
         color="secondary" 
         startIcon={<AddCircleTwoToneIcon/>}
@@ -200,16 +239,6 @@ return (
         ย้อนกลับ 
         </Button>
       </ContentHeader>
-      {status ? ( 
-        <div>
-          {alert ? ( 
-              <Alert severity="success"  onClose={() => { }}> 
-                <AlertTitle> บันทึกข้อมูลสำเร็จ </AlertTitle></Alert>) 
-        : (     
-          <Alert severity="error" onClose={() => { setStatus(false) }}> 
-            <AlertTitle> ไม่สามารถบันทึกข้อมูลได้ กรุณาลองใหม่อีกครั้ง </AlertTitle></Alert>)}
-        </div>
-          ) : null}
       <div className={classes.root}>
         <form noValidate autoComplete="off">
           <FormControl
@@ -234,7 +263,7 @@ return (
               ))}
             </Select>
             
-            <div className={classes.paper}><strong>ชื่อ-นามสกุล (ไม่ใส่ตัวเลข)</strong></div>
+            <div className={classes.paper}><strong>ชื่อ-นามสกุล</strong></div>
             <TextField
             style={{ width: 500 ,marginLeft:7,marginRight:-7,marginTop:10}}
             className={classes.textField}
@@ -274,7 +303,7 @@ return (
               onChange={handleEmailChange}
             />
 
-            <div className={classes.paper}><strong>รหัสผ่าน (ไม่น้อยกว่า 4 ตัว และ ไม่ใส่ตัวอักษร)</strong></div>
+            <div className={classes.paper}><strong>รหัสผ่าน</strong></div>
             <TextField
             style={{ width: 500 ,marginLeft:7,marginRight:-7,marginTop:10}}
             className={classes.textField}

@@ -195,6 +195,11 @@ func (pc *PersonalCreate) Save(ctx context.Context) (*Personal, error) {
 	if _, ok := pc.mutation.Email(); !ok {
 		return nil, &ValidationError{Name: "Email", err: errors.New("ent: missing required field \"Email\"")}
 	}
+	if v, ok := pc.mutation.Email(); ok {
+		if err := personal.EmailValidator(v); err != nil {
+			return nil, &ValidationError{Name: "Email", err: fmt.Errorf("ent: validator failed for field \"Email\": %w", err)}
+		}
+	}
 	if _, ok := pc.mutation.Password(); !ok {
 		return nil, &ValidationError{Name: "Password", err: errors.New("ent: missing required field \"Password\"")}
 	}
