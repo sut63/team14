@@ -14,9 +14,9 @@ type Customer struct {
 // Fields of the Customer.
 func (Customer) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("Customername"),
-		field.String("Address"),
-		field.String("Phonenumber"),
+		field.String("Customername").NotEmpty(),
+		field.String("Address").NotEmpty(),
+		field.String("Phonenumber").MaxLen(10).MinLen(10),
 	}
 }
 

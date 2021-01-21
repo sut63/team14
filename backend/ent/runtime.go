@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/tanapon395/playlist-video/ent/adminrepair"
+	"github.com/tanapon395/playlist-video/ent/customer"
 	"github.com/tanapon395/playlist-video/ent/fix"
 	"github.com/tanapon395/playlist-video/ent/personal"
 	"github.com/tanapon395/playlist-video/ent/product"
@@ -23,6 +24,34 @@ func init() {
 	adminrepairDescEquipmentdamate := adminrepairFields[0].Descriptor()
 	// adminrepair.EquipmentdamateValidator is a validator for the "equipmentdamate" field. It is called by the builders before save.
 	adminrepair.EquipmentdamateValidator = adminrepairDescEquipmentdamate.Validators[0].(func(string) error)
+	customerFields := schema.Customer{}.Fields()
+	_ = customerFields
+	// customerDescCustomername is the schema descriptor for Customername field.
+	customerDescCustomername := customerFields[0].Descriptor()
+	// customer.CustomernameValidator is a validator for the "Customername" field. It is called by the builders before save.
+	customer.CustomernameValidator = customerDescCustomername.Validators[0].(func(string) error)
+	// customerDescAddress is the schema descriptor for Address field.
+	customerDescAddress := customerFields[1].Descriptor()
+	// customer.AddressValidator is a validator for the "Address" field. It is called by the builders before save.
+	customer.AddressValidator = customerDescAddress.Validators[0].(func(string) error)
+	// customerDescPhonenumber is the schema descriptor for Phonenumber field.
+	customerDescPhonenumber := customerFields[2].Descriptor()
+	// customer.PhonenumberValidator is a validator for the "Phonenumber" field. It is called by the builders before save.
+	customer.PhonenumberValidator = func() func(string) error {
+		validators := customerDescPhonenumber.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(_Phonenumber string) error {
+			for _, fn := range fns {
+				if err := fn(_Phonenumber); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
 	fixFields := schema.Fix{}.Fields()
 	_ = fixFields
 	// fixDescProductnumber is the schema descriptor for productnumber field.

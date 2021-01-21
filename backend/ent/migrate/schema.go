@@ -62,7 +62,7 @@ var (
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "customername", Type: field.TypeString},
 		{Name: "address", Type: field.TypeString},
-		{Name: "phonenumber", Type: field.TypeString},
+		{Name: "phonenumber", Type: field.TypeString, Size: 10},
 		{Name: "gender_id", Type: field.TypeInt, Nullable: true},
 		{Name: "personal_id", Type: field.TypeInt, Nullable: true},
 		{Name: "title_id", Type: field.TypeInt, Nullable: true},
