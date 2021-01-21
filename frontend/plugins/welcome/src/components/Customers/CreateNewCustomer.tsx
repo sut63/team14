@@ -9,9 +9,14 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import PersonIcon from '@material-ui/icons/Person';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { DefaultApi } from '../../api/apis';
-import { EntPersonal, EntGender, EntTitle, EntCustomer} from '../../api';
+//import { EntPersonal, EntGender, EntTitle, EntCustomer} from '../../api';
 import { Cookies } from '../WelcomePage/Cookie';
-
+import { EntPersonal } from '../../api/models/EntPersonal';
+import { EntGender } from '../../api/models/EntGender';
+import { EntTitle } from '../../api/models/EntTitle';
+import { EntCustomer } from '../../api/models/EntCustomer';
+import Swal from 'sweetalert2';
+import Customers from '.';
 
 const useStyles = makeStyles((theme: Theme) =>
  createStyles({
@@ -50,6 +55,19 @@ const useStyles = makeStyles((theme: Theme) =>
    },
   }),
 );
+
+const Toast = Swal.mixin({
+  toast: true,
+  position: 'top-end',
+  showConfirmButton: false,
+  timer: 3000,
+  timerProgressBar: true,
+  didOpen: toast => {
+    toast.addEventListener('mouseenter', Swal.stopTimer);
+    toast.addEventListener('mouseleave', Swal.resumeTimer);
+  },
+});
+
 var ck = new Cookies()
 var cookieName = ck.GetCookie()
 var cookieID = ck.GetID()
@@ -78,35 +96,35 @@ export default function CreateNewCustomer() {
 
   useEffect(() => {
     const getPersonals = async () => {
-      const res = await http.listPersonal({ limit: 10, offset: 0 });
+      const p = await http.listPersonal({ limit: 10, offset: 0 });
       setLoading(false);
-      setPersonals(res);
-      console.log(res);
+      setPersonals(p);
+      
     };
     getPersonals();
 
     const getTiles = async () => {
-      const res = await http.listTitle({ limit: 10, offset: 0 });
+      const t = await http.listTitle({ limit: 10, offset: 0 });
       setLoading(false);
-      setTitles(res);
-      console.log(res);
+      setTitles(t);
+      
     };
     getTiles();
 
     const getGenders = async () => {
-      const res = await http.listGender({ limit: 10, offset: 0 });
+      const g = await http.listGender({ limit: 10, offset: 0 });
       setLoading(false);
-      setGenders(res);
-      console.log(res);
+      setGenders(g);
+      
     };
     getGenders();
 
   }, [loading]);
 
-  const getCustomer = async () => {
+  /*const getCustomer = async () => {
     const res = await http.listCustomer({ limit: 10, offset: 0 });
     setCustomer(res);
-  };
+  };*/
 
   const handleCustomernameChange = (event: any) => {
     setCustomername(event.target.value as string);
@@ -132,9 +150,77 @@ export default function CreateNewCustomer() {
     setGender(event.target.value as number);
   };
 
- 
+ let p = Number(personal)
+
+ const customer = {
+  customername : customername,
+  address : address,
+  phonenumber : phonenumber,
+  title : title,
+  personal : Number(cookieID),
+  gender : gender,
+  };
+
+  const alertMessage = (icon: any, title: any) => {
+    Toast.fire({
+      icon: icon,
+      title: title,
+    });
+  }
+
+  const checkCaseSaveError = (field: string) => {
+    switch(field) {
+      case 'Customername':
+        alertMessage("error","กรุณากรอกชื่อ");
+        return;
+      case 'Address':
+        alertMessage("error","กรุณากรอกที่อยู่");
+        return;
+      case 'Phonenumber':
+        alertMessage("error","กรุณากรอกข้อมูลหมายเลขโทรศัพท์ 10 หลัก");
+        return;
+      default:
+        alertMessage("error","บันทึกข้อมูลไม่สำเร็จ");
+        return;
+    }
+  }
+
+  console.log(customer)
+function save() {
+  const apiUrl = 'http://localhost:8080/api/v1/customers';
+  const requestOptions = {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(customer),
+  };
+
+  console.log(customer); // log ดูข้อมูล สามารถ Inspect ดูข้อมูลได้ F12 เลือก Tab Console
+
+  fetch(apiUrl, requestOptions)
+    .then(response => response.json())
+    .then(data => {
+      console.log(data);
+      if (data.status == true) {
+        //clear();
+        Toast.fire({
+          icon: 'success',
+          title: 'บันทึกข้อมูลสำเร็จ',
+
+        });//window.setTimeout(function(){location.reload()},8000);
+      } else {
+        checkCaseSaveError(data.error.Name)
+      }
+    });
+
+    
+    const timer = setTimeout(() => {
+      setStatus(false);
+    }, 1000);
+  };
+  
+
   // create personal
-const CreateCustomer = async () => {
+/*const CreateCustomer = async () => {
   if ((customername != null) && (customername != "") && (address != null) && (address != "") && (phonenumber != null) && (phonenumber != "") && (title != null) && (personal != null) && (gender != null) ) {
   
     const customer = {
@@ -160,7 +246,7 @@ const CreateCustomer = async () => {
   const timer = setTimeout(() => {
     setStatus(false);
   }, 3000);
-};
+};*/
 
  return (
    
@@ -168,23 +254,13 @@ const CreateCustomer = async () => {
      <Header
        title="Customer System" type="Computer Repair System">
       <div>&nbsp;&nbsp;&nbsp;</div>
-      <Button onClick={() => {CreateCustomer();}} variant="contained" color="primary" startIcon={<AddCircleOutlinedIcon/>}> Create new customer </Button>
+      <Button onClick={() => {save();}} variant="contained" color="primary" startIcon={<AddCircleOutlinedIcon/>}> Create new customer </Button>
       <div>&nbsp;&nbsp;&nbsp;</div>
      
       <Button style={{ marginLeft: 20 }} component={RouterLink} to="/customertable" variant="contained" startIcon={<CancelRoundedIcon/>}>  Table </Button>
      </Header>
 
      <Content>
-       {status ? ( 
-        <div>
-        {alert ? ( 
-            <Alert severity="success"  onClose={() => { }}> 
-              <AlertTitle> บันทึกข้อมูลสำเร็จ </AlertTitle></Alert>) 
-      : (     
-        <Alert severity="error" onClose={() => { setStatus(false) }}> 
-          <AlertTitle> ไม่สามารถบันทึกข้อมูลได้ กรุณาลองใหม่อีกครั้ง </AlertTitle></Alert>)}
-      </div>
-          ) : null}
      <div className={classes.root}>
         <form noValidate autoComplete="off">
           <FormControl

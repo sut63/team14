@@ -139,11 +139,26 @@ func (cc *CustomerCreate) Save(ctx context.Context) (*Customer, error) {
 	if _, ok := cc.mutation.Customername(); !ok {
 		return nil, &ValidationError{Name: "Customername", err: errors.New("ent: missing required field \"Customername\"")}
 	}
+	if v, ok := cc.mutation.Customername(); ok {
+		if err := customer.CustomernameValidator(v); err != nil {
+			return nil, &ValidationError{Name: "Customername", err: fmt.Errorf("ent: validator failed for field \"Customername\": %w", err)}
+		}
+	}
 	if _, ok := cc.mutation.Address(); !ok {
 		return nil, &ValidationError{Name: "Address", err: errors.New("ent: missing required field \"Address\"")}
 	}
+	if v, ok := cc.mutation.Address(); ok {
+		if err := customer.AddressValidator(v); err != nil {
+			return nil, &ValidationError{Name: "Address", err: fmt.Errorf("ent: validator failed for field \"Address\": %w", err)}
+		}
+	}
 	if _, ok := cc.mutation.Phonenumber(); !ok {
 		return nil, &ValidationError{Name: "Phonenumber", err: errors.New("ent: missing required field \"Phonenumber\"")}
+	}
+	if v, ok := cc.mutation.Phonenumber(); ok {
+		if err := customer.PhonenumberValidator(v); err != nil {
+			return nil, &ValidationError{Name: "Phonenumber", err: fmt.Errorf("ent: validator failed for field \"Phonenumber\": %w", err)}
+		}
 	}
 	var (
 		err  error

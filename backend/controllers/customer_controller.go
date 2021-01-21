@@ -90,12 +90,16 @@ func (ctl *CustomerController) CreateCustomer(c *gin.Context) {
 		Save(context.Background())
 	if err != nil {
 		c.JSON(400, gin.H{
-			"error": "saving failed",
+			"status": false,
+			"error":  err,
 		})
 		return
 	}
 
-	c.JSON(200, cm)
+	c.JSON(200, gin.H{
+		"status": true,
+		"data":   cm,
+	})
 }
 
 // GetCustomer handles GET requests to retrieve a customer entity

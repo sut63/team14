@@ -192,6 +192,21 @@ func (cu *CustomerUpdate) RemoveReceipt(r ...*Receipt) *CustomerUpdate {
 
 // Save executes the query and returns the number of rows/vertices matched by this operation.
 func (cu *CustomerUpdate) Save(ctx context.Context) (int, error) {
+	if v, ok := cu.mutation.Customername(); ok {
+		if err := customer.CustomernameValidator(v); err != nil {
+			return 0, &ValidationError{Name: "Customername", err: fmt.Errorf("ent: validator failed for field \"Customername\": %w", err)}
+		}
+	}
+	if v, ok := cu.mutation.Address(); ok {
+		if err := customer.AddressValidator(v); err != nil {
+			return 0, &ValidationError{Name: "Address", err: fmt.Errorf("ent: validator failed for field \"Address\": %w", err)}
+		}
+	}
+	if v, ok := cu.mutation.Phonenumber(); ok {
+		if err := customer.PhonenumberValidator(v); err != nil {
+			return 0, &ValidationError{Name: "Phonenumber", err: fmt.Errorf("ent: validator failed for field \"Phonenumber\": %w", err)}
+		}
+	}
 
 	var (
 		err      error
@@ -640,6 +655,21 @@ func (cuo *CustomerUpdateOne) RemoveReceipt(r ...*Receipt) *CustomerUpdateOne {
 
 // Save executes the query and returns the updated entity.
 func (cuo *CustomerUpdateOne) Save(ctx context.Context) (*Customer, error) {
+	if v, ok := cuo.mutation.Customername(); ok {
+		if err := customer.CustomernameValidator(v); err != nil {
+			return nil, &ValidationError{Name: "Customername", err: fmt.Errorf("ent: validator failed for field \"Customername\": %w", err)}
+		}
+	}
+	if v, ok := cuo.mutation.Address(); ok {
+		if err := customer.AddressValidator(v); err != nil {
+			return nil, &ValidationError{Name: "Address", err: fmt.Errorf("ent: validator failed for field \"Address\": %w", err)}
+		}
+	}
+	if v, ok := cuo.mutation.Phonenumber(); ok {
+		if err := customer.PhonenumberValidator(v); err != nil {
+			return nil, &ValidationError{Name: "Phonenumber", err: fmt.Errorf("ent: validator failed for field \"Phonenumber\": %w", err)}
+		}
+	}
 
 	var (
 		err  error
