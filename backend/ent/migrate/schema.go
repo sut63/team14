@@ -112,7 +112,7 @@ var (
 	FixesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "productnumber", Type: field.TypeString},
-		{Name: "problemtype", Type: field.TypeString},
+		{Name: "problemtype", Type: field.TypeString, Size: 100},
 		{Name: "queue", Type: field.TypeString, Unique: true},
 		{Name: "date", Type: field.TypeTime},
 		{Name: "customer_id", Type: field.TypeInt, Nullable: true},

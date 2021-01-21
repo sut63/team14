@@ -25,25 +25,25 @@ type FixCreate struct {
 	hooks    []Hook
 }
 
-// SetProductnumber sets the productnumber field.
+// SetProductnumber sets the Productnumber field.
 func (fc *FixCreate) SetProductnumber(s string) *FixCreate {
 	fc.mutation.SetProductnumber(s)
 	return fc
 }
 
-// SetProblemtype sets the problemtype field.
+// SetProblemtype sets the Problemtype field.
 func (fc *FixCreate) SetProblemtype(s string) *FixCreate {
 	fc.mutation.SetProblemtype(s)
 	return fc
 }
 
-// SetQueue sets the queue field.
+// SetQueue sets the Queue field.
 func (fc *FixCreate) SetQueue(s string) *FixCreate {
 	fc.mutation.SetQueue(s)
 	return fc
 }
 
-// SetDate sets the date field.
+// SetDate sets the Date field.
 func (fc *FixCreate) SetDate(t time.Time) *FixCreate {
 	fc.mutation.SetDate(t)
 	return fc
@@ -152,31 +152,31 @@ func (fc *FixCreate) Mutation() *FixMutation {
 // Save creates the Fix in the database.
 func (fc *FixCreate) Save(ctx context.Context) (*Fix, error) {
 	if _, ok := fc.mutation.Productnumber(); !ok {
-		return nil, &ValidationError{Name: "productnumber", err: errors.New("ent: missing required field \"productnumber\"")}
+		return nil, &ValidationError{Name: "Productnumber", err: errors.New("ent: missing required field \"Productnumber\"")}
 	}
 	if v, ok := fc.mutation.Productnumber(); ok {
 		if err := fix.ProductnumberValidator(v); err != nil {
-			return nil, &ValidationError{Name: "productnumber", err: fmt.Errorf("ent: validator failed for field \"productnumber\": %w", err)}
+			return nil, &ValidationError{Name: "Productnumber", err: fmt.Errorf("ent: validator failed for field \"Productnumber\": %w", err)}
 		}
 	}
 	if _, ok := fc.mutation.Problemtype(); !ok {
-		return nil, &ValidationError{Name: "problemtype", err: errors.New("ent: missing required field \"problemtype\"")}
+		return nil, &ValidationError{Name: "Problemtype", err: errors.New("ent: missing required field \"Problemtype\"")}
 	}
 	if v, ok := fc.mutation.Problemtype(); ok {
 		if err := fix.ProblemtypeValidator(v); err != nil {
-			return nil, &ValidationError{Name: "problemtype", err: fmt.Errorf("ent: validator failed for field \"problemtype\": %w", err)}
+			return nil, &ValidationError{Name: "Problemtype", err: fmt.Errorf("ent: validator failed for field \"Problemtype\": %w", err)}
 		}
 	}
 	if _, ok := fc.mutation.Queue(); !ok {
-		return nil, &ValidationError{Name: "queue", err: errors.New("ent: missing required field \"queue\"")}
+		return nil, &ValidationError{Name: "Queue", err: errors.New("ent: missing required field \"Queue\"")}
 	}
 	if v, ok := fc.mutation.Queue(); ok {
 		if err := fix.QueueValidator(v); err != nil {
-			return nil, &ValidationError{Name: "queue", err: fmt.Errorf("ent: validator failed for field \"queue\": %w", err)}
+			return nil, &ValidationError{Name: "Queue", err: fmt.Errorf("ent: validator failed for field \"Queue\": %w", err)}
 		}
 	}
 	if _, ok := fc.mutation.Date(); !ok {
-		return nil, &ValidationError{Name: "date", err: errors.New("ent: missing required field \"date\"")}
+		return nil, &ValidationError{Name: "Date", err: errors.New("ent: missing required field \"Date\"")}
 	}
 	var (
 		err  error

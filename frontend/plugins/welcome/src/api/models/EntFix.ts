@@ -77,9 +77,9 @@ export function EntFixFromJSONTyped(json: any, ignoreDiscriminator: boolean): En
         'date': !exists(json, 'date') ? undefined : json['date'],
         'edges': !exists(json, 'edges') ? undefined : EntFixEdgesFromJSON(json['edges']),
         'id': !exists(json, 'id') ? undefined : json['id'],
-        'problemtype': !exists(json, 'problemtype') ? undefined : json['problemtype'],
-        'productnumber': !exists(json, 'productnumber') ? undefined : json['productnumber'],
-        'queue': !exists(json, 'queue') ? undefined : json['queue'],
+        'problemtype': !exists(json, 'Problemtype') ? undefined : json['Problemtype'],
+        'productnumber': !exists(json, 'Productnumber') ? undefined : json['Productnumber'],
+        'queue': !exists(json, 'Queue') ? undefined : json['Queue'],
     };
 }
 

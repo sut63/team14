@@ -21,14 +21,14 @@ type Fix struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
-	// Productnumber holds the value of the "productnumber" field.
-	Productnumber string `json:"productnumber,omitempty"`
-	// Problemtype holds the value of the "problemtype" field.
-	Problemtype string `json:"problemtype,omitempty"`
-	// Queue holds the value of the "queue" field.
-	Queue string `json:"queue,omitempty"`
-	// Date holds the value of the "date" field.
-	Date time.Time `json:"date,omitempty"`
+	// Productnumber holds the value of the "Productnumber" field.
+	Productnumber string `json:"Productnumber,omitempty"`
+	// Problemtype holds the value of the "Problemtype" field.
+	Problemtype string `json:"Problemtype,omitempty"`
+	// Queue holds the value of the "Queue" field.
+	Queue string `json:"Queue,omitempty"`
+	// Date holds the value of the "Date" field.
+	Date time.Time `json:"Date,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the FixQuery when eager-loading is set.
 	Edges         FixEdges `json:"edges"`
@@ -129,10 +129,10 @@ func (e FixEdges) FixcomtypeOrErr() (*Fixcomtype, error) {
 func (*Fix) scanValues() []interface{} {
 	return []interface{}{
 		&sql.NullInt64{},  // id
-		&sql.NullString{}, // productnumber
-		&sql.NullString{}, // problemtype
-		&sql.NullString{}, // queue
-		&sql.NullTime{},   // date
+		&sql.NullString{}, // Productnumber
+		&sql.NullString{}, // Problemtype
+		&sql.NullString{}, // Queue
+		&sql.NullTime{},   // Date
 	}
 }
 
@@ -159,22 +159,22 @@ func (f *Fix) assignValues(values ...interface{}) error {
 	f.ID = int(value.Int64)
 	values = values[1:]
 	if value, ok := values[0].(*sql.NullString); !ok {
-		return fmt.Errorf("unexpected type %T for field productnumber", values[0])
+		return fmt.Errorf("unexpected type %T for field Productnumber", values[0])
 	} else if value.Valid {
 		f.Productnumber = value.String
 	}
 	if value, ok := values[1].(*sql.NullString); !ok {
-		return fmt.Errorf("unexpected type %T for field problemtype", values[1])
+		return fmt.Errorf("unexpected type %T for field Problemtype", values[1])
 	} else if value.Valid {
 		f.Problemtype = value.String
 	}
 	if value, ok := values[2].(*sql.NullString); !ok {
-		return fmt.Errorf("unexpected type %T for field queue", values[2])
+		return fmt.Errorf("unexpected type %T for field Queue", values[2])
 	} else if value.Valid {
 		f.Queue = value.String
 	}
 	if value, ok := values[3].(*sql.NullTime); !ok {
-		return fmt.Errorf("unexpected type %T for field date", values[3])
+		return fmt.Errorf("unexpected type %T for field Date", values[3])
 	} else if value.Valid {
 		f.Date = value.Time
 	}
@@ -256,13 +256,13 @@ func (f *Fix) String() string {
 	var builder strings.Builder
 	builder.WriteString("Fix(")
 	builder.WriteString(fmt.Sprintf("id=%v", f.ID))
-	builder.WriteString(", productnumber=")
+	builder.WriteString(", Productnumber=")
 	builder.WriteString(f.Productnumber)
-	builder.WriteString(", problemtype=")
+	builder.WriteString(", Problemtype=")
 	builder.WriteString(f.Problemtype)
-	builder.WriteString(", queue=")
+	builder.WriteString(", Queue=")
 	builder.WriteString(f.Queue)
-	builder.WriteString(", date=")
+	builder.WriteString(", Date=")
 	builder.WriteString(f.Date.Format(time.ANSIC))
 	builder.WriteByte(')')
 	return builder.String()

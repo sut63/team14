@@ -1,18 +1,27 @@
-import React, {  FC, useState, useEffect } from 'react';
+//style
+import React, { useState, useEffect } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { Content, Header, Page, pageTheme } from '@backstage/core';
 import { FormControl, Select, InputLabel, MenuItem, TextField,Button } from '@material-ui/core';
-import { Alert, AlertTitle } from '@material-ui/lab';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import { Cookies } from '../WelcomePage/Cookie'
+import { DefaultApi } from '../../api/apis';
+//icon
 import AddCircleOutlinedIcon from '@material-ui/icons/AddCircleOutlined';
 import CancelRoundedIcon from '@material-ui/icons/CancelRounded';
-import InputAdornment from '@material-ui/core/InputAdornment';
 import PersonIcon from '@material-ui/icons/Person';
 import ComputerTwoToneIcon from '@material-ui/icons/ComputerTwoTone';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
-import { DefaultApi } from '../../api/apis';
-import { EntPersonal, EntFixcomtype, EntCustomer, EntFixbrand, EntFix} from '../../api';
-import { Cookies } from '../WelcomePage/Cookie'
+//alert
+import Swal from 'sweetalert2';
+//entity
+import { EntPersonal } from '../../api/models/EntPersonal';
+import { EntFixcomtype } from '../../api/models/EntFixcomtype';
+import { EntCustomer } from '../../api/models/EntCustomer';
+import { EntFixbrand } from '../../api/models/EntFixbrand';
+import { EntFix } from '../../api/models/EntFix';
 
+// css style
 const useStyles = makeStyles((theme: Theme) =>
  createStyles({
   root: {
@@ -51,6 +60,19 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
+//alert setting
+const Toast = Swal.mixin({
+  toast: true,
+  position: 'top-end',
+  showConfirmButton: false,
+  timer: 3000,
+  timerProgressBar: true,
+  didOpen: toast => {
+    toast.addEventListener('mouseenter', Swal.stopTimer);
+    toast.addEventListener('mouseleave', Swal.resumeTimer);
+  },
+});
+
 //Cookies
 var ck = new Cookies()
   var cookieName = ck.GetCookie()
@@ -77,6 +99,11 @@ export default function Fixpage() {
 
   const [fixbrands, setFixbrands] = React.useState<EntFixbrand[]>([]);
   const [fixbrand, setFixbrand] = useState(Number);
+
+//validate
+  const [productnumberError, setProductnumberError] = React.useState('');
+  const [problemtypeError, setProblemtypeError] = React.useState('');
+  const [queueError, setQueueError] = React.useState('');
   
   const [status, setStatus] = useState(false);
   const [alert, setAlert] = useState(true);
@@ -122,7 +149,10 @@ export default function Fixpage() {
     setFixs(res);
   };
 
-  const handleProductnumberChange = (event: any) => {
+  const handleProductnumberChange = (event: React.ChangeEvent<{value: any }>) => {
+    const { value } = event.target;
+    const validateValue = value
+    checkPattern('Productnumber', validateValue)
     setProductnumber(event.target.value as string);
   };
 
@@ -130,11 +160,17 @@ export default function Fixpage() {
     setDate(event.target.value as string);
   };
 
-  const handleProblemtypeChange = (event: any) => {
+  const handleProblemtypeChange = (event: React.ChangeEvent<{value: any }>) => {
+    const { value } = event.target;
+    const validateValue = value
+    checkPattern('Problemtype', validateValue)
     setProblemtype(event.target.value as string);
   };
 
-  const handleQueueChange = (event: any) => {
+  const handleQueueChange = (event: React.ChangeEvent<{value: any }>) => {
+    const { value } = event.target;
+    const validateValue = value
+    checkPattern('Queue', validateValue)
     setQueue(event.target.value as string);
   };
   
@@ -154,7 +190,98 @@ export default function Fixpage() {
     setFixbrand(event.target.value as number);
   };
 
-  // create fix
+  //let p = Number(personal)
+
+  const fix = {
+    productnumber : productnumber,
+    date : date + ":00+07:00",
+    problemtype : problemtype,
+    queue : queue,
+    personal : Number(cookieID),
+    customer : customer,
+    fixcomtype : fixcomtype,
+    fixbrand : fixbrand,
+  };
+
+// ฟังก์ชั่นสำหรับ validate หมายเลขผลิตภัณฑ์
+  const validareProductnumber = (val: string)=>{
+    return val;
+  }
+// ฟังก์ชั่นสำหรับ validate รายละเอียดการแจ้งซ่อม
+  const validareProblemtype = (val: string)=>{
+    return val.length >=5 && val.length <=100 ? true : false;
+  }
+// ฟังก์ชั่นสำหรับ validate ลำดับคิว
+  const validareQueue = (val: string)=>{
+    return val.match("[F]+[I]+[X]+[-]") && val.length == 7;
+  }
+
+ // สำหรับตรวจสอบรูปแบบข้อมูลที่กรอก ว่าเป็นไปตามที่กำหนดหรือไม่
+ const checkPattern  = (id: string, value: string) => {
+  switch(id) {
+    case 'Productnumber':
+      validareProductnumber(value) ? setProductnumberError('') : setProductnumberError('กรอกหมายเลขผลิตภัณฑ์ a-z,A-Z,0-9');
+      return;
+    case 'Problemtype':
+      validareProblemtype(value) ? setProblemtypeError('') : setProblemtypeError('กรอกรายละเอียดการแจ้งซ่อม 5 ตัวอักษรขึ้นไป');
+      return;
+    case 'Queue':
+      validareQueue(value) ? setQueueError('') : setQueueError('รูปแบบหมายเลข FIX-XXX')
+      return;
+    default:
+      return;
+  }
+}
+  const alertMessage = (icon: any, title: any) => {
+    Toast.fire({
+      icon: icon,
+      title: title,
+    });
+  }
+  
+  const checkCaseSaveError = (field: string) => {
+    switch(field) {
+      case 'Productnumber':
+        alertMessage("error","กรุณากรอกหมายเลขผลิตภัณฑ์");
+        return;
+      case 'Problemtype':
+        alertMessage("error","กรุณากรอกรายละเอียดการแจ้งซ่อม");
+        return;
+        case 'Queue':
+          alertMessage("error","กรุณากรอกลำดับคิว");
+          return;
+      default:
+        alertMessage("error","บันทึกข้อมูลไม่สำเร็จ");
+        return;
+    }
+  }
+
+  const save = async () => {
+    const apiUrl = 'http://localhost:8080/api/v1/fixs';
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(fix),
+    };
+
+    fetch(apiUrl, requestOptions)
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+        if (data.status === true) {
+          Toast.fire({
+            icon: 'success',
+            title: 'บันทึกข้อมูลสำเร็จ',
+          });
+        } else {
+          checkCaseSaveError(data.error.Name)
+        }
+      });
+  };
+
+
+
+  /*// create fix
 const CreateFix = async () => {
   if ((personal != null) && (customer != null) && (fixcomtype != null) && (fixbrand != null) && (productnumber != "")
       && (date != "") && (problemtype != "") && (queue != "")){
@@ -183,30 +310,19 @@ const CreateFix = async () => {
 const timer = setTimeout(() => {
   setStatus(false);
 }, 3000);
-};
+};*/
 
  return (
-   
    <Page theme={pageTheme.tool}>
      <Header
        title="ระบบบันทึกการแจ้งซ่อมคอมพิวเตอร์" type="ระบบแจ้งซ่อมคอมพิวเตอร์">
       <div>&nbsp;&nbsp;&nbsp;</div>
-      <Button onClick={() => {CreateFix();}} variant="contained"  color="primary" startIcon={<AddCircleOutlinedIcon/>}> เพิ่มข้อมูลการแจ้งซ่อมสินค้า </Button>
+      <Button onClick={() => {save();}} variant="contained"  color="primary" startIcon={<AddCircleOutlinedIcon/>}> เพิ่มข้อมูลการแจ้งซ่อมสินค้า </Button>
       <div>&nbsp;&nbsp;&nbsp;</div>
       <Button style={{ marginLeft: 20 }} component={RouterLink} to="/Tablefix" variant="contained" startIcon={<CancelRoundedIcon/>}> ดูข้อมูล </Button>
      </Header>
 
      <Content>
-     {status ? ( 
-        <div>
-        {alert ? ( 
-            <Alert severity="success"  onClose={() => { }}> 
-              <AlertTitle> บันทึกข้อมูลสำเร็จ </AlertTitle></Alert>) 
-      : (     
-        <Alert severity="error" onClose={() => { setStatus(false) }}> 
-          <AlertTitle> ไม่สามารถบันทึกข้อมูลได้ กรุณาลองใหม่อีกครั้ง </AlertTitle></Alert>)}
-      </div>
-          ) : null}
      <div className={classes.root}>
         <form noValidate autoComplete="off">
           <FormControl
@@ -273,32 +389,15 @@ const timer = setTimeout(() => {
                 </InputAdornment>
               ),
             }}
+            error = {productnumberError ? true : false}
               id="productnumber"
               variant="standard"
               color="secondary"
               type="string"
               size="medium"
+              helperText= {productnumberError}
               value={productnumber}
               onChange={handleProductnumberChange}
-            />
-
-            <div className={classes.paper}><strong>วันที่รับแจ้งซ่อม</strong></div>
-            <TextField 
-            className={classes.textField}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <ComputerTwoToneIcon />
-                </InputAdornment>
-              ),
-            }}
-              id="date"
-              variant="standard"
-              color="secondary"
-              type="datetime-local"
-              size="medium"
-              value={date}
-              onChange={handleDateChange}
             />
 
             <div className={classes.paper}><strong>รายละเอียดการแจ้งซ่อม/ปัญหา</strong></div>
@@ -311,11 +410,13 @@ const timer = setTimeout(() => {
                 </InputAdornment>
               ),
             }}
+            error = {problemtypeError ? true : false}
               id="problemtype"
               variant="standard"
               color="secondary"
               type="string"
               size="medium"
+              helperText= {problemtypeError}
               value={problemtype}
               onChange={handleProblemtypeChange}
             />
@@ -330,11 +431,13 @@ const timer = setTimeout(() => {
                 </InputAdornment>
               ),
             }}
+            error = {queueError ? true : false}
               id="queue"
               variant="standard"
               color="secondary"
               type="string"
               size="medium"
+              helperText= {queueError}
               value={queue}
               onChange={handleQueueChange}
             />

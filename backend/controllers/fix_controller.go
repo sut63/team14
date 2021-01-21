@@ -101,28 +101,33 @@ func (ctl *FixController) CreateFix(c *gin.Context) {
 		})
 		return
 	}
-
-	date, err := time.Parse(time.RFC3339, obj.Date)
+	t1 := time.Now()
+	t2 := t1.Format("2006-01-02T15:04:05Z07:00")
+	time1, err := time.Parse(time.RFC3339, t2)
+	//date, err := time.Parse(time.RFC3339, obj.Date)
 	f, err := ctl.client.Fix.
 		Create().
 		SetProductnumber(obj.Productnumber).
 		SetProblemtype(obj.Problemtype).
-		SetDate(date).
+		SetDate(time1).
 		SetQueue(obj.Queue).
 		SetFixbrand(fb).
 		SetPersonal(p).
 		SetCustomer(cm).
 		SetFixcomtype(ft).
 		Save(context.Background())
-
-	if err != nil {
-		c.JSON(400, gin.H{
-			"error": "saving failed",
+		if err != nil {
+			c.JSON(400, gin.H{
+				"status": false,
+				"error":  err,
+			})
+			return
+		}
+	
+		c.JSON(200, gin.H{
+			"status": true,
+			"data":   f,
 		})
-		return
-	}
-
-	c.JSON(200, f)
 }
 
 // GetFix handles GET requests to retrieve a fix entity

@@ -54,18 +54,60 @@ func init() {
 	}()
 	fixFields := schema.Fix{}.Fields()
 	_ = fixFields
-	// fixDescProductnumber is the schema descriptor for productnumber field.
+	// fixDescProductnumber is the schema descriptor for Productnumber field.
 	fixDescProductnumber := fixFields[0].Descriptor()
-	// fix.ProductnumberValidator is a validator for the "productnumber" field. It is called by the builders before save.
-	fix.ProductnumberValidator = fixDescProductnumber.Validators[0].(func(string) error)
-	// fixDescProblemtype is the schema descriptor for problemtype field.
+	// fix.ProductnumberValidator is a validator for the "Productnumber" field. It is called by the builders before save.
+	fix.ProductnumberValidator = func() func(string) error {
+		validators := fixDescProductnumber.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(_Productnumber string) error {
+			for _, fn := range fns {
+				if err := fn(_Productnumber); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	// fixDescProblemtype is the schema descriptor for Problemtype field.
 	fixDescProblemtype := fixFields[1].Descriptor()
-	// fix.ProblemtypeValidator is a validator for the "problemtype" field. It is called by the builders before save.
-	fix.ProblemtypeValidator = fixDescProblemtype.Validators[0].(func(string) error)
-	// fixDescQueue is the schema descriptor for queue field.
+	// fix.ProblemtypeValidator is a validator for the "Problemtype" field. It is called by the builders before save.
+	fix.ProblemtypeValidator = func() func(string) error {
+		validators := fixDescProblemtype.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(_Problemtype string) error {
+			for _, fn := range fns {
+				if err := fn(_Problemtype); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	// fixDescQueue is the schema descriptor for Queue field.
 	fixDescQueue := fixFields[2].Descriptor()
-	// fix.QueueValidator is a validator for the "queue" field. It is called by the builders before save.
-	fix.QueueValidator = fixDescQueue.Validators[0].(func(string) error)
+	// fix.QueueValidator is a validator for the "Queue" field. It is called by the builders before save.
+	fix.QueueValidator = func() func(string) error {
+		validators := fixDescQueue.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(_Queue string) error {
+			for _, fn := range fns {
+				if err := fn(_Queue); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
 	personalFields := schema.Personal{}.Fields()
 	_ = personalFields
 	// personalDescPersonalname is the schema descriptor for Personalname field.
