@@ -23,9 +23,21 @@ type AdminrepairCreate struct {
 	hooks    []Hook
 }
 
+// SetNumberrepair sets the numberrepair field.
+func (ac *AdminrepairCreate) SetNumberrepair(s string) *AdminrepairCreate {
+	ac.mutation.SetNumberrepair(s)
+	return ac
+}
+
 // SetEquipmentdamate sets the equipmentdamate field.
 func (ac *AdminrepairCreate) SetEquipmentdamate(s string) *AdminrepairCreate {
 	ac.mutation.SetEquipmentdamate(s)
+	return ac
+}
+
+// SetRepairinformation sets the repairinformation field.
+func (ac *AdminrepairCreate) SetRepairinformation(s string) *AdminrepairCreate {
+	ac.mutation.SetRepairinformation(s)
 	return ac
 }
 
@@ -108,12 +120,28 @@ func (ac *AdminrepairCreate) Mutation() *AdminrepairMutation {
 
 // Save creates the Adminrepair in the database.
 func (ac *AdminrepairCreate) Save(ctx context.Context) (*Adminrepair, error) {
+	if _, ok := ac.mutation.Numberrepair(); !ok {
+		return nil, &ValidationError{Name: "numberrepair", err: errors.New("ent: missing required field \"numberrepair\"")}
+	}
+	if v, ok := ac.mutation.Numberrepair(); ok {
+		if err := adminrepair.NumberrepairValidator(v); err != nil {
+			return nil, &ValidationError{Name: "numberrepair", err: fmt.Errorf("ent: validator failed for field \"numberrepair\": %w", err)}
+		}
+	}
 	if _, ok := ac.mutation.Equipmentdamate(); !ok {
 		return nil, &ValidationError{Name: "equipmentdamate", err: errors.New("ent: missing required field \"equipmentdamate\"")}
 	}
 	if v, ok := ac.mutation.Equipmentdamate(); ok {
 		if err := adminrepair.EquipmentdamateValidator(v); err != nil {
 			return nil, &ValidationError{Name: "equipmentdamate", err: fmt.Errorf("ent: validator failed for field \"equipmentdamate\": %w", err)}
+		}
+	}
+	if _, ok := ac.mutation.Repairinformation(); !ok {
+		return nil, &ValidationError{Name: "repairinformation", err: errors.New("ent: missing required field \"repairinformation\"")}
+	}
+	if v, ok := ac.mutation.Repairinformation(); ok {
+		if err := adminrepair.RepairinformationValidator(v); err != nil {
+			return nil, &ValidationError{Name: "repairinformation", err: fmt.Errorf("ent: validator failed for field \"repairinformation\": %w", err)}
 		}
 	}
 	var (
@@ -176,6 +204,14 @@ func (ac *AdminrepairCreate) createSpec() (*Adminrepair, *sqlgraph.CreateSpec) {
 			},
 		}
 	)
+	if value, ok := ac.mutation.Numberrepair(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: adminrepair.FieldNumberrepair,
+		})
+		a.Numberrepair = value
+	}
 	if value, ok := ac.mutation.Equipmentdamate(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
@@ -183,6 +219,14 @@ func (ac *AdminrepairCreate) createSpec() (*Adminrepair, *sqlgraph.CreateSpec) {
 			Column: adminrepair.FieldEquipmentdamate,
 		})
 		a.Equipmentdamate = value
+	}
+	if value, ok := ac.mutation.Repairinformation(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: adminrepair.FieldRepairinformation,
+		})
+		a.Repairinformation = value
 	}
 	if nodes := ac.mutation.ReceiptIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

@@ -44,6 +44,18 @@ export interface EntAdminrepair {
      * @memberof EntAdminrepair
      */
     id?: number;
+    /**
+     * Numberrepair holds the value of the "numberrepair" field.
+     * @type {string}
+     * @memberof EntAdminrepair
+     */
+    numberrepair?: string;
+    /**
+     * Repairinformation holds the value of the "repairinformation" field.
+     * @type {string}
+     * @memberof EntAdminrepair
+     */
+    repairinformation?: string;
 }
 
 export function EntAdminrepairFromJSON(json: any): EntAdminrepair {
@@ -59,6 +71,8 @@ export function EntAdminrepairFromJSONTyped(json: any, ignoreDiscriminator: bool
         'edges': !exists(json, 'edges') ? undefined : EntAdminrepairEdgesFromJSON(json['edges']),
         'equipmentdamate': !exists(json, 'equipmentdamate') ? undefined : json['equipmentdamate'],
         'id': !exists(json, 'id') ? undefined : json['id'],
+        'numberrepair': !exists(json, 'numberrepair') ? undefined : json['numberrepair'],
+        'repairinformation': !exists(json, 'repairinformation') ? undefined : json['repairinformation'],
     };
 }
 
@@ -74,6 +88,8 @@ export function EntAdminrepairToJSON(value?: EntAdminrepair | null): any {
         'edges': EntAdminrepairEdgesToJSON(value.edges),
         'equipmentdamate': value.equipmentdamate,
         'id': value.id,
+        'numberrepair': value.numberrepair,
+        'repairinformation': value.repairinformation,
     };
 }
 

@@ -7,8 +7,12 @@ const (
 	Label = "adminrepair"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
+	// FieldNumberrepair holds the string denoting the numberrepair field in the database.
+	FieldNumberrepair = "numberrepair"
 	// FieldEquipmentdamate holds the string denoting the equipmentdamate field in the database.
 	FieldEquipmentdamate = "equipmentdamate"
+	// FieldRepairinformation holds the string denoting the repairinformation field in the database.
+	FieldRepairinformation = "repairinformation"
 
 	// EdgeReceipt holds the string denoting the receipt edge name in mutations.
 	EdgeReceipt = "receipt"
@@ -54,7 +58,9 @@ const (
 // Columns holds all SQL columns for adminrepair fields.
 var Columns = []string{
 	FieldID,
+	FieldNumberrepair,
 	FieldEquipmentdamate,
+	FieldRepairinformation,
 }
 
 // ForeignKeys holds the SQL foreign-keys that are owned by the Adminrepair type.
@@ -65,6 +71,10 @@ var ForeignKeys = []string{
 }
 
 var (
+	// NumberrepairValidator is a validator for the "numberrepair" field. It is called by the builders before save.
+	NumberrepairValidator func(string) error
 	// EquipmentdamateValidator is a validator for the "equipmentdamate" field. It is called by the builders before save.
 	EquipmentdamateValidator func(string) error
+	// RepairinformationValidator is a validator for the "repairinformation" field. It is called by the builders before save.
+	RepairinformationValidator func(string) error
 )

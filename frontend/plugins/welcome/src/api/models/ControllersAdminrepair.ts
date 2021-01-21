@@ -33,6 +33,12 @@ export interface ControllersAdminrepair {
     fix?: number;
     /**
      * 
+     * @type {string}
+     * @memberof ControllersAdminrepair
+     */
+    numberrepair?: string;
+    /**
+     * 
      * @type {number}
      * @memberof ControllersAdminrepair
      */
@@ -43,6 +49,12 @@ export interface ControllersAdminrepair {
      * @memberof ControllersAdminrepair
      */
     product?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ControllersAdminrepair
+     */
+    repairinformation?: string;
 }
 
 export function ControllersAdminrepairFromJSON(json: any): ControllersAdminrepair {
@@ -57,8 +69,10 @@ export function ControllersAdminrepairFromJSONTyped(json: any, ignoreDiscriminat
         
         'equipmentdamate': !exists(json, 'equipmentdamate') ? undefined : json['equipmentdamate'],
         'fix': !exists(json, 'fix') ? undefined : json['fix'],
+        'numberrepair': !exists(json, 'numberrepair') ? undefined : json['numberrepair'],
         'personal': !exists(json, 'personal') ? undefined : json['personal'],
         'product': !exists(json, 'product') ? undefined : json['product'],
+        'repairinformation': !exists(json, 'repairinformation') ? undefined : json['repairinformation'],
     };
 }
 
@@ -73,8 +87,10 @@ export function ControllersAdminrepairToJSON(value?: ControllersAdminrepair | nu
         
         'equipmentdamate': value.equipmentdamate,
         'fix': value.fix,
+        'numberrepair': value.numberrepair,
         'personal': value.personal,
         'product': value.product,
+        'repairinformation': value.repairinformation,
     };
 }
 

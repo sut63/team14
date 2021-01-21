@@ -1,6 +1,9 @@
 package schema
 
 import (
+	"errors"
+	"regexp"
+
 	"github.com/facebookincubator/ent"
 	"github.com/facebookincubator/ent/schema/edge"
 	"github.com/facebookincubator/ent/schema/field"
@@ -14,7 +17,15 @@ type Adminrepair struct {
 // Fields of the Adminrepair.
 func (Adminrepair) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("equipmentdamate").NotEmpty(),
+		field.String("numberrepair").Unique().MaxLen(6).Validate(func(amp string) error {
+			match, _ := regexp.MatchString("[A]+[M]+[P]+[-]+[0-9]+[0-9]", amp)
+			if !match {
+				return errors.New("รูปแบบรหัสบัตรคิวของ บันทึกซ่อมแซมคอมพิวเตอร์ของพนักงงานไม่ถูกต้อง")
+			}
+			return nil
+		}),
+		field.String("equipmentdamate").MaxLen(75).MinLen(5),
+		field.String("repairinformation").MaxLen(500).MinLen(10),
 	}
 }
 

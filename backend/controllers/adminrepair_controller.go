@@ -20,10 +20,12 @@ type AdminrepairController struct {
 }
 
 type Adminrepair struct {
-	Personal        int
-	Fix             int
-	Product         int
-	Equipmentdamate string
+	Personal          int
+	Fix               int
+	Product           int
+	Equipmentdamate   string
+	Numberrepair      string
+	Repairinformation string
 }
 
 // CreateAdminrepair handles POST requests for adding adminrepair entities
@@ -84,19 +86,27 @@ func (ctl *AdminrepairController) CreateAdminrepair(c *gin.Context) {
 
 	a, err := ctl.client.Adminrepair.
 		Create().
+		SetNumberrepair(obj.Numberrepair).
+		SetEquipmentdamate(obj.Equipmentdamate).
+		SetRepairinformation(obj.Repairinformation).
 		SetAdminrepairPersonal(p).
 		SetAdminrepairFix(f).
-		SetEquipmentdamate(obj.Equipmentdamate).
 		SetAdminrepairProduct(pd).
 		Save(context.Background())
+
 	if err != nil {
+		fmt.Println(err)
 		c.JSON(400, gin.H{
-			"error": "saving failed",
+			"status": false,
+			"error":  err,
 		})
 		return
 	}
 
-	c.JSON(200, a)
+	c.JSON(200, gin.H{
+		"status": true,
+		"error":  a,
+	})
 }
 
 // GetAdminrepair handles GET requests to retrieve a adminrepair entity

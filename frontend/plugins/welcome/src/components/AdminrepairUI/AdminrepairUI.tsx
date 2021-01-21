@@ -25,6 +25,7 @@ import AdminrepairTable from '../AdminrepairTable';
 import AdminrepairFixTable from '../AdminrepairFixTable';
 import AdminrepairProductTable from '../AdminrepairProductTable';
 import { Cookies } from '../WelcomePage/Cookie'
+import Swal from 'sweetalert2';
 
 const HeaderCustom = {
   minHeight: '50px',
@@ -55,12 +56,12 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
+
+  export default function AdminrepairCreate(){
+  //const UI = { giveName : 'Confirmation'}
   var ck = new Cookies()
   var cookieName = ck.GetCookie()
   var cookieID = ck.GetID()
-
-const Adminrepair: FC<{}> = () =>{
-  //const UI = { giveName : 'Confirmation'}
   const classes = useStyles();
   const api = new DefaultApi();
   const [loading, setLoading] = useState(true);
@@ -76,8 +77,13 @@ const Adminrepair: FC<{}> = () =>{
 
   const [fixid, setFixID] = useState(Number);
   const [equipmentdamate, setEquipmentdamate] = useState(String);
+  const [numberrepair, setNumberrepair] = useState(String);
+  const [repairinformation, setRepairinformation] = useState(String);
   const [productid, setProductID] = useState(Number);
 
+  const [equipmentdamateError, setEquipmentdamateError] = useState('');
+  const [numberrepairError, setNumberrepairError] = useState('');
+  const [repairinformationError, setRepairinformationError] = useState('');
   useEffect(() =>{
     const getFixs = async () =>{
         const res = await api.listFix({limit:10,offset:0});
@@ -95,17 +101,67 @@ const Adminrepair: FC<{}> = () =>{
     
   },[loading]);
 
-  
-  const Equipmentdamatehandlechange = (event: any) => {
-    setEquipmentdamate(event.target.value as string);
+  const Toast = Swal.mixin({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 5000,
+    timerProgressBar: true,
+    didOpen: toast => {
+      toast.addEventListener('mouseenter', Swal.stopTimer);
+      toast.addEventListener('mouseleave', Swal.resumeTimer);
+    },
+  });
+
+  const alertMessage = (icon: any, title: any) => {
+    Toast.fire({
+      icon: icon,
+      title: title,
+    });
   }
 
-  const Fixhandlechange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setFixID(event.target.value as number);
+  const validareEquipmentdamate = (val: string)=>{
+    return val.length <= 20 && val.length >= 5  ? true : false;
   }
 
-  const Producthandlechange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setProductID(event.target.value as number);
+  const validareRepairinformation = (val: string)=>{
+    return val.length <= 100 && val.length >= 10  ? true : false;
+  }
+
+  const validareNumberrepair = (val: string)=>{
+    return val.match("[A]+[M]+[P]+[-]+[0-9]+[0-9]") && val.length == 6;
+  }
+  const checkPattern = (id:string,value:string)=>{
+    switch(id) {
+      case 'equipmentdamate':
+        validareEquipmentdamate(value) ? setEquipmentdamateError('') : setEquipmentdamateError('ความยาวของตัวอักษร 5-20 ตัวอักษร');
+        return;
+      case 'numberrepair':
+        validareNumberrepair(value) ? setNumberrepairError('') : setNumberrepairError('รูปแบบหมายเลข AMP-XX');
+        return;
+      case 'repairinformation':
+        validareRepairinformation(value) ? setRepairinformationError('') : setRepairinformationError('ความยาวของตัวอักษร 10-100 ตัวอักษร');
+          return;
+      default:
+        return;
+    }
+  }
+
+  const checkCaseSaveError = (field: string) => {
+    switch(field) {
+      case 'equipmentdamate':
+        alertMessage("error","ความยาวของ ความเสียหายที่พบ ไม่ถูกต้อง กรุณากรอกใหม่");
+        return;
+      case 'repairinformation':
+          alertMessage("error","ความยาวของ รายละเอียดการซ่อม ไม่ถูกต้อง กรุณากรอกใหม่");
+          return;
+      case 'numberrepair':
+        alertMessage("error","รูปแบบหมายเลขบันทึกซ่อมแซมของพนักงงานไม่ถูกต้อง กรุณากรอกใหม่");
+        return;
+      default:
+        alertMessage("error","มีข้อมูลบางอย่างไม่ถูกต้อง กรุณากรอกข้อมูลใหม่ อีกครั้ง!!!");
+        return;
+    }
   }
 
   const CheckTableAdminrepair = (event: any) => {
@@ -123,21 +179,97 @@ const Adminrepair: FC<{}> = () =>{
     setFixtable(false)
     setProducttable(true)
   }
+
   
+  const Equipmentdamatehandlechange = (event: React.ChangeEvent<{value: any }>) => {
+    const { value } = event.target;
+    const validateValue = value
+    checkPattern('equipmentdamate', validateValue)
+    setEquipmentdamate(event.target.value as string);
+  }
+  const Repairinformationhandlechange = (event: React.ChangeEvent<{value: any }>) => {
+    const { value } = event.target;
+    const validateValue = value
+    checkPattern('repairinformation', validateValue)
+    setRepairinformation(event.target.value as string);
+  }
+
+  const Numberrepairhandlechange = (event: React.ChangeEvent<{value: any }>) => {
+    const { value } = event.target;
+    const validateValue = value
+    checkPattern('numberrepair', validateValue)
+    setNumberrepair(event.target.value as string);
+  }
+
+  const Fixhandlechange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    setFixID(event.target.value as number);
+  }
+
+  const Producthandlechange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    setProductID(event.target.value as number);
+  }
+
+  const Adminrepair = {
+    personal :  Number(cookieID),
+    fix : fixid,
+    equipmentdamate : equipmentdamate,
+    repairinformation : repairinformation,
+    product : productid,
+    numberrepair : numberrepair,
+  };
+
+  function CreateAdminrepair() {
+    const apiUrl = 'http://localhost:8080/api/v1/adminrepairs';
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(Adminrepair),
+    };
+  
+    console.log(Adminrepair);
+  
+    fetch(apiUrl, requestOptions)
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+        if (data.status == true) {
+          //clear();
+          Toast.fire({
+            icon: 'success',
+            title: 'บันทึกข้อมูลสำเร็จ',
+  
+          });//window.setTimeout(function(){location.reload()},8000);
+          const timer = setTimeout(() => {
+            window.location.reload(false);
+         }, 5000);
+        } else {
+          checkCaseSaveError(data.error.Name)
+        }
+      });
+      const timer = setTimeout(() => {
+        setStatus(false);
+      }, 5000);
+    };
+
+
+
+    /*
   const CreateAdminrepair = async ()=>{
-    if ((fixid != null)  && (equipmentdamate != null) && (equipmentdamate != "") && (productid != null) ){
+    if ((fixid != null)  && (equipmentdamate != null) && (equipmentdamate != "") && (productid != null) && (numberrepair != null) && (numberrepair != "")){
     const Adminrepair = {
       personal :  Number(cookieID),
       fix : fixid,
       equipmentdamate : equipmentdamate,
       product : productid,
+      numberrepair : numberrepair,
     };
+    
+    
     console.log(Adminrepair);
-    setStatus(true);
-    setAlert(false);
     const res: any = await api.createAdminrepair({ adminrepair : Adminrepair});
-    setAlert(true);
+    setStatus(true);
       if (res.id != '') {
+        setAlert(true);
         const timer = setTimeout(() => {
           window.location.reload(false);
        }, 3000);
@@ -147,7 +279,8 @@ const Adminrepair: FC<{}> = () =>{
       setAlert(false);
     }
     
-  }
+  }*/
+  
 
   return (
     <Page theme={pageTheme.home}>
@@ -207,6 +340,25 @@ const Adminrepair: FC<{}> = () =>{
       <Container maxWidth="sm">
         <Grid container spacing={3}>
           <Grid item xs={12}></Grid>
+
+          <Grid item xs={3}>
+            <div className={classes.paper}>หมายเลขบันทึกซ่อมแซมคอมพิวเตอร์ของพนักงาน</div>
+          </Grid>
+          <Grid item xs={9}>
+            <TextField 
+            style={{ width: 300}}
+            error = {numberrepairError ? true : false}
+            id="numberrepair" 
+            label="กรุณากรอกหมายเลข" 
+            variant="standard"
+            type="string"
+            size="medium"
+            helperText= {numberrepairError}
+            value={numberrepair}
+            onChange = {Numberrepairhandlechange}/>
+          </Grid>
+
+
           <Grid item xs={3}>
             <div className={classes.paper}>หมายเลข บันทึกแจ้งซ่อมแซมคอมพิวเตอร์</div>
           </Grid>
@@ -221,7 +373,7 @@ const Adminrepair: FC<{}> = () =>{
                 {fixs.map(item => {
                   return (
                     <MenuItem key={item.id} value={item.id}>
-                      {item.id}
+                      {item.queue}
                     </MenuItem>
                   );
                 })}
@@ -230,16 +382,18 @@ const Adminrepair: FC<{}> = () =>{
           </Grid>
 
           <Grid item xs={3}>
-            <div className={classes.paper}>ความเสียหาย</div>
+            <div className={classes.paper}>ความเสียหายที่พบ</div>
           </Grid>
           <Grid item xs={9}>
             <TextField 
             style={{ width: 300}}
+            error = {equipmentdamateError ? true : false}
             id="equipmentdamate" 
             label="กรุณากรอกข้อมูลความเสียหาย" 
             variant="standard"
             type="string"
             size="medium"
+            helperText= {equipmentdamateError}
             value={equipmentdamate}
             onChange = {Equipmentdamatehandlechange}/>
           </Grid>
@@ -266,6 +420,25 @@ const Adminrepair: FC<{}> = () =>{
             </FormControl>
           </Grid>
 
+          <Grid item xs={3}>
+            <div className={classes.paper}>รายละเอียดการซ่อม</div>
+          </Grid>
+          <Grid item xs={9}>
+            <TextField 
+            style={{ width: 300}}
+            error = {repairinformationError ? true : false}
+            id="equipmentdamate" 
+            label="กรุณากรอกข้อมูลความเสียหาย" 
+            multiline
+            rows={4}
+            type="string"
+            size="medium"
+            helperText= {repairinformationError}
+            value={repairinformation}
+            onChange = {Repairinformationhandlechange}/>
+          </Grid>
+
+
           <Grid item xs={3}></Grid>
           <Grid item xs={12}>
             <Button
@@ -287,4 +460,3 @@ const Adminrepair: FC<{}> = () =>{
   </Page>
   );
 };
-export default Adminrepair;

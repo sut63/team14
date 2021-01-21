@@ -58,7 +58,9 @@ type AdminrepairMutation struct {
 	op                          Op
 	typ                         string
 	id                          *int
+	numberrepair                *string
 	equipmentdamate             *string
+	repairinformation           *string
 	clearedFields               map[string]struct{}
 	receipt                     map[int]struct{}
 	removedreceipt              map[int]struct{}
@@ -151,6 +153,43 @@ func (m *AdminrepairMutation) ID() (id int, exists bool) {
 	return *m.id, true
 }
 
+// SetNumberrepair sets the numberrepair field.
+func (m *AdminrepairMutation) SetNumberrepair(s string) {
+	m.numberrepair = &s
+}
+
+// Numberrepair returns the numberrepair value in the mutation.
+func (m *AdminrepairMutation) Numberrepair() (r string, exists bool) {
+	v := m.numberrepair
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldNumberrepair returns the old numberrepair value of the Adminrepair.
+// If the Adminrepair object wasn't provided to the builder, the object is fetched
+// from the database.
+// An error is returned if the mutation operation is not UpdateOne, or database query fails.
+func (m *AdminrepairMutation) OldNumberrepair(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldNumberrepair is allowed only on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldNumberrepair requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldNumberrepair: %w", err)
+	}
+	return oldValue.Numberrepair, nil
+}
+
+// ResetNumberrepair reset all changes of the "numberrepair" field.
+func (m *AdminrepairMutation) ResetNumberrepair() {
+	m.numberrepair = nil
+}
+
 // SetEquipmentdamate sets the equipmentdamate field.
 func (m *AdminrepairMutation) SetEquipmentdamate(s string) {
 	m.equipmentdamate = &s
@@ -186,6 +225,43 @@ func (m *AdminrepairMutation) OldEquipmentdamate(ctx context.Context) (v string,
 // ResetEquipmentdamate reset all changes of the "equipmentdamate" field.
 func (m *AdminrepairMutation) ResetEquipmentdamate() {
 	m.equipmentdamate = nil
+}
+
+// SetRepairinformation sets the repairinformation field.
+func (m *AdminrepairMutation) SetRepairinformation(s string) {
+	m.repairinformation = &s
+}
+
+// Repairinformation returns the repairinformation value in the mutation.
+func (m *AdminrepairMutation) Repairinformation() (r string, exists bool) {
+	v := m.repairinformation
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldRepairinformation returns the old repairinformation value of the Adminrepair.
+// If the Adminrepair object wasn't provided to the builder, the object is fetched
+// from the database.
+// An error is returned if the mutation operation is not UpdateOne, or database query fails.
+func (m *AdminrepairMutation) OldRepairinformation(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldRepairinformation is allowed only on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldRepairinformation requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldRepairinformation: %w", err)
+	}
+	return oldValue.Repairinformation, nil
+}
+
+// ResetRepairinformation reset all changes of the "repairinformation" field.
+func (m *AdminrepairMutation) ResetRepairinformation() {
+	m.repairinformation = nil
 }
 
 // AddReceiptIDs adds the receipt edge to Receipt by ids.
@@ -361,9 +437,15 @@ func (m *AdminrepairMutation) Type() string {
 // this mutation. Note that, in order to get all numeric
 // fields that were in/decremented, call AddedFields().
 func (m *AdminrepairMutation) Fields() []string {
-	fields := make([]string, 0, 1)
+	fields := make([]string, 0, 3)
+	if m.numberrepair != nil {
+		fields = append(fields, adminrepair.FieldNumberrepair)
+	}
 	if m.equipmentdamate != nil {
 		fields = append(fields, adminrepair.FieldEquipmentdamate)
+	}
+	if m.repairinformation != nil {
+		fields = append(fields, adminrepair.FieldRepairinformation)
 	}
 	return fields
 }
@@ -373,8 +455,12 @@ func (m *AdminrepairMutation) Fields() []string {
 // not set, or was not define in the schema.
 func (m *AdminrepairMutation) Field(name string) (ent.Value, bool) {
 	switch name {
+	case adminrepair.FieldNumberrepair:
+		return m.Numberrepair()
 	case adminrepair.FieldEquipmentdamate:
 		return m.Equipmentdamate()
+	case adminrepair.FieldRepairinformation:
+		return m.Repairinformation()
 	}
 	return nil, false
 }
@@ -384,8 +470,12 @@ func (m *AdminrepairMutation) Field(name string) (ent.Value, bool) {
 // or the query to the database was failed.
 func (m *AdminrepairMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
 	switch name {
+	case adminrepair.FieldNumberrepair:
+		return m.OldNumberrepair(ctx)
 	case adminrepair.FieldEquipmentdamate:
 		return m.OldEquipmentdamate(ctx)
+	case adminrepair.FieldRepairinformation:
+		return m.OldRepairinformation(ctx)
 	}
 	return nil, fmt.Errorf("unknown Adminrepair field %s", name)
 }
@@ -395,12 +485,26 @@ func (m *AdminrepairMutation) OldField(ctx context.Context, name string) (ent.Va
 // type mismatch the field type.
 func (m *AdminrepairMutation) SetField(name string, value ent.Value) error {
 	switch name {
+	case adminrepair.FieldNumberrepair:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetNumberrepair(v)
+		return nil
 	case adminrepair.FieldEquipmentdamate:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetEquipmentdamate(v)
+		return nil
+	case adminrepair.FieldRepairinformation:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetRepairinformation(v)
 		return nil
 	}
 	return fmt.Errorf("unknown Adminrepair field %s", name)
@@ -452,8 +556,14 @@ func (m *AdminrepairMutation) ClearField(name string) error {
 // defined in the schema.
 func (m *AdminrepairMutation) ResetField(name string) error {
 	switch name {
+	case adminrepair.FieldNumberrepair:
+		m.ResetNumberrepair()
+		return nil
 	case adminrepair.FieldEquipmentdamate:
 		m.ResetEquipmentdamate()
+		return nil
+	case adminrepair.FieldRepairinformation:
+		m.ResetRepairinformation()
 		return nil
 	}
 	return fmt.Errorf("unknown Adminrepair field %s", name)

@@ -11,7 +11,9 @@ var (
 	// AdminrepairsColumns holds the columns for the "adminrepairs" table.
 	AdminrepairsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
-		{Name: "equipmentdamate", Type: field.TypeString},
+		{Name: "numberrepair", Type: field.TypeString, Unique: true, Size: 6},
+		{Name: "equipmentdamate", Type: field.TypeString, Size: 75},
+		{Name: "repairinformation", Type: field.TypeString, Size: 500},
 		{Name: "fix_id", Type: field.TypeInt, Unique: true, Nullable: true},
 		{Name: "personal_id", Type: field.TypeInt, Nullable: true},
 		{Name: "product_id", Type: field.TypeInt, Nullable: true},
@@ -24,21 +26,21 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:  "adminrepairs_fixes_fix",
-				Columns: []*schema.Column{AdminrepairsColumns[2]},
+				Columns: []*schema.Column{AdminrepairsColumns[4]},
 
 				RefColumns: []*schema.Column{FixesColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:  "adminrepairs_personals_personal",
-				Columns: []*schema.Column{AdminrepairsColumns[3]},
+				Columns: []*schema.Column{AdminrepairsColumns[5]},
 
 				RefColumns: []*schema.Column{PersonalsColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:  "adminrepairs_products_product",
-				Columns: []*schema.Column{AdminrepairsColumns[4]},
+				Columns: []*schema.Column{AdminrepairsColumns[6]},
 
 				RefColumns: []*schema.Column{ProductsColumns[0]},
 				OnDelete:   schema.SetNull,

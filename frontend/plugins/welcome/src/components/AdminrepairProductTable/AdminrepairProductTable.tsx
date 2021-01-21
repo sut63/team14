@@ -9,7 +9,7 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import { DefaultApi } from '../../api/apis';
 import { EntProduct } from '../../api/models/EntProduct';
- 
+
 const useStyles = makeStyles({
  table: {
    minWidth: 650,
@@ -38,9 +38,9 @@ export default function ComponentsTable() {
        <TableHead>
          <TableRow>
            <TableCell align="center">No.</TableCell>
-           <TableCell align="center">Product Name</TableCell>
-           <TableCell align="center">Product type</TableCell>
-           <TableCell align="center">Product brand</TableCell>
+           <TableCell align="center">ชื่อ อะไหล่</TableCell>
+           <TableCell align="center">ประเภทอะไหล่</TableCell>
+           <TableCell align="center">แบรนด์สินค้า</TableCell>
          </TableRow>
        </TableHead>
        <TableBody>
