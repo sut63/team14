@@ -18,6 +18,12 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import Typography from '@material-ui/core/Typography';
 import { Cookies } from '../WelcomePage/Cookie'
+import Swal from 'sweetalert2';
+import Product from '.';
+import SaveIcon from '@material-ui/icons/Save';
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
+import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
+import LocalOfferIcon from '@material-ui/icons/LocalOffer';
 
 import { DefaultApi } from '../../api/apis';
 import { EntBrand } from '../../api/models/EntBrand'; // import interface Brand
@@ -51,8 +57,23 @@ const useStyles = makeStyles((theme: Theme) =>
       marginBottom: theme.spacing(1),
       marginLeft: theme.spacing(1),
     },
+    pa: {
+      marginTop: theme.spacing(2),
+    },
   }),
 );
+
+const Toast = Swal.mixin({
+  toast: true,
+  position: 'top-end',
+  showConfirmButton: false,
+  timer: 3000,
+  timerProgressBar: true,
+  didOpen: toast => {
+    toast.addEventListener('mouseenter', Swal.stopTimer);
+    toast.addEventListener('mouseleave', Swal.resumeTimer);
+  },
+});
 
 var ck = new Cookies()
 var cookieName = ck.GetCookie()
@@ -60,16 +81,16 @@ var cookieID = ck.GetID()
 
 export default function CreateProductRecord() {
   const classes = useStyles();
-  const api = new DefaultApi();
+  const http = new DefaultApi();
   
   const [products, setProduct] = React.useState<EntProduct[]>([]);
- 
   const [brands, setBrands] = React.useState<EntBrand[]>([]);
   const [typeproducts, setTypeproducts] = React.useState<EntTypeproduct[]>([]);
   const [personals, setPersonals] = React.useState<EntPersonal[]>([]);
 
   const [status, setStatus] = useState(false);
   const [alert, setAlert] = useState(true);
+  const [alert2, setAlerts] = useState(true);
   const [loading, setLoading] = useState(true);
  
   const [productname, setProductName] = useState(String);
@@ -82,36 +103,33 @@ export default function CreateProductRecord() {
 
   useEffect(() => {
     const getBrands = async () => {
-      const res = await api.listBrand({ limit: 10, offset: 0 });
+      const b = await http.listBrand({ limit: 10, offset: 0 });
       setLoading(false);
-      setBrands(res);
-      console.log(res);
+      setBrands(b);
     };
     getBrands();
   
     const getTypeproducts = async () => {
-      const res = await api.listTypeproduct({ limit: 10, offset: 0 });
+      const t = await http.listTypeproduct({ limit: 10, offset: 0 });
       setLoading(false);
-      setTypeproducts(res);
-      console.log(res);
+      setTypeproducts(t);
     };
     getTypeproducts();
   
     const getPersonals = async () => {
-      const res = await api.listPersonal({ limit: 10, offset: 0 });
+      const p = await http.listPersonal({ limit: 10, offset: 0 });
       setLoading(false);
-      setPersonals(res);
-      console.log(res);
+      setPersonals(p);
     };
     getPersonals();
   
   }, [loading]);
   
   
-  const getProduct = async () => {
-    const res = await api.listProduct({ limit: 10, offset: 0 });
+  /*const getProduct = async () => {
+    const res = await http.listProduct({ limit: 10, offset: 0 });
     setProduct(res);
-  };
+  };*/
   
   const handleproductnameChange = (event: any) => {
     setProductName(event.target.value as string);
@@ -133,7 +151,75 @@ export default function CreateProductRecord() {
     setTypeproduct(event.target.value as number);
   };
   
-  // create product
+  let p = Number(personal)
+
+  const product = {
+   productname : productname,
+   numberofproduct : numberofproduct,
+   price : price,
+   brand : brand,
+   personal : Number(cookieID),
+   typeproduct : typeproduct,
+   };
+ 
+   const alertMessage = (icon: any, title: any) => {
+     Toast.fire({
+       icon: icon,
+       title: title,
+     });
+   }
+ 
+   const checkCaseSaveError = (field: string) => {
+     switch(field) {
+       case 'Productname':
+         alertMessage("error","กรุณากรอกชื่อสินค้า");
+         return;
+       case 'Numberofproduct':
+         alertMessage("error","กรุณากรอกจำนวนสินค้า");
+         return;
+       case 'Price':
+         alertMessage("error","รูปแบบของราคาสินค้าไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง");
+         return;
+       default:
+         alertMessage("error","บันทึกข้อมูลไม่สำเร็จ");
+         return;
+     }
+   }
+ 
+   console.log(product)
+ function save() {
+   const apiUrl = 'http://localhost:8080/api/v1/products';
+   const requestOptions = {
+     method: 'POST',
+     headers: { 'Content-Type': 'application/json' },
+     body: JSON.stringify(product),
+   };
+ 
+   console.log(product); // log ดูข้อมูล สามารถ Inspect ดูข้อมูลได้ F12 เลือก Tab Console
+ 
+   fetch(apiUrl, requestOptions)
+     .then(response => response.json())
+     .then(data => {
+       console.log(data);
+       if (data.status == true) {
+         //clear();
+         Toast.fire({
+           icon: 'success',
+           title: 'บันทึกข้อมูลสำเร็จ',
+ 
+         });//window.setTimeout(function(){location.reload()},8000);
+       } else {
+         checkCaseSaveError(data.error.Name)
+       }
+     });
+ 
+     
+     const timer = setTimeout(() => {
+       setStatus(false);
+     }, 1000);
+   };
+
+  /*// create product
   const CreateProduct = async () => {
     if ((productname != null) && (productname != "") && (numberofproduct != null) && (numberofproduct != "") && (price != null) && (price != "") && (brand != null) && (typeproduct != null)  && (personal != null) ) {
     
@@ -146,7 +232,7 @@ export default function CreateProductRecord() {
       personal : Number(cookieID),
     };
     console.log(products);
-    const res: any = await api.createProduct({ product: product });
+    const res: any = await http.createProduct({ product: product });
    
     setStatus(true);
     if (res.id != '') {
@@ -157,7 +243,7 @@ export default function CreateProductRecord() {
       setStatus(true);
       setAlert(false);
     }
-};
+};*/
 
   return (
     <Page theme={pageTheme.tool}>
@@ -174,23 +260,13 @@ export default function CreateProductRecord() {
             component={RouterLink} 
             to="/Producttables" 
             variant="contained"
+            startIcon={<ArrowBackIosIcon />}
             color="primary"
             > 
              ย้อนกลับ 
             </Button>
           </Link>
           </div>
-
-          {status ? ( 
-        <div>
-        {alert ? ( 
-            <Alert severity="success"  onClose={() => { }}> 
-              <AlertTitle> บันทึกข้อมูลสำเร็จ </AlertTitle></Alert>) 
-      : (     
-        <Alert severity="error" onClose={() => { setStatus(false) }}> 
-          <AlertTitle> ไม่สามารถบันทึกข้อมูลได้ กรุณาลองใหม่อีกครั้ง </AlertTitle></Alert>)}
-      </div>
-          ) : null}
         </ContentHeader>
 
         <div className={classes.root}>
@@ -204,6 +280,7 @@ export default function CreateProductRecord() {
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
+                    <LocalOfferIcon />
                   </InputAdornment>
                 ),
               }}
@@ -242,6 +319,7 @@ export default function CreateProductRecord() {
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
+                    <MonetizationOnIcon />
                   </InputAdornment>
                 ),
               }}
@@ -303,19 +381,23 @@ export default function CreateProductRecord() {
             </FormControl>
             </div>
 
+           
+
             <div className={classes.margin}>
                 <Typography variant="h6" gutterBottom  align="center">
                   <Button
                     onClick={() => {
-                      CreateProduct();
+                      save();
                     }}
                       variant="contained"
+                      startIcon={<SaveIcon />}
                       color="primary"
                   >
                     Submit
                   </Button>
                 </Typography>
               </div>
+              
               </FormControl>
           </form>
         </div>

@@ -18,8 +18,7 @@ func (Product) Fields() []ent.Field {
 			NotEmpty(),
 		field.String("Numberofproduct").
 			NotEmpty(),
-		field.String("Price").
-			NotEmpty(),
+		field.String("Price").MinLen(3),
 	}
 }
 

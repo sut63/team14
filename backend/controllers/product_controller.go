@@ -82,7 +82,7 @@ func (ctl *ProductController) CreateProduct(c *gin.Context) {
 		return
 	}
 
-	pr, err := ctl.client.Product.
+	pi, err := ctl.client.Product.
 		Create().
 		SetProductname(obj.Productname).
 		SetNumberofproduct(obj.Numberofproduct).
@@ -91,15 +91,19 @@ func (ctl *ProductController) CreateProduct(c *gin.Context) {
 		SetTypeproduct(t).
 		SetPersonal(p).
 		Save(context.Background())
-	if err != nil {
-		c.JSON(400, gin.H{
-			"error": "saving failed",
+		if err != nil {
+			c.JSON(400, gin.H{
+				"status": false,
+				"error":  err,
+			})
+			return
+		}
+	
+		c.JSON(200, gin.H{
+			"status": true,
+			"data":   pi,
 		})
-		return
 	}
-
-	c.JSON(200, pr)
-}
 
 // DeleteProduct handles DELETE requests to delete a product entity
 // @Summary Delete a product entity by ID
