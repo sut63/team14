@@ -27,6 +27,12 @@ export interface ControllersReceipt {
     added?: string;
     /**
      * 
+     * @type {string}
+     * @memberof ControllersReceipt
+     */
+    address?: string;
+    /**
+     * 
      * @type {number}
      * @memberof ControllersReceipt
      */
@@ -55,6 +61,18 @@ export interface ControllersReceipt {
      * @memberof ControllersReceipt
      */
     product?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ControllersReceipt
+     */
+    productname?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ControllersReceipt
+     */
+    serviceprovider?: string;
 }
 
 export function ControllersReceiptFromJSON(json: any): ControllersReceipt {
@@ -68,11 +86,14 @@ export function ControllersReceiptFromJSONTyped(json: any, ignoreDiscriminator: 
     return {
         
         'added': !exists(json, 'added') ? undefined : json['added'],
+        'address': !exists(json, 'address') ? undefined : json['address'],
         'adminrepair': !exists(json, 'adminrepair') ? undefined : json['adminrepair'],
         'customer': !exists(json, 'customer') ? undefined : json['customer'],
         'paymentType': !exists(json, 'paymentType') ? undefined : json['paymentType'],
         'personal': !exists(json, 'personal') ? undefined : json['personal'],
         'product': !exists(json, 'product') ? undefined : json['product'],
+        'productname': !exists(json, 'productname') ? undefined : json['productname'],
+        'serviceprovider': !exists(json, 'serviceprovider') ? undefined : json['serviceprovider'],
     };
 }
 
@@ -86,11 +107,14 @@ export function ControllersReceiptToJSON(value?: ControllersReceipt | null): any
     return {
         
         'added': value.added,
+        'address': value.address,
         'adminrepair': value.adminrepair,
         'customer': value.customer,
         'paymentType': value.paymentType,
         'personal': value.personal,
         'product': value.product,
+        'productname': value.productname,
+        'serviceprovider': value.serviceprovider,
     };
 }
 

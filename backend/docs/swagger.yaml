@@ -94,6 +94,8 @@ definitions:
     properties:
       added:
         type: string
+      address:
+        type: string
       adminrepair:
         type: integer
       customer:
@@ -104,6 +106,10 @@ definitions:
         type: integer
       product:
         type: integer
+      productname:
+        type: string
+      serviceprovider:
+        type: string
     type: object
   controllers.Title:
     type: object
@@ -130,13 +136,11 @@ definitions:
         type: object
       adminrepairPersonal:
         $ref: '#/definitions/ent.Personal'
-        description: AdminrepairPersonal holds the value of the AdminrepairPersonal
-          edge.
+        description: AdminrepairPersonal holds the value of the AdminrepairPersonal edge.
         type: object
       adminrepairProduct:
         $ref: '#/definitions/ent.Product'
-        description: AdminrepairProduct holds the value of the AdminrepairProduct
-          edge.
+        description: AdminrepairProduct holds the value of the AdminrepairProduct edge.
         type: object
       receipt:
         description: Receipt holds the value of the receipt edge.
@@ -495,6 +499,15 @@ definitions:
     type: object
   ent.Receipt:
     properties:
+      Address:
+        description: Address holds the value of the "Address" field.
+        type: string
+      Productname:
+        description: Productname holds the value of the "Productname" field.
+        type: string
+      Serviceprovider:
+        description: Serviceprovider holds the value of the "Serviceprovider" field.
+        type: string
       added_time:
         description: AddedTime holds the value of the "added_time" field.
         type: string
@@ -2569,7 +2582,6 @@ securityDefinitions:
     tokenUrl: https://example.com/oauth/token
     type: oauth2
   OAuth2Application:
-    authorizationUrl: ""
     flow: application
     scopes:
       admin: ' Grants read and write access to administrative information'
@@ -2584,7 +2596,6 @@ securityDefinitions:
       write: ' Grants write access'
     type: oauth2
   OAuth2Password:
-    authorizationUrl: ""
     flow: password
     scopes:
       admin: ' Grants read and write access to administrative information'

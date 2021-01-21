@@ -27,6 +27,24 @@ import {
  */
 export interface EntReceipt {
     /**
+     * Address holds the value of the "Address" field.
+     * @type {string}
+     * @memberof EntReceipt
+     */
+    address?: string;
+    /**
+     * Productname holds the value of the "Productname" field.
+     * @type {string}
+     * @memberof EntReceipt
+     */
+    productname?: string;
+    /**
+     * Serviceprovider holds the value of the "Serviceprovider" field.
+     * @type {string}
+     * @memberof EntReceipt
+     */
+    serviceprovider?: string;
+    /**
      * AddedTime holds the value of the "added_time" field.
      * @type {string}
      * @memberof EntReceipt
@@ -56,6 +74,9 @@ export function EntReceiptFromJSONTyped(json: any, ignoreDiscriminator: boolean)
     }
     return {
         
+        'address': !exists(json, 'Address') ? undefined : json['Address'],
+        'productname': !exists(json, 'Productname') ? undefined : json['Productname'],
+        'serviceprovider': !exists(json, 'Serviceprovider') ? undefined : json['Serviceprovider'],
         'addedTime': !exists(json, 'added_time') ? undefined : json['added_time'],
         'edges': !exists(json, 'edges') ? undefined : EntReceiptEdgesFromJSON(json['edges']),
         'id': !exists(json, 'id') ? undefined : json['id'],
@@ -71,6 +92,9 @@ export function EntReceiptToJSON(value?: EntReceipt | null): any {
     }
     return {
         
+        'Address': value.address,
+        'Productname': value.productname,
+        'Serviceprovider': value.serviceprovider,
         'added_time': value.addedTime,
         'edges': EntReceiptEdgesToJSON(value.edges),
         'id': value.id,

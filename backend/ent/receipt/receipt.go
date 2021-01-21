@@ -13,6 +13,12 @@ const (
 	FieldID = "id"
 	// FieldAddedTime holds the string denoting the added_time field in the database.
 	FieldAddedTime = "added_time"
+	// FieldServiceprovider holds the string denoting the serviceprovider field in the database.
+	FieldServiceprovider = "serviceprovider"
+	// FieldAddress holds the string denoting the address field in the database.
+	FieldAddress = "address"
+	// FieldProductname holds the string denoting the productname field in the database.
+	FieldProductname = "productname"
 
 	// EdgePaymenttype holds the string denoting the paymenttype edge name in mutations.
 	EdgePaymenttype = "paymenttype"
@@ -68,6 +74,9 @@ const (
 var Columns = []string{
 	FieldID,
 	FieldAddedTime,
+	FieldServiceprovider,
+	FieldAddress,
+	FieldProductname,
 }
 
 // ForeignKeys holds the SQL foreign-keys that are owned by the Receipt type.
@@ -82,4 +91,10 @@ var ForeignKeys = []string{
 var (
 	// DefaultAddedTime holds the default value on creation for the added_time field.
 	DefaultAddedTime func() time.Time
+	// ServiceproviderValidator is a validator for the "Serviceprovider" field. It is called by the builders before save.
+	ServiceproviderValidator func(string) error
+	// AddressValidator is a validator for the "Address" field. It is called by the builders before save.
+	AddressValidator func(string) error
+	// ProductnameValidator is a validator for the "Productname" field. It is called by the builders before save.
+	ProductnameValidator func(string) error
 )

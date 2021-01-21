@@ -23,6 +23,12 @@ type Receipt struct {
 	ID int `json:"id,omitempty"`
 	// AddedTime holds the value of the "added_time" field.
 	AddedTime time.Time `json:"added_time,omitempty"`
+	// Serviceprovider holds the value of the "Serviceprovider" field.
+	Serviceprovider string `json:"Serviceprovider,omitempty"`
+	// Address holds the value of the "Address" field.
+	Address string `json:"Address,omitempty"`
+	// Productname holds the value of the "Productname" field.
+	Productname string `json:"Productname,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the ReceiptQuery when eager-loading is set.
 	Edges          ReceiptEdges `json:"edges"`
@@ -123,8 +129,11 @@ func (e ReceiptEdges) ProductOrErr() (*Product, error) {
 // scanValues returns the types for scanning values from sql.Rows.
 func (*Receipt) scanValues() []interface{} {
 	return []interface{}{
-		&sql.NullInt64{}, // id
-		&sql.NullTime{},  // added_time
+		&sql.NullInt64{},  // id
+		&sql.NullTime{},   // added_time
+		&sql.NullString{}, // Serviceprovider
+		&sql.NullString{}, // Address
+		&sql.NullString{}, // Productname
 	}
 }
 
@@ -156,7 +165,22 @@ func (r *Receipt) assignValues(values ...interface{}) error {
 	} else if value.Valid {
 		r.AddedTime = value.Time
 	}
-	values = values[1:]
+	if value, ok := values[1].(*sql.NullString); !ok {
+		return fmt.Errorf("unexpected type %T for field Serviceprovider", values[1])
+	} else if value.Valid {
+		r.Serviceprovider = value.String
+	}
+	if value, ok := values[2].(*sql.NullString); !ok {
+		return fmt.Errorf("unexpected type %T for field Address", values[2])
+	} else if value.Valid {
+		r.Address = value.String
+	}
+	if value, ok := values[3].(*sql.NullString); !ok {
+		return fmt.Errorf("unexpected type %T for field Productname", values[3])
+	} else if value.Valid {
+		r.Productname = value.String
+	}
+	values = values[4:]
 	if len(values) == len(receipt.ForeignKeys) {
 		if value, ok := values[0].(*sql.NullInt64); !ok {
 			return fmt.Errorf("unexpected type %T for edge-field adminrepair_id", value)
@@ -242,6 +266,12 @@ func (r *Receipt) String() string {
 	builder.WriteString(fmt.Sprintf("id=%v", r.ID))
 	builder.WriteString(", added_time=")
 	builder.WriteString(r.AddedTime.Format(time.ANSIC))
+	builder.WriteString(", Serviceprovider=")
+	builder.WriteString(r.Serviceprovider)
+	builder.WriteString(", Address=")
+	builder.WriteString(r.Address)
+	builder.WriteString(", Productname=")
+	builder.WriteString(r.Productname)
 	builder.WriteByte(')')
 	return builder.String()
 }

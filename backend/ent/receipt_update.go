@@ -47,6 +47,24 @@ func (ru *ReceiptUpdate) SetNillableAddedTime(t *time.Time) *ReceiptUpdate {
 	return ru
 }
 
+// SetServiceprovider sets the Serviceprovider field.
+func (ru *ReceiptUpdate) SetServiceprovider(s string) *ReceiptUpdate {
+	ru.mutation.SetServiceprovider(s)
+	return ru
+}
+
+// SetAddress sets the Address field.
+func (ru *ReceiptUpdate) SetAddress(s string) *ReceiptUpdate {
+	ru.mutation.SetAddress(s)
+	return ru
+}
+
+// SetProductname sets the Productname field.
+func (ru *ReceiptUpdate) SetProductname(s string) *ReceiptUpdate {
+	ru.mutation.SetProductname(s)
+	return ru
+}
+
 // SetPaymenttypeID sets the paymenttype edge to PaymentType by id.
 func (ru *ReceiptUpdate) SetPaymenttypeID(id int) *ReceiptUpdate {
 	ru.mutation.SetPaymenttypeID(id)
@@ -179,6 +197,21 @@ func (ru *ReceiptUpdate) ClearProduct() *ReceiptUpdate {
 
 // Save executes the query and returns the number of rows/vertices matched by this operation.
 func (ru *ReceiptUpdate) Save(ctx context.Context) (int, error) {
+	if v, ok := ru.mutation.Serviceprovider(); ok {
+		if err := receipt.ServiceproviderValidator(v); err != nil {
+			return 0, &ValidationError{Name: "Serviceprovider", err: fmt.Errorf("ent: validator failed for field \"Serviceprovider\": %w", err)}
+		}
+	}
+	if v, ok := ru.mutation.Address(); ok {
+		if err := receipt.AddressValidator(v); err != nil {
+			return 0, &ValidationError{Name: "Address", err: fmt.Errorf("ent: validator failed for field \"Address\": %w", err)}
+		}
+	}
+	if v, ok := ru.mutation.Productname(); ok {
+		if err := receipt.ProductnameValidator(v); err != nil {
+			return 0, &ValidationError{Name: "Productname", err: fmt.Errorf("ent: validator failed for field \"Productname\": %w", err)}
+		}
+	}
 
 	var (
 		err      error
@@ -252,6 +285,27 @@ func (ru *ReceiptUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Type:   field.TypeTime,
 			Value:  value,
 			Column: receipt.FieldAddedTime,
+		})
+	}
+	if value, ok := ru.mutation.Serviceprovider(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: receipt.FieldServiceprovider,
+		})
+	}
+	if value, ok := ru.mutation.Address(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: receipt.FieldAddress,
+		})
+	}
+	if value, ok := ru.mutation.Productname(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: receipt.FieldProductname,
 		})
 	}
 	if ru.mutation.PaymenttypeCleared() {
@@ -461,6 +515,24 @@ func (ruo *ReceiptUpdateOne) SetNillableAddedTime(t *time.Time) *ReceiptUpdateOn
 	return ruo
 }
 
+// SetServiceprovider sets the Serviceprovider field.
+func (ruo *ReceiptUpdateOne) SetServiceprovider(s string) *ReceiptUpdateOne {
+	ruo.mutation.SetServiceprovider(s)
+	return ruo
+}
+
+// SetAddress sets the Address field.
+func (ruo *ReceiptUpdateOne) SetAddress(s string) *ReceiptUpdateOne {
+	ruo.mutation.SetAddress(s)
+	return ruo
+}
+
+// SetProductname sets the Productname field.
+func (ruo *ReceiptUpdateOne) SetProductname(s string) *ReceiptUpdateOne {
+	ruo.mutation.SetProductname(s)
+	return ruo
+}
+
 // SetPaymenttypeID sets the paymenttype edge to PaymentType by id.
 func (ruo *ReceiptUpdateOne) SetPaymenttypeID(id int) *ReceiptUpdateOne {
 	ruo.mutation.SetPaymenttypeID(id)
@@ -593,6 +665,21 @@ func (ruo *ReceiptUpdateOne) ClearProduct() *ReceiptUpdateOne {
 
 // Save executes the query and returns the updated entity.
 func (ruo *ReceiptUpdateOne) Save(ctx context.Context) (*Receipt, error) {
+	if v, ok := ruo.mutation.Serviceprovider(); ok {
+		if err := receipt.ServiceproviderValidator(v); err != nil {
+			return nil, &ValidationError{Name: "Serviceprovider", err: fmt.Errorf("ent: validator failed for field \"Serviceprovider\": %w", err)}
+		}
+	}
+	if v, ok := ruo.mutation.Address(); ok {
+		if err := receipt.AddressValidator(v); err != nil {
+			return nil, &ValidationError{Name: "Address", err: fmt.Errorf("ent: validator failed for field \"Address\": %w", err)}
+		}
+	}
+	if v, ok := ruo.mutation.Productname(); ok {
+		if err := receipt.ProductnameValidator(v); err != nil {
+			return nil, &ValidationError{Name: "Productname", err: fmt.Errorf("ent: validator failed for field \"Productname\": %w", err)}
+		}
+	}
 
 	var (
 		err  error
@@ -664,6 +751,27 @@ func (ruo *ReceiptUpdateOne) sqlSave(ctx context.Context) (r *Receipt, err error
 			Type:   field.TypeTime,
 			Value:  value,
 			Column: receipt.FieldAddedTime,
+		})
+	}
+	if value, ok := ruo.mutation.Serviceprovider(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: receipt.FieldServiceprovider,
+		})
+	}
+	if value, ok := ruo.mutation.Address(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: receipt.FieldAddress,
+		})
+	}
+	if value, ok := ruo.mutation.Productname(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: receipt.FieldProductname,
 		})
 	}
 	if ruo.mutation.PaymenttypeCleared() {
