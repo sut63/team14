@@ -2973,11 +2973,17 @@ var doc = `{
                 "fix": {
                     "type": "integer"
                 },
+                "numberrepair": {
+                    "type": "string"
+                },
                 "personal": {
                     "type": "integer"
                 },
                 "product": {
                     "type": "integer"
+                },
+                "repairinformation": {
+                    "type": "string"
                 }
             }
         },
@@ -3153,6 +3159,14 @@ var doc = `{
                 "id": {
                     "description": "ID of the ent.",
                     "type": "integer"
+                },
+                "numberrepair": {
+                    "description": "Numberrepair holds the value of the \"numberrepair\" field.",
+                    "type": "string"
+                },
+                "repairinformation": {
+                    "description": "Repairinformation holds the value of the \"repairinformation\" field.",
+                    "type": "string"
                 }
             }
         },

@@ -44,22 +44,23 @@ export default function ComponentsTable() {
      <Table className={classes.table} aria-label="simple table">
        <TableHead>
          <TableRow>
-           <TableCell align="center">No.</TableCell>
-           <TableCell align="center">Personals</TableCell>
-           <TableCell align="center">Fix number</TableCell>
-           <TableCell align="center">Product</TableCell>
-           <TableCell align="center">Equipment damate</TableCell>
+           <TableCell align="center">หมายเลขบันทึกซ่อมของพนักงงาน</TableCell>
+           <TableCell align="center">ชื่อ เจ้าหน้าที่</TableCell>
+           <TableCell align="center">หมายเลขบันทึกการแจ้งซ่อม</TableCell>
+           <TableCell align="center">ชื่อ อะไหล่ที่ใช้ซ่อมแซม</TableCell>
+           <TableCell align="center">ความเสียหายที่เจ้าหน้าที่พบ</TableCell>
+           <TableCell align="center">รายละเอียดการซ่อม</TableCell>
          </TableRow>
        </TableHead>
        <TableBody>
          {adminrepairs.map((item:any )=> (
            <TableRow key={item.id}>
-             <TableCell align="center">{item.id}</TableCell>
+             <TableCell align="center">{item.numberrepair}</TableCell>
              <TableCell align="center">{item.edges.adminrepairPersonal.personalname}</TableCell>
-             <TableCell align="center">{item.edges.adminrepairFix.id}</TableCell>
+             <TableCell align="center">{item.edges.adminrepairFix.queue}</TableCell>
              <TableCell align="center">{item.edges.adminrepairProduct.productname}</TableCell>
              <TableCell align="center">{item.equipmentdamate}</TableCell>
-             <TableCell align="center">รับทำเรื่องเรียบร้อยแล้ว</TableCell>
+             <TableCell align="center">{item.repairinformation}</TableCell>
              <TableCell align="center">
                <Button
                  onClick={() => {

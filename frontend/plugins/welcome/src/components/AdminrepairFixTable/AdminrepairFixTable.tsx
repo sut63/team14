@@ -38,30 +38,28 @@ export default function ComponentsTable() {
      <Table className={classes.table} aria-label="simple table">
        <TableHead>
        <TableRow>
-           <TableCell align="center">No</TableCell>
+           <TableCell align="center">ลำดับคิว</TableCell>
            <TableCell align="center">ชื่อลูกค้า</TableCell>
            <TableCell align="center">ประเภทคอมพิวเตอร์</TableCell>
            <TableCell align="center">แบรนด์</TableCell>
            <TableCell align="center">หมายเลขผลิตภัณฑ์</TableCell>
            <TableCell align="center">วันที่รับแจ้งซ่อม</TableCell>
            <TableCell align="center">รายละเอียดการแจ้งซ่อม/ปัญา</TableCell>
-           <TableCell align="center">ลำดับคิว</TableCell>
+
          </TableRow>
        </TableHead>
 
        <TableBody>
          {fixs.map((item:any) => (
            <TableRow key={item.id}>
-             <TableCell align="center">{item.id}</TableCell>
+             <TableCell align="center">{item.queue}</TableCell>
              <TableCell align="center">{item.edges?.customer?.customername}</TableCell>
              <TableCell align="center">{item.edges?.fixcomtype?.fixcomtypename}</TableCell>
              <TableCell align="center">{item.edges?.fixbrand?.fixbrandname}</TableCell>
              <TableCell align="center">{item.productnumber}</TableCell>
              <TableCell align="center">{moment(item.date).format("DD/MM/YYYY HH.mm น.")}</TableCell>
              <TableCell align="center">{item.problemtype}</TableCell>
-             <TableCell align="center">{item.queue}</TableCell>
-             <TableCell align="center">
-             </TableCell>
+
 
            </TableRow>
          ))}

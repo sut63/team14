@@ -91,10 +91,135 @@ func IDLTE(id int) predicate.Adminrepair {
 	})
 }
 
+// Numberrepair applies equality check predicate on the "numberrepair" field. It's identical to NumberrepairEQ.
+func Numberrepair(v string) predicate.Adminrepair {
+	return predicate.Adminrepair(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldNumberrepair), v))
+	})
+}
+
 // Equipmentdamate applies equality check predicate on the "equipmentdamate" field. It's identical to EquipmentdamateEQ.
 func Equipmentdamate(v string) predicate.Adminrepair {
 	return predicate.Adminrepair(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldEquipmentdamate), v))
+	})
+}
+
+// Repairinformation applies equality check predicate on the "repairinformation" field. It's identical to RepairinformationEQ.
+func Repairinformation(v string) predicate.Adminrepair {
+	return predicate.Adminrepair(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldRepairinformation), v))
+	})
+}
+
+// NumberrepairEQ applies the EQ predicate on the "numberrepair" field.
+func NumberrepairEQ(v string) predicate.Adminrepair {
+	return predicate.Adminrepair(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldNumberrepair), v))
+	})
+}
+
+// NumberrepairNEQ applies the NEQ predicate on the "numberrepair" field.
+func NumberrepairNEQ(v string) predicate.Adminrepair {
+	return predicate.Adminrepair(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldNumberrepair), v))
+	})
+}
+
+// NumberrepairIn applies the In predicate on the "numberrepair" field.
+func NumberrepairIn(vs ...string) predicate.Adminrepair {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Adminrepair(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldNumberrepair), v...))
+	})
+}
+
+// NumberrepairNotIn applies the NotIn predicate on the "numberrepair" field.
+func NumberrepairNotIn(vs ...string) predicate.Adminrepair {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Adminrepair(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldNumberrepair), v...))
+	})
+}
+
+// NumberrepairGT applies the GT predicate on the "numberrepair" field.
+func NumberrepairGT(v string) predicate.Adminrepair {
+	return predicate.Adminrepair(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldNumberrepair), v))
+	})
+}
+
+// NumberrepairGTE applies the GTE predicate on the "numberrepair" field.
+func NumberrepairGTE(v string) predicate.Adminrepair {
+	return predicate.Adminrepair(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldNumberrepair), v))
+	})
+}
+
+// NumberrepairLT applies the LT predicate on the "numberrepair" field.
+func NumberrepairLT(v string) predicate.Adminrepair {
+	return predicate.Adminrepair(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldNumberrepair), v))
+	})
+}
+
+// NumberrepairLTE applies the LTE predicate on the "numberrepair" field.
+func NumberrepairLTE(v string) predicate.Adminrepair {
+	return predicate.Adminrepair(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldNumberrepair), v))
+	})
+}
+
+// NumberrepairContains applies the Contains predicate on the "numberrepair" field.
+func NumberrepairContains(v string) predicate.Adminrepair {
+	return predicate.Adminrepair(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldNumberrepair), v))
+	})
+}
+
+// NumberrepairHasPrefix applies the HasPrefix predicate on the "numberrepair" field.
+func NumberrepairHasPrefix(v string) predicate.Adminrepair {
+	return predicate.Adminrepair(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldNumberrepair), v))
+	})
+}
+
+// NumberrepairHasSuffix applies the HasSuffix predicate on the "numberrepair" field.
+func NumberrepairHasSuffix(v string) predicate.Adminrepair {
+	return predicate.Adminrepair(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldNumberrepair), v))
+	})
+}
+
+// NumberrepairEqualFold applies the EqualFold predicate on the "numberrepair" field.
+func NumberrepairEqualFold(v string) predicate.Adminrepair {
+	return predicate.Adminrepair(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldNumberrepair), v))
+	})
+}
+
+// NumberrepairContainsFold applies the ContainsFold predicate on the "numberrepair" field.
+func NumberrepairContainsFold(v string) predicate.Adminrepair {
+	return predicate.Adminrepair(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldNumberrepair), v))
 	})
 }
 
@@ -206,6 +331,117 @@ func EquipmentdamateEqualFold(v string) predicate.Adminrepair {
 func EquipmentdamateContainsFold(v string) predicate.Adminrepair {
 	return predicate.Adminrepair(func(s *sql.Selector) {
 		s.Where(sql.ContainsFold(s.C(FieldEquipmentdamate), v))
+	})
+}
+
+// RepairinformationEQ applies the EQ predicate on the "repairinformation" field.
+func RepairinformationEQ(v string) predicate.Adminrepair {
+	return predicate.Adminrepair(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldRepairinformation), v))
+	})
+}
+
+// RepairinformationNEQ applies the NEQ predicate on the "repairinformation" field.
+func RepairinformationNEQ(v string) predicate.Adminrepair {
+	return predicate.Adminrepair(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldRepairinformation), v))
+	})
+}
+
+// RepairinformationIn applies the In predicate on the "repairinformation" field.
+func RepairinformationIn(vs ...string) predicate.Adminrepair {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Adminrepair(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldRepairinformation), v...))
+	})
+}
+
+// RepairinformationNotIn applies the NotIn predicate on the "repairinformation" field.
+func RepairinformationNotIn(vs ...string) predicate.Adminrepair {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Adminrepair(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldRepairinformation), v...))
+	})
+}
+
+// RepairinformationGT applies the GT predicate on the "repairinformation" field.
+func RepairinformationGT(v string) predicate.Adminrepair {
+	return predicate.Adminrepair(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldRepairinformation), v))
+	})
+}
+
+// RepairinformationGTE applies the GTE predicate on the "repairinformation" field.
+func RepairinformationGTE(v string) predicate.Adminrepair {
+	return predicate.Adminrepair(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldRepairinformation), v))
+	})
+}
+
+// RepairinformationLT applies the LT predicate on the "repairinformation" field.
+func RepairinformationLT(v string) predicate.Adminrepair {
+	return predicate.Adminrepair(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldRepairinformation), v))
+	})
+}
+
+// RepairinformationLTE applies the LTE predicate on the "repairinformation" field.
+func RepairinformationLTE(v string) predicate.Adminrepair {
+	return predicate.Adminrepair(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldRepairinformation), v))
+	})
+}
+
+// RepairinformationContains applies the Contains predicate on the "repairinformation" field.
+func RepairinformationContains(v string) predicate.Adminrepair {
+	return predicate.Adminrepair(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldRepairinformation), v))
+	})
+}
+
+// RepairinformationHasPrefix applies the HasPrefix predicate on the "repairinformation" field.
+func RepairinformationHasPrefix(v string) predicate.Adminrepair {
+	return predicate.Adminrepair(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldRepairinformation), v))
+	})
+}
+
+// RepairinformationHasSuffix applies the HasSuffix predicate on the "repairinformation" field.
+func RepairinformationHasSuffix(v string) predicate.Adminrepair {
+	return predicate.Adminrepair(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldRepairinformation), v))
+	})
+}
+
+// RepairinformationEqualFold applies the EqualFold predicate on the "repairinformation" field.
+func RepairinformationEqualFold(v string) predicate.Adminrepair {
+	return predicate.Adminrepair(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldRepairinformation), v))
+	})
+}
+
+// RepairinformationContainsFold applies the ContainsFold predicate on the "repairinformation" field.
+func RepairinformationContainsFold(v string) predicate.Adminrepair {
+	return predicate.Adminrepair(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldRepairinformation), v))
 	})
 }
 

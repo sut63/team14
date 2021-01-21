@@ -18,8 +18,12 @@ type Adminrepair struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
+	// Numberrepair holds the value of the "numberrepair" field.
+	Numberrepair string `json:"numberrepair,omitempty"`
 	// Equipmentdamate holds the value of the "equipmentdamate" field.
 	Equipmentdamate string `json:"equipmentdamate,omitempty"`
+	// Repairinformation holds the value of the "repairinformation" field.
+	Repairinformation string `json:"repairinformation,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the AdminrepairQuery when eager-loading is set.
 	Edges       AdminrepairEdges `json:"edges"`
@@ -98,7 +102,9 @@ func (e AdminrepairEdges) AdminrepairProductOrErr() (*Product, error) {
 func (*Adminrepair) scanValues() []interface{} {
 	return []interface{}{
 		&sql.NullInt64{},  // id
+		&sql.NullString{}, // numberrepair
 		&sql.NullString{}, // equipmentdamate
+		&sql.NullString{}, // repairinformation
 	}
 }
 
@@ -124,11 +130,21 @@ func (a *Adminrepair) assignValues(values ...interface{}) error {
 	a.ID = int(value.Int64)
 	values = values[1:]
 	if value, ok := values[0].(*sql.NullString); !ok {
-		return fmt.Errorf("unexpected type %T for field equipmentdamate", values[0])
+		return fmt.Errorf("unexpected type %T for field numberrepair", values[0])
+	} else if value.Valid {
+		a.Numberrepair = value.String
+	}
+	if value, ok := values[1].(*sql.NullString); !ok {
+		return fmt.Errorf("unexpected type %T for field equipmentdamate", values[1])
 	} else if value.Valid {
 		a.Equipmentdamate = value.String
 	}
-	values = values[1:]
+	if value, ok := values[2].(*sql.NullString); !ok {
+		return fmt.Errorf("unexpected type %T for field repairinformation", values[2])
+	} else if value.Valid {
+		a.Repairinformation = value.String
+	}
+	values = values[3:]
 	if len(values) == len(adminrepair.ForeignKeys) {
 		if value, ok := values[0].(*sql.NullInt64); !ok {
 			return fmt.Errorf("unexpected type %T for edge-field fix_id", value)
@@ -195,8 +211,12 @@ func (a *Adminrepair) String() string {
 	var builder strings.Builder
 	builder.WriteString("Adminrepair(")
 	builder.WriteString(fmt.Sprintf("id=%v", a.ID))
+	builder.WriteString(", numberrepair=")
+	builder.WriteString(a.Numberrepair)
 	builder.WriteString(", equipmentdamate=")
 	builder.WriteString(a.Equipmentdamate)
+	builder.WriteString(", repairinformation=")
+	builder.WriteString(a.Repairinformation)
 	builder.WriteByte(')')
 	return builder.String()
 }

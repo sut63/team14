@@ -20,10 +20,60 @@ import (
 func init() {
 	adminrepairFields := schema.Adminrepair{}.Fields()
 	_ = adminrepairFields
+	// adminrepairDescNumberrepair is the schema descriptor for numberrepair field.
+	adminrepairDescNumberrepair := adminrepairFields[0].Descriptor()
+	// adminrepair.NumberrepairValidator is a validator for the "numberrepair" field. It is called by the builders before save.
+	adminrepair.NumberrepairValidator = func() func(string) error {
+		validators := adminrepairDescNumberrepair.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(numberrepair string) error {
+			for _, fn := range fns {
+				if err := fn(numberrepair); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
 	// adminrepairDescEquipmentdamate is the schema descriptor for equipmentdamate field.
-	adminrepairDescEquipmentdamate := adminrepairFields[0].Descriptor()
+	adminrepairDescEquipmentdamate := adminrepairFields[1].Descriptor()
 	// adminrepair.EquipmentdamateValidator is a validator for the "equipmentdamate" field. It is called by the builders before save.
-	adminrepair.EquipmentdamateValidator = adminrepairDescEquipmentdamate.Validators[0].(func(string) error)
+	adminrepair.EquipmentdamateValidator = func() func(string) error {
+		validators := adminrepairDescEquipmentdamate.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(equipmentdamate string) error {
+			for _, fn := range fns {
+				if err := fn(equipmentdamate); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	// adminrepairDescRepairinformation is the schema descriptor for repairinformation field.
+	adminrepairDescRepairinformation := adminrepairFields[2].Descriptor()
+	// adminrepair.RepairinformationValidator is a validator for the "repairinformation" field. It is called by the builders before save.
+	adminrepair.RepairinformationValidator = func() func(string) error {
+		validators := adminrepairDescRepairinformation.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(repairinformation string) error {
+			for _, fn := range fns {
+				if err := fn(repairinformation); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
 	customerFields := schema.Customer{}.Fields()
 	_ = customerFields
 	// customerDescCustomername is the schema descriptor for Customername field.

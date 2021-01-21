@@ -27,11 +27,29 @@ import {
  */
 export interface EntFix {
     /**
-     * Date holds the value of the "date" field.
+     * Date holds the value of the "Date" field.
      * @type {string}
      * @memberof EntFix
      */
     date?: string;
+    /**
+     * Problemtype holds the value of the "Problemtype" field.
+     * @type {string}
+     * @memberof EntFix
+     */
+    problemtype?: string;
+    /**
+     * Productnumber holds the value of the "Productnumber" field.
+     * @type {string}
+     * @memberof EntFix
+     */
+    productnumber?: string;
+    /**
+     * Queue holds the value of the "Queue" field.
+     * @type {string}
+     * @memberof EntFix
+     */
+    queue?: string;
     /**
      * 
      * @type {EntFixEdges}
@@ -44,24 +62,6 @@ export interface EntFix {
      * @memberof EntFix
      */
     id?: number;
-    /**
-     * Problemtype holds the value of the "problemtype" field.
-     * @type {string}
-     * @memberof EntFix
-     */
-    problemtype?: string;
-    /**
-     * Productnumber holds the value of the "productnumber" field.
-     * @type {string}
-     * @memberof EntFix
-     */
-    productnumber?: string;
-    /**
-     * Queue holds the value of the "queue" field.
-     * @type {string}
-     * @memberof EntFix
-     */
-    queue?: string;
 }
 
 export function EntFixFromJSON(json: any): EntFix {
@@ -74,12 +74,12 @@ export function EntFixFromJSONTyped(json: any, ignoreDiscriminator: boolean): En
     }
     return {
         
-        'date': !exists(json, 'date') ? undefined : json['date'],
-        'edges': !exists(json, 'edges') ? undefined : EntFixEdgesFromJSON(json['edges']),
-        'id': !exists(json, 'id') ? undefined : json['id'],
+        'date': !exists(json, 'Date') ? undefined : json['Date'],
         'problemtype': !exists(json, 'Problemtype') ? undefined : json['Problemtype'],
         'productnumber': !exists(json, 'Productnumber') ? undefined : json['Productnumber'],
         'queue': !exists(json, 'Queue') ? undefined : json['Queue'],
+        'edges': !exists(json, 'edges') ? undefined : EntFixEdgesFromJSON(json['edges']),
+        'id': !exists(json, 'id') ? undefined : json['id'],
     };
 }
 
@@ -92,12 +92,12 @@ export function EntFixToJSON(value?: EntFix | null): any {
     }
     return {
         
-        'date': value.date,
+        'Date': value.date,
+        'Problemtype': value.problemtype,
+        'Productnumber': value.productnumber,
+        'Queue': value.queue,
         'edges': EntFixEdgesToJSON(value.edges),
         'id': value.id,
-        'problemtype': value.problemtype,
-        'productnumber': value.productnumber,
-        'queue': value.queue,
     };
 }
 

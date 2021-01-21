@@ -364,12 +364,12 @@ func (aq *AdminrepairQuery) WithAdminrepairProduct(opts ...func(*ProductQuery)) 
 // Example:
 //
 //	var v []struct {
-//		Equipmentdamate string `json:"equipmentdamate,omitempty"`
+//		Numberrepair string `json:"numberrepair,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
 //	client.Adminrepair.Query().
-//		GroupBy(adminrepair.FieldEquipmentdamate).
+//		GroupBy(adminrepair.FieldNumberrepair).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 //
@@ -390,11 +390,11 @@ func (aq *AdminrepairQuery) GroupBy(field string, fields ...string) *Adminrepair
 // Example:
 //
 //	var v []struct {
-//		Equipmentdamate string `json:"equipmentdamate,omitempty"`
+//		Numberrepair string `json:"numberrepair,omitempty"`
 //	}
 //
 //	client.Adminrepair.Query().
-//		Select(adminrepair.FieldEquipmentdamate).
+//		Select(adminrepair.FieldNumberrepair).
 //		Scan(ctx, &v)
 //
 func (aq *AdminrepairQuery) Select(field string, fields ...string) *AdminrepairSelect {

@@ -31,9 +31,21 @@ func (au *AdminrepairUpdate) Where(ps ...predicate.Adminrepair) *AdminrepairUpda
 	return au
 }
 
+// SetNumberrepair sets the numberrepair field.
+func (au *AdminrepairUpdate) SetNumberrepair(s string) *AdminrepairUpdate {
+	au.mutation.SetNumberrepair(s)
+	return au
+}
+
 // SetEquipmentdamate sets the equipmentdamate field.
 func (au *AdminrepairUpdate) SetEquipmentdamate(s string) *AdminrepairUpdate {
 	au.mutation.SetEquipmentdamate(s)
+	return au
+}
+
+// SetRepairinformation sets the repairinformation field.
+func (au *AdminrepairUpdate) SetRepairinformation(s string) *AdminrepairUpdate {
+	au.mutation.SetRepairinformation(s)
 	return au
 }
 
@@ -149,9 +161,19 @@ func (au *AdminrepairUpdate) ClearAdminrepairProduct() *AdminrepairUpdate {
 
 // Save executes the query and returns the number of rows/vertices matched by this operation.
 func (au *AdminrepairUpdate) Save(ctx context.Context) (int, error) {
+	if v, ok := au.mutation.Numberrepair(); ok {
+		if err := adminrepair.NumberrepairValidator(v); err != nil {
+			return 0, &ValidationError{Name: "numberrepair", err: fmt.Errorf("ent: validator failed for field \"numberrepair\": %w", err)}
+		}
+	}
 	if v, ok := au.mutation.Equipmentdamate(); ok {
 		if err := adminrepair.EquipmentdamateValidator(v); err != nil {
 			return 0, &ValidationError{Name: "equipmentdamate", err: fmt.Errorf("ent: validator failed for field \"equipmentdamate\": %w", err)}
+		}
+	}
+	if v, ok := au.mutation.Repairinformation(); ok {
+		if err := adminrepair.RepairinformationValidator(v); err != nil {
+			return 0, &ValidationError{Name: "repairinformation", err: fmt.Errorf("ent: validator failed for field \"repairinformation\": %w", err)}
 		}
 	}
 
@@ -222,11 +244,25 @@ func (au *AdminrepairUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			}
 		}
 	}
+	if value, ok := au.mutation.Numberrepair(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: adminrepair.FieldNumberrepair,
+		})
+	}
 	if value, ok := au.mutation.Equipmentdamate(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
 			Column: adminrepair.FieldEquipmentdamate,
+		})
+	}
+	if value, ok := au.mutation.Repairinformation(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: adminrepair.FieldRepairinformation,
 		})
 	}
 	if nodes := au.mutation.RemovedReceiptIDs(); len(nodes) > 0 {
@@ -390,9 +426,21 @@ type AdminrepairUpdateOne struct {
 	mutation *AdminrepairMutation
 }
 
+// SetNumberrepair sets the numberrepair field.
+func (auo *AdminrepairUpdateOne) SetNumberrepair(s string) *AdminrepairUpdateOne {
+	auo.mutation.SetNumberrepair(s)
+	return auo
+}
+
 // SetEquipmentdamate sets the equipmentdamate field.
 func (auo *AdminrepairUpdateOne) SetEquipmentdamate(s string) *AdminrepairUpdateOne {
 	auo.mutation.SetEquipmentdamate(s)
+	return auo
+}
+
+// SetRepairinformation sets the repairinformation field.
+func (auo *AdminrepairUpdateOne) SetRepairinformation(s string) *AdminrepairUpdateOne {
+	auo.mutation.SetRepairinformation(s)
 	return auo
 }
 
@@ -508,9 +556,19 @@ func (auo *AdminrepairUpdateOne) ClearAdminrepairProduct() *AdminrepairUpdateOne
 
 // Save executes the query and returns the updated entity.
 func (auo *AdminrepairUpdateOne) Save(ctx context.Context) (*Adminrepair, error) {
+	if v, ok := auo.mutation.Numberrepair(); ok {
+		if err := adminrepair.NumberrepairValidator(v); err != nil {
+			return nil, &ValidationError{Name: "numberrepair", err: fmt.Errorf("ent: validator failed for field \"numberrepair\": %w", err)}
+		}
+	}
 	if v, ok := auo.mutation.Equipmentdamate(); ok {
 		if err := adminrepair.EquipmentdamateValidator(v); err != nil {
 			return nil, &ValidationError{Name: "equipmentdamate", err: fmt.Errorf("ent: validator failed for field \"equipmentdamate\": %w", err)}
+		}
+	}
+	if v, ok := auo.mutation.Repairinformation(); ok {
+		if err := adminrepair.RepairinformationValidator(v); err != nil {
+			return nil, &ValidationError{Name: "repairinformation", err: fmt.Errorf("ent: validator failed for field \"repairinformation\": %w", err)}
 		}
 	}
 
@@ -579,11 +637,25 @@ func (auo *AdminrepairUpdateOne) sqlSave(ctx context.Context) (a *Adminrepair, e
 		return nil, &ValidationError{Name: "ID", err: fmt.Errorf("missing Adminrepair.ID for update")}
 	}
 	_spec.Node.ID.Value = id
+	if value, ok := auo.mutation.Numberrepair(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: adminrepair.FieldNumberrepair,
+		})
+	}
 	if value, ok := auo.mutation.Equipmentdamate(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
 			Column: adminrepair.FieldEquipmentdamate,
+		})
+	}
+	if value, ok := auo.mutation.Repairinformation(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: adminrepair.FieldRepairinformation,
 		})
 	}
 	if nodes := auo.mutation.RemovedReceiptIDs(); len(nodes) > 0 {
