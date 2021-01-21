@@ -114,4 +114,16 @@ func init() {
 	receiptDescAddedTime := receiptFields[0].Descriptor()
 	// receipt.DefaultAddedTime holds the default value on creation for the added_time field.
 	receipt.DefaultAddedTime = receiptDescAddedTime.Default.(func() time.Time)
+	// receiptDescServiceprovider is the schema descriptor for Serviceprovider field.
+	receiptDescServiceprovider := receiptFields[1].Descriptor()
+	// receipt.ServiceproviderValidator is a validator for the "Serviceprovider" field. It is called by the builders before save.
+	receipt.ServiceproviderValidator = receiptDescServiceprovider.Validators[0].(func(string) error)
+	// receiptDescAddress is the schema descriptor for Address field.
+	receiptDescAddress := receiptFields[2].Descriptor()
+	// receipt.AddressValidator is a validator for the "Address" field. It is called by the builders before save.
+	receipt.AddressValidator = receiptDescAddress.Validators[0].(func(string) error)
+	// receiptDescProductname is the schema descriptor for Productname field.
+	receiptDescProductname := receiptFields[3].Descriptor()
+	// receipt.ProductnameValidator is a validator for the "Productname" field. It is called by the builders before save.
+	receipt.ProductnameValidator = receiptDescProductname.Validators[0].(func(string) error)
 }

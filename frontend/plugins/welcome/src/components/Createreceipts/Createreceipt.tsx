@@ -5,6 +5,8 @@ import { ContentHeader, Content, Header, Page, pageTheme } from '@backstage/core
 import { FormControl, Select, InputLabel, MenuItem, TextField, Button, InputAdornment } from '@material-ui/core';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { Alert, AlertTitle } from '@material-ui/lab';
+import Swal from 'sweetalert2';
+import Receipt from '.';
 
 //api
 import { DefaultApi } from '../../api/apis';
@@ -14,8 +16,9 @@ import { EntPersonal, EntPaymentType, EntReceipt, EntAdminrepair, EntCustomer, E
 
 //icon
 import NoteTwoToneIcon from '@material-ui/icons/NoteTwoTone';
+import AddCircleOutlinedIcon from '@material-ui/icons/AddCircleOutlined';
+import CancelRoundedIcon from '@material-ui/icons/CancelRounded';
 import AddCircleTwoToneIcon from '@material-ui/icons/AddCircleTwoTone';
-import CancelTwoToneIcon from '@material-ui/icons/CancelTwoTone';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 
 //cookie
@@ -58,6 +61,18 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
+const Toast = Swal.mixin({
+  toast: true,
+  position: 'top-end',
+  showConfirmButton: false,
+  timer: 3000,
+  timerProgressBar: true,
+  didOpen: toast => {
+    toast.addEventListener('mouseenter', Swal.stopTimer);
+    toast.addEventListener('mouseleave', Swal.resumeTimer);
+  },
+});
+
 var ck = new Cookies()
 var cookieName = ck.GetCookie()
 var cookieID = ck.GetID()
@@ -68,6 +83,7 @@ export default function Personalpage() {
 
   const [status, setStatus] = useState(false);
   const [alert, setAlert] = useState(true);
+  const [alert2, setAlerts] = useState(true);
   const [loading, setLoading] = useState(true);
 
   const [personals, setPersonals] = React.useState<EntPersonal[]>([]);
@@ -83,7 +99,9 @@ export default function Personalpage() {
   const [product, setProduct] = useState(Number);
 
   const [addedTime, setAddedTime] = useState(String);
-  
+  const [serviceprovider, setServiceprovider] = useState(String);
+  const [address, setAddress] = useState(String);
+  const [productname, setProductname] = useState(String);
 
   useEffect(() => {
     const getCustomers = async () => {
@@ -152,9 +170,93 @@ export default function Personalpage() {
     setProduct(event.target.value as number);
   };
 
-  const CreateReceipt = async () => {
+  const handleServiceproviderChange = (event: any) => {
+    setServiceprovider(event.target.value as string);
+  };
+
+  const handleAddressChange = (event: any) => {
+    setAddress(event.target.value as string);
+  };
+
+  const handleProductnameChange = (event: any) => {
+    setProductname(event.target.value as string);
+  };
+  let p = Number(personal)
+
+  const receipt = {
+    serviceprovider : serviceprovider,
+    address : address,
+    productname : productname,
+    customer: customer,
+    personal: Number(cookieID),
+    adminrepair: adminrepair,
+    paymentType: paymenttype,
+    product: product,
+    added : addedTime + ":00+07:00", 
+  };
+
+  const alertMessage = (icon: any, title: any) => {
+    Toast.fire({
+      icon: icon,
+      title: title,
+    });
+  }
+
+  const checkCaseSaveError = (field: string) => {
+    switch(field) {
+      case 'Serviceprovider':
+        alertMessage("error","กรุณากรอกชื่อร้านค้าผู้ให้บริการ");
+        return;
+      case 'Address':
+        alertMessage("error","กรุณากรอกที่อยู่ร้านค้า");
+        return;
+      case 'Productname':
+        alertMessage("error","กรุณากรอกชื่อผลิตภัณฑ์");
+        return;
+      default:
+        alertMessage("error","บันทึกข้อมูลไม่สำเร็จ");
+        return;
+    }
+  }
+
+  console.log(receipt)
+  function save() {
+    const apiUrl = 'http://localhost:8080/api/v1/receipts';
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(receipt),
+    };
+  
+    console.log(receipt); // log ดูข้อมูล สามารถ Inspect ดูข้อมูลได้ F12 เลือก Tab Console
+  
+    fetch(apiUrl, requestOptions)
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+        if (data.status == true) {
+          //clear();
+          Toast.fire({
+            icon: 'success',
+            title: 'บันทึกข้อมูลสำเร็จ',
+  
+          });//window.setTimeout(function(){location.reload()},8000);
+        } else {
+          checkCaseSaveError(data.error.Name)
+        }
+      });
+
+      const timer = setTimeout(() => {
+        setStatus(false);
+      }, 1000);
+    };
+  
+  /*const CreateReceipt = async () => {
     if ( (customer != null) && (personal != null) && (adminrepair != null) && (paymenttype != null) && (product != null) && (addedTime != "") &&(addedTime != null)){
     const receipt = {
+      serviceprovider : serviceprovider,
+      address : address,
+      productname : productname,
       customer: customer,
       personal: Number(cookieID),
       adminrepair: adminrepair,
@@ -162,6 +264,7 @@ export default function Personalpage() {
       product: product,
       added : addedTime + ":00+07:00", 
     };
+
     console.log(receipt)
     const res: any = await http.createReceipt({ receipt: receipt });
       setStatus(true);
@@ -173,7 +276,7 @@ export default function Personalpage() {
         setStatus(true);
         setAlert(false);
       }
-  };
+  };*/
 
 return (
   <Page theme={pageTheme.tool}>
@@ -191,36 +294,11 @@ return (
     <Content>
       <ContentHeader title="สร้างใบเสร็จ">
       <div>&nbsp;&nbsp;&nbsp;</div>
-        <Button  
-        onClick={() => {CreateReceipt();}}
-        variant="contained" 
-        color="secondary" 
-        startIcon={<NoteTwoToneIcon/>}
-        > 
-        บันทึกข้อมูล 
-        </Button>
+      <Button onClick={() => {save();}} variant="contained" color="primary" startIcon={<AddCircleOutlinedIcon/>}> Create new receipt </Button>
       <div>&nbsp;&nbsp;&nbsp;</div>
-        <Button 
-        style={{ marginLeft: 20 }} 
-        component={RouterLink} 
-        to="/Tablereceipt" 
-        variant="contained"
-        color="primary"
-        startIcon={<CancelTwoToneIcon/>}
-        > 
-        ย้อนกลับ 
-        </Button>
+      <Button style={{ marginLeft: 20 }} component={RouterLink} to="/Tablereceipt" variant="contained" startIcon={<CancelRoundedIcon/>}>  ย้อนกลับ </Button>
       </ContentHeader>
-      {status ? ( 
-        <div>
-          {alert ? ( 
-              <Alert severity="success"  onClose={() => { }}> 
-                <AlertTitle> บันทึกข้อมูลสำเร็จ </AlertTitle></Alert>) 
-        : (     
-          <Alert severity="error" onClose={() => { setStatus(false) }}> 
-            <AlertTitle> ไม่สามารถบันทึกข้อมูลได้ กรุณาลองใหม่อีกครั้ง </AlertTitle></Alert>)}
-        </div>
-          ) : null}
+  
       <div className={classes.root}>
         <form noValidate autoComplete="off">
           <FormControl
@@ -229,6 +307,26 @@ return (
             variant="outlined"
             size="small"
           >
+
+          <div className={classes.paper}><strong>ชื่อร้านค้าผู้ให้บริการ</strong></div>
+            <TextField 
+            className={classes.textField}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  
+                </InputAdornment>
+              ),
+            }}
+              id="serviceprovider"
+              variant="standard"
+              color="secondary"
+              type="string"
+              size="medium"
+              value={serviceprovider}
+              onChange={handleServiceproviderChange}
+            />
+
             <div className={classes.paper}><strong>รหัสลูกค้า</strong></div>
               <Select className={classes.select}
               style={{ width: 500 ,marginLeft:7,marginRight:-7,marginTop:10}}
@@ -270,6 +368,44 @@ return (
                 <MenuItem value={item.id}>{item.phonenumber}</MenuItem>
               ))}
             </Select>
+
+            <div className={classes.paper}><strong>ที่อยู่ร้านค้า</strong></div>
+            <TextField 
+            className={classes.textField}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  
+                </InputAdornment>
+              ),
+            }}
+              id="address"
+              variant="standard"
+              color="secondary"
+              type="string"
+              size="medium"
+              value={address}
+              onChange={handleAddressChange}
+            />
+
+            <div className={classes.paper}><strong>ชื่อผลิตภัณฑ์</strong></div>
+            <TextField 
+            className={classes.textField}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  
+                </InputAdornment>
+              ),
+            }}
+              id="nameproduct"
+              variant="standard"
+              color="secondary"
+              type="string"
+              size="medium"
+              value={productname}
+              onChange={handleProductnameChange}
+            />
 
             <div className={classes.paper}><strong>รายละเอียดการซ่อม</strong></div>
             <Select className={classes.select}

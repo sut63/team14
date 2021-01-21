@@ -23,12 +23,15 @@ type ReceiptController struct {
 }
 
 type Receipt struct {
-	Added       string
-	Customer    int
-	Personal    int
-	PaymentType int
-	Adminrepair int
-	Product     int
+	Added       	string
+	Serviceprovider	string
+	Address			string
+	Productname		string
+	Customer    	int
+	Personal    	int
+	PaymentType 	int
+	Adminrepair 	int
+	Product     	int
 }
 
 // CreateReceipt handles POST requests for adding receipt entities
@@ -112,15 +115,22 @@ func (ctl *ReceiptController) CreateReceipt(c *gin.Context) {
 		SetAdminrepair(a).
 		SetPaymenttype(pt).
 		SetProduct(pr).
+		SetServiceprovider(obj.Serviceprovider).
+		SetAddress(obj.Address).
+		SetProductname(obj.Productname).
 		Save(context.Background())
 	if err != nil {
 		c.JSON(400, gin.H{
-			"error": "saving failed",
+			"status": false,
+			"error": err,
 		})
 		return
 	}
 
-	c.JSON(200, r)
+	c.JSON(200, gin.H{
+		"status": true,
+		"data": r,
+	})
 }
 
 // GetReceipt handles GET requests to retrieve a receipt entity

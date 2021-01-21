@@ -100,6 +100,27 @@ func AddedTime(v time.Time) predicate.Receipt {
 	})
 }
 
+// Serviceprovider applies equality check predicate on the "Serviceprovider" field. It's identical to ServiceproviderEQ.
+func Serviceprovider(v string) predicate.Receipt {
+	return predicate.Receipt(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldServiceprovider), v))
+	})
+}
+
+// Address applies equality check predicate on the "Address" field. It's identical to AddressEQ.
+func Address(v string) predicate.Receipt {
+	return predicate.Receipt(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldAddress), v))
+	})
+}
+
+// Productname applies equality check predicate on the "Productname" field. It's identical to ProductnameEQ.
+func Productname(v string) predicate.Receipt {
+	return predicate.Receipt(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldProductname), v))
+	})
+}
+
 // AddedTimeEQ applies the EQ predicate on the "added_time" field.
 func AddedTimeEQ(v time.Time) predicate.Receipt {
 	return predicate.Receipt(func(s *sql.Selector) {
@@ -173,6 +194,339 @@ func AddedTimeLT(v time.Time) predicate.Receipt {
 func AddedTimeLTE(v time.Time) predicate.Receipt {
 	return predicate.Receipt(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldAddedTime), v))
+	})
+}
+
+// ServiceproviderEQ applies the EQ predicate on the "Serviceprovider" field.
+func ServiceproviderEQ(v string) predicate.Receipt {
+	return predicate.Receipt(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldServiceprovider), v))
+	})
+}
+
+// ServiceproviderNEQ applies the NEQ predicate on the "Serviceprovider" field.
+func ServiceproviderNEQ(v string) predicate.Receipt {
+	return predicate.Receipt(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldServiceprovider), v))
+	})
+}
+
+// ServiceproviderIn applies the In predicate on the "Serviceprovider" field.
+func ServiceproviderIn(vs ...string) predicate.Receipt {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Receipt(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldServiceprovider), v...))
+	})
+}
+
+// ServiceproviderNotIn applies the NotIn predicate on the "Serviceprovider" field.
+func ServiceproviderNotIn(vs ...string) predicate.Receipt {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Receipt(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldServiceprovider), v...))
+	})
+}
+
+// ServiceproviderGT applies the GT predicate on the "Serviceprovider" field.
+func ServiceproviderGT(v string) predicate.Receipt {
+	return predicate.Receipt(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldServiceprovider), v))
+	})
+}
+
+// ServiceproviderGTE applies the GTE predicate on the "Serviceprovider" field.
+func ServiceproviderGTE(v string) predicate.Receipt {
+	return predicate.Receipt(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldServiceprovider), v))
+	})
+}
+
+// ServiceproviderLT applies the LT predicate on the "Serviceprovider" field.
+func ServiceproviderLT(v string) predicate.Receipt {
+	return predicate.Receipt(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldServiceprovider), v))
+	})
+}
+
+// ServiceproviderLTE applies the LTE predicate on the "Serviceprovider" field.
+func ServiceproviderLTE(v string) predicate.Receipt {
+	return predicate.Receipt(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldServiceprovider), v))
+	})
+}
+
+// ServiceproviderContains applies the Contains predicate on the "Serviceprovider" field.
+func ServiceproviderContains(v string) predicate.Receipt {
+	return predicate.Receipt(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldServiceprovider), v))
+	})
+}
+
+// ServiceproviderHasPrefix applies the HasPrefix predicate on the "Serviceprovider" field.
+func ServiceproviderHasPrefix(v string) predicate.Receipt {
+	return predicate.Receipt(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldServiceprovider), v))
+	})
+}
+
+// ServiceproviderHasSuffix applies the HasSuffix predicate on the "Serviceprovider" field.
+func ServiceproviderHasSuffix(v string) predicate.Receipt {
+	return predicate.Receipt(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldServiceprovider), v))
+	})
+}
+
+// ServiceproviderEqualFold applies the EqualFold predicate on the "Serviceprovider" field.
+func ServiceproviderEqualFold(v string) predicate.Receipt {
+	return predicate.Receipt(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldServiceprovider), v))
+	})
+}
+
+// ServiceproviderContainsFold applies the ContainsFold predicate on the "Serviceprovider" field.
+func ServiceproviderContainsFold(v string) predicate.Receipt {
+	return predicate.Receipt(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldServiceprovider), v))
+	})
+}
+
+// AddressEQ applies the EQ predicate on the "Address" field.
+func AddressEQ(v string) predicate.Receipt {
+	return predicate.Receipt(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldAddress), v))
+	})
+}
+
+// AddressNEQ applies the NEQ predicate on the "Address" field.
+func AddressNEQ(v string) predicate.Receipt {
+	return predicate.Receipt(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldAddress), v))
+	})
+}
+
+// AddressIn applies the In predicate on the "Address" field.
+func AddressIn(vs ...string) predicate.Receipt {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Receipt(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldAddress), v...))
+	})
+}
+
+// AddressNotIn applies the NotIn predicate on the "Address" field.
+func AddressNotIn(vs ...string) predicate.Receipt {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Receipt(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldAddress), v...))
+	})
+}
+
+// AddressGT applies the GT predicate on the "Address" field.
+func AddressGT(v string) predicate.Receipt {
+	return predicate.Receipt(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldAddress), v))
+	})
+}
+
+// AddressGTE applies the GTE predicate on the "Address" field.
+func AddressGTE(v string) predicate.Receipt {
+	return predicate.Receipt(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldAddress), v))
+	})
+}
+
+// AddressLT applies the LT predicate on the "Address" field.
+func AddressLT(v string) predicate.Receipt {
+	return predicate.Receipt(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldAddress), v))
+	})
+}
+
+// AddressLTE applies the LTE predicate on the "Address" field.
+func AddressLTE(v string) predicate.Receipt {
+	return predicate.Receipt(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldAddress), v))
+	})
+}
+
+// AddressContains applies the Contains predicate on the "Address" field.
+func AddressContains(v string) predicate.Receipt {
+	return predicate.Receipt(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldAddress), v))
+	})
+}
+
+// AddressHasPrefix applies the HasPrefix predicate on the "Address" field.
+func AddressHasPrefix(v string) predicate.Receipt {
+	return predicate.Receipt(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldAddress), v))
+	})
+}
+
+// AddressHasSuffix applies the HasSuffix predicate on the "Address" field.
+func AddressHasSuffix(v string) predicate.Receipt {
+	return predicate.Receipt(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldAddress), v))
+	})
+}
+
+// AddressEqualFold applies the EqualFold predicate on the "Address" field.
+func AddressEqualFold(v string) predicate.Receipt {
+	return predicate.Receipt(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldAddress), v))
+	})
+}
+
+// AddressContainsFold applies the ContainsFold predicate on the "Address" field.
+func AddressContainsFold(v string) predicate.Receipt {
+	return predicate.Receipt(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldAddress), v))
+	})
+}
+
+// ProductnameEQ applies the EQ predicate on the "Productname" field.
+func ProductnameEQ(v string) predicate.Receipt {
+	return predicate.Receipt(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldProductname), v))
+	})
+}
+
+// ProductnameNEQ applies the NEQ predicate on the "Productname" field.
+func ProductnameNEQ(v string) predicate.Receipt {
+	return predicate.Receipt(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldProductname), v))
+	})
+}
+
+// ProductnameIn applies the In predicate on the "Productname" field.
+func ProductnameIn(vs ...string) predicate.Receipt {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Receipt(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldProductname), v...))
+	})
+}
+
+// ProductnameNotIn applies the NotIn predicate on the "Productname" field.
+func ProductnameNotIn(vs ...string) predicate.Receipt {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Receipt(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldProductname), v...))
+	})
+}
+
+// ProductnameGT applies the GT predicate on the "Productname" field.
+func ProductnameGT(v string) predicate.Receipt {
+	return predicate.Receipt(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldProductname), v))
+	})
+}
+
+// ProductnameGTE applies the GTE predicate on the "Productname" field.
+func ProductnameGTE(v string) predicate.Receipt {
+	return predicate.Receipt(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldProductname), v))
+	})
+}
+
+// ProductnameLT applies the LT predicate on the "Productname" field.
+func ProductnameLT(v string) predicate.Receipt {
+	return predicate.Receipt(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldProductname), v))
+	})
+}
+
+// ProductnameLTE applies the LTE predicate on the "Productname" field.
+func ProductnameLTE(v string) predicate.Receipt {
+	return predicate.Receipt(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldProductname), v))
+	})
+}
+
+// ProductnameContains applies the Contains predicate on the "Productname" field.
+func ProductnameContains(v string) predicate.Receipt {
+	return predicate.Receipt(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldProductname), v))
+	})
+}
+
+// ProductnameHasPrefix applies the HasPrefix predicate on the "Productname" field.
+func ProductnameHasPrefix(v string) predicate.Receipt {
+	return predicate.Receipt(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldProductname), v))
+	})
+}
+
+// ProductnameHasSuffix applies the HasSuffix predicate on the "Productname" field.
+func ProductnameHasSuffix(v string) predicate.Receipt {
+	return predicate.Receipt(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldProductname), v))
+	})
+}
+
+// ProductnameEqualFold applies the EqualFold predicate on the "Productname" field.
+func ProductnameEqualFold(v string) predicate.Receipt {
+	return predicate.Receipt(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldProductname), v))
+	})
+}
+
+// ProductnameContainsFold applies the ContainsFold predicate on the "Productname" field.
+func ProductnameContainsFold(v string) predicate.Receipt {
+	return predicate.Receipt(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldProductname), v))
 	})
 }
 

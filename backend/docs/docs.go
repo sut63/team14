@@ -3109,6 +3109,9 @@ var doc = `{
                 "added": {
                     "type": "string"
                 },
+                "address": {
+                    "type": "string"
+                },
                 "adminrepair": {
                     "type": "integer"
                 },
@@ -3123,6 +3126,12 @@ var doc = `{
                 },
                 "product": {
                     "type": "integer"
+                },
+                "productname": {
+                    "type": "string"
+                },
+                "serviceprovider": {
+                    "type": "string"
                 }
             }
         },
@@ -3634,6 +3643,18 @@ var doc = `{
         "ent.Receipt": {
             "type": "object",
             "properties": {
+                "Address": {
+                    "description": "Address holds the value of the \"Address\" field.",
+                    "type": "string"
+                },
+                "Productname": {
+                    "description": "Productname holds the value of the \"Productname\" field.",
+                    "type": "string"
+                },
+                "Serviceprovider": {
+                    "description": "Serviceprovider holds the value of the \"Serviceprovider\" field.",
+                    "type": "string"
+                },
                 "added_time": {
                     "description": "AddedTime holds the value of the \"added_time\" field.",
                     "type": "string"
@@ -3772,7 +3793,6 @@ var doc = `{
         "OAuth2Application": {
             "type": "oauth2",
             "flow": "application",
-            "authorizationUrl": "",
             "tokenUrl": "https://example.com/oauth/token",
             "scopes": {
                 "admin": " Grants read and write access to administrative information",
@@ -3791,7 +3811,6 @@ var doc = `{
         "OAuth2Password": {
             "type": "oauth2",
             "flow": "password",
-            "authorizationUrl": "",
             "tokenUrl": "https://example.com/oauth/token",
             "scopes": {
                 "admin": " Grants read and write access to administrative information",
