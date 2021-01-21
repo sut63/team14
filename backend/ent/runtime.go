@@ -72,6 +72,10 @@ func init() {
 	personalDescPersonalname := personalFields[0].Descriptor()
 	// personal.PersonalnameValidator is a validator for the "Personalname" field. It is called by the builders before save.
 	personal.PersonalnameValidator = personalDescPersonalname.Validators[0].(func(string) error)
+	// personalDescEmail is the schema descriptor for Email field.
+	personalDescEmail := personalFields[1].Descriptor()
+	// personal.EmailValidator is a validator for the "Email" field. It is called by the builders before save.
+	personal.EmailValidator = personalDescEmail.Validators[0].(func(string) error)
 	// personalDescPassword is the schema descriptor for Password field.
 	personalDescPassword := personalFields[2].Descriptor()
 	// personal.PasswordValidator is a validator for the "Password" field. It is called by the builders before save.
