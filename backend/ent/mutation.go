@@ -2059,10 +2059,10 @@ type FixMutation struct {
 	op                Op
 	typ               string
 	id                *int
-	productnumber     *string
-	problemtype       *string
-	queue             *string
-	date              *time.Time
+	_Productnumber    *string
+	_Problemtype      *string
+	_Queue            *string
+	_Date             *time.Time
 	clearedFields     map[string]struct{}
 	fix               *int
 	clearedfix        bool
@@ -2157,21 +2157,21 @@ func (m *FixMutation) ID() (id int, exists bool) {
 	return *m.id, true
 }
 
-// SetProductnumber sets the productnumber field.
+// SetProductnumber sets the Productnumber field.
 func (m *FixMutation) SetProductnumber(s string) {
-	m.productnumber = &s
+	m._Productnumber = &s
 }
 
-// Productnumber returns the productnumber value in the mutation.
+// Productnumber returns the Productnumber value in the mutation.
 func (m *FixMutation) Productnumber() (r string, exists bool) {
-	v := m.productnumber
+	v := m._Productnumber
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldProductnumber returns the old productnumber value of the Fix.
+// OldProductnumber returns the old Productnumber value of the Fix.
 // If the Fix object wasn't provided to the builder, the object is fetched
 // from the database.
 // An error is returned if the mutation operation is not UpdateOne, or database query fails.
@@ -2189,26 +2189,26 @@ func (m *FixMutation) OldProductnumber(ctx context.Context) (v string, err error
 	return oldValue.Productnumber, nil
 }
 
-// ResetProductnumber reset all changes of the "productnumber" field.
+// ResetProductnumber reset all changes of the "Productnumber" field.
 func (m *FixMutation) ResetProductnumber() {
-	m.productnumber = nil
+	m._Productnumber = nil
 }
 
-// SetProblemtype sets the problemtype field.
+// SetProblemtype sets the Problemtype field.
 func (m *FixMutation) SetProblemtype(s string) {
-	m.problemtype = &s
+	m._Problemtype = &s
 }
 
-// Problemtype returns the problemtype value in the mutation.
+// Problemtype returns the Problemtype value in the mutation.
 func (m *FixMutation) Problemtype() (r string, exists bool) {
-	v := m.problemtype
+	v := m._Problemtype
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldProblemtype returns the old problemtype value of the Fix.
+// OldProblemtype returns the old Problemtype value of the Fix.
 // If the Fix object wasn't provided to the builder, the object is fetched
 // from the database.
 // An error is returned if the mutation operation is not UpdateOne, or database query fails.
@@ -2226,26 +2226,26 @@ func (m *FixMutation) OldProblemtype(ctx context.Context) (v string, err error) 
 	return oldValue.Problemtype, nil
 }
 
-// ResetProblemtype reset all changes of the "problemtype" field.
+// ResetProblemtype reset all changes of the "Problemtype" field.
 func (m *FixMutation) ResetProblemtype() {
-	m.problemtype = nil
+	m._Problemtype = nil
 }
 
-// SetQueue sets the queue field.
+// SetQueue sets the Queue field.
 func (m *FixMutation) SetQueue(s string) {
-	m.queue = &s
+	m._Queue = &s
 }
 
-// Queue returns the queue value in the mutation.
+// Queue returns the Queue value in the mutation.
 func (m *FixMutation) Queue() (r string, exists bool) {
-	v := m.queue
+	v := m._Queue
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldQueue returns the old queue value of the Fix.
+// OldQueue returns the old Queue value of the Fix.
 // If the Fix object wasn't provided to the builder, the object is fetched
 // from the database.
 // An error is returned if the mutation operation is not UpdateOne, or database query fails.
@@ -2263,26 +2263,26 @@ func (m *FixMutation) OldQueue(ctx context.Context) (v string, err error) {
 	return oldValue.Queue, nil
 }
 
-// ResetQueue reset all changes of the "queue" field.
+// ResetQueue reset all changes of the "Queue" field.
 func (m *FixMutation) ResetQueue() {
-	m.queue = nil
+	m._Queue = nil
 }
 
-// SetDate sets the date field.
+// SetDate sets the Date field.
 func (m *FixMutation) SetDate(t time.Time) {
-	m.date = &t
+	m._Date = &t
 }
 
-// Date returns the date value in the mutation.
+// Date returns the Date value in the mutation.
 func (m *FixMutation) Date() (r time.Time, exists bool) {
-	v := m.date
+	v := m._Date
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldDate returns the old date value of the Fix.
+// OldDate returns the old Date value of the Fix.
 // If the Fix object wasn't provided to the builder, the object is fetched
 // from the database.
 // An error is returned if the mutation operation is not UpdateOne, or database query fails.
@@ -2300,9 +2300,9 @@ func (m *FixMutation) OldDate(ctx context.Context) (v time.Time, err error) {
 	return oldValue.Date, nil
 }
 
-// ResetDate reset all changes of the "date" field.
+// ResetDate reset all changes of the "Date" field.
 func (m *FixMutation) ResetDate() {
-	m.date = nil
+	m._Date = nil
 }
 
 // SetFixID sets the fix edge to Adminrepair by id.
@@ -2515,16 +2515,16 @@ func (m *FixMutation) Type() string {
 // fields that were in/decremented, call AddedFields().
 func (m *FixMutation) Fields() []string {
 	fields := make([]string, 0, 4)
-	if m.productnumber != nil {
+	if m._Productnumber != nil {
 		fields = append(fields, fix.FieldProductnumber)
 	}
-	if m.problemtype != nil {
+	if m._Problemtype != nil {
 		fields = append(fields, fix.FieldProblemtype)
 	}
-	if m.queue != nil {
+	if m._Queue != nil {
 		fields = append(fields, fix.FieldQueue)
 	}
-	if m.date != nil {
+	if m._Date != nil {
 		fields = append(fields, fix.FieldDate)
 	}
 	return fields

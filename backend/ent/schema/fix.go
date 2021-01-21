@@ -1,6 +1,8 @@
 package schema
 
 import (
+	"regexp"
+
 	"github.com/facebookincubator/ent"
 	"github.com/facebookincubator/ent/schema/edge"
 	"github.com/facebookincubator/ent/schema/field"
@@ -10,16 +12,15 @@ import (
 type Fix struct {
 	ent.Schema
 }
+
 // Fields of the Fix.
 func (Fix) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("productnumber").
-		NotEmpty(),
-		field.String("problemtype").
-		NotEmpty(),
-		field.String("queue").Unique().
-		NotEmpty(),
-		field.Time("date"),
+		field.String("Productnumber").Match(regexp.MustCompile("[a-zA-Z0-9_]+$")).
+			NotEmpty(),
+		field.String("Problemtype").MaxLen(100).MinLen(5),
+		field.String("Queue").Unique().MinLen(5).Match(regexp.MustCompile("[A-Z0-9_]+$")),
+		field.Time("Date"),
 	}
 }
 

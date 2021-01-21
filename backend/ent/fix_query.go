@@ -395,7 +395,7 @@ func (fq *FixQuery) WithFixcomtype(opts ...func(*FixcomtypeQuery)) *FixQuery {
 // Example:
 //
 //	var v []struct {
-//		Productnumber string `json:"productnumber,omitempty"`
+//		Productnumber string `json:"Productnumber,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
@@ -421,7 +421,7 @@ func (fq *FixQuery) GroupBy(field string, fields ...string) *FixGroupBy {
 // Example:
 //
 //	var v []struct {
-//		Productnumber string `json:"productnumber,omitempty"`
+//		Productnumber string `json:"Productnumber,omitempty"`
 //	}
 //
 //	client.Fix.Query().

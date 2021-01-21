@@ -8,61 +8,7 @@
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">FixLogin Success Test Case</td></tr>
-</thead>
-<tbody>
-<tr><td>open</td><td>http://localhost:3000/<datalist><option>http://localhost:3000/</option></datalist></td><td></td>
-</tr>
-<tr><td>type</td><td>id=email<datalist><option>id=email</option><option>name=email</option><option>//input[@id='email']</option><option>//div[@id='root']/div/div[2]/article/div[2]/div/div/input</option><option>//input</option><option>css=#email</option></datalist></td><td>a@hotmail.com</td>
-</tr>
-<tr><td>type</td><td>id=password<datalist><option>id=password</option><option>name=password</option><option>//input[@id='password']</option><option>//div[@id='root']/div/div[2]/article/div[2]/div[2]/div/input</option><option>//div[2]/div/input</option><option>css=#password</option></datalist></td><td>1234</td>
-</tr>
-<tr><td>click</td><td>//div[@id='root']/div/div[2]/article/div[2]/button/span<datalist><option>//div[@id='root']/div/div[2]/article/div[2]/button/span</option><option>//button/span</option><option>css=span.MuiButton-label</option></datalist></td><td></td>
-</tr>
-</tbody></table>
-<table cellpadding="1" cellspacing="1" border="1">
-<thead>
-<tr><td rowspan="1" colspan="3">FixCreate Failed Test Case</td></tr>
-</thead>
-<tbody>
-<tr><td>open</td><td>http://localhost:3000/Group14<datalist><option>http://localhost:3000/Group14</option></datalist></td><td></td>
-</tr>
-<tr><td>click</td><td>//div[@id='root']/div/div[2]/div/article/a[3]/span<datalist><option>//div[@id='root']/div/div[2]/div/article/a[3]/span</option><option>//a[3]/span</option></datalist></td><td></td>
-</tr>
-<tr><td>click</td><td>//div[@id='root']/div/div[2]/article/div/div[2]/a/span<datalist><option>//div[@id='root']/div/div[2]/article/div/div[2]/a/span</option><option>//div/div[2]/a/span</option><option>css=a.MuiButtonBase-root.MuiButton-root.MuiButton-contained.MuiButton-containedSecondary &gt; span.MuiButton-label</option></datalist></td><td></td>
-</tr>
-<tr><td>click</td><td>id=customername<datalist><option>//body</option><option>css=body</option><option>id=customername</option></datalist></td><td></td>
-</tr>
-<tr><td>click</td><td>//div[@id='menu-']/div[3]/ul/li[2]<datalist><option>//div[@id='menu-']/div[3]/ul/li[2]</option><option>//li[2]</option></datalist></td><td></td>
-</tr>
-<tr><td>click</td><td>id=fixcomtype<datalist><option>//body</option><option>css=body</option><option>id=fixcomtype</option></datalist></td><td></td>
-</tr>
-<tr><td>click</td><td>//div[@id='menu-']/div[3]/ul/li[2]<datalist><option>//div[@id='menu-']/div[3]/ul/li[2]</option><option>//li[2]</option></datalist></td><td></td>
-</tr>
-<tr><td>click</td><td>id=fixbrandname<datalist><option>//body</option><option>css=body</option><option>id=fixbrandname</option></datalist></td><td></td>
-</tr>
-<tr><td>click</td><td>//div[@id='menu-']/div[3]/ul/li[4]<datalist><option>//div[@id='menu-']/div[3]/ul/li[4]</option><option>//li[4]</option></datalist></td><td></td>
-</tr>
-<tr><td>click</td><td>id=productnumber<datalist><option>id=productnumber</option><option>//input[@id='productnumber']</option><option>//div[@id='root']/div/div[2]/article/div/form/div/div[8]/div/input</option><option>//div[8]/div/input</option><option>css=#productnumber</option></datalist></td><td></td>
-</tr>
-<tr><td>type</td><td>id=productnumber<datalist><option>id=productnumber</option><option>//input[@id='productnumber']</option><option>//div[@id='root']/div/div[2]/article/div/form/div/div[8]/div/input</option><option>//div[8]/div/input</option><option>css=#productnumber</option></datalist></td><td>LENOVO-LNV-89998</td>
-</tr>
-<tr><td>click</td><td>id=problemtype<datalist><option>id=problemtype</option><option>//input[@id='problemtype']</option><option>//div[@id='root']/div/div[2]/article/div/form/div/div[12]/div/input</option><option>//div[12]/div/input</option><option>css=#problemtype</option></datalist></td><td></td>
-</tr>
-<tr><td>type</td><td>id=problemtype<datalist><option>id=problemtype</option><option>//input[@id='problemtype']</option><option>//div[@id='root']/div/div[2]/article/div/form/div/div[12]/div/input</option><option>//div[12]/div/input</option><option>css=#problemtype</option></datalist></td><td>หน้าจอแตก</td>
-</tr>
-<tr><td>click</td><td>id=queue<datalist><option>id=queue</option><option>//input[@id='queue']</option><option>//div[@id='root']/div/div[2]/article/div/form/div/div[14]/div/input</option><option>//div[14]/div/input</option><option>css=#queue</option></datalist></td><td></td>
-</tr>
-<tr><td>type</td><td>id=queue<datalist><option>id=queue</option><option>//input[@id='queue']</option><option>//div[@id='root']/div/div[2]/article/div/form/div/div[14]/div/input</option><option>//div[14]/div/input</option><option>css=#queue</option></datalist></td><td>Fix-99</td>
-</tr>
-<tr><td>click</td><td>//div[@id='root']/div/div[2]/header/div[2]/button/span<datalist><option>//div[@id='root']/div/div[2]/header/div[2]/button/span</option><option>//button/span</option><option>css=span.MuiButton-label</option></datalist></td><td></td>
-</tr>
-<tr><td>assertText</td><td>//div[@id='root']/div/div[2]/article/div/div<datalist><option>//div[@id='root']/div/div[2]/article/div/div</option><option>//article/div/div</option><option>css=div.MuiPaper-root.MuiAlert-root.MuiAlert-standardWarning.MuiPaper-elevation0</option></datalist></td><td>ไม่สามารถบันทึกข้อมูลได้ กรุณาลองใหม่อีกครั้ง</td>
-</tr>
-</tbody></table>
-<table cellpadding="1" cellspacing="1" border="1">
-<thead>
-<tr><td rowspan="1" colspan="3">FixCreate Success Test Case</td></tr>
+<tr><td rowspan="1" colspan="3">Fix Success Test Case</td></tr>
 </thead>
 <tbody>
 <tr><td>open</td><td>http://localhost:3000/Group14<datalist><option>http://localhost:3000/Group14</option></datalist></td><td></td>
@@ -85,39 +31,139 @@
 </tr>
 <tr><td>click</td><td>id=productnumber<datalist><option>id=productnumber</option><option>//input[@id='productnumber']</option><option>//div[@id='root']/div/div[2]/article/div/form/div/div[8]/div/input</option><option>//div[8]/div/input</option><option>css=#productnumber</option></datalist></td><td></td>
 </tr>
-<tr><td>type</td><td>id=productnumber<datalist><option>id=productnumber</option><option>//input[@id='productnumber']</option><option>//div[@id='root']/div/div[2]/article/div/form/div/div[8]/div/input</option><option>//div[8]/div/input</option><option>css=#productnumber</option></datalist></td><td>DELL-DDD-555</td>
+<tr><td>type</td><td>id=productnumber<datalist><option>id=productnumber</option><option>//input[@id='productnumber']</option><option>//div[@id='root']/div/div[2]/article/div/form/div/div[8]/div/input</option><option>//div[8]/div/input</option><option>css=#productnumber</option></datalist></td><td>DELL-B000-02</td>
 </tr>
-<tr><td>click</td><td>id=date<datalist><option>id=date</option><option>//input[@id='date']</option><option>//div[@id='root']/div/div[2]/article/div/form/div/div[10]/div/input</option><option>//div[10]/div/input</option><option>css=#date</option></datalist></td><td></td>
+<tr><td>click</td><td>id=problemtype<datalist><option>id=problemtype</option><option>//input[@id='problemtype']</option><option>//div[@id='root']/div/div[2]/article/div/form/div/div[10]/div/input</option><option>//div[10]/div/input</option><option>css=#problemtype</option></datalist></td><td></td>
 </tr>
-<tr><td>setText</td><td>id=date<datalist><option>id=date</option><option>//input[@id='date']</option><option>//div[@id='root']/div/div[2]/article/div/form/div/div[10]/div/input</option><option>//div[10]/div/input</option><option>css=#date</option></datalist></td><td>2021-01-15T20:26</td>
+<tr><td>type</td><td>id=problemtype<datalist><option>id=problemtype</option><option>//input[@id='problemtype']</option><option>//div[@id='root']/div/div[2]/article/div/form/div/div[10]/div/input</option><option>//div[10]/div/input</option><option>css=#problemtype</option></datalist></td><td>ลงโปรแกรม</td>
 </tr>
-<tr><td>click</td><td>id=problemtype<datalist><option>id=problemtype</option><option>//input[@id='problemtype']</option><option>//div[@id='root']/div/div[2]/article/div/form/div/div[12]/div/input</option><option>//div[12]/div/input</option><option>css=#problemtype</option></datalist></td><td></td>
+<tr><td>click</td><td>id=queue<datalist><option>id=queue</option><option>//input[@id='queue']</option><option>//div[@id='root']/div/div[2]/article/div/form/div/div[12]/div/input</option><option>//div[12]/div/input</option><option>css=#queue</option></datalist></td><td></td>
 </tr>
-<tr><td>type</td><td>id=problemtype<datalist><option>id=problemtype</option><option>//input[@id='problemtype']</option><option>//div[@id='root']/div/div[2]/article/div/form/div/div[12]/div/input</option><option>//div[12]/div/input</option><option>css=#problemtype</option></datalist></td><td>ลง windowns ใหม่</td>
-</tr>
-<tr><td>click</td><td>id=queue<datalist><option>id=queue</option><option>//input[@id='queue']</option><option>//div[@id='root']/div/div[2]/article/div/form/div/div[14]/div/input</option><option>//div[14]/div/input</option><option>css=#queue</option></datalist></td><td></td>
-</tr>
-<tr><td>type</td><td>id=queue<datalist><option>id=queue</option><option>//input[@id='queue']</option><option>//div[@id='root']/div/div[2]/article/div/form/div/div[14]/div/input</option><option>//div[14]/div/input</option><option>css=#queue</option></datalist></td><td>Fix-55</td>
+<tr><td>type</td><td>id=queue<datalist><option>id=queue</option><option>//input[@id='queue']</option><option>//div[@id='root']/div/div[2]/article/div/form/div/div[12]/div/input</option><option>//div[12]/div/input</option><option>css=#queue</option></datalist></td><td>FIX-006</td>
 </tr>
 <tr><td>click</td><td>//div[@id='root']/div/div[2]/header/div[2]/button/span<datalist><option>//div[@id='root']/div/div[2]/header/div[2]/button/span</option><option>//button/span</option><option>css=span.MuiButton-label</option></datalist></td><td></td>
 </tr>
-<tr><td>assertText</td><td>//div[@id='root']/div/div[2]/article/div/div<datalist><option>//div[@id='root']/div/div[2]/article/div/div</option><option>//article/div/div</option><option>css=div.MuiPaper-root.MuiAlert-root.MuiAlert-standardSuccess.MuiPaper-elevation0</option></datalist></td><td>บันทึกข้อมูลสำเร็จ</td>
+<tr><td>assertText</td><td>id=swal2-title<datalist><option>id=swal2-title</option><option>//h2[@id='swal2-title']</option><option>//h2</option><option>css=#swal2-title</option></datalist></td><td>บันทึกข้อมูลสำเร็จ</td>
 </tr>
 </tbody></table>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">FixLogin Failed Test Case</td></tr>
+<tr><td rowspan="1" colspan="3">Fix field3 Failed Test Case</td></tr>
 </thead>
 <tbody>
-<tr><td>open</td><td>http://localhost:3000/<datalist><option>http://localhost:3000/</option></datalist></td><td></td>
+<tr><td>open</td><td>http://localhost:3000/Group14<datalist><option>http://localhost:3000/Group14</option></datalist></td><td></td>
 </tr>
-<tr><td>type</td><td>id=email<datalist><option>id=email</option><option>name=email</option><option>//input[@id='email']</option><option>//div[@id='root']/div/div[2]/article/div[2]/div/div/input</option><option>//input</option><option>css=#email</option></datalist></td><td>a@hotmail.com</td>
+<tr><td>click</td><td>//div[@id='root']/div/div[2]/div/article/a[3]/span<datalist><option>//div[@id='root']/div/div[2]/div/article/a[3]/span</option><option>//a[3]/span</option></datalist></td><td></td>
 </tr>
-<tr><td>type</td><td>id=password<datalist><option>id=password</option><option>name=password</option><option>//input[@id='password']</option><option>//div[@id='root']/div/div[2]/article/div[2]/div[2]/div/input</option><option>//div[2]/div/input</option><option>css=#password</option></datalist></td><td>123456789</td>
+<tr><td>click</td><td>//div[@id='root']/div/div[2]/article/div/div[2]/a/span<datalist><option>//div[@id='root']/div/div[2]/article/div/div[2]/a/span</option><option>//div/div[2]/a/span</option><option>css=a.MuiButtonBase-root.MuiButton-root.MuiButton-contained.MuiButton-containedSecondary &gt; span.MuiButton-label</option></datalist></td><td></td>
 </tr>
-<tr><td>click</td><td>//div[@id='root']/div/div[2]/article/div[2]/button/span<datalist><option>//div[@id='root']/div/div[2]/article/div[2]/button/span</option><option>//button/span</option><option>css=span.MuiButton-label</option></datalist></td><td></td>
+<tr><td>click</td><td>id=customername<datalist><option>//body</option><option>css=body</option><option>id=customername</option></datalist></td><td></td>
 </tr>
-<tr><td>assertAlert</td><td>เข้าสู่ระบบไม่สำเร็จ กรุณาตรวจสอบ Email หรือ Password<datalist><option>เข้าสู่ระบบไม่สำเร็จ กรุณาตรวจสอบ Email หรือ Password</option></datalist></td><td></td>
+<tr><td>click</td><td>//div[@id='menu-']/div[3]/ul/li<datalist><option>//div[@id='menu-']/div[3]/ul/li</option><option>//li</option><option>css=li.MuiButtonBase-root.MuiListItem-root.MuiMenuItem-root.MuiMenuItem-gutters.MuiListItem-gutters.MuiListItem-button</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>id=fixcomtype<datalist><option>//body</option><option>css=body</option><option>id=fixcomtype</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='menu-']/div[3]/ul/li[2]<datalist><option>//div[@id='menu-']/div[3]/ul/li[2]</option><option>//li[2]</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>id=fixbrandname<datalist><option>//body</option><option>css=body</option><option>id=fixbrandname</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='menu-']/div[3]/ul/li<datalist><option>//div[@id='menu-']/div[3]/ul/li</option><option>//li</option><option>css=li.MuiButtonBase-root.MuiListItem-root.MuiMenuItem-root.MuiMenuItem-gutters.MuiListItem-gutters.MuiListItem-button</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>id=productnumber<datalist><option>id=productnumber</option><option>//input[@id='productnumber']</option><option>//div[@id='root']/div/div[2]/article/div/form/div/div[8]/div/input</option><option>//div[8]/div/input</option><option>css=#productnumber</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>id=productnumber<datalist><option>id=productnumber</option><option>//input[@id='productnumber']</option><option>//div[@id='root']/div/div[2]/article/div/form/div/div[8]/div/input</option><option>//div[8]/div/input</option><option>css=#productnumber</option></datalist></td><td>ASUS-B000-01</td>
+</tr>
+<tr><td>click</td><td>id=problemtype<datalist><option>id=problemtype</option><option>//input[@id='problemtype']</option><option>//div[@id='root']/div/div[2]/article/div/form/div/div[10]/div/input</option><option>//div[10]/div/input</option><option>css=#problemtype</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>id=problemtype<datalist><option>id=problemtype</option><option>//input[@id='problemtype']</option><option>//div[@id='root']/div/div[2]/article/div/form/div/div[10]/div/input</option><option>//div[10]/div/input</option><option>css=#problemtype</option></datalist></td><td>แป้นพิมพ์เสีย</td>
+</tr>
+<tr><td>click</td><td>id=queue<datalist><option>id=queue</option><option>//input[@id='queue']</option><option>//div[@id='root']/div/div[2]/article/div/form/div/div[12]/div/input</option><option>//div[12]/div/input</option><option>css=#queue</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>id=queue<datalist><option>id=queue</option><option>//input[@id='queue']</option><option>//div[@id='root']/div/div[2]/article/div/form/div/div[12]/div/input</option><option>//div[12]/div/input</option><option>css=#queue</option></datalist></td><td>F</td>
+</tr>
+<tr><td>click</td><td>//div[@id='root']/div/div[2]/header/div[2]/button/span<datalist><option>//div[@id='root']/div/div[2]/header/div[2]/button/span</option><option>//button/span</option><option>css=span.MuiButton-label</option></datalist></td><td></td>
+</tr>
+<tr><td>assertText</td><td>id=swal2-title<datalist><option>id=swal2-title</option><option>//h2[@id='swal2-title']</option><option>//h2</option><option>css=#swal2-title</option></datalist></td><td>กรุณากรอกลำดับคิว</td>
+</tr>
+</tbody></table>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Fix field2 Failed Test Case</td></tr>
+</thead>
+<tbody>
+<tr><td>open</td><td>http://localhost:3000/Group14<datalist><option>http://localhost:3000/Group14</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='root']/div/div[2]/div/article/a[3]/span<datalist><option>//div[@id='root']/div/div[2]/div/article/a[3]/span</option><option>//a[3]/span</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='root']/div/div[2]/article/div/div[2]/a/span<datalist><option>//div[@id='root']/div/div[2]/article/div/div[2]/a/span</option><option>//div/div[2]/a/span</option><option>css=a.MuiButtonBase-root.MuiButton-root.MuiButton-contained.MuiButton-containedSecondary &gt; span.MuiButton-label</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>id=customername<datalist><option>//body</option><option>css=body</option><option>id=customername</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='menu-']/div[3]/ul/li<datalist><option>//div[@id='menu-']/div[3]/ul/li</option><option>//li</option><option>css=li.MuiButtonBase-root.MuiListItem-root.MuiMenuItem-root.MuiMenuItem-gutters.MuiListItem-gutters.MuiListItem-button</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>id=fixcomtype<datalist><option>//body</option><option>css=body</option><option>id=fixcomtype</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='menu-']/div[3]/ul/li[2]<datalist><option>//div[@id='menu-']/div[3]/ul/li[2]</option><option>//li[2]</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>id=fixbrandname<datalist><option>//body</option><option>css=body</option><option>id=fixbrandname</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='menu-']/div[3]/ul/li[2]<datalist><option>//div[@id='menu-']/div[3]/ul/li[2]</option><option>//li[2]</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>id=productnumber<datalist><option>id=productnumber</option><option>//input[@id='productnumber']</option><option>//div[@id='root']/div/div[2]/article/div/form/div/div[8]/div/input</option><option>//div[8]/div/input</option><option>css=#productnumber</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>id=productnumber<datalist><option>id=productnumber</option><option>//input[@id='productnumber']</option><option>//div[@id='root']/div/div[2]/article/div/form/div/div[8]/div/input</option><option>//div[8]/div/input</option><option>css=#productnumber</option></datalist></td><td>ACER-B000-03</td>
+</tr>
+<tr><td>click</td><td>id=problemtype<datalist><option>id=problemtype</option><option>//input[@id='problemtype']</option><option>//div[@id='root']/div/div[2]/article/div/form/div/div[10]/div/input</option><option>//div[10]/div/input</option><option>css=#problemtype</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>id=problemtype<datalist><option>id=problemtype</option><option>//input[@id='problemtype']</option><option>//div[@id='root']/div/div[2]/article/div/form/div/div[10]/div/input</option><option>//div[10]/div/input</option><option>css=#problemtype</option></datalist></td><td>AA</td>
+</tr>
+<tr><td>click</td><td>id=queue<datalist><option>id=queue</option><option>//input[@id='queue']</option><option>//div[@id='root']/div/div[2]/article/div/form/div/div[12]/div/input</option><option>//div[12]/div/input</option><option>css=#queue</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>id=queue<datalist><option>id=queue</option><option>//input[@id='queue']</option><option>//div[@id='root']/div/div[2]/article/div/form/div/div[12]/div/input</option><option>//div[12]/div/input</option><option>css=#queue</option></datalist></td><td>FIX-006</td>
+</tr>
+<tr><td>click</td><td>//div[@id='root']/div/div[2]/header/div[2]/button/span<datalist><option>//div[@id='root']/div/div[2]/header/div[2]/button/span</option><option>//button/span</option><option>css=span.MuiButton-label</option></datalist></td><td></td>
+</tr>
+<tr><td>assertText</td><td>id=swal2-title<datalist><option>id=swal2-title</option><option>//h2[@id='swal2-title']</option><option>//h2</option><option>css=#swal2-title</option></datalist></td><td>กรุณากรอกรายละเอียดการแจ้งซ่อม</td>
+</tr>
+</tbody></table>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Fix field1 Failed Test Case</td></tr>
+</thead>
+<tbody>
+<tr><td>open</td><td>http://localhost:3000/Group14<datalist><option>http://localhost:3000/Group14</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='root']/div/div[2]/div/article/a[3]/span<datalist><option>//div[@id='root']/div/div[2]/div/article/a[3]/span</option><option>//a[3]/span</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='root']/div/div[2]/article/div/div[2]/a/span<datalist><option>//div[@id='root']/div/div[2]/article/div/div[2]/a/span</option><option>//div/div[2]/a/span</option><option>css=a.MuiButtonBase-root.MuiButton-root.MuiButton-contained.MuiButton-containedSecondary &gt; span.MuiButton-label</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>id=customername<datalist><option>//body</option><option>css=body</option><option>id=customername</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='menu-']/div[3]/ul/li<datalist><option>//div[@id='menu-']/div[3]/ul/li</option><option>//li</option><option>css=li.MuiButtonBase-root.MuiListItem-root.MuiMenuItem-root.MuiMenuItem-gutters.MuiListItem-gutters.MuiListItem-button</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>id=fixcomtype<datalist><option>//body</option><option>css=body</option><option>id=fixcomtype</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='menu-']/div[3]/ul/li<datalist><option>//div[@id='menu-']/div[3]/ul/li</option><option>//li</option><option>css=li.MuiButtonBase-root.MuiListItem-root.MuiMenuItem-root.MuiMenuItem-gutters.MuiListItem-gutters.MuiListItem-button</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>id=fixbrandname<datalist><option>//body</option><option>css=body</option><option>id=fixbrandname</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='menu-']/div[3]/ul/li[3]<datalist><option>//div[@id='menu-']/div[3]/ul/li[3]</option><option>//li[3]</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>id=productnumber<datalist><option>id=productnumber</option><option>//input[@id='productnumber']</option><option>//div[@id='root']/div/div[2]/article/div/form/div/div[8]/div/input</option><option>//div[8]/div/input</option><option>css=#productnumber</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>id=productnumber<datalist><option>id=productnumber</option><option>//input[@id='productnumber']</option><option>//div[@id='root']/div/div[2]/article/div/form/div/div[8]/div/input</option><option>//div[8]/div/input</option><option>css=#productnumber</option></datalist></td><td>ต๊ะ</td>
+</tr>
+<tr><td>click</td><td>id=problemtype<datalist><option>id=problemtype</option><option>//input[@id='problemtype']</option><option>//div[@id='root']/div/div[2]/article/div/form/div/div[10]/div/input</option><option>//div[10]/div/input</option><option>css=#problemtype</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>id=problemtype<datalist><option>id=problemtype</option><option>//input[@id='problemtype']</option><option>//div[@id='root']/div/div[2]/article/div/form/div/div[10]/div/input</option><option>//div[10]/div/input</option><option>css=#problemtype</option></datalist></td><td>เปิดไม่ติด</td>
+</tr>
+<tr><td>click</td><td>id=queue<datalist><option>id=queue</option><option>//input[@id='queue']</option><option>//div[@id='root']/div/div[2]/article/div/form/div/div[12]/div/input</option><option>//div[12]/div/input</option><option>css=#queue</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>id=queue<datalist><option>id=queue</option><option>//input[@id='queue']</option><option>//div[@id='root']/div/div[2]/article/div/form/div/div[12]/div/input</option><option>//div[12]/div/input</option><option>css=#queue</option></datalist></td><td>FIX-006</td>
+</tr>
+<tr><td>click</td><td>//div[@id='root']/div/div[2]/header/div[2]/button/span<datalist><option>//div[@id='root']/div/div[2]/header/div[2]/button/span</option><option>//button/span</option><option>css=span.MuiButton-label</option></datalist></td><td></td>
+</tr>
+<tr><td>assertText</td><td>id=swal2-title<datalist><option>id=swal2-title</option><option>//h2[@id='swal2-title']</option><option>//h2</option><option>css=#swal2-title</option></datalist></td><td>กรุณากรอกหมายเลขผลิตภัณฑ์</td>
 </tr>
 </tbody></table>
 </body>

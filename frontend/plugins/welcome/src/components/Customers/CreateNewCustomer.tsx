@@ -257,7 +257,7 @@ function save() {
       <Button onClick={() => {save();}} variant="contained" color="primary" startIcon={<AddCircleOutlinedIcon/>}> Create new customer </Button>
       <div>&nbsp;&nbsp;&nbsp;</div>
      
-      <Button style={{ marginLeft: 20 }} component={RouterLink} to="/customertable" variant="contained" startIcon={<CancelRoundedIcon/>}>  Table </Button>
+      <Button style={{ marginLeft: 20 }} component={RouterLink} to="/CustomerTable" variant="contained" startIcon={<CancelRoundedIcon/>}>  Table </Button>
      </Header>
 
      <Content>

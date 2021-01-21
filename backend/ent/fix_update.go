@@ -33,25 +33,25 @@ func (fu *FixUpdate) Where(ps ...predicate.Fix) *FixUpdate {
 	return fu
 }
 
-// SetProductnumber sets the productnumber field.
+// SetProductnumber sets the Productnumber field.
 func (fu *FixUpdate) SetProductnumber(s string) *FixUpdate {
 	fu.mutation.SetProductnumber(s)
 	return fu
 }
 
-// SetProblemtype sets the problemtype field.
+// SetProblemtype sets the Problemtype field.
 func (fu *FixUpdate) SetProblemtype(s string) *FixUpdate {
 	fu.mutation.SetProblemtype(s)
 	return fu
 }
 
-// SetQueue sets the queue field.
+// SetQueue sets the Queue field.
 func (fu *FixUpdate) SetQueue(s string) *FixUpdate {
 	fu.mutation.SetQueue(s)
 	return fu
 }
 
-// SetDate sets the date field.
+// SetDate sets the Date field.
 func (fu *FixUpdate) SetDate(t time.Time) *FixUpdate {
 	fu.mutation.SetDate(t)
 	return fu
@@ -191,17 +191,17 @@ func (fu *FixUpdate) ClearFixcomtype() *FixUpdate {
 func (fu *FixUpdate) Save(ctx context.Context) (int, error) {
 	if v, ok := fu.mutation.Productnumber(); ok {
 		if err := fix.ProductnumberValidator(v); err != nil {
-			return 0, &ValidationError{Name: "productnumber", err: fmt.Errorf("ent: validator failed for field \"productnumber\": %w", err)}
+			return 0, &ValidationError{Name: "Productnumber", err: fmt.Errorf("ent: validator failed for field \"Productnumber\": %w", err)}
 		}
 	}
 	if v, ok := fu.mutation.Problemtype(); ok {
 		if err := fix.ProblemtypeValidator(v); err != nil {
-			return 0, &ValidationError{Name: "problemtype", err: fmt.Errorf("ent: validator failed for field \"problemtype\": %w", err)}
+			return 0, &ValidationError{Name: "Problemtype", err: fmt.Errorf("ent: validator failed for field \"Problemtype\": %w", err)}
 		}
 	}
 	if v, ok := fu.mutation.Queue(); ok {
 		if err := fix.QueueValidator(v); err != nil {
-			return 0, &ValidationError{Name: "queue", err: fmt.Errorf("ent: validator failed for field \"queue\": %w", err)}
+			return 0, &ValidationError{Name: "Queue", err: fmt.Errorf("ent: validator failed for field \"Queue\": %w", err)}
 		}
 	}
 
@@ -493,25 +493,25 @@ type FixUpdateOne struct {
 	mutation *FixMutation
 }
 
-// SetProductnumber sets the productnumber field.
+// SetProductnumber sets the Productnumber field.
 func (fuo *FixUpdateOne) SetProductnumber(s string) *FixUpdateOne {
 	fuo.mutation.SetProductnumber(s)
 	return fuo
 }
 
-// SetProblemtype sets the problemtype field.
+// SetProblemtype sets the Problemtype field.
 func (fuo *FixUpdateOne) SetProblemtype(s string) *FixUpdateOne {
 	fuo.mutation.SetProblemtype(s)
 	return fuo
 }
 
-// SetQueue sets the queue field.
+// SetQueue sets the Queue field.
 func (fuo *FixUpdateOne) SetQueue(s string) *FixUpdateOne {
 	fuo.mutation.SetQueue(s)
 	return fuo
 }
 
-// SetDate sets the date field.
+// SetDate sets the Date field.
 func (fuo *FixUpdateOne) SetDate(t time.Time) *FixUpdateOne {
 	fuo.mutation.SetDate(t)
 	return fuo
@@ -651,17 +651,17 @@ func (fuo *FixUpdateOne) ClearFixcomtype() *FixUpdateOne {
 func (fuo *FixUpdateOne) Save(ctx context.Context) (*Fix, error) {
 	if v, ok := fuo.mutation.Productnumber(); ok {
 		if err := fix.ProductnumberValidator(v); err != nil {
-			return nil, &ValidationError{Name: "productnumber", err: fmt.Errorf("ent: validator failed for field \"productnumber\": %w", err)}
+			return nil, &ValidationError{Name: "Productnumber", err: fmt.Errorf("ent: validator failed for field \"Productnumber\": %w", err)}
 		}
 	}
 	if v, ok := fuo.mutation.Problemtype(); ok {
 		if err := fix.ProblemtypeValidator(v); err != nil {
-			return nil, &ValidationError{Name: "problemtype", err: fmt.Errorf("ent: validator failed for field \"problemtype\": %w", err)}
+			return nil, &ValidationError{Name: "Problemtype", err: fmt.Errorf("ent: validator failed for field \"Problemtype\": %w", err)}
 		}
 	}
 	if v, ok := fuo.mutation.Queue(); ok {
 		if err := fix.QueueValidator(v); err != nil {
-			return nil, &ValidationError{Name: "queue", err: fmt.Errorf("ent: validator failed for field \"queue\": %w", err)}
+			return nil, &ValidationError{Name: "Queue", err: fmt.Errorf("ent: validator failed for field \"Queue\": %w", err)}
 		}
 	}
 

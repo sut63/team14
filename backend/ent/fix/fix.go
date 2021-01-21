@@ -84,10 +84,10 @@ var ForeignKeys = []string{
 }
 
 var (
-	// ProductnumberValidator is a validator for the "productnumber" field. It is called by the builders before save.
+	// ProductnumberValidator is a validator for the "Productnumber" field. It is called by the builders before save.
 	ProductnumberValidator func(string) error
-	// ProblemtypeValidator is a validator for the "problemtype" field. It is called by the builders before save.
+	// ProblemtypeValidator is a validator for the "Problemtype" field. It is called by the builders before save.
 	ProblemtypeValidator func(string) error
-	// QueueValidator is a validator for the "queue" field. It is called by the builders before save.
+	// QueueValidator is a validator for the "Queue" field. It is called by the builders before save.
 	QueueValidator func(string) error
 )

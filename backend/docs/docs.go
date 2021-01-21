@@ -3306,8 +3306,20 @@ var doc = `{
         "ent.Fix": {
             "type": "object",
             "properties": {
-                "date": {
-                    "description": "Date holds the value of the \"date\" field.",
+                "Date": {
+                    "description": "Date holds the value of the \"Date\" field.",
+                    "type": "string"
+                },
+                "Problemtype": {
+                    "description": "Problemtype holds the value of the \"Problemtype\" field.",
+                    "type": "string"
+                },
+                "Productnumber": {
+                    "description": "Productnumber holds the value of the \"Productnumber\" field.",
+                    "type": "string"
+                },
+                "Queue": {
+                    "description": "Queue holds the value of the \"Queue\" field.",
                     "type": "string"
                 },
                 "edges": {
@@ -3318,18 +3330,6 @@ var doc = `{
                 "id": {
                     "description": "ID of the ent.",
                     "type": "integer"
-                },
-                "problemtype": {
-                    "description": "Problemtype holds the value of the \"problemtype\" field.",
-                    "type": "string"
-                },
-                "productnumber": {
-                    "description": "Productnumber holds the value of the \"productnumber\" field.",
-                    "type": "string"
-                },
-                "queue": {
-                    "description": "Queue holds the value of the \"queue\" field.",
-                    "type": "string"
                 }
             }
         },
@@ -3793,6 +3793,7 @@ var doc = `{
         "OAuth2Application": {
             "type": "oauth2",
             "flow": "application",
+            "authorizationUrl": "",
             "tokenUrl": "https://example.com/oauth/token",
             "scopes": {
                 "admin": " Grants read and write access to administrative information",
@@ -3811,6 +3812,7 @@ var doc = `{
         "OAuth2Password": {
             "type": "oauth2",
             "flow": "password",
+            "authorizationUrl": "",
             "tokenUrl": "https://example.com/oauth/token",
             "scopes": {
                 "admin": " Grants read and write access to administrative information",
