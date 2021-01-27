@@ -15,6 +15,7 @@ import Personalcreate from './components/Personalcreate/';
 import Personaltable from './components/Personaltable';
 import Personalsearch from './components/Personalsearch';
 import Personalwelcome from './components/Personalwelcome';
+import ProductSearch from './components/ProductSearch';
  
 export const plugin = createPlugin({
   id: 'welcome',
@@ -29,12 +30,14 @@ export const plugin = createPlugin({
     router.registerRoute('/customertable', CustomerTable);
     router.registerRoute('/Producttables', Producttable);
     router.registerRoute('/Productcreate', Productcreates);
+    router.registerRoute('/ProductSearch', ProductSearch);
     router.registerRoute('/Fixpage', Fixpage);
     router.registerRoute('/Tablefix', Tablefix);
     router.registerRoute('/AdminrepairUI', AdminrepairUI);
     router.registerRoute('/createreceipt', Receiptcreate);
     router.registerRoute('/CustomerSearch', CustomerSearch);
     router.registerRoute('/Tablereceipt', Tablereceipt)
+    
 
   },
 });
