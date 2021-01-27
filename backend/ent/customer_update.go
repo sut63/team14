@@ -50,6 +50,12 @@ func (cu *CustomerUpdate) SetPhonenumber(s string) *CustomerUpdate {
 	return cu
 }
 
+// SetIdentificationnumber sets the Identificationnumber field.
+func (cu *CustomerUpdate) SetIdentificationnumber(s string) *CustomerUpdate {
+	cu.mutation.SetIdentificationnumber(s)
+	return cu
+}
+
 // SetGenderID sets the gender edge to Gender by id.
 func (cu *CustomerUpdate) SetGenderID(id int) *CustomerUpdate {
 	cu.mutation.SetGenderID(id)
@@ -207,6 +213,11 @@ func (cu *CustomerUpdate) Save(ctx context.Context) (int, error) {
 			return 0, &ValidationError{Name: "Phonenumber", err: fmt.Errorf("ent: validator failed for field \"Phonenumber\": %w", err)}
 		}
 	}
+	if v, ok := cu.mutation.Identificationnumber(); ok {
+		if err := customer.IdentificationnumberValidator(v); err != nil {
+			return 0, &ValidationError{Name: "Identificationnumber", err: fmt.Errorf("ent: validator failed for field \"Identificationnumber\": %w", err)}
+		}
+	}
 
 	var (
 		err      error
@@ -294,6 +305,13 @@ func (cu *CustomerUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Type:   field.TypeString,
 			Value:  value,
 			Column: customer.FieldPhonenumber,
+		})
+	}
+	if value, ok := cu.mutation.Identificationnumber(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: customer.FieldIdentificationnumber,
 		})
 	}
 	if cu.mutation.GenderCleared() {
@@ -513,6 +531,12 @@ func (cuo *CustomerUpdateOne) SetPhonenumber(s string) *CustomerUpdateOne {
 	return cuo
 }
 
+// SetIdentificationnumber sets the Identificationnumber field.
+func (cuo *CustomerUpdateOne) SetIdentificationnumber(s string) *CustomerUpdateOne {
+	cuo.mutation.SetIdentificationnumber(s)
+	return cuo
+}
+
 // SetGenderID sets the gender edge to Gender by id.
 func (cuo *CustomerUpdateOne) SetGenderID(id int) *CustomerUpdateOne {
 	cuo.mutation.SetGenderID(id)
@@ -670,6 +694,11 @@ func (cuo *CustomerUpdateOne) Save(ctx context.Context) (*Customer, error) {
 			return nil, &ValidationError{Name: "Phonenumber", err: fmt.Errorf("ent: validator failed for field \"Phonenumber\": %w", err)}
 		}
 	}
+	if v, ok := cuo.mutation.Identificationnumber(); ok {
+		if err := customer.IdentificationnumberValidator(v); err != nil {
+			return nil, &ValidationError{Name: "Identificationnumber", err: fmt.Errorf("ent: validator failed for field \"Identificationnumber\": %w", err)}
+		}
+	}
 
 	var (
 		err  error
@@ -755,6 +784,13 @@ func (cuo *CustomerUpdateOne) sqlSave(ctx context.Context) (c *Customer, err err
 			Type:   field.TypeString,
 			Value:  value,
 			Column: customer.FieldPhonenumber,
+		})
+	}
+	if value, ok := cuo.mutation.Identificationnumber(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: customer.FieldIdentificationnumber,
 		})
 	}
 	if cuo.mutation.GenderCleared() {

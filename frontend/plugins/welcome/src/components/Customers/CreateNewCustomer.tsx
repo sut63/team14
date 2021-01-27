@@ -93,6 +93,8 @@ export default function CreateNewCustomer() {
   const [customername, setCustomername] = useState(String);
   const [address, setAddress] = useState(String);
   const [phonenumber, setPhonenumber] = useState(String);
+  const [identificationnumber, setIdentificationnumber] = useState(String);
+
 
   useEffect(() => {
     const getPersonals = async () => {
@@ -137,6 +139,10 @@ export default function CreateNewCustomer() {
   const handlePhonenumberChange = (event: any) => {
     setPhonenumber(event.target.value as string);
   };
+
+  const handleIdentificationnumberChange = (event: any) => {
+    setIdentificationnumber(event.target.value as string);
+  };
   
   const TitlehandleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     setTitle(event.target.value as number);
@@ -156,6 +162,7 @@ export default function CreateNewCustomer() {
   customername : customername,
   address : address,
   phonenumber : phonenumber,
+  identificationnumber : identificationnumber,
   title : title,
   personal : Number(cookieID),
   gender : gender,
@@ -178,6 +185,9 @@ export default function CreateNewCustomer() {
         return;
       case 'Phonenumber':
         alertMessage("error","กรุณากรอกข้อมูลหมายเลขโทรศัพท์ 10 หลัก");
+        return;
+      case 'Identificationnumber':
+        alertMessage("error","กรุณากรอกข้อมูลบัตรประชาชน 13 หลัก");
         return;
       default:
         alertMessage("error","บันทึกข้อมูลไม่สำเร็จ");
@@ -253,11 +263,15 @@ function save() {
    <Page theme={pageTheme.tool}>
      <Header
        title="Customer System" type="Computer Repair System">
+<<<<<<< Updated upstream
       <div>&nbsp;&nbsp;&nbsp;</div>
       <Button onClick={() => {save();}} variant="contained" color="primary" startIcon={<AddCircleOutlinedIcon/>}> Create new customer </Button>
       <div>&nbsp;&nbsp;&nbsp;</div>
      
       <Button style={{ marginLeft: 20 }} component={RouterLink} to="/CustomerTable" variant="contained" startIcon={<CancelRoundedIcon/>}>  Table </Button>
+=======
+      
+>>>>>>> Stashed changes
      </Header>
 
      <Content>
@@ -340,6 +354,25 @@ function save() {
               value={phonenumber}
               onChange={handlePhonenumberChange}
             />
+
+<           div className={classes.paper}><strong>บชช</strong></div>
+            <TextField 
+            className={classes.textField}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <PersonIcon />
+                </InputAdornment>
+              ),
+            }}
+              id="identificationnumber"
+              variant="standard"
+              color="secondary"
+              type="string"
+              size="medium"
+              value={identificationnumber}
+              onChange={handleIdentificationnumberChange}
+            />
             
             <div className={classes.paper}><strong>เพศ</strong></div>
             <Select className={classes.select}
@@ -358,6 +391,12 @@ function save() {
 
           
           </FormControl>
+
+          <div>&nbsp;&nbsp;&nbsp;</div>
+      <Button onClick={() => {save();}} variant="contained" color="primary" startIcon={<AddCircleOutlinedIcon/>}> Create new customer </Button>
+      <div>&nbsp;&nbsp;&nbsp;</div>
+     
+      <Button style={{ marginLeft: 20 }} component={RouterLink} to="/customertable" variant="contained" startIcon={<CancelRoundedIcon/>}>  Table </Button>
     
 
         </form>

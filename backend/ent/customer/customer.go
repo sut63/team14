@@ -13,6 +13,8 @@ const (
 	FieldAddress = "address"
 	// FieldPhonenumber holds the string denoting the phonenumber field in the database.
 	FieldPhonenumber = "phonenumber"
+	// FieldIdentificationnumber holds the string denoting the identificationnumber field in the database.
+	FieldIdentificationnumber = "identificationnumber"
 
 	// EdgeGender holds the string denoting the gender edge name in mutations.
 	EdgeGender = "gender"
@@ -70,6 +72,7 @@ var Columns = []string{
 	FieldCustomername,
 	FieldAddress,
 	FieldPhonenumber,
+	FieldIdentificationnumber,
 }
 
 // ForeignKeys holds the SQL foreign-keys that are owned by the Customer type.
@@ -86,4 +89,6 @@ var (
 	AddressValidator func(string) error
 	// PhonenumberValidator is a validator for the "Phonenumber" field. It is called by the builders before save.
 	PhonenumberValidator func(string) error
+	// IdentificationnumberValidator is a validator for the "Identificationnumber" field. It is called by the builders before save.
+	IdentificationnumberValidator func(string) error
 )

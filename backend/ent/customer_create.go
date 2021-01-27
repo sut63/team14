@@ -42,6 +42,12 @@ func (cc *CustomerCreate) SetPhonenumber(s string) *CustomerCreate {
 	return cc
 }
 
+// SetIdentificationnumber sets the Identificationnumber field.
+func (cc *CustomerCreate) SetIdentificationnumber(s string) *CustomerCreate {
+	cc.mutation.SetIdentificationnumber(s)
+	return cc
+}
+
 // SetGenderID sets the gender edge to Gender by id.
 func (cc *CustomerCreate) SetGenderID(id int) *CustomerCreate {
 	cc.mutation.SetGenderID(id)
@@ -160,6 +166,14 @@ func (cc *CustomerCreate) Save(ctx context.Context) (*Customer, error) {
 			return nil, &ValidationError{Name: "Phonenumber", err: fmt.Errorf("ent: validator failed for field \"Phonenumber\": %w", err)}
 		}
 	}
+	if _, ok := cc.mutation.Identificationnumber(); !ok {
+		return nil, &ValidationError{Name: "Identificationnumber", err: errors.New("ent: missing required field \"Identificationnumber\"")}
+	}
+	if v, ok := cc.mutation.Identificationnumber(); ok {
+		if err := customer.IdentificationnumberValidator(v); err != nil {
+			return nil, &ValidationError{Name: "Identificationnumber", err: fmt.Errorf("ent: validator failed for field \"Identificationnumber\": %w", err)}
+		}
+	}
 	var (
 		err  error
 		node *Customer
@@ -243,6 +257,14 @@ func (cc *CustomerCreate) createSpec() (*Customer, *sqlgraph.CreateSpec) {
 			Column: customer.FieldPhonenumber,
 		})
 		c.Phonenumber = value
+	}
+	if value, ok := cc.mutation.Identificationnumber(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: customer.FieldIdentificationnumber,
+		})
+		c.Identificationnumber = value
 	}
 	if nodes := cc.mutation.GenderIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

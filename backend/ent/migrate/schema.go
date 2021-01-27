@@ -65,6 +65,7 @@ var (
 		{Name: "customername", Type: field.TypeString},
 		{Name: "address", Type: field.TypeString},
 		{Name: "phonenumber", Type: field.TypeString, Size: 10},
+		{Name: "identificationnumber", Type: field.TypeString, Size: 13},
 		{Name: "gender_id", Type: field.TypeInt, Nullable: true},
 		{Name: "personal_id", Type: field.TypeInt, Nullable: true},
 		{Name: "title_id", Type: field.TypeInt, Nullable: true},
@@ -77,21 +78,21 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:  "customers_genders_customer",
-				Columns: []*schema.Column{CustomersColumns[4]},
+				Columns: []*schema.Column{CustomersColumns[5]},
 
 				RefColumns: []*schema.Column{GendersColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:  "customers_personals_customer",
-				Columns: []*schema.Column{CustomersColumns[5]},
+				Columns: []*schema.Column{CustomersColumns[6]},
 
 				RefColumns: []*schema.Column{PersonalsColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:  "customers_titles_customer",
-				Columns: []*schema.Column{CustomersColumns[6]},
+				Columns: []*schema.Column{CustomersColumns[7]},
 
 				RefColumns: []*schema.Column{TitlesColumns[0]},
 				OnDelete:   schema.SetNull,

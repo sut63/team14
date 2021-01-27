@@ -24,6 +24,8 @@ type Customer struct {
 	Address string `json:"Address,omitempty"`
 	// Phonenumber holds the value of the "Phonenumber" field.
 	Phonenumber string `json:"Phonenumber,omitempty"`
+	// Identificationnumber holds the value of the "Identificationnumber" field.
+	Identificationnumber string `json:"Identificationnumber,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the CustomerQuery when eager-loading is set.
 	Edges       CustomerEdges `json:"edges"`
@@ -116,6 +118,7 @@ func (*Customer) scanValues() []interface{} {
 		&sql.NullString{}, // Customername
 		&sql.NullString{}, // Address
 		&sql.NullString{}, // Phonenumber
+		&sql.NullString{}, // Identificationnumber
 	}
 }
 
@@ -155,7 +158,12 @@ func (c *Customer) assignValues(values ...interface{}) error {
 	} else if value.Valid {
 		c.Phonenumber = value.String
 	}
-	values = values[3:]
+	if value, ok := values[3].(*sql.NullString); !ok {
+		return fmt.Errorf("unexpected type %T for field Identificationnumber", values[3])
+	} else if value.Valid {
+		c.Identificationnumber = value.String
+	}
+	values = values[4:]
 	if len(values) == len(customer.ForeignKeys) {
 		if value, ok := values[0].(*sql.NullInt64); !ok {
 			return fmt.Errorf("unexpected type %T for edge-field gender_id", value)
@@ -233,6 +241,8 @@ func (c *Customer) String() string {
 	builder.WriteString(c.Address)
 	builder.WriteString(", Phonenumber=")
 	builder.WriteString(c.Phonenumber)
+	builder.WriteString(", Identificationnumber=")
+	builder.WriteString(c.Identificationnumber)
 	builder.WriteByte(')')
 	return builder.String()
 }

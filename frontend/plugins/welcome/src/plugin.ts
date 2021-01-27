@@ -12,6 +12,7 @@ import Tablefix from './components/Tablefix';
 import AdminrepairUI from './components/AdminrepairUI';
 import Receiptcreate from './components/Createreceipts';
 import Tablereceipt from './components/Tablereceipt';
+import CustomerSearch from './components/CustomerSearch';
  
 export const plugin = createPlugin({
   id: 'welcome',
@@ -28,6 +29,7 @@ export const plugin = createPlugin({
     router.registerRoute('/Tablefix', Tablefix);
     router.registerRoute('/AdminrepairUI', AdminrepairUI);
     router.registerRoute('/createreceipt', Receiptcreate);
+    router.registerRoute('/CustomerSearch', CustomerSearch);
     router.registerRoute('/Tablereceipt', Tablereceipt)
 
   },
