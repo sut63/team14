@@ -263,15 +263,12 @@ function save() {
    <Page theme={pageTheme.tool}>
      <Header
        title="Customer System" type="Computer Repair System">
-<<<<<<< Updated upstream
+
       <div>&nbsp;&nbsp;&nbsp;</div>
       <Button onClick={() => {save();}} variant="contained" color="primary" startIcon={<AddCircleOutlinedIcon/>}> Create new customer </Button>
       <div>&nbsp;&nbsp;&nbsp;</div>
      
       <Button style={{ marginLeft: 20 }} component={RouterLink} to="/CustomerTable" variant="contained" startIcon={<CancelRoundedIcon/>}>  Table </Button>
-=======
-      
->>>>>>> Stashed changes
      </Header>
 
      <Content>
@@ -355,7 +352,7 @@ function save() {
               onChange={handlePhonenumberChange}
             />
 
-<           div className={classes.paper}><strong>บชช</strong></div>
+<           div className={classes.paper}><strong>หมายเลขบัตรประชาชน</strong></div>
             <TextField 
             className={classes.textField}
             InputProps={{
