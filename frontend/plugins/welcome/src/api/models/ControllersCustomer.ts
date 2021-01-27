@@ -39,6 +39,12 @@ export interface ControllersCustomer {
     gender?: number;
     /**
      * 
+     * @type {string}
+     * @memberof ControllersCustomer
+     */
+    identificationnumber?: string;
+    /**
+     * 
      * @type {number}
      * @memberof ControllersCustomer
      */
@@ -70,6 +76,7 @@ export function ControllersCustomerFromJSONTyped(json: any, ignoreDiscriminator:
         'address': !exists(json, 'address') ? undefined : json['address'],
         'customername': !exists(json, 'customername') ? undefined : json['customername'],
         'gender': !exists(json, 'gender') ? undefined : json['gender'],
+        'identificationnumber': !exists(json, 'identificationnumber') ? undefined : json['identificationnumber'],
         'personal': !exists(json, 'personal') ? undefined : json['personal'],
         'phonenumber': !exists(json, 'phonenumber') ? undefined : json['phonenumber'],
         'title': !exists(json, 'title') ? undefined : json['title'],
@@ -88,6 +95,7 @@ export function ControllersCustomerToJSON(value?: ControllersCustomer | null): a
         'address': value.address,
         'customername': value.customername,
         'gender': value.gender,
+        'identificationnumber': value.identificationnumber,
         'personal': value.personal,
         'phonenumber': value.phonenumber,
         'title': value.title,

@@ -43,6 +43,11 @@ const deleteCustomer = async (id: number) => {
  const res = await api.deleteCustomer({ id: id });
  setLoading(true);
 };
+
+const getCustomer = async (id: number) => {
+  const res = await api.getCustomer({ id: id });
+  setLoading(true);
+ };
  
  return (
   <Page theme={pageTheme.tool}>
@@ -61,6 +66,8 @@ const deleteCustomer = async (id: number) => {
 
     <ContentHeader title="ตารางแสดงผลข้อมูล">
       <div>&nbsp;&nbsp;&nbsp;</div>
+      <Button variant="contained" color="secondary" href="/CustomerSearch" startIcon={<FaceIcon />}> ค้นหาข้อมูลลูกค้า </Button>
+      <div>&nbsp;&nbsp;&nbsp;</div>
     <Button variant="contained" color="secondary" href="/CreateNewCustomer" startIcon={<FaceIcon />}> เพิ่มข้อมูลลูกค้า </Button>
     <div>&nbsp;&nbsp;&nbsp;</div>
     <Button variant="contained" color="primary" href="/Group14" startIcon={<HomeRoundedIcon/>}> กลับหน้าหลัก </Button>
@@ -72,10 +79,11 @@ const deleteCustomer = async (id: number) => {
          <TableRow>
            <TableCell align="center">ลำดับที่</TableCell>
            <TableCell align="center">คำนำหน้าชื่อ</TableCell>
-           <TableCell align="center">ชื่อขนามสกุล</TableCell>
-           <TableCell align="center">เพศ</TableCell>
-           <TableCell align="center">เบอร์โทร</TableCell>
+           <TableCell align="center">ชื่อ-นามสกุล</TableCell>
            <TableCell align="center">ที่อยู่</TableCell>
+           <TableCell align="center">เบอร์โทร</TableCell>
+           <TableCell align="center">เลขบัตรประจำตัวประชาชน</TableCell>
+           <TableCell align="center">เพศ</TableCell>
            <TableCell align="center">เจ้าหน้าที่แจ้งซ่อม</TableCell>
 
          </TableRow>
@@ -86,9 +94,10 @@ const deleteCustomer = async (id: number) => {
              <TableCell align="center">{item.id}</TableCell>
              <TableCell align="center">{item.edges?.title?.titlename}</TableCell>
              <TableCell align="center">{item.customername}</TableCell>
-             <TableCell align="center">{item.edges?.gender?.gendername}</TableCell>
-             <TableCell align="center">{item.phonenumber}</TableCell>
              <TableCell align="center">{item.address}</TableCell>
+             <TableCell align="center">{item.phonenumber}</TableCell>
+             <TableCell align="center">{item.identificationnumber}</TableCell>
+             <TableCell align="center">{item.edges?.gender?.gendername}</TableCell>
              <TableCell align="center">{item.edges?.personal.personalname}</TableCell>
              <TableCell align="center">
              <Button

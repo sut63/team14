@@ -19,12 +19,13 @@ type CustomerController struct {
 	router gin.IRouter
 }
 type Customer struct {
-	Address      string
-	Customername string
-	Phonenumber  string
-	Gender       int
-	Personal     int
-	Title        int
+	Address              string
+	Customername         string
+	Phonenumber          string
+	Identificationnumber string
+	Gender               int
+	Personal             int
+	Title                int
 }
 
 // CreateCustomer handles POST requests for adding customer entities
@@ -87,6 +88,7 @@ func (ctl *CustomerController) CreateCustomer(c *gin.Context) {
 		SetAddress(obj.Address).
 		SetCustomername(obj.Customername).
 		SetPhonenumber(obj.Phonenumber).
+		SetIdentificationnumber(obj.Identificationnumber).
 		Save(context.Background())
 	if err != nil {
 		c.JSON(400, gin.H{
@@ -122,18 +124,32 @@ func (ctl *CustomerController) GetCustomer(c *gin.Context) {
 		return
 	}
 
+	//identificationnumber := string(c.Param("identificationnumber"))
+
 	cm, err := ctl.client.Customer.
 		Query().
 		Where(customer.IDEQ(int(id))).
-		Only(context.Background())
+		All(context.Background())
+
 	if err != nil {
 		c.JSON(404, gin.H{
-			"error": err.Error(),
+			"error":  err.Error(),
+			"status": false,
 		})
 		return
 	}
 
-	c.JSON(200, cm)
+	if len(cm) != 0 {
+		c.JSON(200, cm)
+		return
+	} else {
+		c.JSON(404, gin.H{
+			"error":  "customer not found",
+			"status": false,
+		})
+		return
+	}
+
 }
 
 // ListCustomer handles request to get a list of customer entities

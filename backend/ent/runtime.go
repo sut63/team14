@@ -102,6 +102,24 @@ func init() {
 			return nil
 		}
 	}()
+	// customerDescIdentificationnumber is the schema descriptor for Identificationnumber field.
+	customerDescIdentificationnumber := customerFields[3].Descriptor()
+	// customer.IdentificationnumberValidator is a validator for the "Identificationnumber" field. It is called by the builders before save.
+	customer.IdentificationnumberValidator = func() func(string) error {
+		validators := customerDescIdentificationnumber.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(_Identificationnumber string) error {
+			for _, fn := range fns {
+				if err := fn(_Identificationnumber); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
 	fixFields := schema.Fix{}.Fields()
 	_ = fixFields
 	// fixDescProductnumber is the schema descriptor for Productnumber field.

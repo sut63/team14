@@ -112,6 +112,13 @@ func Phonenumber(v string) predicate.Customer {
 	})
 }
 
+// Identificationnumber applies equality check predicate on the "Identificationnumber" field. It's identical to IdentificationnumberEQ.
+func Identificationnumber(v string) predicate.Customer {
+	return predicate.Customer(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldIdentificationnumber), v))
+	})
+}
+
 // CustomernameEQ applies the EQ predicate on the "Customername" field.
 func CustomernameEQ(v string) predicate.Customer {
 	return predicate.Customer(func(s *sql.Selector) {
@@ -442,6 +449,117 @@ func PhonenumberEqualFold(v string) predicate.Customer {
 func PhonenumberContainsFold(v string) predicate.Customer {
 	return predicate.Customer(func(s *sql.Selector) {
 		s.Where(sql.ContainsFold(s.C(FieldPhonenumber), v))
+	})
+}
+
+// IdentificationnumberEQ applies the EQ predicate on the "Identificationnumber" field.
+func IdentificationnumberEQ(v string) predicate.Customer {
+	return predicate.Customer(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldIdentificationnumber), v))
+	})
+}
+
+// IdentificationnumberNEQ applies the NEQ predicate on the "Identificationnumber" field.
+func IdentificationnumberNEQ(v string) predicate.Customer {
+	return predicate.Customer(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldIdentificationnumber), v))
+	})
+}
+
+// IdentificationnumberIn applies the In predicate on the "Identificationnumber" field.
+func IdentificationnumberIn(vs ...string) predicate.Customer {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Customer(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldIdentificationnumber), v...))
+	})
+}
+
+// IdentificationnumberNotIn applies the NotIn predicate on the "Identificationnumber" field.
+func IdentificationnumberNotIn(vs ...string) predicate.Customer {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Customer(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldIdentificationnumber), v...))
+	})
+}
+
+// IdentificationnumberGT applies the GT predicate on the "Identificationnumber" field.
+func IdentificationnumberGT(v string) predicate.Customer {
+	return predicate.Customer(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldIdentificationnumber), v))
+	})
+}
+
+// IdentificationnumberGTE applies the GTE predicate on the "Identificationnumber" field.
+func IdentificationnumberGTE(v string) predicate.Customer {
+	return predicate.Customer(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldIdentificationnumber), v))
+	})
+}
+
+// IdentificationnumberLT applies the LT predicate on the "Identificationnumber" field.
+func IdentificationnumberLT(v string) predicate.Customer {
+	return predicate.Customer(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldIdentificationnumber), v))
+	})
+}
+
+// IdentificationnumberLTE applies the LTE predicate on the "Identificationnumber" field.
+func IdentificationnumberLTE(v string) predicate.Customer {
+	return predicate.Customer(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldIdentificationnumber), v))
+	})
+}
+
+// IdentificationnumberContains applies the Contains predicate on the "Identificationnumber" field.
+func IdentificationnumberContains(v string) predicate.Customer {
+	return predicate.Customer(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldIdentificationnumber), v))
+	})
+}
+
+// IdentificationnumberHasPrefix applies the HasPrefix predicate on the "Identificationnumber" field.
+func IdentificationnumberHasPrefix(v string) predicate.Customer {
+	return predicate.Customer(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldIdentificationnumber), v))
+	})
+}
+
+// IdentificationnumberHasSuffix applies the HasSuffix predicate on the "Identificationnumber" field.
+func IdentificationnumberHasSuffix(v string) predicate.Customer {
+	return predicate.Customer(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldIdentificationnumber), v))
+	})
+}
+
+// IdentificationnumberEqualFold applies the EqualFold predicate on the "Identificationnumber" field.
+func IdentificationnumberEqualFold(v string) predicate.Customer {
+	return predicate.Customer(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldIdentificationnumber), v))
+	})
+}
+
+// IdentificationnumberContainsFold applies the ContainsFold predicate on the "Identificationnumber" field.
+func IdentificationnumberContainsFold(v string) predicate.Customer {
+	return predicate.Customer(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldIdentificationnumber), v))
 	})
 }
 

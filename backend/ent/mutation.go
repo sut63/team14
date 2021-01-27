@@ -1078,25 +1078,26 @@ func (m *BrandMutation) ResetEdge(name string) error {
 // nodes in the graph.
 type CustomerMutation struct {
 	config
-	op              Op
-	typ             string
-	id              *int
-	_Customername   *string
-	_Address        *string
-	_Phonenumber    *string
-	clearedFields   map[string]struct{}
-	gender          *int
-	clearedgender   bool
-	personal        *int
-	clearedpersonal bool
-	title           *int
-	clearedtitle    bool
-	fix             map[int]struct{}
-	removedfix      map[int]struct{}
-	receipt         map[int]struct{}
-	removedreceipt  map[int]struct{}
-	done            bool
-	oldValue        func(context.Context) (*Customer, error)
+	op                    Op
+	typ                   string
+	id                    *int
+	_Customername         *string
+	_Address              *string
+	_Phonenumber          *string
+	_Identificationnumber *string
+	clearedFields         map[string]struct{}
+	gender                *int
+	clearedgender         bool
+	personal              *int
+	clearedpersonal       bool
+	title                 *int
+	clearedtitle          bool
+	fix                   map[int]struct{}
+	removedfix            map[int]struct{}
+	receipt               map[int]struct{}
+	removedreceipt        map[int]struct{}
+	done                  bool
+	oldValue              func(context.Context) (*Customer, error)
 }
 
 var _ ent.Mutation = (*CustomerMutation)(nil)
@@ -1287,6 +1288,43 @@ func (m *CustomerMutation) OldPhonenumber(ctx context.Context) (v string, err er
 // ResetPhonenumber reset all changes of the "Phonenumber" field.
 func (m *CustomerMutation) ResetPhonenumber() {
 	m._Phonenumber = nil
+}
+
+// SetIdentificationnumber sets the Identificationnumber field.
+func (m *CustomerMutation) SetIdentificationnumber(s string) {
+	m._Identificationnumber = &s
+}
+
+// Identificationnumber returns the Identificationnumber value in the mutation.
+func (m *CustomerMutation) Identificationnumber() (r string, exists bool) {
+	v := m._Identificationnumber
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldIdentificationnumber returns the old Identificationnumber value of the Customer.
+// If the Customer object wasn't provided to the builder, the object is fetched
+// from the database.
+// An error is returned if the mutation operation is not UpdateOne, or database query fails.
+func (m *CustomerMutation) OldIdentificationnumber(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldIdentificationnumber is allowed only on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldIdentificationnumber requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldIdentificationnumber: %w", err)
+	}
+	return oldValue.Identificationnumber, nil
+}
+
+// ResetIdentificationnumber reset all changes of the "Identificationnumber" field.
+func (m *CustomerMutation) ResetIdentificationnumber() {
+	m._Identificationnumber = nil
 }
 
 // SetGenderID sets the gender edge to Gender by id.
@@ -1504,7 +1542,7 @@ func (m *CustomerMutation) Type() string {
 // this mutation. Note that, in order to get all numeric
 // fields that were in/decremented, call AddedFields().
 func (m *CustomerMutation) Fields() []string {
-	fields := make([]string, 0, 3)
+	fields := make([]string, 0, 4)
 	if m._Customername != nil {
 		fields = append(fields, customer.FieldCustomername)
 	}
@@ -1513,6 +1551,9 @@ func (m *CustomerMutation) Fields() []string {
 	}
 	if m._Phonenumber != nil {
 		fields = append(fields, customer.FieldPhonenumber)
+	}
+	if m._Identificationnumber != nil {
+		fields = append(fields, customer.FieldIdentificationnumber)
 	}
 	return fields
 }
@@ -1528,6 +1569,8 @@ func (m *CustomerMutation) Field(name string) (ent.Value, bool) {
 		return m.Address()
 	case customer.FieldPhonenumber:
 		return m.Phonenumber()
+	case customer.FieldIdentificationnumber:
+		return m.Identificationnumber()
 	}
 	return nil, false
 }
@@ -1543,6 +1586,8 @@ func (m *CustomerMutation) OldField(ctx context.Context, name string) (ent.Value
 		return m.OldAddress(ctx)
 	case customer.FieldPhonenumber:
 		return m.OldPhonenumber(ctx)
+	case customer.FieldIdentificationnumber:
+		return m.OldIdentificationnumber(ctx)
 	}
 	return nil, fmt.Errorf("unknown Customer field %s", name)
 }
@@ -1572,6 +1617,13 @@ func (m *CustomerMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetPhonenumber(v)
+		return nil
+	case customer.FieldIdentificationnumber:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetIdentificationnumber(v)
 		return nil
 	}
 	return fmt.Errorf("unknown Customer field %s", name)
@@ -1631,6 +1683,9 @@ func (m *CustomerMutation) ResetField(name string) error {
 		return nil
 	case customer.FieldPhonenumber:
 		m.ResetPhonenumber()
+		return nil
+	case customer.FieldIdentificationnumber:
+		m.ResetIdentificationnumber()
 		return nil
 	}
 	return fmt.Errorf("unknown Customer field %s", name)

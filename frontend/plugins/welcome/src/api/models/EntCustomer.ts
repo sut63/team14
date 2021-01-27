@@ -39,6 +39,12 @@ export interface EntCustomer {
      */
     customername?: string;
     /**
+     * Identificationnumber holds the value of the "Identificationnumber" field.
+     * @type {string}
+     * @memberof EntCustomer
+     */
+    identificationnumber?: string;
+    /**
      * Phonenumber holds the value of the "Phonenumber" field.
      * @type {string}
      * @memberof EntCustomer
@@ -70,6 +76,7 @@ export function EntCustomerFromJSONTyped(json: any, ignoreDiscriminator: boolean
         
         'address': !exists(json, 'Address') ? undefined : json['Address'],
         'customername': !exists(json, 'Customername') ? undefined : json['Customername'],
+        'identificationnumber': !exists(json, 'Identificationnumber') ? undefined : json['Identificationnumber'],
         'phonenumber': !exists(json, 'Phonenumber') ? undefined : json['Phonenumber'],
         'edges': !exists(json, 'edges') ? undefined : EntCustomerEdgesFromJSON(json['edges']),
         'id': !exists(json, 'id') ? undefined : json['id'],
@@ -87,6 +94,7 @@ export function EntCustomerToJSON(value?: EntCustomer | null): any {
         
         'Address': value.address,
         'Customername': value.customername,
+        'Identificationnumber': value.identificationnumber,
         'Phonenumber': value.phonenumber,
         'edges': EntCustomerEdgesToJSON(value.edges),
         'id': value.id,

@@ -2999,6 +2999,9 @@ var doc = `{
                 "gender": {
                     "type": "integer"
                 },
+                "identificationnumber": {
+                    "type": "string"
+                },
                 "personal": {
                     "type": "integer"
                 },
@@ -3236,6 +3239,10 @@ var doc = `{
                 },
                 "Customername": {
                     "description": "Customername holds the value of the \"Customername\" field.",
+                    "type": "string"
+                },
+                "Identificationnumber": {
+                    "description": "Identificationnumber holds the value of the \"Identificationnumber\" field.",
                     "type": "string"
                 },
                 "Phonenumber": {

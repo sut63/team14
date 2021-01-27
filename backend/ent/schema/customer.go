@@ -17,6 +17,7 @@ func (Customer) Fields() []ent.Field {
 		field.String("Customername").NotEmpty(),
 		field.String("Address").NotEmpty(),
 		field.String("Phonenumber").MaxLen(10).MinLen(10),
+		field.String("Identificationnumber").MaxLen(13).MinLen(13),
 	}
 }
 
