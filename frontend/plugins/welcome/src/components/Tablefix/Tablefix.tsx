@@ -20,6 +20,7 @@ import {
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import ComputerTwoToneIcon from '@material-ui/icons/ComputerTwoTone';
 import HomeRoundedIcon from '@material-ui/icons/HomeRounded';
+import SearchIcon from '@material-ui/icons/Search';
 import { EntFix } from '../../api';
 import moment from 'moment'
 
@@ -81,6 +82,8 @@ export default function Tablefix() {
     
     <Content>
     <ContentHeader title="ตารางแสดงผลข้อมูล">
+    <div>&nbsp;&nbsp;&nbsp;</div>
+    <Button variant="contained" color="secondary" href="/FixSearch" startIcon={<SearchIcon />}> ค้นหาข้อมูลการแจ้งซ่อมสินค้า </Button>
       <div>&nbsp;&nbsp;&nbsp;</div>
     <Button variant="contained" color="secondary" href="/Fixpage" startIcon={<ComputerTwoToneIcon />}> เพิ่มข้อมูลการแจ้งซ่อมสินค้า </Button>
     <div>&nbsp;&nbsp;&nbsp;</div>

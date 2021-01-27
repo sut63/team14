@@ -6,6 +6,7 @@ import CustomerTable from './components/CustomerTables';
 import Productcreates from './components/Productcreates';
 import Producttable from './components/Producttable';
 import Fixpage from './components/Fixpage';
+import FixSearch from './components/FixSearch';
 import Tablefix from './components/Tablefix';
 import AdminrepairUI from './components/AdminrepairUI';
 import Receiptcreate from './components/Createreceipts';
@@ -32,6 +33,7 @@ export const plugin = createPlugin({
     router.registerRoute('/Productcreate', Productcreates);
     router.registerRoute('/ProductSearch', ProductSearch);
     router.registerRoute('/Fixpage', Fixpage);
+    router.registerRoute('/FixSearch', FixSearch);
     router.registerRoute('/Tablefix', Tablefix);
     router.registerRoute('/AdminrepairUI', AdminrepairUI);
     router.registerRoute('/createreceipt', Receiptcreate);
