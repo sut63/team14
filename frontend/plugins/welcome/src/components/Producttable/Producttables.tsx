@@ -14,6 +14,7 @@ import { EntProduct} from '../../api/models/EntProduct';
 import HomeRoundedIcon from '@material-ui/icons/HomeRounded';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import SettingsTwoToneIcon from '@material-ui/icons/SettingsTwoTone';
+import SearchIcon from '@material-ui/icons/Search';
 
 const useStyles = makeStyles({
  table: {
@@ -60,8 +61,10 @@ const deleteProducts = async (id: number) => {
 
     <ContentHeader title="ตารางแสดงผลข้อมูล">
       <div>&nbsp;&nbsp;&nbsp;</div>
+    <Button variant="contained" color="secondary" href="/ProductSearch" startIcon={<SearchIcon/>}> ค้นหาข้อมูลอะไหล่คอมพิวเตอร์ </Button>
+      <div>&nbsp;&nbsp;&nbsp;</div>
     <Button variant="contained" color="secondary" href="/Productcreate" startIcon={<SettingsTwoToneIcon/>}> เพิ่มข้อมูลอะไหล่คอมพิวเตอร์ </Button>
-    <div>&nbsp;&nbsp;&nbsp;</div>
+      <div>&nbsp;&nbsp;&nbsp;</div>
     <Button variant="contained" color="primary" href="/Group14" startIcon={<HomeRoundedIcon/>}> กลับหน้าหลัก </Button>
       </ContentHeader>
 
