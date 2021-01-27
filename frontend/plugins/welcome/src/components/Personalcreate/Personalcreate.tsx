@@ -69,12 +69,11 @@ const Toast = Swal.mixin({
   },
 });
 
-export default function Personalpage() {
+export default function Personalcreate() {
   const classes = useStyles();
   const http = new DefaultApi();
 
   const [status, setStatus] = useState(false);
-  const [alert, setAlert] = useState(true);
   const [loading, setLoading] = useState(true);
 
   const [personals, setPersonals] = React.useState<EntPersonal[]>([]);
@@ -231,7 +230,7 @@ return (
         <Button 
         style={{ marginLeft: 20 }} 
         component={RouterLink} 
-        to="/Tablepersonal" 
+        to="/Personaltable" 
         variant="contained"
         color="primary"
         startIcon={<CancelTwoToneIcon/>}

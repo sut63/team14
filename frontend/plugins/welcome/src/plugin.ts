@@ -1,8 +1,6 @@
 import { createPlugin } from '@backstage/core';
 import WelcomePage from './components/WelcomePage';
 import Group14 from './components/Group14';
-import Personalpage from './components/Personalpage';
-import Tablepersonal from './components/Tablepersonal';
 import CreateNewCustomer from './components/Customers';
 import CustomerTable from './components/CustomerTables';
 import Productcreates from './components/Productcreates';
@@ -13,14 +11,20 @@ import AdminrepairUI from './components/AdminrepairUI';
 import Receiptcreate from './components/Createreceipts';
 import Tablereceipt from './components/Tablereceipt';
 import CustomerSearch from './components/CustomerSearch';
+import Personalcreate from './components/Personalcreate/';
+import Personaltable from './components/Personaltable';
+import Personalsearch from './components/Personalsearch';
+import Personalwelcome from './components/Personalwelcome';
  
 export const plugin = createPlugin({
   id: 'welcome',
   register({ router }) {
     router.registerRoute('/', WelcomePage);
     router.registerRoute('/Group14', Group14);
-    router.registerRoute('/Personalpage', Personalpage);
-    router.registerRoute('/Tablepersonal', Tablepersonal);
+    router.registerRoute('/Personalcreate', Personalcreate);
+    router.registerRoute('/Personaltable', Personaltable);
+    router.registerRoute('/Personalwelcome', Personalwelcome);
+    router.registerRoute('/Personalsearch', Personalsearch);
     router.registerRoute('/createnewcustomer', CreateNewCustomer);
     router.registerRoute('/customertable', CustomerTable);
     router.registerRoute('/Producttables', Producttable);

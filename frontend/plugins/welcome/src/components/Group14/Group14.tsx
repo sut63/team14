@@ -60,7 +60,7 @@ const Group14: FC<{}> = () => {
               variant="outlined"
               fullWidth
               size="large"
-              href="/Tablepersonal" 
+              href="/Personalwelcome" 
               startIcon={<PersonIcon />}
               className={classes.systemstlye}> 
               ข้อมูลบุคลากร
