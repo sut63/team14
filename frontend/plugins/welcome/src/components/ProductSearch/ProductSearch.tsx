@@ -57,11 +57,11 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 const Toast = Swal.mixin({
-  // toast: true,
+  //toast: true,
   position: 'center',
   showConfirmButton: false,
-  //timer: 3000,
-  //timerProgressBar: true,
+  timer: 3000,
+  timerProgressBar: true,
   showCloseButton: true,
 
 });
@@ -165,14 +165,14 @@ export default function ComponentsTable() {
             <Paper>
 
               <Typography align="center" >
-                <div style={{ background: 'linear-gradient(45deg, #CCCCCC 15%, #CCCCCC 120%)', height: 45 }}>
+                <div style={{ background: 'linear-gradient(45deg, #CCCCCC 15%, #CCCCCC 120%)', height: 35 }}>
                   <h1 style={
                     {
                       //color: "#000000",
                       //borderRadius: 5,
                       //height: 18,
                       //padding: '0 30px',
-                      fontSize: '25px',
+                      fontSize: '20px',
                     }}>
                     ค้นหาข้อมูลอะไหล่คอมพิวเตอร์
             </h1>
@@ -229,7 +229,7 @@ export default function ComponentsTable() {
                     style={
                       {
                         color: "#FFFFFF",
-                        padding: '0 25px',
+                        padding: '0 20px',
 
                       }
                     }>
