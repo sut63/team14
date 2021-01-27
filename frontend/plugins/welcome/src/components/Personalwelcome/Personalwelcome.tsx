@@ -60,7 +60,7 @@ const Personalwelcome: FC<{}> = () => {
               variant="outlined"
               fullWidth
               size="large"
-              href="/Tablepersonal" 
+              href="/Personaltable" 
               startIcon={<PersonIcon />}
               className={classes.systemstlye}> 
               เพิ่มข้อมูลบุคลากร

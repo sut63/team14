@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
  
-export default function Tablepersonal() {
+export default function Personaltable() {
   const classes = useStyles();
   const http = new DefaultApi();
 
@@ -82,9 +82,9 @@ export default function Tablepersonal() {
     <Content>
       <ContentHeader title="ตารางแสดงผลข้อมูล">
       <div>&nbsp;&nbsp;&nbsp;</div>
-    <Button variant="contained" color="secondary" href="/Personalpage" startIcon={<PersonAddRoundedIcon />}> เพิ่มข้อมูลบุคลากร </Button>
+    <Button variant="contained" color="secondary" href="/Personalcreate" startIcon={<PersonAddRoundedIcon />}> เพิ่มข้อมูลบุคลากร </Button>
     <div>&nbsp;&nbsp;&nbsp;</div>
-    <Button variant="contained" color="primary" href="/Group14" startIcon={<HomeRoundedIcon/>}> กลับหน้าหลัก </Button>
+    <Button variant="contained" color="primary" href="/Personalwelcome" startIcon={<HomeRoundedIcon/>}> ย้อนกลับ </Button>
       </ContentHeader>
    <TableContainer component={Paper}>
      <Table className={classes.table} aria-label="simple table">
