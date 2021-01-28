@@ -57,6 +57,12 @@ func (rc *ReceiptCreate) SetProductname(s string) *ReceiptCreate {
 	return rc
 }
 
+// SetReceiptcode sets the Receiptcode field.
+func (rc *ReceiptCreate) SetReceiptcode(s string) *ReceiptCreate {
+	rc.mutation.SetReceiptcode(s)
+	return rc
+}
+
 // SetPaymenttypeID sets the paymenttype edge to PaymentType by id.
 func (rc *ReceiptCreate) SetPaymenttypeID(id int) *ReceiptCreate {
 	rc.mutation.SetPaymenttypeID(id)
@@ -187,6 +193,14 @@ func (rc *ReceiptCreate) Save(ctx context.Context) (*Receipt, error) {
 			return nil, &ValidationError{Name: "Productname", err: fmt.Errorf("ent: validator failed for field \"Productname\": %w", err)}
 		}
 	}
+	if _, ok := rc.mutation.Receiptcode(); !ok {
+		return nil, &ValidationError{Name: "Receiptcode", err: errors.New("ent: missing required field \"Receiptcode\"")}
+	}
+	if v, ok := rc.mutation.Receiptcode(); ok {
+		if err := receipt.ReceiptcodeValidator(v); err != nil {
+			return nil, &ValidationError{Name: "Receiptcode", err: fmt.Errorf("ent: validator failed for field \"Receiptcode\": %w", err)}
+		}
+	}
 	var (
 		err  error
 		node *Receipt
@@ -278,6 +292,14 @@ func (rc *ReceiptCreate) createSpec() (*Receipt, *sqlgraph.CreateSpec) {
 			Column: receipt.FieldProductname,
 		})
 		r.Productname = value
+	}
+	if value, ok := rc.mutation.Receiptcode(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: receipt.FieldReceiptcode,
+		})
+		r.Receiptcode = value
 	}
 	if nodes := rc.mutation.PaymenttypeIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

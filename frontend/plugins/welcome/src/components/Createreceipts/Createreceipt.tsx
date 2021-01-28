@@ -102,6 +102,7 @@ export default function Personalpage() {
   const [serviceprovider, setServiceprovider] = useState(String);
   const [address, setAddress] = useState(String);
   const [productname, setProductname] = useState(String);
+  const [receiptcode, setReceiptcode] = useState(String);
 
   useEffect(() => {
     const getCustomers = async () => {
@@ -181,12 +182,18 @@ export default function Personalpage() {
   const handleProductnameChange = (event: any) => {
     setProductname(event.target.value as string);
   };
+
+  const handleReceiptcodeChange = (event: any) => {
+    setReceiptcode(event.target.value as string);
+  };
+
   let p = Number(personal)
 
   const receipt = {
     serviceprovider : serviceprovider,
     address : address,
     productname : productname,
+    receiptcode : receiptcode,
     customer: customer,
     personal: Number(cookieID),
     adminrepair: adminrepair,
@@ -213,6 +220,9 @@ export default function Personalpage() {
       case 'Productname':
         alertMessage("error","กรุณากรอกชื่อผลิตภัณฑ์");
         return;
+      case 'Receiptcode':
+          alertMessage("error","กรุณากรอกรหัสใบเสร็จ");
+          return;
       default:
         alertMessage("error","บันทึกข้อมูลไม่สำเร็จ");
         return;
@@ -327,19 +337,24 @@ return (
               onChange={handleServiceproviderChange}
             />
 
-            <div className={classes.paper}><strong>รหัสลูกค้า</strong></div>
-              <Select className={classes.select}
-              style={{ width: 500 ,marginLeft:7,marginRight:-7,marginTop:10}}
-              color="primary"
-              labelId="nametitle-label"
-              id="customerid"
-              value={customer}
-              onChange={customerchange}
-            >
-              {customers.map((item: EntCustomer) => (
-                <MenuItem value={item.id}>{item.id}</MenuItem>
-              ))}
-            </Select>
+            <div className={classes.paper}><strong>รหัสใบเสร็จ</strong></div>
+            <TextField 
+            className={classes.textField}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  
+                </InputAdornment>
+              ),
+            }}
+              id="serviceprovider"
+              variant="standard"
+              color="secondary"
+              type="string"
+              size="medium"
+              value={receiptcode}
+              onChange={handleReceiptcodeChange}
+            />
 
             <div className={classes.paper}><strong>ชื่อ-นามสกุล</strong></div>
               <Select className={classes.select}

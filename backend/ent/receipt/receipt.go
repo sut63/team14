@@ -19,6 +19,8 @@ const (
 	FieldAddress = "address"
 	// FieldProductname holds the string denoting the productname field in the database.
 	FieldProductname = "productname"
+	// FieldReceiptcode holds the string denoting the receiptcode field in the database.
+	FieldReceiptcode = "receiptcode"
 
 	// EdgePaymenttype holds the string denoting the paymenttype edge name in mutations.
 	EdgePaymenttype = "paymenttype"
@@ -77,6 +79,7 @@ var Columns = []string{
 	FieldServiceprovider,
 	FieldAddress,
 	FieldProductname,
+	FieldReceiptcode,
 }
 
 // ForeignKeys holds the SQL foreign-keys that are owned by the Receipt type.
@@ -97,4 +100,6 @@ var (
 	AddressValidator func(string) error
 	// ProductnameValidator is a validator for the "Productname" field. It is called by the builders before save.
 	ProductnameValidator func(string) error
+	// ReceiptcodeValidator is a validator for the "Receiptcode" field. It is called by the builders before save.
+	ReceiptcodeValidator func(string) error
 )

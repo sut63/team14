@@ -72,6 +72,12 @@ export interface ControllersReceipt {
      * @type {string}
      * @memberof ControllersReceipt
      */
+    receiptcode?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ControllersReceipt
+     */
     serviceprovider?: string;
 }
 
@@ -93,6 +99,7 @@ export function ControllersReceiptFromJSONTyped(json: any, ignoreDiscriminator: 
         'personal': !exists(json, 'personal') ? undefined : json['personal'],
         'product': !exists(json, 'product') ? undefined : json['product'],
         'productname': !exists(json, 'productname') ? undefined : json['productname'],
+        'receiptcode': !exists(json, 'receiptcode') ? undefined : json['receiptcode'],
         'serviceprovider': !exists(json, 'serviceprovider') ? undefined : json['serviceprovider'],
     };
 }
@@ -114,6 +121,7 @@ export function ControllersReceiptToJSON(value?: ControllersReceipt | null): any
         'personal': value.personal,
         'product': value.product,
         'productname': value.productname,
+        'receiptcode': value.receiptcode,
         'serviceprovider': value.serviceprovider,
     };
 }

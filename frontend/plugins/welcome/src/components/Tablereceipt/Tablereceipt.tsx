@@ -12,6 +12,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import SearchIcon from '@material-ui/icons/Search';
 
 //api
 import { DefaultApi } from '../../api/apis';
@@ -82,6 +83,8 @@ export default function Tablepersonal() {
     <Content>
       <ContentHeader title="ตารางแสดงผลข้อมูล">
       <div>&nbsp;&nbsp;&nbsp;</div>
+      <Button variant="contained" color="secondary" href="/ReceiptSearch" startIcon={<SearchIcon/>}> ค้นหาข้อมูลใบเสร็จ </Button>
+      <div>&nbsp;&nbsp;&nbsp;</div>
     <Button variant="contained" color="secondary" href="/createreceipt" startIcon={<NoteTwoToneIcon />}> สร้างใบเสร็จ </Button>
     <div>&nbsp;&nbsp;&nbsp;</div>
     <Button variant="contained" color="primary" href="/Group14" startIcon={<HomeRoundedIcon/>}> กลับหน้าหลัก </Button>
@@ -92,7 +95,7 @@ export default function Tablepersonal() {
          <TableRow>
            <TableCell align="center">No</TableCell>
            <TableCell align="center">ชื่อร้านค้าผู้ให้บริการ</TableCell>
-           <TableCell align="center">รหัสลูกค้า</TableCell>
+           <TableCell align="center">รหัสใบเสร็จ</TableCell>
            <TableCell align="center">ชื่อ-นามสกุล</TableCell>
            <TableCell align="center">เบอร์โทรศัพท์</TableCell>
            <TableCell align="center">ที่อยู่ร้านค้า</TableCell>
@@ -108,7 +111,7 @@ export default function Tablepersonal() {
            <TableRow key={item.id}>
              <TableCell align="center">{item.id}</TableCell>
              <TableCell align="center">{item.serviceprovider}</TableCell>
-             <TableCell align="center">{item.edges?.customer?.id}</TableCell>
+             <TableCell align="center">{item.receiptcode}</TableCell>
              <TableCell align="center">{item.edges?.customer?.customername}</TableCell>
              <TableCell align="center">{item.edges?.customer?.phonenumber}</TableCell>
              <TableCell align="center">{item.address}</TableCell>

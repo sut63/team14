@@ -21,6 +21,7 @@ func (Receipt) Fields() []ent.Field {
 		field.String("Serviceprovider").NotEmpty(),
 		field.String("Address").NotEmpty(),
 		field.String("Productname").NotEmpty(),
+		field.String("Receiptcode").MaxLen(11).MinLen(11),
 	}
 }
 

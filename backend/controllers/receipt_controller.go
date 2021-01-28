@@ -26,6 +26,7 @@ type Receipt struct {
 	Added       	string
 	Serviceprovider	string
 	Address			string
+	Receiptcode		string
 	Productname		string
 	Customer    	int
 	Personal    	int
@@ -118,6 +119,7 @@ func (ctl *ReceiptController) CreateReceipt(c *gin.Context) {
 		SetServiceprovider(obj.Serviceprovider).
 		SetAddress(obj.Address).
 		SetProductname(obj.Productname).
+		SetReceiptcode(obj.Receiptcode).
 		Save(context.Background())
 	if err != nil {
 		c.JSON(400, gin.H{

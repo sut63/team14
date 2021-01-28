@@ -29,6 +29,8 @@ type Receipt struct {
 	Address string `json:"Address,omitempty"`
 	// Productname holds the value of the "Productname" field.
 	Productname string `json:"Productname,omitempty"`
+	// Receiptcode holds the value of the "Receiptcode" field.
+	Receiptcode string `json:"Receiptcode,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the ReceiptQuery when eager-loading is set.
 	Edges          ReceiptEdges `json:"edges"`
@@ -134,6 +136,7 @@ func (*Receipt) scanValues() []interface{} {
 		&sql.NullString{}, // Serviceprovider
 		&sql.NullString{}, // Address
 		&sql.NullString{}, // Productname
+		&sql.NullString{}, // Receiptcode
 	}
 }
 
@@ -180,7 +183,12 @@ func (r *Receipt) assignValues(values ...interface{}) error {
 	} else if value.Valid {
 		r.Productname = value.String
 	}
-	values = values[4:]
+	if value, ok := values[4].(*sql.NullString); !ok {
+		return fmt.Errorf("unexpected type %T for field Receiptcode", values[4])
+	} else if value.Valid {
+		r.Receiptcode = value.String
+	}
+	values = values[5:]
 	if len(values) == len(receipt.ForeignKeys) {
 		if value, ok := values[0].(*sql.NullInt64); !ok {
 			return fmt.Errorf("unexpected type %T for edge-field adminrepair_id", value)
@@ -272,6 +280,8 @@ func (r *Receipt) String() string {
 	builder.WriteString(r.Address)
 	builder.WriteString(", Productname=")
 	builder.WriteString(r.Productname)
+	builder.WriteString(", Receiptcode=")
+	builder.WriteString(r.Receiptcode)
 	builder.WriteByte(')')
 	return builder.String()
 }
