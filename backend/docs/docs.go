@@ -3139,6 +3139,9 @@ var doc = `{
                 "productname": {
                     "type": "string"
                 },
+                "receiptcode": {
+                    "type": "string"
+                },
                 "serviceprovider": {
                     "type": "string"
                 }
@@ -3672,6 +3675,10 @@ var doc = `{
                     "description": "Productname holds the value of the \"Productname\" field.",
                     "type": "string"
                 },
+                "Receiptcode": {
+                    "description": "Receiptcode holds the value of the \"Receiptcode\" field.",
+                    "type": "string"
+                },
                 "Serviceprovider": {
                     "description": "Serviceprovider holds the value of the \"Serviceprovider\" field.",
                     "type": "string"
@@ -3814,7 +3821,6 @@ var doc = `{
         "OAuth2Application": {
             "type": "oauth2",
             "flow": "application",
-            "authorizationUrl": "",
             "tokenUrl": "https://example.com/oauth/token",
             "scopes": {
                 "admin": " Grants read and write access to administrative information",
@@ -3833,7 +3839,6 @@ var doc = `{
         "OAuth2Password": {
             "type": "oauth2",
             "flow": "password",
-            "authorizationUrl": "",
             "tokenUrl": "https://example.com/oauth/token",
             "scopes": {
                 "admin": " Grants read and write access to administrative information",

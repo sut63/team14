@@ -65,6 +65,12 @@ func (ru *ReceiptUpdate) SetProductname(s string) *ReceiptUpdate {
 	return ru
 }
 
+// SetReceiptcode sets the Receiptcode field.
+func (ru *ReceiptUpdate) SetReceiptcode(s string) *ReceiptUpdate {
+	ru.mutation.SetReceiptcode(s)
+	return ru
+}
+
 // SetPaymenttypeID sets the paymenttype edge to PaymentType by id.
 func (ru *ReceiptUpdate) SetPaymenttypeID(id int) *ReceiptUpdate {
 	ru.mutation.SetPaymenttypeID(id)
@@ -212,6 +218,11 @@ func (ru *ReceiptUpdate) Save(ctx context.Context) (int, error) {
 			return 0, &ValidationError{Name: "Productname", err: fmt.Errorf("ent: validator failed for field \"Productname\": %w", err)}
 		}
 	}
+	if v, ok := ru.mutation.Receiptcode(); ok {
+		if err := receipt.ReceiptcodeValidator(v); err != nil {
+			return 0, &ValidationError{Name: "Receiptcode", err: fmt.Errorf("ent: validator failed for field \"Receiptcode\": %w", err)}
+		}
+	}
 
 	var (
 		err      error
@@ -306,6 +317,13 @@ func (ru *ReceiptUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Type:   field.TypeString,
 			Value:  value,
 			Column: receipt.FieldProductname,
+		})
+	}
+	if value, ok := ru.mutation.Receiptcode(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: receipt.FieldReceiptcode,
 		})
 	}
 	if ru.mutation.PaymenttypeCleared() {
@@ -533,6 +551,12 @@ func (ruo *ReceiptUpdateOne) SetProductname(s string) *ReceiptUpdateOne {
 	return ruo
 }
 
+// SetReceiptcode sets the Receiptcode field.
+func (ruo *ReceiptUpdateOne) SetReceiptcode(s string) *ReceiptUpdateOne {
+	ruo.mutation.SetReceiptcode(s)
+	return ruo
+}
+
 // SetPaymenttypeID sets the paymenttype edge to PaymentType by id.
 func (ruo *ReceiptUpdateOne) SetPaymenttypeID(id int) *ReceiptUpdateOne {
 	ruo.mutation.SetPaymenttypeID(id)
@@ -680,6 +704,11 @@ func (ruo *ReceiptUpdateOne) Save(ctx context.Context) (*Receipt, error) {
 			return nil, &ValidationError{Name: "Productname", err: fmt.Errorf("ent: validator failed for field \"Productname\": %w", err)}
 		}
 	}
+	if v, ok := ruo.mutation.Receiptcode(); ok {
+		if err := receipt.ReceiptcodeValidator(v); err != nil {
+			return nil, &ValidationError{Name: "Receiptcode", err: fmt.Errorf("ent: validator failed for field \"Receiptcode\": %w", err)}
+		}
+	}
 
 	var (
 		err  error
@@ -772,6 +801,13 @@ func (ruo *ReceiptUpdateOne) sqlSave(ctx context.Context) (r *Receipt, err error
 			Type:   field.TypeString,
 			Value:  value,
 			Column: receipt.FieldProductname,
+		})
+	}
+	if value, ok := ruo.mutation.Receiptcode(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: receipt.FieldReceiptcode,
 		})
 	}
 	if ruo.mutation.PaymenttypeCleared() {

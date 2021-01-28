@@ -236,4 +236,22 @@ func init() {
 	receiptDescProductname := receiptFields[3].Descriptor()
 	// receipt.ProductnameValidator is a validator for the "Productname" field. It is called by the builders before save.
 	receipt.ProductnameValidator = receiptDescProductname.Validators[0].(func(string) error)
+	// receiptDescReceiptcode is the schema descriptor for Receiptcode field.
+	receiptDescReceiptcode := receiptFields[4].Descriptor()
+	// receipt.ReceiptcodeValidator is a validator for the "Receiptcode" field. It is called by the builders before save.
+	receipt.ReceiptcodeValidator = func() func(string) error {
+		validators := receiptDescReceiptcode.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(_Receiptcode string) error {
+			for _, fn := range fns {
+				if err := fn(_Receiptcode); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
 }

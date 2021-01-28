@@ -121,6 +121,13 @@ func Productname(v string) predicate.Receipt {
 	})
 }
 
+// Receiptcode applies equality check predicate on the "Receiptcode" field. It's identical to ReceiptcodeEQ.
+func Receiptcode(v string) predicate.Receipt {
+	return predicate.Receipt(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldReceiptcode), v))
+	})
+}
+
 // AddedTimeEQ applies the EQ predicate on the "added_time" field.
 func AddedTimeEQ(v time.Time) predicate.Receipt {
 	return predicate.Receipt(func(s *sql.Selector) {
@@ -527,6 +534,117 @@ func ProductnameEqualFold(v string) predicate.Receipt {
 func ProductnameContainsFold(v string) predicate.Receipt {
 	return predicate.Receipt(func(s *sql.Selector) {
 		s.Where(sql.ContainsFold(s.C(FieldProductname), v))
+	})
+}
+
+// ReceiptcodeEQ applies the EQ predicate on the "Receiptcode" field.
+func ReceiptcodeEQ(v string) predicate.Receipt {
+	return predicate.Receipt(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldReceiptcode), v))
+	})
+}
+
+// ReceiptcodeNEQ applies the NEQ predicate on the "Receiptcode" field.
+func ReceiptcodeNEQ(v string) predicate.Receipt {
+	return predicate.Receipt(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldReceiptcode), v))
+	})
+}
+
+// ReceiptcodeIn applies the In predicate on the "Receiptcode" field.
+func ReceiptcodeIn(vs ...string) predicate.Receipt {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Receipt(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldReceiptcode), v...))
+	})
+}
+
+// ReceiptcodeNotIn applies the NotIn predicate on the "Receiptcode" field.
+func ReceiptcodeNotIn(vs ...string) predicate.Receipt {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Receipt(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldReceiptcode), v...))
+	})
+}
+
+// ReceiptcodeGT applies the GT predicate on the "Receiptcode" field.
+func ReceiptcodeGT(v string) predicate.Receipt {
+	return predicate.Receipt(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldReceiptcode), v))
+	})
+}
+
+// ReceiptcodeGTE applies the GTE predicate on the "Receiptcode" field.
+func ReceiptcodeGTE(v string) predicate.Receipt {
+	return predicate.Receipt(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldReceiptcode), v))
+	})
+}
+
+// ReceiptcodeLT applies the LT predicate on the "Receiptcode" field.
+func ReceiptcodeLT(v string) predicate.Receipt {
+	return predicate.Receipt(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldReceiptcode), v))
+	})
+}
+
+// ReceiptcodeLTE applies the LTE predicate on the "Receiptcode" field.
+func ReceiptcodeLTE(v string) predicate.Receipt {
+	return predicate.Receipt(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldReceiptcode), v))
+	})
+}
+
+// ReceiptcodeContains applies the Contains predicate on the "Receiptcode" field.
+func ReceiptcodeContains(v string) predicate.Receipt {
+	return predicate.Receipt(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldReceiptcode), v))
+	})
+}
+
+// ReceiptcodeHasPrefix applies the HasPrefix predicate on the "Receiptcode" field.
+func ReceiptcodeHasPrefix(v string) predicate.Receipt {
+	return predicate.Receipt(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldReceiptcode), v))
+	})
+}
+
+// ReceiptcodeHasSuffix applies the HasSuffix predicate on the "Receiptcode" field.
+func ReceiptcodeHasSuffix(v string) predicate.Receipt {
+	return predicate.Receipt(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldReceiptcode), v))
+	})
+}
+
+// ReceiptcodeEqualFold applies the EqualFold predicate on the "Receiptcode" field.
+func ReceiptcodeEqualFold(v string) predicate.Receipt {
+	return predicate.Receipt(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldReceiptcode), v))
+	})
+}
+
+// ReceiptcodeContainsFold applies the ContainsFold predicate on the "Receiptcode" field.
+func ReceiptcodeContainsFold(v string) predicate.Receipt {
+	return predicate.Receipt(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldReceiptcode), v))
 	})
 }
 

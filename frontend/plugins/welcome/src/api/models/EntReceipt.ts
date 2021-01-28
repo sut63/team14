@@ -39,6 +39,12 @@ export interface EntReceipt {
      */
     productname?: string;
     /**
+     * Receiptcode holds the value of the "Receiptcode" field.
+     * @type {string}
+     * @memberof EntReceipt
+     */
+    receiptcode?: string;
+    /**
      * Serviceprovider holds the value of the "Serviceprovider" field.
      * @type {string}
      * @memberof EntReceipt
@@ -76,6 +82,7 @@ export function EntReceiptFromJSONTyped(json: any, ignoreDiscriminator: boolean)
         
         'address': !exists(json, 'Address') ? undefined : json['Address'],
         'productname': !exists(json, 'Productname') ? undefined : json['Productname'],
+        'receiptcode': !exists(json, 'Receiptcode') ? undefined : json['Receiptcode'],
         'serviceprovider': !exists(json, 'Serviceprovider') ? undefined : json['Serviceprovider'],
         'addedTime': !exists(json, 'added_time') ? undefined : json['added_time'],
         'edges': !exists(json, 'edges') ? undefined : EntReceiptEdgesFromJSON(json['edges']),
@@ -94,6 +101,7 @@ export function EntReceiptToJSON(value?: EntReceipt | null): any {
         
         'Address': value.address,
         'Productname': value.productname,
+        'Receiptcode': value.receiptcode,
         'Serviceprovider': value.serviceprovider,
         'added_time': value.addedTime,
         'edges': EntReceiptEdgesToJSON(value.edges),

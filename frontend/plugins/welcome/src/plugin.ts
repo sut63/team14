@@ -19,6 +19,7 @@ import Personaltable from './components/Personaltable';
 import Personalsearch from './components/Personalsearch';
 import Personalwelcome from './components/Personalwelcome';
 import ProductSearch from './components/ProductSearch';
+import ReceiptSearch from './components/ReceiptSearch';
  
 export const plugin = createPlugin({
   id: 'welcome',
@@ -42,8 +43,8 @@ export const plugin = createPlugin({
     router.registerRoute('/Selectadminrepair', Selectadminrepair);
     router.registerRoute('/createreceipt', Receiptcreate);
     router.registerRoute('/CustomerSearch', CustomerSearch);
-    router.registerRoute('/Tablereceipt', Tablereceipt)
-    
+    router.registerRoute('/Tablereceipt', Tablereceipt);
+    router.registerRoute('/ReceiptSearch', ReceiptSearch);
 
   },
 });
