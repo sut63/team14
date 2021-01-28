@@ -1,5 +1,4 @@
-import React, { FC, useEffect,useState } from 'react';
-import {Link as RouterLink} from 'react-router-dom';
+import React, { useEffect,useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { ContentHeader,Content, Header, Page, pageTheme } from '@backstage/core';
 import {
@@ -11,25 +10,18 @@ import {
   MenuItem,
   TextField,
 }from '@material-ui/core';
-import HomeRoundedIcon from '@material-ui/icons/HomeRounded';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import SaveIcon from '@material-ui/icons/Save';
 import { DefaultApi } from '../../api/apis';
-import { EntPersonal } from '../../api/models/EntPersonal';
 import { EntFix } from '../../api/models/EntFix';
 import { EntProduct } from '../../api/models/EntProduct';
-import { EntAdminrepair } from '../../api/models/EntAdminrepair';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import { Alert } from '@material-ui/lab';
 import Button from '@material-ui/core/Button';
 import AdminrepairTable from '../AdminrepairTable';
 import AdminrepairFixTable from '../AdminrepairFixTable';
 import AdminrepairProductTable from '../AdminrepairProductTable';
 import { Cookies } from '../WelcomePage/Cookie'
 import Swal from 'sweetalert2';
-
-const HeaderCustom = {
-  minHeight: '50px',
-};
 
 // css style 
 const useStyles = makeStyles(theme => ({
@@ -60,18 +52,15 @@ const useStyles = makeStyles(theme => ({
   export default function AdminrepairCreate(){
   //const UI = { giveName : 'Confirmation'}
   var ck = new Cookies()
-  var cookieName = ck.GetCookie()
   var cookieID = ck.GetID()
   const classes = useStyles();
   const api = new DefaultApi();
   const [loading, setLoading] = useState(true);
-  const [alert, setAlert] = useState(true);
-  const [status, setStatus] = useState(false);
+
   const [adtable, setAdtable] = useState(false);
   const [fixtable, setFixtable] = useState(false);
   const [producttable, setProducttable] = useState(false);
 
-  const [personals, setPersonals] = useState<EntPersonal[]>([]);
   const [fixs, setFixs] = useState<EntFix[]>([]);
   const [products, setProducts] = useState<EntProduct[]>([]);
 
@@ -84,6 +73,7 @@ const useStyles = makeStyles(theme => ({
   const [equipmentdamateError, setEquipmentdamateError] = useState('');
   const [numberrepairError, setNumberrepairError] = useState('');
   const [repairinformationError, setRepairinformationError] = useState('');
+
   useEffect(() =>{
     const getFixs = async () =>{
         const res = await api.listFix({limit:10,offset:0});
@@ -246,42 +236,8 @@ const useStyles = makeStyles(theme => ({
           checkCaseSaveError(data.error.Name)
         }
       });
-      const timer = setTimeout(() => {
-        setStatus(false);
-      }, 5000);
     };
-
-
-
-    /*
-  const CreateAdminrepair = async ()=>{
-    if ((fixid != null)  && (equipmentdamate != null) && (equipmentdamate != "") && (productid != null) && (numberrepair != null) && (numberrepair != "")){
-    const Adminrepair = {
-      personal :  Number(cookieID),
-      fix : fixid,
-      equipmentdamate : equipmentdamate,
-      product : productid,
-      numberrepair : numberrepair,
-    };
-    
-    
-    console.log(Adminrepair);
-    const res: any = await api.createAdminrepair({ adminrepair : Adminrepair});
-    setStatus(true);
-      if (res.id != '') {
-        setAlert(true);
-        const timer = setTimeout(() => {
-          window.location.reload(false);
-       }, 3000);
-      }
-    }else {
-      setStatus(true);
-      setAlert(false);
-    }
-    
-  }*/
   
-
   return (
     <Page theme={pageTheme.home}>
     <Header title="ระบบบันทึกซ่อมแซมคอมพิวเตอร์ของพนักงาน" type="ระบบแจ้งซ่อมคอมพิวเตอร์">
@@ -295,19 +251,6 @@ const useStyles = makeStyles(theme => ({
         </Button>
     </Header>
     <Content>
-    {status ? (
-           <div>
-             {alert ? (
-               <Alert severity="success">
-                 บันทึกข้อมูลเสร็จสิ้น!!!
-               </Alert>
-             ) : (
-               <Alert severity="error" style={{ marginTop: 20,marginBottom: 30 }}>
-                 มีข้อมูลบางอย่างไม่ถูกต้อง กรุณากรอกข้อมูลใหม่ อีกครั้ง!!!
-               </Alert>
-             )}
-           </div>
-         ) : null}
          <ContentHeader title="เพิ่มข้อมูลบันทึกซ่อมแซมคอมพิวเตอร์ของ พนักงาน">
     <Button
       style={{ marginLeft: 10}}
@@ -452,7 +395,7 @@ const useStyles = makeStyles(theme => ({
               บันทึกข้อมูลการซ่อมแซม
             </Button>
             <Button style={{ marginRight: 30}} 
-            variant="contained" color="secondary" href="/Group14" startIcon={<HomeRoundedIcon/>}> กลับหน้าหลัก </Button>
+            variant="contained" color="secondary" size="large" href="/Selectadminrepair" startIcon={<ArrowBackIcon/>}> ย้อนกลับ </Button>
           </Grid>
         </Grid>
       </Container>

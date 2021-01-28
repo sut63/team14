@@ -9,6 +9,8 @@ import Fixpage from './components/Fixpage';
 import FixSearch from './components/FixSearch';
 import Tablefix from './components/Tablefix';
 import AdminrepairUI from './components/AdminrepairUI';
+import AdminrepairSearch from './components/AdminrepairSearch';
+import Selectadminrepair from './components/Selectadminrepair';
 import Receiptcreate from './components/Createreceipts';
 import Tablereceipt from './components/Tablereceipt';
 import CustomerSearch from './components/CustomerSearch';
@@ -36,6 +38,8 @@ export const plugin = createPlugin({
     router.registerRoute('/FixSearch', FixSearch);
     router.registerRoute('/Tablefix', Tablefix);
     router.registerRoute('/AdminrepairUI', AdminrepairUI);
+    router.registerRoute('/AdminrepairSearch', AdminrepairSearch);
+    router.registerRoute('/Selectadminrepair', Selectadminrepair);
     router.registerRoute('/createreceipt', Receiptcreate);
     router.registerRoute('/CustomerSearch', CustomerSearch);
     router.registerRoute('/Tablereceipt', Tablereceipt)
