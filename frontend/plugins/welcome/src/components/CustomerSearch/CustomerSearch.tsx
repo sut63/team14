@@ -92,6 +92,18 @@ export default function ComponentsTable() {
     setSearch(false);
   }
 
+  const Toast = Swal.mixin({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+    didOpen: toast => {
+      toast.addEventListener('mouseenter', Swal.stopTimer);
+      toast.addEventListener('mouseleave', Swal.resumeTimer);
+    },
+  });
+
   useEffect(() => {
     const getCustomers = async () => {
       const res = await api.listCustomer({ offset: 0 });
@@ -141,22 +153,7 @@ export default function ComponentsTable() {
 
     <Page theme={pageTheme.tool}>
       <Header title={`Customer System`} type="Computer Repair System" >
-      <div>&nbsp;&nbsp;&nbsp;</div>
-        <Button 
-        style={{ marginLeft: 20 }} 
-        href="/CustomerTable"
-        variant="contained"  
-        > 
-        กลับหน้าตารางข้อมูลลูกค้า 
-        </Button>
 
-        <Button 
-        style={{ marginLeft: 20 }} 
-        href="/"
-        variant="contained"  
-        > 
-        ออกจากระบบ 
-        </Button>
 
       </Header>
       <Content>
@@ -240,8 +237,8 @@ export default function ComponentsTable() {
             </Paper>
           </Grid>
         </Grid>
-
-
+        
+        
         <Grid container justify="center">
           <Grid item xs={12} md={10}>
             <Paper>
@@ -327,6 +324,28 @@ export default function ComponentsTable() {
             </Paper>
           </Grid>
         </Grid>
+
+        <div>&nbsp;&nbsp;&nbsp;</div>
+        <Typography align="center" >
+        <div>&nbsp;&nbsp;&nbsp;</div>
+        <Button 
+        style={{ marginLeft: 20 }} 
+        href="/CustomerTable"
+        variant="contained"  
+        > 
+        กลับหน้าตารางข้อมูลลูกค้า 
+        </Button>
+
+        <Button 
+        style={{ marginLeft: 20 }} 
+        href="/Group14"
+        variant="contained"  
+        > 
+        กลับหน้าหลัก 
+        </Button>
+        </Typography>
+        <div>&nbsp;&nbsp;&nbsp;</div>
+
       </Content>
     </Page>
   );
