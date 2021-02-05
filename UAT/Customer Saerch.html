@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta content="text/html; charset=UTF-8" http-equiv="content-type" />
+	<title>Customer Saerch</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">ค้นหาข้อมูลลูกค้าสำเร็จ</td></tr>
+</thead>
+<tbody>
+<tr><td>open</td><td>http://localhost:3000/CustomerTable<datalist><option>http://localhost:3000/CustomerTable</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='root']/div/div[2]/article/div/div[2]/a/span<datalist><option>//div[@id='root']/div/div[2]/article/div/div[2]/a/span</option><option>//div/div[2]/a/span</option><option>css=a.MuiButtonBase-root.MuiButton-root.MuiButton-contained.MuiButton-containedSecondary &gt; span.MuiButton-label</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>id=customername<datalist><option>id=customername</option><option>//input[@id='customername']</option><option>//div[@id='root']/div/div[2]/article/div/div/div/p/div[2]/div/div[2]/div/input</option><option>//input</option><option>css=#customername</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>id=customername<datalist><option>id=customername</option><option>//input[@id='customername']</option><option>//div[@id='root']/div/div[2]/article/div/div/div/p/div[2]/div/div[2]/div/input</option><option>//input</option><option>css=#customername</option></datalist></td><td>ประเสริฐ รัตนวงศ์</td>
+</tr>
+<tr><td>click</td><td>//div[@id='root']/div/div[2]/article/div/div/div/p/button/span/h3<datalist><option>//div[@id='root']/div/div[2]/article/div/div/div/p/button/span/h3</option><option>//h3</option><option>css=h3</option></datalist></td><td></td>
+</tr>
+<tr><td>assertText</td><td>id=swal2-title<datalist><option>id=swal2-title</option><option>//h2[@id='swal2-title']</option><option>//h2</option><option>css=#swal2-title</option></datalist></td><td>พบข้อมูลที่ค้นหา</td>
+</tr>
+</tbody></table>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">ค้นหาข้อมูลลูกค้าไม่สำเร็จ</td></tr>
+</thead>
+<tbody>
+<tr><td>open</td><td>http://localhost:3000/CustomerTable<datalist><option>http://localhost:3000/CustomerTable</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='root']/div/div[2]/article<datalist><option>//div[@id='root']/div/div[2]/article</option><option>//article</option><option>css=article.makeStyles-root-29</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='root']/div/div[2]/article/div/div[2]/a/span<datalist><option>//div[@id='root']/div/div[2]/article/div/div[2]/a/span</option><option>//div/div[2]/a/span</option><option>css=a.MuiButtonBase-root.MuiButton-root.MuiButton-contained.MuiButton-containedSecondary &gt; span.MuiButton-label</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>id=customername<datalist><option>id=customername</option><option>//input[@id='customername']</option><option>//div[@id='root']/div/div[2]/article/div/div/div/p/div[2]/div/div[2]/div/input</option><option>//input</option><option>css=#customername</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>id=customername<datalist><option>id=customername</option><option>//input[@id='customername']</option><option>//div[@id='root']/div/div[2]/article/div/div/div/p/div[2]/div/div[2]/div/input</option><option>//input</option><option>css=#customername</option></datalist></td><td>อำพร รัตนวงศ์</td>
+</tr>
+<tr><td>click</td><td>//div[@id='root']/div/div[2]/article/div/div/div/p/button/span/h3<datalist><option>//div[@id='root']/div/div[2]/article/div/div/div/p/button/span/h3</option><option>//h3</option><option>css=h3</option></datalist></td><td></td>
+</tr>
+<tr><td>assertText</td><td>id=swal2-title<datalist><option>id=swal2-title</option><option>//h2[@id='swal2-title']</option><option>//h2</option><option>css=#swal2-title</option></datalist></td><td>ไม่พบข้อมูลที่ค้นหา</td>
+</tr>
+<tr><td>click</td><td>//div[@id='root']/div/div[2]/article/p/a/span<datalist><option>//div[@id='root']/div/div[2]/article/p/a/span</option><option>//p/a/span</option><option>css=a.MuiButtonBase-root.MuiButton-root.MuiButton-contained &gt; span.MuiButton-label</option></datalist></td><td></td>
+</tr>
+</tbody></table>
+</body>
+</html>
