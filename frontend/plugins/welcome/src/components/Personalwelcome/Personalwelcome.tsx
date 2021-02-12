@@ -33,7 +33,7 @@ const Personalwelcome: FC<{}> = () => {
      <Header
        title="ระบบแจ้งซ่อมคอมพิวเตอร์" type="กลุ่มที่ 14">
          <div>&nbsp;&nbsp;&nbsp;</div>
-    <Button variant="contained" color="default" href="/Group14" startIcon={<ExitToAppIcon />}> ออกจากระบบ </Button>
+    <Button variant="contained" color="default" href="/" startIcon={<ExitToAppIcon />}> ออกจากระบบ </Button>
      </Header>
         <Content>
           <ContentHeader title="ระบบข้อมูลบุคลากร">

@@ -118,7 +118,7 @@ export default function Personaltable() {
                  variant="contained"
                  color="primary"
                  startIcon={<DeleteIcon/>}
-                 href="/Tablepersonal"
+                 href="/Personaltable"
                >
                  Delete
                </Button>

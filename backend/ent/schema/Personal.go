@@ -1,6 +1,7 @@
 package schema
 
 import (
+	"errors"
 	"regexp"
 
 	"github.com/facebookincubator/ent"
@@ -17,7 +18,13 @@ type Personal struct {
 func (Personal) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("Personalname").Match(regexp.MustCompile("[a-zA-Zก-ฮ]")),
-		field.String("Email").Match(regexp.MustCompile("[a-zA-Z0-9]+@([a-zA-Z0-9]+.)+[A-Za-z]")),
+		field.String("Email").Validate(func(s string) error {
+			match, _ := regexp.MatchString("^[a-zA-Z0-9.!#$%&'*+\\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$", s)
+			if !match {
+				return errors.New("รูปแบบอีเมลไม่ถูกต้อง")
+			}
+			return nil
+		}),
 		field.String("Password").MinLen(4).Match(regexp.MustCompile("[0-9]")),
 	}
 }
