@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta content="text/html; charset=UTF-8" http-equiv="content-type" />
+	<title>Customer Test Suit</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Login fail</td></tr>
+</thead>
+<tbody>
+<tr><td>open</td><td>http://localhost:3000/<datalist><option>http://localhost:3000/</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>id=email<datalist><option>id=email</option><option>name=email</option><option>//input[@id='email']</option><option>//div[@id='root']/div/div[2]/article/div[2]/div/div/input</option><option>//input</option><option>css=#email</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>id=email<datalist><option>id=email</option><option>name=email</option><option>//input[@id='email']</option><option>//div[@id='root']/div/div[2]/article/div[2]/div/div/input</option><option>//input</option><option>css=#email</option></datalist></td><td>sai@gmail.com</td>
+</tr>
+<tr><td>click</td><td>id=password<datalist><option>id=password</option><option>name=password</option><option>//input[@id='password']</option><option>//div[@id='root']/div/div[2]/article/div[2]/div[2]/div/input</option><option>//div[2]/div/input</option><option>css=#password</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>id=password<datalist><option>id=password</option><option>name=password</option><option>//input[@id='password']</option><option>//div[@id='root']/div/div[2]/article/div[2]/div[2]/div/input</option><option>//div[2]/div/input</option><option>css=#password</option></datalist></td><td>12</td>
+</tr>
+<tr><td>click</td><td>//div[@id='root']/div/div[2]/article/div[2]/button/span<datalist><option>//div[@id='root']/div/div[2]/article/div[2]/button/span</option><option>//button/span</option><option>css=span.MuiButton-label</option></datalist></td><td></td>
+</tr>
+<tr><td>assertAlert</td><td>เข้าสู่ระบบไม่สำเร็จ กรุณาตรวจสอบ Email หรือ Password<datalist><option>เข้าสู่ระบบไม่สำเร็จ กรุณาตรวจสอบ Email หรือ Password</option></datalist></td><td></td>
+</tr>
+</tbody></table>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Login Success</td></tr>
+</thead>
+<tbody>
+<tr><td>open</td><td>http://localhost:3000/<datalist><option>http://localhost:3000/</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>id=email<datalist><option>id=email</option><option>name=email</option><option>//input[@id='email']</option><option>//div[@id='root']/div/div[2]/article/div[2]/div/div/input</option><option>//input</option><option>css=#email</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>id=email<datalist><option>id=email</option><option>name=email</option><option>//input[@id='email']</option><option>//div[@id='root']/div/div[2]/article/div[2]/div/div/input</option><option>//input</option><option>css=#email</option></datalist></td><td>e@hotmail.com</td>
+</tr>
+<tr><td>click</td><td>id=password<datalist><option>id=password</option><option>name=password</option><option>//input[@id='password']</option><option>//div[@id='root']/div/div[2]/article/div[2]/div[2]/div/input</option><option>//div[2]/div/input</option><option>css=#password</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>id=password<datalist><option>id=password</option><option>name=password</option><option>//input[@id='password']</option><option>//div[@id='root']/div/div[2]/article/div[2]/div[2]/div/input</option><option>//div[2]/div/input</option><option>css=#password</option></datalist></td><td>1234</td>
+</tr>
+<tr><td>click</td><td>//div[@id='root']/div/div[2]/article/div[2]/button/span<datalist><option>//div[@id='root']/div/div[2]/article/div[2]/button/span</option><option>//button/span</option><option>css=span.MuiButton-label</option></datalist></td><td></td>
+</tr>
+</tbody></table>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">บันทึกสำเร็จ</td></tr>
+</thead>
+<tbody>
+<tr><td>open</td><td>http://localhost:3000/CustomerTable<datalist><option>http://localhost:3000/CustomerTable</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='root']/div/div[2]/article/div/div[2]/a[2]/span<datalist><option>//div[@id='root']/div/div[2]/article/div/div[2]/a[2]/span</option><option>//a[2]/span</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>id=nametitle<datalist><option>id=nametitle</option><option>//div[@id='nametitle']</option><option>//div[@id='root']/div/div[2]/article/div/form/div/div[2]/div</option><option>//div/div[2]/div</option><option>css=#nametitle</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='menu-']/div[3]/ul/li[3]<datalist><option>//div[@id='menu-']/div[3]/ul/li[3]</option><option>//li[3]</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>id=customername<datalist><option>id=customername</option><option>//input[@id='customername']</option><option>//div[@id='root']/div/div[2]/article/div/form/div/div[4]/div/input</option><option>//div[4]/div/input</option><option>css=#customername</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>id=customername<datalist><option>id=customername</option><option>//input[@id='customername']</option><option>//div[@id='root']/div/div[2]/article/div/form/div/div[4]/div/input</option><option>//div[4]/div/input</option><option>css=#customername</option></datalist></td><td>ไปรยา รัตนวงศ์</td>
+</tr>
+<tr><td>click</td><td>id=address<datalist><option>id=address</option><option>//input[@id='address']</option><option>//div[@id='root']/div/div[2]/article/div/form/div/div[6]/div/input</option><option>//div[6]/div/input</option><option>css=#address</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>id=address<datalist><option>id=address</option><option>//input[@id='address']</option><option>//div[@id='root']/div/div[2]/article/div/form/div/div[6]/div/input</option><option>//div[6]/div/input</option><option>css=#address</option></datalist></td><td>319/5 อำเภอโพนทอง จังหวัดร้อยเอ็ด</td>
+</tr>
+<tr><td>click</td><td>id=phonenumber<datalist><option>id=phonenumber</option><option>//input[@id='phonenumber']</option><option>//div[@id='root']/div/div[2]/article/div/form/div/div[8]/div/input</option><option>//div[8]/div/input</option><option>css=#phonenumber</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>id=phonenumber<datalist><option>id=phonenumber</option><option>//input[@id='phonenumber']</option><option>//div[@id='root']/div/div[2]/article/div/form/div/div[8]/div/input</option><option>//div[8]/div/input</option><option>css=#phonenumber</option></datalist></td><td>0998765432</td>
+</tr>
+<tr><td>click</td><td>id=identificationnumber<datalist><option>id=identificationnumber</option><option>//input[@id='identificationnumber']</option><option>//div[@id='root']/div/div[2]/article/div/form/div/div[10]/div/input</option><option>//div[10]/div/input</option><option>css=#identificationnumber</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>id=identificationnumber<datalist><option>id=identificationnumber</option><option>//input[@id='identificationnumber']</option><option>//div[@id='root']/div/div[2]/article/div/form/div/div[10]/div/input</option><option>//div[10]/div/input</option><option>css=#identificationnumber</option></datalist></td><td>1450701356874</td>
+</tr>
+<tr><td>click</td><td>id=gender<datalist><option>id=gender</option><option>//div[@id='gender']</option><option>//div[@id='root']/div/div[2]/article/div/form/div/div[12]/div</option><option>//div[12]/div</option><option>css=#gender</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='menu-']/div[3]/ul/li[2]<datalist><option>//div[@id='menu-']/div[3]/ul/li[2]</option><option>//li[2]</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='root']/div/div[2]/article/div/form/button/span<datalist><option>//div[@id='root']/div/div[2]/article/div/form/button/span</option><option>//button/span</option><option>css=span.MuiButton-label</option></datalist></td><td></td>
+</tr>
+<tr><td>assertText</td><td>id=swal2-title<datalist><option>id=swal2-title</option><option>//h2[@id='swal2-title']</option><option>//h2</option><option>css=#swal2-title</option></datalist></td><td>บันทึกข้อมูลสำเร็จ</td>
+</tr>
+</tbody></table>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">บันทึกไม่สำเร็จ กรุณากรอกชื่อ</td></tr>
+</thead>
+<tbody>
+<tr><td>open</td><td>http://localhost:3000/CreateNewCustomer<datalist><option>http://localhost:3000/CreateNewCustomer</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>id=nametitle<datalist><option>id=nametitle</option><option>//div[@id='nametitle']</option><option>//div[@id='root']/div/div[2]/article/div/form/div/div[2]/div</option><option>//div/div[2]/div</option><option>css=#nametitle</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='menu-']/div[3]/ul/li[3]<datalist><option>//div[@id='menu-']/div[3]/ul/li[3]</option><option>//li[3]</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>id=address<datalist><option>id=address</option><option>//input[@id='address']</option><option>//div[@id='root']/div/div[2]/article/div/form/div/div[6]/div/input</option><option>//div[6]/div/input</option><option>css=#address</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>id=address<datalist><option>id=address</option><option>//input[@id='address']</option><option>//div[@id='root']/div/div[2]/article/div/form/div/div[6]/div/input</option><option>//div[6]/div/input</option><option>css=#address</option></datalist></td><td>319/5 อำเภอโพนทอง จังหวัดร้อยเอ็ด</td>
+</tr>
+<tr><td>click</td><td>id=phonenumber<datalist><option>id=phonenumber</option><option>//input[@id='phonenumber']</option><option>//div[@id='root']/div/div[2]/article/div/form/div/div[8]/div/input</option><option>//div[8]/div/input</option><option>css=#phonenumber</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>id=phonenumber<datalist><option>id=phonenumber</option><option>//input[@id='phonenumber']</option><option>//div[@id='root']/div/div[2]/article/div/form/div/div[8]/div/input</option><option>//div[8]/div/input</option><option>css=#phonenumber</option></datalist></td><td>0998765432</td>
+</tr>
+<tr><td>click</td><td>id=identificationnumber<datalist><option>id=identificationnumber</option><option>//input[@id='identificationnumber']</option><option>//div[@id='root']/div/div[2]/article/div/form/div/div[10]/div/input</option><option>//div[10]/div/input</option><option>css=#identificationnumber</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>id=identificationnumber<datalist><option>id=identificationnumber</option><option>//input[@id='identificationnumber']</option><option>//div[@id='root']/div/div[2]/article/div/form/div/div[10]/div/input</option><option>//div[10]/div/input</option><option>css=#identificationnumber</option></datalist></td><td>1450701356876</td>
+</tr>
+<tr><td>click</td><td>id=gender<datalist><option>id=gender</option><option>//div[@id='gender']</option><option>//div[@id='root']/div/div[2]/article/div/form/div/div[12]/div</option><option>//div[12]/div</option><option>css=#gender</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='menu-']/div[3]/ul/li[2]<datalist><option>//div[@id='menu-']/div[3]/ul/li[2]</option><option>//li[2]</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='root']/div/div[2]/article/div/form/button/span<datalist><option>//div[@id='root']/div/div[2]/article/div/form/button/span</option><option>//button/span</option><option>css=span.MuiButton-label</option></datalist></td><td></td>
+</tr>
+<tr><td>assertText</td><td>id=swal2-title<datalist><option>id=swal2-title</option><option>//h2[@id='swal2-title']</option><option>//h2</option><option>css=#swal2-title</option></datalist></td><td>กรุณากรอกชื่อ</td>
+</tr>
+<tr><td>click</td><td>//div[@id='root']/div/div[2]/article/div<datalist><option>//div[@id='root']/div/div[2]/article/div</option><option>//article/div</option><option>css=div.makeStyles-root-20</option></datalist></td><td></td>
+</tr>
+</tbody></table>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">บันทึกไม่สำเร็จ กรุณากรอกที่อยู่</td></tr>
+</thead>
+<tbody>
+<tr><td>open</td><td>http://localhost:3000/CreateNewCustomer<datalist><option>http://localhost:3000/CreateNewCustomer</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>id=nametitle<datalist><option>id=nametitle</option><option>//div[@id='nametitle']</option><option>//div[@id='root']/div/div[2]/article/div/form/div/div[2]/div</option><option>//div/div[2]/div</option><option>css=#nametitle</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='menu-']/div[3]/ul/li[3]<datalist><option>//div[@id='menu-']/div[3]/ul/li[3]</option><option>//li[3]</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>id=customername<datalist><option>id=customername</option><option>//input[@id='customername']</option><option>//div[@id='root']/div/div[2]/article/div/form/div/div[4]/div/input</option><option>//div[4]/div/input</option><option>css=#customername</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>id=customername<datalist><option>id=customername</option><option>//input[@id='customername']</option><option>//div[@id='root']/div/div[2]/article/div/form/div/div[4]/div/input</option><option>//div[4]/div/input</option><option>css=#customername</option></datalist></td><td>จิรายุ รัตนวงศ์</td>
+</tr>
+<tr><td>click</td><td>id=phonenumber<datalist><option>id=phonenumber</option><option>//input[@id='phonenumber']</option><option>//div[@id='root']/div/div[2]/article/div/form/div/div[8]/div/input</option><option>//div[8]/div/input</option><option>css=#phonenumber</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>id=phonenumber<datalist><option>id=phonenumber</option><option>//input[@id='phonenumber']</option><option>//div[@id='root']/div/div[2]/article/div/form/div/div[8]/div/input</option><option>//div[8]/div/input</option><option>css=#phonenumber</option></datalist></td><td>0998767654</td>
+</tr>
+<tr><td>click</td><td>id=identificationnumber<datalist><option>id=identificationnumber</option><option>//input[@id='identificationnumber']</option><option>//div[@id='root']/div/div[2]/article/div/form/div/div[10]/div/input</option><option>//div[10]/div/input</option><option>css=#identificationnumber</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>id=identificationnumber<datalist><option>id=identificationnumber</option><option>//input[@id='identificationnumber']</option><option>//div[@id='root']/div/div[2]/article/div/form/div/div[10]/div/input</option><option>//div[10]/div/input</option><option>css=#identificationnumber</option></datalist></td><td>1234567890123</td>
+</tr>
+<tr><td>click</td><td>id=gender<datalist><option>id=gender</option><option>//div[@id='gender']</option><option>//div[@id='root']/div/div[2]/article/div/form/div/div[12]/div</option><option>//div[12]/div</option><option>css=#gender</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='menu-']/div[3]/ul/li[2]<datalist><option>//div[@id='menu-']/div[3]/ul/li[2]</option><option>//li[2]</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='root']/div/div[2]/article/div/form/button/span<datalist><option>//div[@id='root']/div/div[2]/article/div/form/button/span</option><option>//button/span</option><option>css=span.MuiButton-label</option></datalist></td><td></td>
+</tr>
+<tr><td>assertText</td><td>id=swal2-title<datalist><option>id=swal2-title</option><option>//h2[@id='swal2-title']</option><option>//h2</option><option>css=#swal2-title</option></datalist></td><td>กรุณากรอกที่อยู่</td>
+</tr>
+</tbody></table>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">บันทึกไม่สำเร็จ กรุณากรอกหมายเลขโทรศัพท์มือถือ 10 หลัก</td></tr>
+</thead>
+<tbody>
+<tr><td>open</td><td>http://localhost:3000/CreateNewCustomer<datalist><option>http://localhost:3000/CreateNewCustomer</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>id=nametitle<datalist><option>id=nametitle</option><option>//div[@id='nametitle']</option><option>//div[@id='root']/div/div[2]/article/div/form/div/div[2]/div</option><option>//div/div[2]/div</option><option>css=#nametitle</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='menu-']/div[3]/ul/li[3]<datalist><option>//div[@id='menu-']/div[3]/ul/li[3]</option><option>//li[3]</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>id=customername<datalist><option>id=customername</option><option>//input[@id='customername']</option><option>//div[@id='root']/div/div[2]/article/div/form/div/div[4]/div/input</option><option>//div[4]/div/input</option><option>css=#customername</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>id=customername<datalist><option>id=customername</option><option>//input[@id='customername']</option><option>//div[@id='root']/div/div[2]/article/div/form/div/div[4]/div/input</option><option>//div[4]/div/input</option><option>css=#customername</option></datalist></td><td>จิรายุ รัตนวงศ์</td>
+</tr>
+<tr><td>click</td><td>id=address<datalist><option>id=address</option><option>//input[@id='address']</option><option>//div[@id='root']/div/div[2]/article/div/form/div/div[6]/div/input</option><option>//div[6]/div/input</option><option>css=#address</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>id=address<datalist><option>id=address</option><option>//input[@id='address']</option><option>//div[@id='root']/div/div[2]/article/div/form/div/div[6]/div/input</option><option>//div[6]/div/input</option><option>css=#address</option></datalist></td><td>319/5 อำเภอโพนทอง จังหวัดร้อยเอ็ด</td>
+</tr>
+<tr><td>click</td><td>id=identificationnumber<datalist><option>id=identificationnumber</option><option>//input[@id='identificationnumber']</option><option>//div[@id='root']/div/div[2]/article/div/form/div/div[10]/div/input</option><option>//div[10]/div/input</option><option>css=#identificationnumber</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>id=phonenumber<datalist><option>id=phonenumber</option><option>//input[@id='phonenumber']</option><option>//div[@id='root']/div/div[2]/article/div/form/div/div[8]/div/input</option><option>//div[8]/div/input</option><option>css=#phonenumber</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>id=phonenumber<datalist><option>id=phonenumber</option><option>//input[@id='phonenumber']</option><option>//div[@id='root']/div/div[2]/article/div/form/div/div[8]/div/input</option><option>//div[8]/div/input</option><option>css=#phonenumber</option></datalist></td><td>099846</td>
+</tr>
+<tr><td>click</td><td>id=identificationnumber<datalist><option>id=identificationnumber</option><option>//input[@id='identificationnumber']</option><option>//div[@id='root']/div/div[2]/article/div/form/div/div[10]/div/input</option><option>//div[10]/div/input</option><option>css=#identificationnumber</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>id=identificationnumber<datalist><option>id=identificationnumber</option><option>//input[@id='identificationnumber']</option><option>//div[@id='root']/div/div[2]/article/div/form/div/div[10]/div/input</option><option>//div[10]/div/input</option><option>css=#identificationnumber</option></datalist></td><td>1234567890123</td>
+</tr>
+<tr><td>click</td><td>id=gender<datalist><option>id=gender</option><option>//div[@id='gender']</option><option>//div[@id='root']/div/div[2]/article/div/form/div/div[12]/div</option><option>//div[12]/div</option><option>css=#gender</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='menu-']/div[3]/ul/li[2]<datalist><option>//div[@id='menu-']/div[3]/ul/li[2]</option><option>//li[2]</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='root']/div/div[2]/article/div/form/button/span<datalist><option>//div[@id='root']/div/div[2]/article/div/form/button/span</option><option>//button/span</option><option>css=span.MuiButton-label</option></datalist></td><td></td>
+</tr>
+<tr><td>assertText</td><td>id=swal2-title<datalist><option>id=swal2-title</option><option>//h2[@id='swal2-title']</option><option>//h2</option><option>css=#swal2-title</option></datalist></td><td>กรุณากรอกข้อมูลหมายเลขโทรศัพท์ 10 หลัก</td>
+</tr>
+</tbody></table>
+</body>
+</html>
