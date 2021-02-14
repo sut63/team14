@@ -18,7 +18,6 @@ func (Receipt) Fields() []ent.Field {
 	return []ent.Field{
 		field.Time("added_time").
 			Default(time.Now),
-		field.String("Serviceprovider").NotEmpty(),
 		field.String("Address").NotEmpty(),
 		field.String("Productname").NotEmpty(),
 		field.String("Receiptcode").MaxLen(11).MinLen(11),

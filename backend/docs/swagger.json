@@ -3126,9 +3126,6 @@
                 },
                 "receiptcode": {
                     "type": "string"
-                },
-                "serviceprovider": {
-                    "type": "string"
                 }
             }
         },
@@ -3662,10 +3659,6 @@
                 },
                 "Receiptcode": {
                     "description": "Receiptcode holds the value of the \"Receiptcode\" field.",
-                    "type": "string"
-                },
-                "Serviceprovider": {
-                    "description": "Serviceprovider holds the value of the \"Serviceprovider\" field.",
                     "type": "string"
                 },
                 "added_time": {

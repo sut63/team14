@@ -99,7 +99,6 @@ export default function Personalpage() {
   const [product, setProduct] = useState(Number);
 
   const [addedTime, setAddedTime] = useState(String);
-  const [serviceprovider, setServiceprovider] = useState(String);
   const [address, setAddress] = useState(String);
   const [productname, setProductname] = useState(String);
   const [receiptcode, setReceiptcode] = useState(String);
@@ -171,9 +170,6 @@ export default function Personalpage() {
     setProduct(event.target.value as number);
   };
 
-  const handleServiceproviderChange = (event: any) => {
-    setServiceprovider(event.target.value as string);
-  };
 
   const handleAddressChange = (event: any) => {
     setAddress(event.target.value as string);
@@ -190,7 +186,6 @@ export default function Personalpage() {
   let p = Number(personal)
 
   const receipt = {
-    serviceprovider : serviceprovider,
     address : address,
     productname : productname,
     receiptcode : receiptcode,
@@ -211,9 +206,6 @@ export default function Personalpage() {
 
   const checkCaseSaveError = (field: string) => {
     switch(field) {
-      case 'Serviceprovider':
-        alertMessage("error","กรุณากรอกชื่อร้านค้าผู้ให้บริการ");
-        return;
       case 'Address':
         alertMessage("error","กรุณากรอกที่อยู่ร้านค้า");
         return;
@@ -318,25 +310,6 @@ return (
             size="small"
           >
 
-          <div className={classes.paper}><strong>ชื่อร้านค้าผู้ให้บริการ</strong></div>
-            <TextField 
-            className={classes.textField}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  
-                </InputAdornment>
-              ),
-            }}
-              id="serviceprovider"
-              variant="standard"
-              color="secondary"
-              type="string"
-              size="medium"
-              value={serviceprovider}
-              onChange={handleServiceproviderChange}
-            />
-
             <div className={classes.paper}><strong>รหัสใบเสร็จ</strong></div>
             <TextField 
             className={classes.textField}
@@ -367,20 +340,6 @@ return (
             >
               {customers.map((item: EntCustomer) => (
                 <MenuItem value={item.id}>{item.customername}</MenuItem>
-              ))}
-            </Select>
-
-            <div className={classes.paper}><strong>เบอร์โทรศัพท์</strong></div>
-              <Select className={classes.select}
-              style={{ width: 500 ,marginLeft:7,marginRight:-7,marginTop:10}}
-              color="primary"
-              labelId="nametitle-label"
-              id="phonenumber"
-              value={customer}
-              onChange={customerchange}
-            >
-              {customers.map((item: EntCustomer) => (
-                <MenuItem value={item.id}>{item.phonenumber}</MenuItem>
               ))}
             </Select>
 
@@ -457,8 +416,6 @@ return (
               value={paymenttype}
               onChange={paymenttypechange}
             >
-              <InputLabel className={classes.insideLabel}>เลือกประเภทการจ่ายเงิน</InputLabel>
-
               {paymenttypes.map((item: EntPaymentType) => (
                 <MenuItem value={item.id}>{item.typename}</MenuItem>
               ))}
