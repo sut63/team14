@@ -100,13 +100,6 @@ func AddedTime(v time.Time) predicate.Receipt {
 	})
 }
 
-// Serviceprovider applies equality check predicate on the "Serviceprovider" field. It's identical to ServiceproviderEQ.
-func Serviceprovider(v string) predicate.Receipt {
-	return predicate.Receipt(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldServiceprovider), v))
-	})
-}
-
 // Address applies equality check predicate on the "Address" field. It's identical to AddressEQ.
 func Address(v string) predicate.Receipt {
 	return predicate.Receipt(func(s *sql.Selector) {
@@ -201,117 +194,6 @@ func AddedTimeLT(v time.Time) predicate.Receipt {
 func AddedTimeLTE(v time.Time) predicate.Receipt {
 	return predicate.Receipt(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldAddedTime), v))
-	})
-}
-
-// ServiceproviderEQ applies the EQ predicate on the "Serviceprovider" field.
-func ServiceproviderEQ(v string) predicate.Receipt {
-	return predicate.Receipt(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldServiceprovider), v))
-	})
-}
-
-// ServiceproviderNEQ applies the NEQ predicate on the "Serviceprovider" field.
-func ServiceproviderNEQ(v string) predicate.Receipt {
-	return predicate.Receipt(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldServiceprovider), v))
-	})
-}
-
-// ServiceproviderIn applies the In predicate on the "Serviceprovider" field.
-func ServiceproviderIn(vs ...string) predicate.Receipt {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.Receipt(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
-		s.Where(sql.In(s.C(FieldServiceprovider), v...))
-	})
-}
-
-// ServiceproviderNotIn applies the NotIn predicate on the "Serviceprovider" field.
-func ServiceproviderNotIn(vs ...string) predicate.Receipt {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.Receipt(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
-		s.Where(sql.NotIn(s.C(FieldServiceprovider), v...))
-	})
-}
-
-// ServiceproviderGT applies the GT predicate on the "Serviceprovider" field.
-func ServiceproviderGT(v string) predicate.Receipt {
-	return predicate.Receipt(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldServiceprovider), v))
-	})
-}
-
-// ServiceproviderGTE applies the GTE predicate on the "Serviceprovider" field.
-func ServiceproviderGTE(v string) predicate.Receipt {
-	return predicate.Receipt(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldServiceprovider), v))
-	})
-}
-
-// ServiceproviderLT applies the LT predicate on the "Serviceprovider" field.
-func ServiceproviderLT(v string) predicate.Receipt {
-	return predicate.Receipt(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldServiceprovider), v))
-	})
-}
-
-// ServiceproviderLTE applies the LTE predicate on the "Serviceprovider" field.
-func ServiceproviderLTE(v string) predicate.Receipt {
-	return predicate.Receipt(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldServiceprovider), v))
-	})
-}
-
-// ServiceproviderContains applies the Contains predicate on the "Serviceprovider" field.
-func ServiceproviderContains(v string) predicate.Receipt {
-	return predicate.Receipt(func(s *sql.Selector) {
-		s.Where(sql.Contains(s.C(FieldServiceprovider), v))
-	})
-}
-
-// ServiceproviderHasPrefix applies the HasPrefix predicate on the "Serviceprovider" field.
-func ServiceproviderHasPrefix(v string) predicate.Receipt {
-	return predicate.Receipt(func(s *sql.Selector) {
-		s.Where(sql.HasPrefix(s.C(FieldServiceprovider), v))
-	})
-}
-
-// ServiceproviderHasSuffix applies the HasSuffix predicate on the "Serviceprovider" field.
-func ServiceproviderHasSuffix(v string) predicate.Receipt {
-	return predicate.Receipt(func(s *sql.Selector) {
-		s.Where(sql.HasSuffix(s.C(FieldServiceprovider), v))
-	})
-}
-
-// ServiceproviderEqualFold applies the EqualFold predicate on the "Serviceprovider" field.
-func ServiceproviderEqualFold(v string) predicate.Receipt {
-	return predicate.Receipt(func(s *sql.Selector) {
-		s.Where(sql.EqualFold(s.C(FieldServiceprovider), v))
-	})
-}
-
-// ServiceproviderContainsFold applies the ContainsFold predicate on the "Serviceprovider" field.
-func ServiceproviderContainsFold(v string) predicate.Receipt {
-	return predicate.Receipt(func(s *sql.Selector) {
-		s.Where(sql.ContainsFold(s.C(FieldServiceprovider), v))
 	})
 }
 

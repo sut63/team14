@@ -23,8 +23,6 @@ type Receipt struct {
 	ID int `json:"id,omitempty"`
 	// AddedTime holds the value of the "added_time" field.
 	AddedTime time.Time `json:"added_time,omitempty"`
-	// Serviceprovider holds the value of the "Serviceprovider" field.
-	Serviceprovider string `json:"Serviceprovider,omitempty"`
 	// Address holds the value of the "Address" field.
 	Address string `json:"Address,omitempty"`
 	// Productname holds the value of the "Productname" field.
@@ -133,7 +131,6 @@ func (*Receipt) scanValues() []interface{} {
 	return []interface{}{
 		&sql.NullInt64{},  // id
 		&sql.NullTime{},   // added_time
-		&sql.NullString{}, // Serviceprovider
 		&sql.NullString{}, // Address
 		&sql.NullString{}, // Productname
 		&sql.NullString{}, // Receiptcode
@@ -169,26 +166,21 @@ func (r *Receipt) assignValues(values ...interface{}) error {
 		r.AddedTime = value.Time
 	}
 	if value, ok := values[1].(*sql.NullString); !ok {
-		return fmt.Errorf("unexpected type %T for field Serviceprovider", values[1])
-	} else if value.Valid {
-		r.Serviceprovider = value.String
-	}
-	if value, ok := values[2].(*sql.NullString); !ok {
-		return fmt.Errorf("unexpected type %T for field Address", values[2])
+		return fmt.Errorf("unexpected type %T for field Address", values[1])
 	} else if value.Valid {
 		r.Address = value.String
 	}
-	if value, ok := values[3].(*sql.NullString); !ok {
-		return fmt.Errorf("unexpected type %T for field Productname", values[3])
+	if value, ok := values[2].(*sql.NullString); !ok {
+		return fmt.Errorf("unexpected type %T for field Productname", values[2])
 	} else if value.Valid {
 		r.Productname = value.String
 	}
-	if value, ok := values[4].(*sql.NullString); !ok {
-		return fmt.Errorf("unexpected type %T for field Receiptcode", values[4])
+	if value, ok := values[3].(*sql.NullString); !ok {
+		return fmt.Errorf("unexpected type %T for field Receiptcode", values[3])
 	} else if value.Valid {
 		r.Receiptcode = value.String
 	}
-	values = values[5:]
+	values = values[4:]
 	if len(values) == len(receipt.ForeignKeys) {
 		if value, ok := values[0].(*sql.NullInt64); !ok {
 			return fmt.Errorf("unexpected type %T for edge-field adminrepair_id", value)
@@ -274,8 +266,6 @@ func (r *Receipt) String() string {
 	builder.WriteString(fmt.Sprintf("id=%v", r.ID))
 	builder.WriteString(", added_time=")
 	builder.WriteString(r.AddedTime.Format(time.ANSIC))
-	builder.WriteString(", Serviceprovider=")
-	builder.WriteString(r.Serviceprovider)
 	builder.WriteString(", Address=")
 	builder.WriteString(r.Address)
 	builder.WriteString(", Productname=")

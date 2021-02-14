@@ -116,8 +116,6 @@ definitions:
         type: string
       receiptcode:
         type: string
-      serviceprovider:
-        type: string
     type: object
   controllers.Title:
     type: object
@@ -524,9 +522,6 @@ definitions:
         type: string
       Receiptcode:
         description: Receiptcode holds the value of the "Receiptcode" field.
-        type: string
-      Serviceprovider:
-        description: Serviceprovider holds the value of the "Serviceprovider" field.
         type: string
       added_time:
         description: AddedTime holds the value of the "added_time" field.

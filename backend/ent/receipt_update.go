@@ -47,12 +47,6 @@ func (ru *ReceiptUpdate) SetNillableAddedTime(t *time.Time) *ReceiptUpdate {
 	return ru
 }
 
-// SetServiceprovider sets the Serviceprovider field.
-func (ru *ReceiptUpdate) SetServiceprovider(s string) *ReceiptUpdate {
-	ru.mutation.SetServiceprovider(s)
-	return ru
-}
-
 // SetAddress sets the Address field.
 func (ru *ReceiptUpdate) SetAddress(s string) *ReceiptUpdate {
 	ru.mutation.SetAddress(s)
@@ -203,11 +197,6 @@ func (ru *ReceiptUpdate) ClearProduct() *ReceiptUpdate {
 
 // Save executes the query and returns the number of rows/vertices matched by this operation.
 func (ru *ReceiptUpdate) Save(ctx context.Context) (int, error) {
-	if v, ok := ru.mutation.Serviceprovider(); ok {
-		if err := receipt.ServiceproviderValidator(v); err != nil {
-			return 0, &ValidationError{Name: "Serviceprovider", err: fmt.Errorf("ent: validator failed for field \"Serviceprovider\": %w", err)}
-		}
-	}
 	if v, ok := ru.mutation.Address(); ok {
 		if err := receipt.AddressValidator(v); err != nil {
 			return 0, &ValidationError{Name: "Address", err: fmt.Errorf("ent: validator failed for field \"Address\": %w", err)}
@@ -296,13 +285,6 @@ func (ru *ReceiptUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Type:   field.TypeTime,
 			Value:  value,
 			Column: receipt.FieldAddedTime,
-		})
-	}
-	if value, ok := ru.mutation.Serviceprovider(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: receipt.FieldServiceprovider,
 		})
 	}
 	if value, ok := ru.mutation.Address(); ok {
@@ -533,12 +515,6 @@ func (ruo *ReceiptUpdateOne) SetNillableAddedTime(t *time.Time) *ReceiptUpdateOn
 	return ruo
 }
 
-// SetServiceprovider sets the Serviceprovider field.
-func (ruo *ReceiptUpdateOne) SetServiceprovider(s string) *ReceiptUpdateOne {
-	ruo.mutation.SetServiceprovider(s)
-	return ruo
-}
-
 // SetAddress sets the Address field.
 func (ruo *ReceiptUpdateOne) SetAddress(s string) *ReceiptUpdateOne {
 	ruo.mutation.SetAddress(s)
@@ -689,11 +665,6 @@ func (ruo *ReceiptUpdateOne) ClearProduct() *ReceiptUpdateOne {
 
 // Save executes the query and returns the updated entity.
 func (ruo *ReceiptUpdateOne) Save(ctx context.Context) (*Receipt, error) {
-	if v, ok := ruo.mutation.Serviceprovider(); ok {
-		if err := receipt.ServiceproviderValidator(v); err != nil {
-			return nil, &ValidationError{Name: "Serviceprovider", err: fmt.Errorf("ent: validator failed for field \"Serviceprovider\": %w", err)}
-		}
-	}
 	if v, ok := ruo.mutation.Address(); ok {
 		if err := receipt.AddressValidator(v); err != nil {
 			return nil, &ValidationError{Name: "Address", err: fmt.Errorf("ent: validator failed for field \"Address\": %w", err)}
@@ -780,13 +751,6 @@ func (ruo *ReceiptUpdateOne) sqlSave(ctx context.Context) (r *Receipt, err error
 			Type:   field.TypeTime,
 			Value:  value,
 			Column: receipt.FieldAddedTime,
-		})
-	}
-	if value, ok := ruo.mutation.Serviceprovider(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: receipt.FieldServiceprovider,
 		})
 	}
 	if value, ok := ruo.mutation.Address(); ok {
