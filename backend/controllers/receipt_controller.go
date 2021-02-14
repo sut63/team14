@@ -23,16 +23,15 @@ type ReceiptController struct {
 }
 
 type Receipt struct {
-	Added       	string
-	Serviceprovider	string
-	Address			string
-	Receiptcode		string
-	Productname		string
-	Customer    	int
-	Personal    	int
-	PaymentType 	int
-	Adminrepair 	int
-	Product     	int
+	Added       string
+	Address     string
+	Receiptcode string
+	Productname string
+	Customer    int
+	Personal    int
+	PaymentType int
+	Adminrepair int
+	Product     int
 }
 
 // CreateReceipt handles POST requests for adding receipt entities
@@ -116,7 +115,6 @@ func (ctl *ReceiptController) CreateReceipt(c *gin.Context) {
 		SetAdminrepair(a).
 		SetPaymenttype(pt).
 		SetProduct(pr).
-		SetServiceprovider(obj.Serviceprovider).
 		SetAddress(obj.Address).
 		SetProductname(obj.Productname).
 		SetReceiptcode(obj.Receiptcode).
@@ -124,14 +122,14 @@ func (ctl *ReceiptController) CreateReceipt(c *gin.Context) {
 	if err != nil {
 		c.JSON(400, gin.H{
 			"status": false,
-			"error": err,
+			"error":  err,
 		})
 		return
 	}
 
 	c.JSON(200, gin.H{
 		"status": true,
-		"data": r,
+		"data":   r,
 	})
 }
 

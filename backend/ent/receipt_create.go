@@ -39,12 +39,6 @@ func (rc *ReceiptCreate) SetNillableAddedTime(t *time.Time) *ReceiptCreate {
 	return rc
 }
 
-// SetServiceprovider sets the Serviceprovider field.
-func (rc *ReceiptCreate) SetServiceprovider(s string) *ReceiptCreate {
-	rc.mutation.SetServiceprovider(s)
-	return rc
-}
-
 // SetAddress sets the Address field.
 func (rc *ReceiptCreate) SetAddress(s string) *ReceiptCreate {
 	rc.mutation.SetAddress(s)
@@ -169,14 +163,6 @@ func (rc *ReceiptCreate) Save(ctx context.Context) (*Receipt, error) {
 		v := receipt.DefaultAddedTime()
 		rc.mutation.SetAddedTime(v)
 	}
-	if _, ok := rc.mutation.Serviceprovider(); !ok {
-		return nil, &ValidationError{Name: "Serviceprovider", err: errors.New("ent: missing required field \"Serviceprovider\"")}
-	}
-	if v, ok := rc.mutation.Serviceprovider(); ok {
-		if err := receipt.ServiceproviderValidator(v); err != nil {
-			return nil, &ValidationError{Name: "Serviceprovider", err: fmt.Errorf("ent: validator failed for field \"Serviceprovider\": %w", err)}
-		}
-	}
 	if _, ok := rc.mutation.Address(); !ok {
 		return nil, &ValidationError{Name: "Address", err: errors.New("ent: missing required field \"Address\"")}
 	}
@@ -268,14 +254,6 @@ func (rc *ReceiptCreate) createSpec() (*Receipt, *sqlgraph.CreateSpec) {
 			Column: receipt.FieldAddedTime,
 		})
 		r.AddedTime = value
-	}
-	if value, ok := rc.mutation.Serviceprovider(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: receipt.FieldServiceprovider,
-		})
-		r.Serviceprovider = value
 	}
 	if value, ok := rc.mutation.Address(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{

@@ -6160,7 +6160,6 @@ type ReceiptMutation struct {
 	typ                string
 	id                 *int
 	added_time         *time.Time
-	_Serviceprovider   *string
 	_Address           *string
 	_Productname       *string
 	_Receiptcode       *string
@@ -6293,43 +6292,6 @@ func (m *ReceiptMutation) OldAddedTime(ctx context.Context) (v time.Time, err er
 // ResetAddedTime reset all changes of the "added_time" field.
 func (m *ReceiptMutation) ResetAddedTime() {
 	m.added_time = nil
-}
-
-// SetServiceprovider sets the Serviceprovider field.
-func (m *ReceiptMutation) SetServiceprovider(s string) {
-	m._Serviceprovider = &s
-}
-
-// Serviceprovider returns the Serviceprovider value in the mutation.
-func (m *ReceiptMutation) Serviceprovider() (r string, exists bool) {
-	v := m._Serviceprovider
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldServiceprovider returns the old Serviceprovider value of the Receipt.
-// If the Receipt object wasn't provided to the builder, the object is fetched
-// from the database.
-// An error is returned if the mutation operation is not UpdateOne, or database query fails.
-func (m *ReceiptMutation) OldServiceprovider(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, fmt.Errorf("OldServiceprovider is allowed only on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, fmt.Errorf("OldServiceprovider requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldServiceprovider: %w", err)
-	}
-	return oldValue.Serviceprovider, nil
-}
-
-// ResetServiceprovider reset all changes of the "Serviceprovider" field.
-func (m *ReceiptMutation) ResetServiceprovider() {
-	m._Serviceprovider = nil
 }
 
 // SetAddress sets the Address field.
@@ -6652,12 +6614,9 @@ func (m *ReceiptMutation) Type() string {
 // this mutation. Note that, in order to get all numeric
 // fields that were in/decremented, call AddedFields().
 func (m *ReceiptMutation) Fields() []string {
-	fields := make([]string, 0, 5)
+	fields := make([]string, 0, 4)
 	if m.added_time != nil {
 		fields = append(fields, receipt.FieldAddedTime)
-	}
-	if m._Serviceprovider != nil {
-		fields = append(fields, receipt.FieldServiceprovider)
 	}
 	if m._Address != nil {
 		fields = append(fields, receipt.FieldAddress)
@@ -6678,8 +6637,6 @@ func (m *ReceiptMutation) Field(name string) (ent.Value, bool) {
 	switch name {
 	case receipt.FieldAddedTime:
 		return m.AddedTime()
-	case receipt.FieldServiceprovider:
-		return m.Serviceprovider()
 	case receipt.FieldAddress:
 		return m.Address()
 	case receipt.FieldProductname:
@@ -6697,8 +6654,6 @@ func (m *ReceiptMutation) OldField(ctx context.Context, name string) (ent.Value,
 	switch name {
 	case receipt.FieldAddedTime:
 		return m.OldAddedTime(ctx)
-	case receipt.FieldServiceprovider:
-		return m.OldServiceprovider(ctx)
 	case receipt.FieldAddress:
 		return m.OldAddress(ctx)
 	case receipt.FieldProductname:
@@ -6720,13 +6675,6 @@ func (m *ReceiptMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetAddedTime(v)
-		return nil
-	case receipt.FieldServiceprovider:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetServiceprovider(v)
 		return nil
 	case receipt.FieldAddress:
 		v, ok := value.(string)
@@ -6801,9 +6749,6 @@ func (m *ReceiptMutation) ResetField(name string) error {
 	switch name {
 	case receipt.FieldAddedTime:
 		m.ResetAddedTime()
-		return nil
-	case receipt.FieldServiceprovider:
-		m.ResetServiceprovider()
 		return nil
 	case receipt.FieldAddress:
 		m.ResetAddress()

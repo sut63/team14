@@ -289,7 +289,6 @@ var (
 	ReceiptsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "added_time", Type: field.TypeTime},
-		{Name: "serviceprovider", Type: field.TypeString},
 		{Name: "address", Type: field.TypeString},
 		{Name: "productname", Type: field.TypeString},
 		{Name: "receiptcode", Type: field.TypeString, Size: 11},
@@ -307,35 +306,35 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:  "receipts_adminrepairs_receipt",
-				Columns: []*schema.Column{ReceiptsColumns[6]},
+				Columns: []*schema.Column{ReceiptsColumns[5]},
 
 				RefColumns: []*schema.Column{AdminrepairsColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:  "receipts_customers_receipt",
-				Columns: []*schema.Column{ReceiptsColumns[7]},
+				Columns: []*schema.Column{ReceiptsColumns[6]},
 
 				RefColumns: []*schema.Column{CustomersColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:  "receipts_payment_types_receipt",
-				Columns: []*schema.Column{ReceiptsColumns[8]},
+				Columns: []*schema.Column{ReceiptsColumns[7]},
 
 				RefColumns: []*schema.Column{PaymentTypesColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:  "receipts_personals_receipt",
-				Columns: []*schema.Column{ReceiptsColumns[9]},
+				Columns: []*schema.Column{ReceiptsColumns[8]},
 
 				RefColumns: []*schema.Column{PersonalsColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:  "receipts_products_receipt",
-				Columns: []*schema.Column{ReceiptsColumns[10]},
+				Columns: []*schema.Column{ReceiptsColumns[9]},
 
 				RefColumns: []*schema.Column{ProductsColumns[0]},
 				OnDelete:   schema.SetNull,

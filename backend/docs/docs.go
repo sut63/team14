@@ -3141,9 +3141,6 @@ var doc = `{
                 },
                 "receiptcode": {
                     "type": "string"
-                },
-                "serviceprovider": {
-                    "type": "string"
                 }
             }
         },
@@ -3677,10 +3674,6 @@ var doc = `{
                 },
                 "Receiptcode": {
                     "description": "Receiptcode holds the value of the \"Receiptcode\" field.",
-                    "type": "string"
-                },
-                "Serviceprovider": {
-                    "description": "Serviceprovider holds the value of the \"Serviceprovider\" field.",
                     "type": "string"
                 },
                 "added_time": {
