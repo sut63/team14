@@ -50,7 +50,6 @@ const useStyles = makeStyles(theme => ({
 
 
   export default function AdminrepairCreate(){
-  //const UI = { giveName : 'Confirmation'}
   var ck = new Cookies()
   var cookieID = ck.GetID()
   const classes = useStyles();
@@ -223,12 +222,11 @@ const useStyles = makeStyles(theme => ({
       .then(data => {
         console.log(data);
         if (data.status == true) {
-          //clear();
           Toast.fire({
             icon: 'success',
             title: 'บันทึกข้อมูลสำเร็จ',
   
-          });//window.setTimeout(function(){location.reload()},8000);
+          });
           const timer = setTimeout(() => {
             window.location.reload(false);
          }, 5000);
