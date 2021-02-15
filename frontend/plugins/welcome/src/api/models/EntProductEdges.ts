@@ -87,7 +87,7 @@ export function EntProductEdgesFromJSONTyped(json: any, ignoreDiscriminator: boo
         'brand': !exists(json, 'Brand') ? undefined : EntBrandFromJSON(json['Brand']),
         'personal': !exists(json, 'Personal') ? undefined : EntPersonalFromJSON(json['Personal']),
         'product': !exists(json, 'Product') ? undefined : ((json['Product'] as Array<any>).map(EntAdminrepairFromJSON)),
-        'receipt': !exists(json, 'Receipt') ? undefined : ((json['Receipt'] as Array<any>).map(EntReceiptFromJSON)),
+        'receipt': !exists(json, 'receipt') ? undefined : ((json['receipt'] as Array<any>).map(EntReceiptFromJSON)),
         'typeproduct': !exists(json, 'Typeproduct') ? undefined : EntTypeproductFromJSON(json['Typeproduct']),
     };
 }

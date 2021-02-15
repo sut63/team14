@@ -253,15 +253,14 @@ export default function ComponentsTable() {
                         <TableHead>
                           <TableRow>
                           <TableCell align="center">No</TableCell>
-                          <TableCell align="center">ชื่อร้านค้าผู้ให้บริการ</TableCell>
                           <TableCell align="center">รหัสใบเสร็จ</TableCell>
                           <TableCell align="center">ชื่อ-นามสกุล</TableCell>
-                          <TableCell align="center">เบอร์โทรศัพท์</TableCell>
                           <TableCell align="center">ที่อยู่ร้านค้า</TableCell>
                           <TableCell align="center">ชื่อผลิตภัณฑ์</TableCell>
                           <TableCell align="center">รายละเอียดการซ่อม</TableCell>
                           <TableCell align="center">ราคา</TableCell>
                           <TableCell align="center">ประเภทการจ่ายเงิน</TableCell>
+                          <TableCell align="center">เจ้าหน้าที่ที่ทำการบันทึก</TableCell>
                           </TableRow>
                         </TableHead>
                         <TableBody>
@@ -269,16 +268,14 @@ export default function ComponentsTable() {
                           {receipt.filter((filter: any) => filter.receiptcode.includes(receiptcode)).map((item: any) => (
                             <TableRow key={item.id}>
                               <TableCell align="center">{item.id}</TableCell>
-                              <TableCell align="center">{item.serviceprovider}</TableCell>
                               <TableCell align="center">{item.receiptcode}</TableCell>
                               <TableCell align="center">{item.edges?.customer?.customername}</TableCell>
-                              <TableCell align="center">{item.edges?.customer?.phonenumber}</TableCell>
                               <TableCell align="center">{item.address}</TableCell>
                               <TableCell align="center">{item.productname}</TableCell>
                               <TableCell align="center">{item.edges?.adminrepair?.equipmentdamate}</TableCell>
                               <TableCell align="center">{item.edges?.product?.price}</TableCell>
                               <TableCell align="center">{item.edges?.paymenttype?.typename}</TableCell>
-                                                                  
+                              <TableCell align="center">{item.edges?.personal?.personalname}</TableCell>          
                             </TableRow>
                           ))}
                         </TableBody>
@@ -292,15 +289,14 @@ export default function ComponentsTable() {
                             <TableHead>
                               <TableRow>
                               <TableCell align="center">No</TableCell>
-                              <TableCell align="center">ชื่อร้านค้าผู้ให้บริการ</TableCell>
                               <TableCell align="center">รหัสใบเสร็จ</TableCell>
                               <TableCell align="center">ชื่อ-นามสกุล</TableCell>
-                              <TableCell align="center">เบอร์โทรศัพท์</TableCell>
                               <TableCell align="center">ที่อยู่ร้านค้า</TableCell>
                               <TableCell align="center">ชื่อผลิตภัณฑ์</TableCell>
                               <TableCell align="center">รายละเอียดการซ่อม</TableCell>
                               <TableCell align="center">ราคา</TableCell>
                               <TableCell align="center">ประเภทการจ่ายเงิน</TableCell>
+                              <TableCell align="center">เจ้าหน้าที่ที่ทำการบันทึก</TableCell>
                               </TableRow>
                             </TableHead>
                             <TableBody>
@@ -308,16 +304,14 @@ export default function ComponentsTable() {
                               {receipt.map((item: any) => (
                                 <TableRow key={item.id}>
                                  <TableCell align="center">{item.id}</TableCell>
-                                 <TableCell align="center">{item.serviceprovider}</TableCell>
                                  <TableCell align="center">{item.receiptcode}</TableCell>
                                  <TableCell align="center">{item.edges?.customer?.customername}</TableCell>
-                                 <TableCell align="center">{item.edges?.customer?.phonenumber}</TableCell>
                                  <TableCell align="center">{item.address}</TableCell>
                                  <TableCell align="center">{item.productname}</TableCell>
                                  <TableCell align="center">{item.edges?.adminrepair?.equipmentdamate}</TableCell>
                                  <TableCell align="center">{item.edges?.product?.price}</TableCell>
                                  <TableCell align="center">{item.edges?.paymenttype?.typename}</TableCell>
-                                 
+                                 <TableCell align="center">{item.edges?.personal?.personalname}</TableCell>
                                 </TableRow>
                               ))}
                             </TableBody>
