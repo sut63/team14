@@ -98,7 +98,7 @@ export default function Tablepersonal() {
            <TableCell align="center">ชื่อ-นามสกุล</TableCell>
            <TableCell align="center">ที่อยู่ร้านค้า</TableCell>
            <TableCell align="center">ชื่อผลิตภัณฑ์</TableCell>
-           <TableCell align="center">รายละเอียดการซ่อม</TableCell>
+           <TableCell align="center">รายละเอียดสินค้า</TableCell>
            <TableCell align="center">ราคา</TableCell>
            <TableCell align="center">ประเภทการจ่ายเงิน</TableCell>
            <TableCell align="center">เจ้าหน้าที่ที่ทำการบันทึก</TableCell>
