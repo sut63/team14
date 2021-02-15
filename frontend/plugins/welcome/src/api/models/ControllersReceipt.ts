@@ -73,12 +73,6 @@ export interface ControllersReceipt {
      * @memberof ControllersReceipt
      */
     receiptcode?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ControllersReceipt
-     */
-    serviceprovider?: string;
 }
 
 export function ControllersReceiptFromJSON(json: any): ControllersReceipt {
@@ -100,7 +94,6 @@ export function ControllersReceiptFromJSONTyped(json: any, ignoreDiscriminator: 
         'product': !exists(json, 'product') ? undefined : json['product'],
         'productname': !exists(json, 'productname') ? undefined : json['productname'],
         'receiptcode': !exists(json, 'receiptcode') ? undefined : json['receiptcode'],
-        'serviceprovider': !exists(json, 'serviceprovider') ? undefined : json['serviceprovider'],
     };
 }
 
@@ -122,7 +115,6 @@ export function ControllersReceiptToJSON(value?: ControllersReceipt | null): any
         'product': value.product,
         'productname': value.productname,
         'receiptcode': value.receiptcode,
-        'serviceprovider': value.serviceprovider,
     };
 }
 

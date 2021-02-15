@@ -77,7 +77,7 @@ export function EntAdminrepairEdgesFromJSONTyped(json: any, ignoreDiscriminator:
         'adminrepairFix': !exists(json, 'AdminrepairFix') ? undefined : EntFixFromJSON(json['AdminrepairFix']),
         'adminrepairPersonal': !exists(json, 'AdminrepairPersonal') ? undefined : EntPersonalFromJSON(json['AdminrepairPersonal']),
         'adminrepairProduct': !exists(json, 'AdminrepairProduct') ? undefined : EntProductFromJSON(json['AdminrepairProduct']),
-        'receipt': !exists(json, 'Receipt') ? undefined : ((json['Receipt'] as Array<any>).map(EntReceiptFromJSON)),
+        'receipt': !exists(json, 'receipt') ? undefined : ((json['receipt'] as Array<any>).map(EntReceiptFromJSON)),
     };
 }
 

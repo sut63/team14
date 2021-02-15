@@ -381,7 +381,7 @@ return (
               onChange={handleProductnameChange}
             />
 
-            <div className={classes.paper}><strong>รายละเอียดการซ่อม</strong></div>
+            <div className={classes.paper}><strong>รายละเอียดสินค้า</strong></div>
             <Select className={classes.select}
               style={{ width: 500 ,marginLeft:7,marginRight:-7,marginTop:10}}
               color="primary"

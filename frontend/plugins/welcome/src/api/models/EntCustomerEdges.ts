@@ -84,10 +84,10 @@ export function EntCustomerEdgesFromJSONTyped(json: any, ignoreDiscriminator: bo
     }
     return {
         
-        'fix': !exists(json, 'Fix') ? undefined : ((json['Fix'] as Array<any>).map(EntFixFromJSON)),
+        'fix': !exists(json, 'fix') ? undefined : ((json['fix'] as Array<any>).map(EntFixFromJSON)),
         'gender': !exists(json, 'Gender') ? undefined : EntGenderFromJSON(json['Gender']),
         'personal': !exists(json, 'Personal') ? undefined : EntPersonalFromJSON(json['Personal']),
-        'receipt': !exists(json, 'Receipt') ? undefined : ((json['Receipt'] as Array<any>).map(EntReceiptFromJSON)),
+        'receipt': !exists(json, 'receipt') ? undefined : ((json['receipt'] as Array<any>).map(EntReceiptFromJSON)),
         'title': !exists(json, 'Title') ? undefined : EntTitleFromJSON(json['Title']),
     };
 }
