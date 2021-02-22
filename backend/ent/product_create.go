@@ -30,15 +30,15 @@ func (pc *ProductCreate) SetProductname(s string) *ProductCreate {
 	return pc
 }
 
-// SetNumberofproduct sets the Numberofproduct field.
-func (pc *ProductCreate) SetNumberofproduct(s string) *ProductCreate {
-	pc.mutation.SetNumberofproduct(s)
+// SetAmountofproduct sets the Amountofproduct field.
+func (pc *ProductCreate) SetAmountofproduct(i int) *ProductCreate {
+	pc.mutation.SetAmountofproduct(i)
 	return pc
 }
 
 // SetPrice sets the Price field.
-func (pc *ProductCreate) SetPrice(s string) *ProductCreate {
-	pc.mutation.SetPrice(s)
+func (pc *ProductCreate) SetPrice(i int) *ProductCreate {
+	pc.mutation.SetPrice(i)
 	return pc
 }
 
@@ -144,12 +144,12 @@ func (pc *ProductCreate) Save(ctx context.Context) (*Product, error) {
 			return nil, &ValidationError{Name: "Productname", err: fmt.Errorf("ent: validator failed for field \"Productname\": %w", err)}
 		}
 	}
-	if _, ok := pc.mutation.Numberofproduct(); !ok {
-		return nil, &ValidationError{Name: "Numberofproduct", err: errors.New("ent: missing required field \"Numberofproduct\"")}
+	if _, ok := pc.mutation.Amountofproduct(); !ok {
+		return nil, &ValidationError{Name: "Amountofproduct", err: errors.New("ent: missing required field \"Amountofproduct\"")}
 	}
-	if v, ok := pc.mutation.Numberofproduct(); ok {
-		if err := product.NumberofproductValidator(v); err != nil {
-			return nil, &ValidationError{Name: "Numberofproduct", err: fmt.Errorf("ent: validator failed for field \"Numberofproduct\": %w", err)}
+	if v, ok := pc.mutation.Amountofproduct(); ok {
+		if err := product.AmountofproductValidator(v); err != nil {
+			return nil, &ValidationError{Name: "Amountofproduct", err: fmt.Errorf("ent: validator failed for field \"Amountofproduct\": %w", err)}
 		}
 	}
 	if _, ok := pc.mutation.Price(); !ok {
@@ -228,17 +228,17 @@ func (pc *ProductCreate) createSpec() (*Product, *sqlgraph.CreateSpec) {
 		})
 		pr.Productname = value
 	}
-	if value, ok := pc.mutation.Numberofproduct(); ok {
+	if value, ok := pc.mutation.Amountofproduct(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
+			Type:   field.TypeInt,
 			Value:  value,
-			Column: product.FieldNumberofproduct,
+			Column: product.FieldAmountofproduct,
 		})
-		pr.Numberofproduct = value
+		pr.Amountofproduct = value
 	}
 	if value, ok := pc.mutation.Price(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
+			Type:   field.TypeInt,
 			Value:  value,
 			Column: product.FieldPrice,
 		})

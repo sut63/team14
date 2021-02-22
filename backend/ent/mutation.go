@@ -5436,25 +5436,27 @@ func (m *PersonalMutation) ResetEdge(name string) error {
 // nodes in the graph.
 type ProductMutation struct {
 	config
-	op                 Op
-	typ                string
-	id                 *int
-	_Productname       *string
-	_Numberofproduct   *string
-	_Price             *string
-	clearedFields      map[string]struct{}
-	product            map[int]struct{}
-	removedproduct     map[int]struct{}
-	brand              *int
-	clearedbrand       bool
-	typeproduct        *int
-	clearedtypeproduct bool
-	personal           *int
-	clearedpersonal    bool
-	receipt            map[int]struct{}
-	removedreceipt     map[int]struct{}
-	done               bool
-	oldValue           func(context.Context) (*Product, error)
+	op                  Op
+	typ                 string
+	id                  *int
+	_Productname        *string
+	_Amountofproduct    *int
+	add_Amountofproduct *int
+	_Price              *int
+	add_Price           *int
+	clearedFields       map[string]struct{}
+	product             map[int]struct{}
+	removedproduct      map[int]struct{}
+	brand               *int
+	clearedbrand        bool
+	typeproduct         *int
+	clearedtypeproduct  bool
+	personal            *int
+	clearedpersonal     bool
+	receipt             map[int]struct{}
+	removedreceipt      map[int]struct{}
+	done                bool
+	oldValue            func(context.Context) (*Product, error)
 }
 
 var _ ent.Mutation = (*ProductMutation)(nil)
@@ -5573,50 +5575,71 @@ func (m *ProductMutation) ResetProductname() {
 	m._Productname = nil
 }
 
-// SetNumberofproduct sets the Numberofproduct field.
-func (m *ProductMutation) SetNumberofproduct(s string) {
-	m._Numberofproduct = &s
+// SetAmountofproduct sets the Amountofproduct field.
+func (m *ProductMutation) SetAmountofproduct(i int) {
+	m._Amountofproduct = &i
+	m.add_Amountofproduct = nil
 }
 
-// Numberofproduct returns the Numberofproduct value in the mutation.
-func (m *ProductMutation) Numberofproduct() (r string, exists bool) {
-	v := m._Numberofproduct
+// Amountofproduct returns the Amountofproduct value in the mutation.
+func (m *ProductMutation) Amountofproduct() (r int, exists bool) {
+	v := m._Amountofproduct
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldNumberofproduct returns the old Numberofproduct value of the Product.
+// OldAmountofproduct returns the old Amountofproduct value of the Product.
 // If the Product object wasn't provided to the builder, the object is fetched
 // from the database.
 // An error is returned if the mutation operation is not UpdateOne, or database query fails.
-func (m *ProductMutation) OldNumberofproduct(ctx context.Context) (v string, err error) {
+func (m *ProductMutation) OldAmountofproduct(ctx context.Context) (v int, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, fmt.Errorf("OldNumberofproduct is allowed only on UpdateOne operations")
+		return v, fmt.Errorf("OldAmountofproduct is allowed only on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, fmt.Errorf("OldNumberofproduct requires an ID field in the mutation")
+		return v, fmt.Errorf("OldAmountofproduct requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldNumberofproduct: %w", err)
+		return v, fmt.Errorf("querying old value for OldAmountofproduct: %w", err)
 	}
-	return oldValue.Numberofproduct, nil
+	return oldValue.Amountofproduct, nil
 }
 
-// ResetNumberofproduct reset all changes of the "Numberofproduct" field.
-func (m *ProductMutation) ResetNumberofproduct() {
-	m._Numberofproduct = nil
+// AddAmountofproduct adds i to Amountofproduct.
+func (m *ProductMutation) AddAmountofproduct(i int) {
+	if m.add_Amountofproduct != nil {
+		*m.add_Amountofproduct += i
+	} else {
+		m.add_Amountofproduct = &i
+	}
+}
+
+// AddedAmountofproduct returns the value that was added to the Amountofproduct field in this mutation.
+func (m *ProductMutation) AddedAmountofproduct() (r int, exists bool) {
+	v := m.add_Amountofproduct
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetAmountofproduct reset all changes of the "Amountofproduct" field.
+func (m *ProductMutation) ResetAmountofproduct() {
+	m._Amountofproduct = nil
+	m.add_Amountofproduct = nil
 }
 
 // SetPrice sets the Price field.
-func (m *ProductMutation) SetPrice(s string) {
-	m._Price = &s
+func (m *ProductMutation) SetPrice(i int) {
+	m._Price = &i
+	m.add_Price = nil
 }
 
 // Price returns the Price value in the mutation.
-func (m *ProductMutation) Price() (r string, exists bool) {
+func (m *ProductMutation) Price() (r int, exists bool) {
 	v := m._Price
 	if v == nil {
 		return
@@ -5628,7 +5651,7 @@ func (m *ProductMutation) Price() (r string, exists bool) {
 // If the Product object wasn't provided to the builder, the object is fetched
 // from the database.
 // An error is returned if the mutation operation is not UpdateOne, or database query fails.
-func (m *ProductMutation) OldPrice(ctx context.Context) (v string, err error) {
+func (m *ProductMutation) OldPrice(ctx context.Context) (v int, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, fmt.Errorf("OldPrice is allowed only on UpdateOne operations")
 	}
@@ -5642,9 +5665,28 @@ func (m *ProductMutation) OldPrice(ctx context.Context) (v string, err error) {
 	return oldValue.Price, nil
 }
 
+// AddPrice adds i to Price.
+func (m *ProductMutation) AddPrice(i int) {
+	if m.add_Price != nil {
+		*m.add_Price += i
+	} else {
+		m.add_Price = &i
+	}
+}
+
+// AddedPrice returns the value that was added to the Price field in this mutation.
+func (m *ProductMutation) AddedPrice() (r int, exists bool) {
+	v := m.add_Price
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
 // ResetPrice reset all changes of the "Price" field.
 func (m *ProductMutation) ResetPrice() {
 	m._Price = nil
+	m.add_Price = nil
 }
 
 // AddProductIDs adds the product edge to Adminrepair by ids.
@@ -5866,8 +5908,8 @@ func (m *ProductMutation) Fields() []string {
 	if m._Productname != nil {
 		fields = append(fields, product.FieldProductname)
 	}
-	if m._Numberofproduct != nil {
-		fields = append(fields, product.FieldNumberofproduct)
+	if m._Amountofproduct != nil {
+		fields = append(fields, product.FieldAmountofproduct)
 	}
 	if m._Price != nil {
 		fields = append(fields, product.FieldPrice)
@@ -5882,8 +5924,8 @@ func (m *ProductMutation) Field(name string) (ent.Value, bool) {
 	switch name {
 	case product.FieldProductname:
 		return m.Productname()
-	case product.FieldNumberofproduct:
-		return m.Numberofproduct()
+	case product.FieldAmountofproduct:
+		return m.Amountofproduct()
 	case product.FieldPrice:
 		return m.Price()
 	}
@@ -5897,8 +5939,8 @@ func (m *ProductMutation) OldField(ctx context.Context, name string) (ent.Value,
 	switch name {
 	case product.FieldProductname:
 		return m.OldProductname(ctx)
-	case product.FieldNumberofproduct:
-		return m.OldNumberofproduct(ctx)
+	case product.FieldAmountofproduct:
+		return m.OldAmountofproduct(ctx)
 	case product.FieldPrice:
 		return m.OldPrice(ctx)
 	}
@@ -5917,15 +5959,15 @@ func (m *ProductMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetProductname(v)
 		return nil
-	case product.FieldNumberofproduct:
-		v, ok := value.(string)
+	case product.FieldAmountofproduct:
+		v, ok := value.(int)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetNumberofproduct(v)
+		m.SetAmountofproduct(v)
 		return nil
 	case product.FieldPrice:
-		v, ok := value.(string)
+		v, ok := value.(int)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
@@ -5938,13 +5980,26 @@ func (m *ProductMutation) SetField(name string, value ent.Value) error {
 // AddedFields returns all numeric fields that were incremented
 // or decremented during this mutation.
 func (m *ProductMutation) AddedFields() []string {
-	return nil
+	var fields []string
+	if m.add_Amountofproduct != nil {
+		fields = append(fields, product.FieldAmountofproduct)
+	}
+	if m.add_Price != nil {
+		fields = append(fields, product.FieldPrice)
+	}
+	return fields
 }
 
 // AddedField returns the numeric value that was in/decremented
 // from a field with the given name. The second value indicates
 // that this field was not set, or was not define in the schema.
 func (m *ProductMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case product.FieldAmountofproduct:
+		return m.AddedAmountofproduct()
+	case product.FieldPrice:
+		return m.AddedPrice()
+	}
 	return nil, false
 }
 
@@ -5953,6 +6008,20 @@ func (m *ProductMutation) AddedField(name string) (ent.Value, bool) {
 // type mismatch the field type.
 func (m *ProductMutation) AddField(name string, value ent.Value) error {
 	switch name {
+	case product.FieldAmountofproduct:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddAmountofproduct(v)
+		return nil
+	case product.FieldPrice:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddPrice(v)
+		return nil
 	}
 	return fmt.Errorf("unknown Product numeric field %s", name)
 }
@@ -5984,8 +6053,8 @@ func (m *ProductMutation) ResetField(name string) error {
 	case product.FieldProductname:
 		m.ResetProductname()
 		return nil
-	case product.FieldNumberofproduct:
-		m.ResetNumberofproduct()
+	case product.FieldAmountofproduct:
+		m.ResetAmountofproduct()
 		return nil
 	case product.FieldPrice:
 		m.ResetPrice()

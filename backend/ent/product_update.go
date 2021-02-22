@@ -38,15 +38,29 @@ func (pu *ProductUpdate) SetProductname(s string) *ProductUpdate {
 	return pu
 }
 
-// SetNumberofproduct sets the Numberofproduct field.
-func (pu *ProductUpdate) SetNumberofproduct(s string) *ProductUpdate {
-	pu.mutation.SetNumberofproduct(s)
+// SetAmountofproduct sets the Amountofproduct field.
+func (pu *ProductUpdate) SetAmountofproduct(i int) *ProductUpdate {
+	pu.mutation.ResetAmountofproduct()
+	pu.mutation.SetAmountofproduct(i)
+	return pu
+}
+
+// AddAmountofproduct adds i to Amountofproduct.
+func (pu *ProductUpdate) AddAmountofproduct(i int) *ProductUpdate {
+	pu.mutation.AddAmountofproduct(i)
 	return pu
 }
 
 // SetPrice sets the Price field.
-func (pu *ProductUpdate) SetPrice(s string) *ProductUpdate {
-	pu.mutation.SetPrice(s)
+func (pu *ProductUpdate) SetPrice(i int) *ProductUpdate {
+	pu.mutation.ResetPrice()
+	pu.mutation.SetPrice(i)
+	return pu
+}
+
+// AddPrice adds i to Price.
+func (pu *ProductUpdate) AddPrice(i int) *ProductUpdate {
+	pu.mutation.AddPrice(i)
 	return pu
 }
 
@@ -197,9 +211,9 @@ func (pu *ProductUpdate) Save(ctx context.Context) (int, error) {
 			return 0, &ValidationError{Name: "Productname", err: fmt.Errorf("ent: validator failed for field \"Productname\": %w", err)}
 		}
 	}
-	if v, ok := pu.mutation.Numberofproduct(); ok {
-		if err := product.NumberofproductValidator(v); err != nil {
-			return 0, &ValidationError{Name: "Numberofproduct", err: fmt.Errorf("ent: validator failed for field \"Numberofproduct\": %w", err)}
+	if v, ok := pu.mutation.Amountofproduct(); ok {
+		if err := product.AmountofproductValidator(v); err != nil {
+			return 0, &ValidationError{Name: "Amountofproduct", err: fmt.Errorf("ent: validator failed for field \"Amountofproduct\": %w", err)}
 		}
 	}
 	if v, ok := pu.mutation.Price(); ok {
@@ -282,16 +296,30 @@ func (pu *ProductUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: product.FieldProductname,
 		})
 	}
-	if value, ok := pu.mutation.Numberofproduct(); ok {
+	if value, ok := pu.mutation.Amountofproduct(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
+			Type:   field.TypeInt,
 			Value:  value,
-			Column: product.FieldNumberofproduct,
+			Column: product.FieldAmountofproduct,
+		})
+	}
+	if value, ok := pu.mutation.AddedAmountofproduct(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: product.FieldAmountofproduct,
 		})
 	}
 	if value, ok := pu.mutation.Price(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: product.FieldPrice,
+		})
+	}
+	if value, ok := pu.mutation.AddedPrice(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
 			Value:  value,
 			Column: product.FieldPrice,
 		})
@@ -501,15 +529,29 @@ func (puo *ProductUpdateOne) SetProductname(s string) *ProductUpdateOne {
 	return puo
 }
 
-// SetNumberofproduct sets the Numberofproduct field.
-func (puo *ProductUpdateOne) SetNumberofproduct(s string) *ProductUpdateOne {
-	puo.mutation.SetNumberofproduct(s)
+// SetAmountofproduct sets the Amountofproduct field.
+func (puo *ProductUpdateOne) SetAmountofproduct(i int) *ProductUpdateOne {
+	puo.mutation.ResetAmountofproduct()
+	puo.mutation.SetAmountofproduct(i)
+	return puo
+}
+
+// AddAmountofproduct adds i to Amountofproduct.
+func (puo *ProductUpdateOne) AddAmountofproduct(i int) *ProductUpdateOne {
+	puo.mutation.AddAmountofproduct(i)
 	return puo
 }
 
 // SetPrice sets the Price field.
-func (puo *ProductUpdateOne) SetPrice(s string) *ProductUpdateOne {
-	puo.mutation.SetPrice(s)
+func (puo *ProductUpdateOne) SetPrice(i int) *ProductUpdateOne {
+	puo.mutation.ResetPrice()
+	puo.mutation.SetPrice(i)
+	return puo
+}
+
+// AddPrice adds i to Price.
+func (puo *ProductUpdateOne) AddPrice(i int) *ProductUpdateOne {
+	puo.mutation.AddPrice(i)
 	return puo
 }
 
@@ -660,9 +702,9 @@ func (puo *ProductUpdateOne) Save(ctx context.Context) (*Product, error) {
 			return nil, &ValidationError{Name: "Productname", err: fmt.Errorf("ent: validator failed for field \"Productname\": %w", err)}
 		}
 	}
-	if v, ok := puo.mutation.Numberofproduct(); ok {
-		if err := product.NumberofproductValidator(v); err != nil {
-			return nil, &ValidationError{Name: "Numberofproduct", err: fmt.Errorf("ent: validator failed for field \"Numberofproduct\": %w", err)}
+	if v, ok := puo.mutation.Amountofproduct(); ok {
+		if err := product.AmountofproductValidator(v); err != nil {
+			return nil, &ValidationError{Name: "Amountofproduct", err: fmt.Errorf("ent: validator failed for field \"Amountofproduct\": %w", err)}
 		}
 	}
 	if v, ok := puo.mutation.Price(); ok {
@@ -743,16 +785,30 @@ func (puo *ProductUpdateOne) sqlSave(ctx context.Context) (pr *Product, err erro
 			Column: product.FieldProductname,
 		})
 	}
-	if value, ok := puo.mutation.Numberofproduct(); ok {
+	if value, ok := puo.mutation.Amountofproduct(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
+			Type:   field.TypeInt,
 			Value:  value,
-			Column: product.FieldNumberofproduct,
+			Column: product.FieldAmountofproduct,
+		})
+	}
+	if value, ok := puo.mutation.AddedAmountofproduct(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: product.FieldAmountofproduct,
 		})
 	}
 	if value, ok := puo.mutation.Price(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: product.FieldPrice,
+		})
+	}
+	if value, ok := puo.mutation.AddedPrice(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
 			Value:  value,
 			Column: product.FieldPrice,
 		})
