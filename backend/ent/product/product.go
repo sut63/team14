@@ -9,8 +9,8 @@ const (
 	FieldID = "id"
 	// FieldProductname holds the string denoting the productname field in the database.
 	FieldProductname = "productname"
-	// FieldNumberofproduct holds the string denoting the numberofproduct field in the database.
-	FieldNumberofproduct = "numberofproduct"
+	// FieldAmountofproduct holds the string denoting the amountofproduct field in the database.
+	FieldAmountofproduct = "amountofproduct"
 	// FieldPrice holds the string denoting the price field in the database.
 	FieldPrice = "price"
 
@@ -68,7 +68,7 @@ const (
 var Columns = []string{
 	FieldID,
 	FieldProductname,
-	FieldNumberofproduct,
+	FieldAmountofproduct,
 	FieldPrice,
 }
 
@@ -82,8 +82,8 @@ var ForeignKeys = []string{
 var (
 	// ProductnameValidator is a validator for the "Productname" field. It is called by the builders before save.
 	ProductnameValidator func(string) error
-	// NumberofproductValidator is a validator for the "Numberofproduct" field. It is called by the builders before save.
-	NumberofproductValidator func(string) error
+	// AmountofproductValidator is a validator for the "Amountofproduct" field. It is called by the builders before save.
+	AmountofproductValidator func(int) error
 	// PriceValidator is a validator for the "Price" field. It is called by the builders before save.
-	PriceValidator func(string) error
+	PriceValidator func(int) error
 )

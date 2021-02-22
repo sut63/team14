@@ -27,17 +27,17 @@ import {
  */
 export interface EntProduct {
     /**
-     * Numberofproduct holds the value of the "Numberofproduct" field.
-     * @type {string}
+     * Amountofproduct holds the value of the "Amountofproduct" field.
+     * @type {number}
      * @memberof EntProduct
      */
-    numberofproduct?: string;
+    amountofproduct?: number;
     /**
      * Price holds the value of the "Price" field.
-     * @type {string}
+     * @type {number}
      * @memberof EntProduct
      */
-    price?: string;
+    price?: number;
     /**
      * Productname holds the value of the "Productname" field.
      * @type {string}
@@ -86,7 +86,7 @@ export function EntProductFromJSONTyped(json: any, ignoreDiscriminator: boolean)
     }
     return {
         
-        'numberofproduct': !exists(json, 'Numberofproduct') ? undefined : json['Numberofproduct'],
+        'amountofproduct': !exists(json, 'Amountofproduct') ? undefined : json['Amountofproduct'],
         'price': !exists(json, 'Price') ? undefined : json['Price'],
         'productname': !exists(json, 'Productname') ? undefined : json['Productname'],
         'brand': !exists(json, 'brand') ? undefined : json['brand'],
@@ -106,7 +106,7 @@ export function EntProductToJSON(value?: EntProduct | null): any {
     }
     return {
         
-        'Numberofproduct': value.numberofproduct,
+        'Amountofproduct': value.amountofproduct,
         'Price': value.price,
         'Productname': value.productname,
         'brand': value.brand,

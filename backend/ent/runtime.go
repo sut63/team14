@@ -210,14 +210,14 @@ func init() {
 	productDescProductname := productFields[0].Descriptor()
 	// product.ProductnameValidator is a validator for the "Productname" field. It is called by the builders before save.
 	product.ProductnameValidator = productDescProductname.Validators[0].(func(string) error)
-	// productDescNumberofproduct is the schema descriptor for Numberofproduct field.
-	productDescNumberofproduct := productFields[1].Descriptor()
-	// product.NumberofproductValidator is a validator for the "Numberofproduct" field. It is called by the builders before save.
-	product.NumberofproductValidator = productDescNumberofproduct.Validators[0].(func(string) error)
+	// productDescAmountofproduct is the schema descriptor for Amountofproduct field.
+	productDescAmountofproduct := productFields[1].Descriptor()
+	// product.AmountofproductValidator is a validator for the "Amountofproduct" field. It is called by the builders before save.
+	product.AmountofproductValidator = productDescAmountofproduct.Validators[0].(func(int) error)
 	// productDescPrice is the schema descriptor for Price field.
 	productDescPrice := productFields[2].Descriptor()
 	// product.PriceValidator is a validator for the "Price" field. It is called by the builders before save.
-	product.PriceValidator = productDescPrice.Validators[0].(func(string) error)
+	product.PriceValidator = productDescPrice.Validators[0].(func(int) error)
 	receiptFields := schema.Receipt{}.Fields()
 	_ = receiptFields
 	// receiptDescAddedTime is the schema descriptor for added_time field.

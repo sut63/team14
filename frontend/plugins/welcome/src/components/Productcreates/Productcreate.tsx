@@ -94,8 +94,8 @@ export default function CreateProductRecord() {
   const [loading, setLoading] = useState(true);
  
   const [productname, setProductName] = useState(String);
-  const [numberofproduct, setNumberofproduct] = useState(String);
-  const [price, setPrice] = useState(String);
+  const [amountofproduct, setAmountofproduct] = useState(Number);
+  const [price, setPrice] = useState(Number);
 
   const [brand, setBrand] = useState(Number);
   const [typeproduct, setTypeproduct] = useState(Number);
@@ -135,12 +135,12 @@ export default function CreateProductRecord() {
     setProductName(event.target.value as string);
   };
   
-  const handlenumberofproductChange = (event: any) => {
-    setNumberofproduct(event.target.value as string);
+  const handleamountofproductChange = (event: any) => {
+    setAmountofproduct(event.target.value as number);
   };
 
   const handlepriceChange = (event: any) => {
-    setPrice(event.target.value as string);
+    setPrice(event.target.value as number);
   };
   
   const BrandhandleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
@@ -155,7 +155,7 @@ export default function CreateProductRecord() {
 
   const product = {
    productname : productname,
-   numberofproduct : numberofproduct,
+   amountofproduct : amountofproduct,
    price : price,
    brand : brand,
    personal : Number(cookieID),
@@ -174,8 +174,8 @@ export default function CreateProductRecord() {
        case 'Productname':
          alertMessage("error","กรุณากรอกชื่อสินค้า");
          return;
-       case 'Numberofproduct':
-         alertMessage("error","กรุณากรอกจำนวนสินค้า");
+       case 'Amountofproduct':
+         alertMessage("error","รูปแบบของจำนวนสินค้าไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง");
          return;
        case 'Price':
          alertMessage("error","รูปแบบของราคาสินค้าไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง");
@@ -303,14 +303,14 @@ export default function CreateProductRecord() {
                   </InputAdornment>
                 ),
               }}
-                id="numberofproduct"
+                id="amountofproduct"
                 label=""
                 variant="standard"
                 color="secondary"
-                type="string"
+                type="number"
                 size="medium"
-                value={numberofproduct}
-                onChange={handlenumberofproductChange}
+                value={amountofproduct}
+                onChange={handleamountofproductChange}
               />
 
             <div className={classes.paper}><strong>ราคา</strong></div>
@@ -327,7 +327,7 @@ export default function CreateProductRecord() {
                 label=""
                 variant="standard"
                 color="secondary"
-                type="string"
+                type="number"
                 size="medium"
                 value={price}
                 onChange={handlepriceChange}

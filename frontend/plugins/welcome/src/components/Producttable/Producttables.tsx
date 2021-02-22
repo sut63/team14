@@ -86,7 +86,7 @@ const deleteProducts = async (id: number) => {
            <TableRow key={item.id}>
              <TableCell align="center">{item.id}</TableCell>
              <TableCell align="center">{item.productname}</TableCell>
-             <TableCell align="center">{item.numberofproduct}</TableCell>
+             <TableCell align="center">{item.amountofproduct}</TableCell>
              <TableCell align="center">{item.price}</TableCell>
              <TableCell align="center">{item.edges?.brand?.brandname}</TableCell>
              <TableCell align="center">{item.edges?.typeproduct?.typeproductname}</TableCell>

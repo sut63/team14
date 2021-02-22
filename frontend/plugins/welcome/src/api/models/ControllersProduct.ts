@@ -21,16 +21,16 @@ import { exists, mapValues } from '../runtime';
 export interface ControllersProduct {
     /**
      * 
+     * @type {string}
+     * @memberof ControllersProduct
+     */
+    amountofproduct?: string;
+    /**
+     * 
      * @type {number}
      * @memberof ControllersProduct
      */
     brand?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof ControllersProduct
-     */
-    numberofproduct?: string;
     /**
      * 
      * @type {number}
@@ -67,8 +67,8 @@ export function ControllersProductFromJSONTyped(json: any, ignoreDiscriminator: 
     }
     return {
         
+        'amountofproduct': !exists(json, 'amountofproduct') ? undefined : json['amountofproduct'],
         'brand': !exists(json, 'brand') ? undefined : json['brand'],
-        'numberofproduct': !exists(json, 'numberofproduct') ? undefined : json['numberofproduct'],
         'personal': !exists(json, 'personal') ? undefined : json['personal'],
         'price': !exists(json, 'price') ? undefined : json['price'],
         'productname': !exists(json, 'productname') ? undefined : json['productname'],
@@ -85,8 +85,8 @@ export function ControllersProductToJSON(value?: ControllersProduct | null): any
     }
     return {
         
+        'amountofproduct': value.amountofproduct,
         'brand': value.brand,
-        'numberofproduct': value.numberofproduct,
         'personal': value.personal,
         'price': value.price,
         'productname': value.productname,

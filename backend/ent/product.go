@@ -20,10 +20,10 @@ type Product struct {
 	ID int `json:"id,omitempty"`
 	// Productname holds the value of the "Productname" field.
 	Productname string `json:"Productname,omitempty"`
-	// Numberofproduct holds the value of the "Numberofproduct" field.
-	Numberofproduct string `json:"Numberofproduct,omitempty"`
+	// Amountofproduct holds the value of the "Amountofproduct" field.
+	Amountofproduct int `json:"Amountofproduct,omitempty"`
 	// Price holds the value of the "Price" field.
-	Price string `json:"Price,omitempty"`
+	Price int `json:"Price,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the ProductQuery when eager-loading is set.
 	Edges       ProductEdges `json:"edges"`
@@ -114,8 +114,8 @@ func (*Product) scanValues() []interface{} {
 	return []interface{}{
 		&sql.NullInt64{},  // id
 		&sql.NullString{}, // Productname
-		&sql.NullString{}, // Numberofproduct
-		&sql.NullString{}, // Price
+		&sql.NullInt64{},  // Amountofproduct
+		&sql.NullInt64{},  // Price
 	}
 }
 
@@ -145,15 +145,15 @@ func (pr *Product) assignValues(values ...interface{}) error {
 	} else if value.Valid {
 		pr.Productname = value.String
 	}
-	if value, ok := values[1].(*sql.NullString); !ok {
-		return fmt.Errorf("unexpected type %T for field Numberofproduct", values[1])
+	if value, ok := values[1].(*sql.NullInt64); !ok {
+		return fmt.Errorf("unexpected type %T for field Amountofproduct", values[1])
 	} else if value.Valid {
-		pr.Numberofproduct = value.String
+		pr.Amountofproduct = int(value.Int64)
 	}
-	if value, ok := values[2].(*sql.NullString); !ok {
+	if value, ok := values[2].(*sql.NullInt64); !ok {
 		return fmt.Errorf("unexpected type %T for field Price", values[2])
 	} else if value.Valid {
-		pr.Price = value.String
+		pr.Price = int(value.Int64)
 	}
 	values = values[3:]
 	if len(values) == len(product.ForeignKeys) {
@@ -229,10 +229,10 @@ func (pr *Product) String() string {
 	builder.WriteString(fmt.Sprintf("id=%v", pr.ID))
 	builder.WriteString(", Productname=")
 	builder.WriteString(pr.Productname)
-	builder.WriteString(", Numberofproduct=")
-	builder.WriteString(pr.Numberofproduct)
+	builder.WriteString(", Amountofproduct=")
+	builder.WriteString(fmt.Sprintf("%v", pr.Amountofproduct))
 	builder.WriteString(", Price=")
-	builder.WriteString(pr.Price)
+	builder.WriteString(fmt.Sprintf("%v", pr.Price))
 	builder.WriteByte(')')
 	return builder.String()
 }

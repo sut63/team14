@@ -3092,11 +3092,11 @@ var doc = `{
         "controllers.Product": {
             "type": "object",
             "properties": {
+                "amountofproduct": {
+                    "type": "string"
+                },
                 "brand": {
                     "type": "integer"
-                },
-                "numberofproduct": {
-                    "type": "string"
                 },
                 "personal": {
                     "type": "integer"
@@ -3595,13 +3595,13 @@ var doc = `{
         "ent.Product": {
             "type": "object",
             "properties": {
-                "Numberofproduct": {
-                    "description": "Numberofproduct holds the value of the \"Numberofproduct\" field.",
-                    "type": "string"
+                "Amountofproduct": {
+                    "description": "Amountofproduct holds the value of the \"Amountofproduct\" field.",
+                    "type": "integer"
                 },
                 "Price": {
                     "description": "Price holds the value of the \"Price\" field.",
-                    "type": "string"
+                    "type": "integer"
                 },
                 "Productname": {
                     "description": "Productname holds the value of the \"Productname\" field.",

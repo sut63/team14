@@ -19,7 +19,7 @@ type ProductController struct {
 
 type Product struct {
 	Productname               string
-	Numberofproduct		      string
+	Amountofproduct		      string
 	Price		      		  string
 	Brand			          int
 	Typeproduct 			  int
@@ -70,6 +70,38 @@ func (ctl *ProductController) CreateProduct(c *gin.Context) {
 		return
 	}
 
+	amountofproducts, err := strconv.Atoi(obj.Amountofproduct)
+
+	if len(obj.Amountofproduct) <= 0 {
+		c.JSON(400, gin.H{
+			"error": "Amoumt of product not found",
+		})
+		return
+	}
+
+	if err != nil {
+		c.JSON(400, gin.H{
+			"error": "Amoumt of product not found!!",
+		})
+		return
+	}
+
+	prices, err := strconv.Atoi(obj.Price)
+
+	if len(obj.Price) <= 0 {
+		c.JSON(400, gin.H{
+			"error": "price not found",
+		})
+		return
+	}
+
+	if err != nil {
+		c.JSON(400, gin.H{
+			"error": "price not found!!",
+		})
+		return
+	}
+
 	p, err := ctl.client.Personal.
 		Query().
 		Where(personal.IDEQ(int(obj.Personal))).
@@ -85,8 +117,8 @@ func (ctl *ProductController) CreateProduct(c *gin.Context) {
 	pi, err := ctl.client.Product.
 		Create().
 		SetProductname(obj.Productname).
-		SetNumberofproduct(obj.Numberofproduct).
-		SetPrice(obj.Price).
+		SetAmountofproduct(amountofproducts).
+		SetPrice(prices).
 		SetBrand(b).
 		SetTypeproduct(t).
 		SetPersonal(p).

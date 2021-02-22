@@ -250,8 +250,8 @@ var (
 	ProductsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "productname", Type: field.TypeString},
-		{Name: "numberofproduct", Type: field.TypeString},
-		{Name: "price", Type: field.TypeString},
+		{Name: "amountofproduct", Type: field.TypeInt},
+		{Name: "price", Type: field.TypeInt},
 		{Name: "Brand", Type: field.TypeInt, Nullable: true},
 		{Name: "Personal", Type: field.TypeInt, Nullable: true},
 		{Name: "Typeproduct", Type: field.TypeInt, Nullable: true},
