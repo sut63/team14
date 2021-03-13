@@ -210,6 +210,10 @@ export interface GetCustomerRequest {
     id: number;
 }
 
+export interface GetCustomerSearchRequest {
+    customer?: string;
+}
+
 export interface GetDepartmentRequest {
     id: number;
 }
@@ -236,6 +240,10 @@ export interface GetPaymenttypeRequest {
 
 export interface GetPersonalRequest {
     id: number;
+}
+
+export interface GetPersonalSearchRequest {
+    personal?: string;
 }
 
 export interface GetReceiptRequest {
@@ -1410,6 +1418,38 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
+     * get customer by Search
+     * Get a customer entity by Search
+     */
+    async getCustomerSearchRaw(requestParameters: GetCustomerSearchRequest): Promise<runtime.ApiResponse<EntCustomer>> {
+        const queryParameters: runtime.HTTPQuery = {};
+
+        if (requestParameters.customer !== undefined) {
+            queryParameters['customer'] = requestParameters.customer;
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/searchcustomers`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EntCustomerFromJSON(jsonValue));
+    }
+
+    /**
+     * get customer by Search
+     * Get a customer entity by Search
+     */
+    async getCustomerSearch(requestParameters: GetCustomerSearchRequest): Promise<EntCustomer> {
+        const response = await this.getCustomerSearchRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
      * get department by ID
      * Get a department entity by ID
      */
@@ -1630,6 +1670,38 @@ export class DefaultApi extends runtime.BaseAPI {
      */
     async getPersonal(requestParameters: GetPersonalRequest): Promise<EntPersonal> {
         const response = await this.getPersonalRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     * get personal by Search
+     * Get a personal entity by Search
+     */
+    async getPersonalSearchRaw(requestParameters: GetPersonalSearchRequest): Promise<runtime.ApiResponse<EntPersonal>> {
+        const queryParameters: runtime.HTTPQuery = {};
+
+        if (requestParameters.personal !== undefined) {
+            queryParameters['personal'] = requestParameters.personal;
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/searchpersonals`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EntPersonalFromJSON(jsonValue));
+    }
+
+    /**
+     * get personal by Search
+     * Get a personal entity by Search
+     */
+    async getPersonalSearch(requestParameters: GetPersonalSearchRequest): Promise<EntPersonal> {
+        const response = await this.getPersonalSearchRaw(requestParameters);
         return await response.value();
     }
 

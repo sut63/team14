@@ -2316,6 +2316,35 @@ paths:
           schema:
             $ref: '#/definitions/gin.H'
       summary: Update a receipt entity by ID
+  /searchcustomers:
+    get:
+      description: get customer by Search
+      operationId: get-customer-search
+      parameters:
+      - description: Customer Search
+        in: query
+        name: customer
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.Customer'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Get a customer entity by Search
   /searchpersonals:
     get:
       description: get personal by Search

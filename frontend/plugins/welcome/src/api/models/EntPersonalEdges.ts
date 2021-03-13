@@ -114,13 +114,13 @@ export function EntPersonalEdgesFromJSONTyped(json: any, ignoreDiscriminator: bo
     }
     return {
         
-        'customer': !exists(json, 'customer') ? undefined : ((json['customer'] as Array<any>).map(EntCustomerFromJSON)),
+        'customer': !exists(json, 'Customer') ? undefined : ((json['Customer'] as Array<any>).map(EntCustomerFromJSON)),
         'department': !exists(json, 'Department') ? undefined : EntDepartmentFromJSON(json['Department']),
-        'fix': !exists(json, 'fix') ? undefined : ((json['fix'] as Array<any>).map(EntFixFromJSON)),
+        'fix': !exists(json, 'Fix') ? undefined : ((json['Fix'] as Array<any>).map(EntFixFromJSON)),
         'gender': !exists(json, 'Gender') ? undefined : EntGenderFromJSON(json['Gender']),
-        'personal': !exists(json, 'personal') ? undefined : ((json['personal'] as Array<any>).map(EntAdminrepairFromJSON)),
-        'product': !exists(json, 'product') ? undefined : ((json['product'] as Array<any>).map(EntProductFromJSON)),
-        'receipt': !exists(json, 'receipt') ? undefined : ((json['receipt'] as Array<any>).map(EntReceiptFromJSON)),
+        'personal': !exists(json, 'Personal') ? undefined : ((json['Personal'] as Array<any>).map(EntAdminrepairFromJSON)),
+        'product': !exists(json, 'Product') ? undefined : ((json['Product'] as Array<any>).map(EntProductFromJSON)),
+        'receipt': !exists(json, 'Receipt') ? undefined : ((json['Receipt'] as Array<any>).map(EntReceiptFromJSON)),
         'title': !exists(json, 'Title') ? undefined : EntTitleFromJSON(json['Title']),
     };
 }

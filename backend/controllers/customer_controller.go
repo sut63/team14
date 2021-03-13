@@ -271,6 +271,39 @@ func (ctl *CustomerController) UpdateCustomer(c *gin.Context) {
 	c.JSON(200, cm)
 }
 
+// GetCustomerSearch handles GET requests to retrieve a Customer entity
+// @Summary Get a customer entity by Search
+// @Description get customer by Search
+// @ID get-customer-search
+// @Produce  json
+// @Param customer query string false "Customer Search"
+// @Success 200 {object} ent.Customer
+// @Failure 400 {object} gin.H
+// @Failure 404 {object} gin.H
+// @Failure 500 {object} gin.H
+// @Router /searchcustomers [get]
+func (ctl *CustomerController) GetCustomerSearch(c *gin.Context) {
+	cmsearch := c.Query("customer")
+
+	cms, err := ctl.client.Customer.
+		Query().
+		WithTitle().
+		WithGender().
+		WithPersonal().
+		Where(customer.CustomernameContains(cmsearch)).
+		All(context.Background())
+	if err != nil {
+		c.JSON(404, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(200, gin.H{
+		"data": cms,
+	})
+}
+
 // NewCustomerController creates and registers handles for the customer controller
 func NewCustomerController(router gin.IRouter, client *ent.Client) *CustomerController {
 	cmc := &CustomerController{
@@ -292,4 +325,7 @@ func (ctl *CustomerController) register() {
 	customers.GET(":id", ctl.GetCustomer)
 	customers.PUT(":id", ctl.UpdateCustomer)
 	customers.DELETE(":id", ctl.DeleteCustomer)
+
+	searchcustomers := ctl.router.Group("/searchcustomers")
+	searchcustomers.GET("", ctl.GetCustomerSearch)
 }
