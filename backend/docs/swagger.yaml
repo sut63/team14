@@ -2316,6 +2316,35 @@ paths:
           schema:
             $ref: '#/definitions/gin.H'
       summary: Update a receipt entity by ID
+  /searchpersonals:
+    get:
+      description: get personal by Search
+      operationId: get-personal-search
+      parameters:
+      - description: Personal Search
+        in: query
+        name: personal
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.Personal'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Get a personal entity by Search
   /titles:
     get:
       description: list title entities

@@ -17,7 +17,6 @@ import CustomerSearch from './components/CustomerSearch';
 import Personalcreate from './components/Personalcreate/';
 import Personaltable from './components/Personaltable';
 import Personalsearch from './components/Personalsearch';
-import Personalwelcome from './components/Personalwelcome';
 import ProductSearch from './components/ProductSearch';
 import ReceiptSearch from './components/ReceiptSearch';
  
@@ -28,7 +27,6 @@ export const plugin = createPlugin({
     router.registerRoute('/Group14', Group14);
     router.registerRoute('/Personalcreate', Personalcreate);
     router.registerRoute('/Personaltable', Personaltable);
-    router.registerRoute('/Personalwelcome', Personalwelcome);
     router.registerRoute('/Personalsearch', Personalsearch);
     router.registerRoute('/createnewcustomer', CreateNewCustomer);
     router.registerRoute('/customertable', CustomerTable);

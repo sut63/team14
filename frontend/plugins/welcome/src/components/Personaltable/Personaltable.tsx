@@ -82,9 +82,11 @@ export default function Personaltable() {
     <Content>
       <ContentHeader title="ตารางแสดงผลข้อมูล">
       <div>&nbsp;&nbsp;&nbsp;</div>
-    <Button variant="contained" color="secondary" href="/Personalcreate" startIcon={<PersonAddRoundedIcon />}> เพิ่มข้อมูลบุคลากร </Button>
-    <div>&nbsp;&nbsp;&nbsp;</div>
-    <Button variant="contained" color="primary" href="/Personalwelcome" startIcon={<HomeRoundedIcon/>}> ย้อนกลับ </Button>
+      <Button variant="contained" style={{background:"#01514C",color:"white"}} href="/Personalsearch" startIcon={<PersonAddRoundedIcon />}> ค้นหาข้อมูลบุคลากร </Button>
+      <div>&nbsp;&nbsp;&nbsp;</div>
+      <Button variant="contained" style={{background:"#F47A00",color:"white"}} href="/Personalcreate" startIcon={<PersonAddRoundedIcon />}> เพิ่มข้อมูลบุคลากร </Button>
+      <div>&nbsp;&nbsp;&nbsp;</div>
+      <Button variant="contained" style={{background:"#FC8472",color:"white"}} href="/Group14" startIcon={<HomeRoundedIcon/>}> ย้อนกลับ </Button>
       </ContentHeader>
    <TableContainer component={Paper}>
      <Table className={classes.table} aria-label="simple table">
