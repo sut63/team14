@@ -14,10 +14,13 @@ import { EntCustomer } from '../../api/models/EntCustomer';
 import Swal from 'sweetalert2'
 import { Link as RouterLink } from 'react-router-dom';
 import moment from 'moment';
-import { Page, pageTheme, Header, Content, Link } from '@backstage/core';
+import { Page, pageTheme, Header, Content, Link, ContentHeader } from '@backstage/core';
 import { Grid, Button, TextField, Typography, FormControl } from '@material-ui/core';
 import SearchTwoToneIcon from '@material-ui/icons/SearchTwoTone';
 
+import { styled } from '@material-ui/core/styles';
+import { compose, spacing, palette, sizing, shadows   } from '@material-ui/system';
+import { Alert } from '@material-ui/lab';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -76,14 +79,19 @@ export default function ComponentsTable() {
   const api = new DefaultApi();
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState(false);
+  const [alert, setAlert] = useState(true);
+  const [status, setStatus] = useState(false);
 
   //---------------------------
   const [checkcustomername, setCustomernames] = useState(false);
   const [customer, setCustomer] = useState<EntCustomer[]>([])
 
   //--------------------------
-  const [customername, setCustomername] = useState(String);
+  const [cmname, setcmname] = useState(String);
   const profile = { givenName: 'ยินดีต้อนรับสู่ ระบบค้นหาข้อมูลลูกค้า' };
+
+  const Box = styled('div')(compose(spacing, palette, shadows, sizing ));
+  
   const alertMessage = (icon: any, title: any) => {
     Toast.fire({
       icon: icon,
@@ -104,63 +112,73 @@ export default function ComponentsTable() {
     },
   });
 
-  useEffect(() => {
-    const getCustomers = async () => {
-      const res = await api.listCustomer({ offset: 0 });
-      setLoading(false);
-      setCustomer(res);
-    };
-    getCustomers();
-  }, [loading]);
-
+ 
   //-------------------
   const customernamehandlehange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setSearch(false);
-    setCustomernames(false);
-    setCustomername(event.target.value as string);
-
+    setStatus(false);
+    setcmname(event.target.value as string);
   };
 
   const cleardata = () => {
-    setCustomername("");
-    setSearch(false);
-    setCustomernames(false);
-    setSearch(false);
-
+    setcmname("");
+    setStatus(false)
+    setCustomer([]);
   }
-  //---------------------
-  const checkresearch = async () => {
-    var check = false;
-    customer.map(item => {
-      if (customername != "") {
-        if (item.customername?.includes(customername)) {
-          setCustomernames(true);
-          alertMessage("success", "พบข้อมูลที่ค้นหา");
-          check = true;
+
+
+  const SearchCustomer = async () => {
+    setStatus(true);
+    setAlert(true);
+    const apiUrl = `http://localhost:8080/api/v1/searchcustomers?customer=${cmname}`;
+    const requestOptions = {
+      method: 'GET',
+    };
+    fetch(apiUrl, requestOptions)
+      .then(response => response.json())
+      .then(data => {
+        console.log(data.data)
+        setStatus(true);
+        setAlert(false);
+        setCustomer([]);
+        if (data.data != null) {
+          if (data.data.length >= 1) {
+            setStatus(true);
+            setAlert(true);
+            console.log(data.data)
+            setCustomer(data.data);
+          }
         }
-      }
-    })
-    if (!check) {
-      alertMessage("error", "ไม่พบข้อมูลที่ค้นหา");
+      });
     }
-    console.log(checkcustomername)
-    if (customername == "") {
-      alertMessage("info", "แสดงข้อมูลลูกค้าทั้งหมดทั้งหมดในระบบ");
-    }
-  };
 
   return (
 
     <Page theme={pageTheme.tool}>
-      <Header title={`Customer System`} type="Computer Repair System" >
+      <Header title= "Customer System" type="Computer Repair System" >
 
+      </Header> 
+      <Content >
+        <ContentHeader title="ค้นหาข้อมูลลูกค้า">
+        {status ? (
+              <div>
+                {alert ? (
+                  <Alert severity="success">
+                    ค้นหาข้อมูลลูกค้าสำเร็จ
+                  </Alert>
+                )
+                  : (
+                    <Alert severity="warning" style={{ marginTop: 20 }}>
+                      ค้นหาข้อมูลลูกค้าไม่สำเร็จ
+                    </Alert>
+                  )}
+              </div>
+            ) : null}
+        </ContentHeader>
 
-      </Header>
-      <Content>
         <Grid container item xs={12} justify="center">
           <Grid item xs={5}>
             <Paper>
-
+            
               <Typography align="center" >
                 <div style={{ background: 'linear-gradient(45deg, #CCCCCC 15%, #CCCCCC 120%)', height: 45 }}>
                   <h1 style={
@@ -183,7 +201,7 @@ export default function ComponentsTable() {
                     <div className={classes.paper}><strong>กรุณากรอกชื่อลูกค้าที่ต้องการค้นหา</strong></div>
                     <TextField
                       id="customername"
-                      value={customername}
+                      value={cmname}
                       onChange={customernamehandlehange}
                       type="string"
                       size="small"
@@ -195,9 +213,7 @@ export default function ComponentsTable() {
                 <div></div>
                 <Button
                   onClick={() => {
-                    checkresearch();
-                    setSearch(true);
-
+                    SearchCustomer();
                   }}
                   
                   className={classes.margins}
@@ -242,87 +258,38 @@ export default function ComponentsTable() {
         <Grid container justify="center">
           <Grid item xs={12} md={10}>
             <Paper>
-              {search ? (
-                <div>
-                  {  checkcustomername ? (
-                    <TableContainer component={Paper}>
-                      <Table className={classes.table} aria-label="simple table">
-                        <TableHead>
-                          <TableRow>
-                          <TableCell align="center">ลำดับที่</TableCell>
-                          <TableCell align="center">คำนำหน้าชื่อ</TableCell>
-                          <TableCell align="center">ชื่อ-นามสกุล</TableCell>
-                          <TableCell align="center">ที่อยู่</TableCell>
-                          <TableCell align="center">เบอร์โทร</TableCell>
-                          <TableCell align="center">เลขบัตรประจำตัวประชาชน</TableCell>
-                          <TableCell align="center">เพศ</TableCell>
-                          <TableCell align="center">เจ้าหน้าที่แจ้งซ่อม</TableCell>
-
-                           
-                          </TableRow>
-                        </TableHead>
-                        <TableBody>
-
-                          {customer.filter((filter: any) => filter.customername.includes(customername)).map((item: any) => (
-                            <TableRow key={item.id}>
-                              <TableCell align="center">{item.id}</TableCell>
-                              <TableCell align="center">{item.edges?.title?.titlename}</TableCell>
-                              <TableCell align="center">{item.customername}</TableCell>
-                              <TableCell align="center">{item.address}</TableCell>
-                              <TableCell align="center">{item.phonenumber}</TableCell>
-                              <TableCell align="center">{item.identificationnumber}</TableCell>
-                              <TableCell align="center">{item.edges?.gender?.gendername}</TableCell>
-                              <TableCell align="center">{item.edges?.personal.personalname}</TableCell>
-                                                                  
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
-                    </TableContainer>
-                  )
-                    : customername == "" ? (
-                      <div>
-                        <TableContainer component={Paper}>
-                          <Table className={classes.table} aria-label="simple table">
-                            <TableHead>
-                              <TableRow>
-                              <TableCell align="center">ลำดับที่</TableCell>
-                              <TableCell align="center">คำนำหน้าชื่อ</TableCell>
-                              <TableCell align="center">ชื่อ-นามสกุล</TableCell>
-                              <TableCell align="center">ที่อยู่</TableCell>
-                              <TableCell align="center">เบอร์โทร</TableCell>
-                              <TableCell align="center">เลขบัตรประจำตัวประชาชน</TableCell>
-                              <TableCell align="center">เพศ</TableCell>
-                              <TableCell align="center">เจ้าหน้าที่แจ้งซ่อม</TableCell>
-
-                                
-                              </TableRow>
-                            </TableHead>
-                            <TableBody>
-
-                              {customer.map((item: any) => (
-                                <TableRow key={item.id}>
-                                 <TableCell align="center">{item.id}</TableCell>
-                                <TableCell align="center">{item.edges?.title?.titlename}</TableCell>
-                                <TableCell align="center">{item.customername}</TableCell>
-                                <TableCell align="center">{item.address}</TableCell>
-                                <TableCell align="center">{item.phonenumber}</TableCell>
-                                <TableCell align="center">{item.identificationnumber}</TableCell>
-                                <TableCell align="center">{item.edges?.gender?.gendername}</TableCell>
-                                <TableCell align="center">{item.edges?.personal.personalname}</TableCell>
-                                 
-                                </TableRow>
-                              ))}
-                            </TableBody>
-                          </Table>
-                        </TableContainer>
-
-                      </div>
-                    ) : null}
-                </div>
-              ) : null}
+              <TableContainer component={Paper}>
+                <Table className={classes.table} aria-label="simple table">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell align="center">ลำดับที่</TableCell>
+                      <TableCell align="center">คำนำหน้าชื่อ</TableCell>
+                      <TableCell align="center">ชื่อ-นามสกุล</TableCell>
+                      <TableCell align="center">ที่อยู่</TableCell>
+                      <TableCell align="center">เบอร์โทร</TableCell>
+                      <TableCell align="center">เลขบัตรประจำตัวประชาชน</TableCell>
+                      <TableCell align="center">เพศ</TableCell>
+                      
+                    </TableRow>
+                  </TableHead>
+                <TableBody>
+                {customer.map((item: any) => (
+                  <TableRow key={item.id}>
+                    <TableCell align="center">{item.id}</TableCell>
+                    <TableCell align="center">{item.edges?.Title?.titlename}</TableCell>
+                    <TableCell align="center">{item.Customername}</TableCell>
+                    <TableCell align="center">{item.Address}</TableCell>
+                    <TableCell align="center">{item.Phonenumber}</TableCell>
+                    <TableCell align="center">{item.Identificationnumber}</TableCell>
+                    <TableCell align="center">{item.edges?.Gender?.Gendername}</TableCell>
+                    
+                  </TableRow>
+                ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
             </Paper>
-          </Grid>
+        </Grid>
         </Grid>
 
         <div>&nbsp;&nbsp;&nbsp;</div>

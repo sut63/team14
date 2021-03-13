@@ -2542,6 +2542,50 @@
                 }
             }
         },
+        "/searchcustomers": {
+            "get": {
+                "description": "get customer by Search",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get a customer entity by Search",
+                "operationId": "get-customer-search",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Customer Search",
+                        "name": "customer",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.Customer"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
         "/searchpersonals": {
             "get": {
                 "description": "get personal by Search",
