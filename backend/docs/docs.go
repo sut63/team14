@@ -2557,6 +2557,50 @@ var doc = `{
                 }
             }
         },
+        "/searchpersonals": {
+            "get": {
+                "description": "get personal by Search",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get a personal entity by Search",
+                "operationId": "get-personal-search",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Personal Search",
+                        "name": "personal",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.Personal"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
         "/titles": {
             "get": {
                 "description": "list title entities",

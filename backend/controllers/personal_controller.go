@@ -264,6 +264,39 @@ func (ctl *PersonalController) UpdatePersonal(c *gin.Context) {
 	c.JSON(200, p)
 }
 
+// GetPersonalSearch handles GET requests to retrieve a Personal entity
+// @Summary Get a personal entity by Search
+// @Description get personal by Search
+// @ID get-personal-search
+// @Produce  json
+// @Param personal query string false "Personal Search"
+// @Success 200 {object} ent.Personal
+// @Failure 400 {object} gin.H
+// @Failure 404 {object} gin.H
+// @Failure 500 {object} gin.H
+// @Router /searchpersonals [get]
+func (ctl *PersonalController) GetPersonalSearch(c *gin.Context) {
+	psearch := c.Query("personal")
+
+	ps, err := ctl.client.Personal.
+		Query().
+		WithDepartment().
+		WithGender().
+		WithTitle().
+		Where(personal.PersonalnameContains(psearch)).
+		All(context.Background())
+	if err != nil {
+		c.JSON(404, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(200, gin.H{
+		"data": ps,
+	})
+}
+
 // NewPersonalController creates and registers handles for the personal controller
 func NewPersonalController(router gin.IRouter, client *ent.Client) *PersonalController {
 	pc := &PersonalController{
@@ -279,6 +312,9 @@ func (ctl *PersonalController) register() {
 	personals := ctl.router.Group("/personals")
 
 	personals.GET("", ctl.ListPersonal)
+
+	searchpersonals := ctl.router.Group("/searchpersonals")
+	searchpersonals.GET("", ctl.GetPersonalSearch)
 
 	// CRUD
 	personals.POST("", ctl.CreatePersonal)
