@@ -1,59 +1,65 @@
-//style
-import React, {  useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import { ContentHeader, Content, Header, Page, pageTheme } from '@backstage/core';
-import { FormControl, Select, InputLabel, MenuItem, TextField, Button, InputAdornment } from '@material-ui/core';
+import {
+  Content,
+  Header,
+  Page,
+  Link,
+  pageTheme,
+  ContentHeader,
+} from '@backstage/core';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
-import { DefaultApi } from '../../api/apis';
-//icon
-import EmailTwoToneIcon from '@material-ui/icons/EmailTwoTone';
-import PersonOutlineTwoToneIcon from '@material-ui/icons/PersonOutlineTwoTone';
-import VpnKeyTwoToneIcon from '@material-ui/icons/VpnKeyTwoTone';
-import AddCircleTwoToneIcon from '@material-ui/icons/AddCircleTwoTone';
-import CancelTwoToneIcon from '@material-ui/icons/CancelTwoTone';
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-//alert
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+import FormControl from '@material-ui/core/FormControl';
+import { Alert, AlertTitle} from '@material-ui/lab';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
+import Typography from '@material-ui/core/Typography';
+import { Cookies } from '../WelcomePage/Cookie'
 import Swal from 'sweetalert2';
-//entity
-import { EntPersonal } from '../../api/models/EntPersonal';
-import { EntGender } from '../../api/models/EntGender';
-import { EntTitle } from '../../api/models/EntTitle';
-import { EntDepartment } from '../../api/models/EntDepartment';
+import Product from '.';
+import SaveIcon from '@material-ui/icons/Save';
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
+import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
+import LocalOfferIcon from '@material-ui/icons/LocalOffer';
+
+import { DefaultApi } from '../../api/apis';
+import { EntBrand } from '../../api/models/EntBrand'; // import interface Brand
+import { EntTypeproduct } from '../../api/models/EntTypeproduct'; // import interface Typeproduct
+import { EntPersonal } from '../../api/models/EntPersonal'; // import interface Personal
+import { EntProduct } from '../../api';
 
 const useStyles = makeStyles((theme: Theme) =>
- createStyles({
-  root: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
-  },
-  margin: {
-    margin: theme.spacing(2),
-  },
-  insideLabel: {
-   margin: theme.spacing(1),
-  },
-  button: {
-   marginLeft: '40px',
-  },
-  textField: {
-   width: 500 ,
-   marginLeft:7,
-   marginRight:-7,
-  },
-  select: {
-    width: 500 ,
-    marginLeft:7,
-    marginRight:-7,
-  },
-  paper: {
-    marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(1),
-    marginLeft: theme.spacing(1),
-  },
-  pa: {
-    marginTop: theme.spacing(2),
-  },
+  createStyles({
+    root: {
+      display: 'flex',
+      flexWrap: 'wrap',
+      justifyContent: 'center',
+    },
+    margin: {
+      margin: theme.spacing(1),
+    },
+    withoutLabel: {
+      marginTop: theme.spacing(3),
+    },
+    textField: {
+      width: '25ch',
+    },
+    select: {
+      width: 500 ,
+      marginLeft:7,
+      marginRight:-7,
+    },
+    paper: {
+      marginTop: theme.spacing(1),
+      marginBottom: theme.spacing(1),
+      marginLeft: theme.spacing(1),
+    },
+    pa: {
+      marginTop: theme.spacing(2),
+    },
   }),
 );
 
@@ -69,292 +75,333 @@ const Toast = Swal.mixin({
   },
 });
 
-export default function Personalcreate() {
+var ck = new Cookies()
+var cookieName = ck.GetCookie()
+var cookieID = ck.GetID()
+
+export default function CreateProductRecord() {
   const classes = useStyles();
   const http = new DefaultApi();
+  
+  const [products, setProduct] = React.useState<EntProduct[]>([]);
+  const [brands, setBrands] = React.useState<EntBrand[]>([]);
+  const [typeproducts, setTypeproducts] = React.useState<EntTypeproduct[]>([]);
+  const [personals, setPersonals] = React.useState<EntPersonal[]>([]);
 
   const [status, setStatus] = useState(false);
+  const [alert, setAlert] = useState(true);
+  const [alert2, setAlerts] = useState(true);
   const [loading, setLoading] = useState(true);
+ 
+  const [productname, setProductName] = useState(String);
+  const [amountofproduct, setAmountofproduct] = useState(String);
+  const [price, setPrice] = useState(String);
 
-  const [personals, setPersonals] = React.useState<EntPersonal[]>([]);
-  const [titles, setTitles] = React.useState<EntTitle[]>([]);
-  const [departments, setDepartments] = React.useState<EntDepartment[]>([]);
-  const [genders, setGenders] = React.useState<EntGender[]>([]);
-
-  const [department, setDepartment] = useState(Number);
-  const [title, setTitle] = useState(Number);
-  const [gender, setGender] = useState(Number);
-
-  const [personalname, setPersonalname] = useState(String);
-  const [email, setEmail] = useState(String);
-  const [password, setPassword] = useState(String);
+  const [brand, setBrand] = useState(Number);
+  const [typeproduct, setTypeproduct] = useState(Number);
+  const [personal, setPersonal] = useState(Number);
 
   useEffect(() => {
-    const getDepartments = async () => {
-      const res = await http.listDepartment({ limit: 10, offset: 0 });
+    const getBrands = async () => {
+      const b = await http.listBrand({ limit: 10, offset: 0 });
       setLoading(false);
-      setDepartments(res);
-      console.log(res);
+      setBrands(b);
     };
-    getDepartments();
-
-    const getTitles = async () => {
-      const res = await http.listTitle({ limit: 10, offset: 0 });
+    getBrands();
+  
+    const getTypeproducts = async () => {
+      const t = await http.listTypeproduct({ limit: 10, offset: 0 });
       setLoading(false);
-      setTitles(res);
-      console.log(res);
+      setTypeproducts(t);
     };
-    getTitles();
-
-    const getGenders = async () => {
-      const res = await http.listGender({ limit: 10, offset: 0 });
+    getTypeproducts();
+  
+    const getPersonals = async () => {
+      const p = await http.listPersonal({ limit: 10, offset: 0 });
       setLoading(false);
-      setGenders(res);
-      console.log(res);
+      setPersonals(p);
     };
-    getGenders();
-
+    getPersonals();
+  
   }, [loading]);
-
-  const handlePersonalnameChange = (event: any) => {
-    setPersonalname(event.target.value as string);
-  };
-
-  const handleEmailChange = (event: any) => {
-    setEmail(event.target.value as string);
-  };
-
-  const handlePasswordChange = (event: any) => {
-    setPassword(event.target.value as string);
+  
+  
+  /*const getProduct = async () => {
+    const res = await http.listProduct({ limit: 10, offset: 0 });
+    setProduct(res);
+  };*/
+  
+  const handleproductnameChange = (event: any) => {
+    setProductName(event.target.value as string);
   };
   
-  const TitlehandleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setTitle(event.target.value as number);
+  const handleamountofproductChange = (event: any) => {
+    setAmountofproduct(event.target.value as string);
   };
 
-  const DepartmenthandleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setDepartment(event.target.value as number);
+  const handlepriceChange = (event: any) => {
+    setPrice(event.target.value as string);
   };
+  
+  const BrandhandleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    setBrand(event.target.value as number);
+  };
+  
+  const TypeproducthandleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    setTypeproduct(event.target.value as number);
+  };
+  
+  let p = Number(personal)
 
-  const GenderhandleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setGender(event.target.value as number);
-  };
+  const product = {
+   productname : productname,
+   amountofproduct : amountofproduct,
+   price : price,
+   brand : brand,
+   personal : Number(cookieID),
+   typeproduct : typeproduct,
+   };
+ 
+   const alertMessage = (icon: any, title: any) => {
+     Toast.fire({
+       icon: icon,
+       title: title,
+     });
+   }
+ 
+   const checkCaseSaveError = (field: string) => {
+     switch(field) {
+       case 'Productname':
+         alertMessage("error","กรุณากรอกชื่อสินค้า");
+         return;
+       case 'Amountofproduct':
+         alertMessage("error","รูปแบบของจำนวนสินค้าไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง");
+         return;
+       case 'Price':
+         alertMessage("error","รูปแบบของราคาสินค้าไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง");
+         return;
+       default:
+         alertMessage("error","บันทึกข้อมูลไม่สำเร็จ");
+         return;
+     }
+   }
+ 
+   console.log(product)
+ function save() {
+   const apiUrl = 'http://localhost:8080/api/v1/products';
+   const requestOptions = {
+     method: 'POST',
+     headers: { 'Content-Type': 'application/json' },
+     body: JSON.stringify(product),
+   };
+ 
+   console.log(product); // log ดูข้อมูล สามารถ Inspect ดูข้อมูลได้ F12 เลือก Tab Console
+ 
+   fetch(apiUrl, requestOptions)
+     .then(response => response.json())
+     .then(data => {
+       console.log(data);
+       if (data.status == true) {
+         //clear();
+         Toast.fire({
+           icon: 'success',
+           title: 'บันทึกข้อมูลสำเร็จ',
+ 
+         });//window.setTimeout(function(){location.reload()},8000);
+       } else {
+         checkCaseSaveError(data.error.Name)
+       }
+     });
+ 
+     
+     const timer = setTimeout(() => {
+       setStatus(false);
+     }, 1000);
+   };
 
-  const personal = {
-    personalname : personalname,
-    email : email,
-    password : password,
-    title : title,
-    department : department,
-    gender : gender,
-  };
-  const alertMessage = (icon: any, title: any) => {
-    Toast.fire({
-      icon: icon,
-      title: title,
-    });
+  /*// create product
+  const CreateProduct = async () => {
+    if ((productname != null) && (productname != "") && (amountofproduct != null) && (amountofproduct != "") && (price != null) && (price != "") && (brand != null) && (typeproduct != null)  && (personal != null) ) {
+    
+      const product = {
+      productname : productname,
+      amountofproduct : amountofproduct,
+      price : price,
+      brand : brand,
+      typeproduct : typeproduct,
+      personal : Number(cookieID),
+    };
+    console.log(products);
+    const res: any = await http.createProduct({ product: product });
+   
+    setStatus(true);
+    if (res.id != '') {
+      setAlert(true);
+    } 
   }
-
-    const checkCaseSaveError = (field: string) => {
-      switch(field) {
-        case 'Personalname':
-          alertMessage("error","รูปแบบชื่อไม่ถูกต้อง");
-          return;
-        case 'Password':
-          alertMessage("error","รหัสผ่านน้อยกว่า 4 ตัว");
-          return;
-        case 'Email':
-          alertMessage("error","รูปแบบ email ไม่ถูกต้อง");
-          return;
-        default:
-          alertMessage("error","บันทึกข้อมูลไม่สำเร็จ");
-          return;
-      }
+    else {
+      setStatus(true);
+      setAlert(false);
     }
-  
-  console.log(personal)
-  function save() {
-    const apiUrl = 'http://localhost:8080/api/v1/personals';
-    const requestOptions = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(personal),
-    };
-  
-    console.log(personal); 
-  
-    fetch(apiUrl, requestOptions)
-      .then(response => response.json())
-      .then(data => {
-        console.log(data);
-        if (data.status == true) {
-          Toast.fire({
-            icon: 'success',
-            title: 'บันทึกข้อมูลสำเร็จ',
-  
-          });
-        } else {
-          checkCaseSaveError(data.error.Name)
-        }
-      });
-      const timer = setTimeout(() => {
-        setStatus(false);
-      }, 1000);
-    };
+};*/
 
-return (
-  <Page theme={pageTheme.tool}>
-    <Header
-      title="ระบบข้อมูลบุคลากร" type="ระบบแจ้งซ่อมคอมพิวเตอร์">
-      <Button 
-        style={{ marginLeft: 20 }} 
-        href="/"
-        variant="contained"  
-        startIcon={<ExitToAppIcon/>}
-        > 
-        ออกจากระบบ 
-        </Button>
-    </Header>
-    <Content>
-      <ContentHeader title="เพิ่มข้อมูลบุคลากร">
-      <div>&nbsp;&nbsp;&nbsp;</div>
-        <Button  
-        onClick={() => {save();}}
-        variant="contained" 
-        color="secondary" 
-        startIcon={<AddCircleTwoToneIcon/>}
-        > 
-        บันทึกข้อมูล 
-        </Button>
-      <div>&nbsp;&nbsp;&nbsp;</div>
-        <Button 
-        style={{ marginLeft: 20 }} 
-        component={RouterLink} 
-        to="/Personaltable" 
-        variant="contained"
-        color="primary"
-        startIcon={<CancelTwoToneIcon/>}
-        > 
-        ย้อนกลับ 
-        </Button>
-      </ContentHeader>
-      <div className={classes.root}>
-        <form noValidate autoComplete="off">
-          <FormControl
-            fullWidth
-            className={classes.margin}
-            variant="outlined"
-            size="small"
-          >
-            <div className={classes.paper}><strong>คำนำหน้าชื่อ</strong></div>
-              <Select className={classes.select}
-              style={{ width: 500 ,marginLeft:7,marginRight:-7,marginTop:10}}
-              color="primary"
-              labelId="nametitle-label"
-              id="nametitle"
-              value={title}
-              onChange={TitlehandleChange}
-            >
-              <InputLabel className={classes.insideLabel} id="faculty-label">เลือกคำนำหน้าชื่อ</InputLabel>
+  return (
+    <Page theme={pageTheme.tool}>
 
-              {titles.map((item: EntTitle) => (
-                <MenuItem value={item.id}>{item.titlename}</MenuItem>
-              ))}
-            </Select>
-            
-            <div className={classes.paper}><strong>ชื่อ-นามสกุล</strong></div>
-            <TextField
-            style={{ width: 500 ,marginLeft:7,marginRight:-7,marginTop:10}}
-            className={classes.textField}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <PersonOutlineTwoToneIcon />
-                </InputAdornment>
-              ),
-            }}
-              id="personalname"
+      <Header
+        title={`เพิ่มอะไหล่คอมพิวเตอร์`}> 
+      </Header>
+      <Content>
+        <ContentHeader title="กรอกข้อมูลอะไหล่คอมพิวเตอร์">
+        <div>
+            <Link component={RouterLink} to="Group14/">
+            <Button 
+            style={{ marginLeft: 20 }} 
+            component={RouterLink} 
+            to="/Producttables" 
+            variant="contained"
+            startIcon={<ArrowBackIosIcon />}
+            color="primary"
+            > 
+             ย้อนกลับ 
+            </Button>
+          </Link>
+          </div>
+        </ContentHeader>
+
+        <div className={classes.root}>
+          <form noValidate autoComplete="off">
+            <FormControl
               variant="outlined"
-              color="primary"
-              type="string"
-              size="small"
-              value={personalname}
-              onChange={handlePersonalnameChange}
-            />
-
-            <div className={classes.paper}><strong>อีเมลล์</strong></div>
-            <TextField
-            style={{ width: 500 ,marginLeft:7,marginRight:-7,marginTop:10}}
-            className={classes.textField}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <EmailTwoToneIcon />
-                </InputAdornment>
-              ),
-            }}
-              id="Email"
-              variant="outlined"
-              color="primary"
-              type="string"
-              size="small"
-              value={email}
-              onChange={handleEmailChange}
-            />
-
-            <div className={classes.paper}><strong>รหัสผ่าน</strong></div>
-            <TextField
-            style={{ width: 500 ,marginLeft:7,marginRight:-7,marginTop:10}}
-            className={classes.textField}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <VpnKeyTwoToneIcon />
-                </InputAdornment>
-              ),
-            }}
-              id="Password"
-              variant="outlined"
-              color="primary"
-              type="string"
-              size="small"
-              value={password}
-              onChange={handlePasswordChange}
-            />
-            
-            <div className={classes.paper}><strong>เพศ</strong></div>
-            <Select className={classes.select}
-              style={{ width: 500 ,marginLeft:7,marginRight:-7,marginTop:10}}
-              color="primary"
-              id="gender"
-              value={gender}
-              onChange={GenderhandleChange}
             >
-              <InputLabel className={classes.insideLabel}>เลือกเพศ</InputLabel>
+               <div className={classes.paper}><strong>ชื่อสินค้า</strong></div>
+              <TextField className={classes.textField}
+               style={{ width: 400 ,marginLeft:9,marginRight:-9}}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <LocalOfferIcon />
+                  </InputAdornment>
+                ),
+              }}
+                id="productname"
+                label=""
+                variant="standard"
+                color="secondary"
+                type="string"
+                size="medium"
+                value={productname}
+                onChange={handleproductnameChange}
+        />
 
-              {genders.map((item: EntGender) => (
-                <MenuItem value={item.id}>{item.gendername}</MenuItem>
-              ))}
-            </Select>
+            <div className={classes.paper}><strong>จำนวนสินค้า</strong></div>
+              <TextField className={classes.textField}
+              style={{ width: 400 ,marginLeft:9,marginRight:-9}}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                  </InputAdornment>
+                ),
+              }}
+                id="amountofproduct"
+                label=""
+                variant="standard"
+                color="secondary"
+                type="string"
+                size="medium"
+                value={amountofproduct}
+                onChange={handleamountofproductChange}
+              />
 
-            <div className={classes.paper}><strong>แผนก</strong></div>
-            <Select className={classes.select}
-              style={{ width: 500 ,marginLeft:7,marginRight:-7,marginTop:10}}
-              color="primary"
-              id="department"
-              value={department}
-              onChange={DepartmenthandleChange}
+            <div className={classes.paper}><strong>ราคา</strong></div>
+              <TextField className={classes.textField}
+               style={{ width: 400 ,marginLeft:7,marginRight:-7}}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <MonetizationOnIcon />
+                  </InputAdornment>
+                ),
+              }}
+                id="price"
+                label=""
+                variant="standard"
+                color="secondary"
+                type="string"
+                size="medium"
+                value={price}
+                onChange={handlepriceChange}
+            />
+           
+            <div>
+            <FormControl
+              className={classes.margin}
+              variant="outlined"
             >
-              <InputLabel className={classes.insideLabel}>เลือกแผนกt</InputLabel>
+              <Typography gutterBottom  align="left">
+                แบรนด์ :   
+              <Typography variant="body1" gutterBottom> 
+              <Select
+                labelId="brand"
+                id="brand"
+                value={brand}
+                onChange={BrandhandleChange}
+                style={{ width: 400 }}
+              >
+                {brands.map((item: EntBrand) => (
+                  <MenuItem value={item.id}>{item.brandname}</MenuItem>
+                ))}
+              </Select>
+              </Typography>
+                </Typography>
+            </FormControl>
+            </div>
 
-              {departments.map((item: EntDepartment) => (
-                <MenuItem value={item.id}>{item.departmentname}</MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </form>
-      </div>
-    </Content>
-   </Page>
- );
-}
+            <div>
+            <FormControl
+              className={classes.margin}
+              variant="outlined"
+            >
+              <Typography gutterBottom  align="left">
+                ประเภทสินค้า :   
+              <Typography variant="body1" gutterBottom> 
+              <Select
+                labelId="typeproduct"
+                id="typeproduct"
+                value={typeproduct}
+                onChange={TypeproducthandleChange}
+                style={{ width: 400 }}
+              >
+                {typeproducts.map((item: EntTypeproduct) => (
+                  <MenuItem value={item.id}>{item.typeproductname}</MenuItem>
+                ))}
+              </Select>
+              </Typography>
+                </Typography>
+            </FormControl>
+            </div>
+
+           
+
+            <div className={classes.margin}>
+                <Typography variant="h6" gutterBottom  align="center">
+                  <Button
+                    onClick={() => {
+                      save();
+                    }}
+                      variant="contained"
+                      startIcon={<SaveIcon />}
+                      color="primary"
+                  >
+                    Submit
+                  </Button>
+                </Typography>
+              </div>
+              
+              </FormControl>
+          </form>
+        </div>
+      </Content>
+    </Page>
+  );
+} 

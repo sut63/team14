@@ -13,15 +13,13 @@
 <tbody>
 <tr><td>open</td><td>http://localhost:3000/<datalist><option>http://localhost:3000/</option></datalist></td><td></td>
 </tr>
-<tr><td>type</td><td>id=email<datalist><option>id=email</option><option>name=email</option><option>//input[@id='email']</option><option>//div[@id='root']/div/div[2]/article/div[2]/div/div/input</option><option>//input</option><option>css=#email</option></datalist></td><td>d@mail.com</td>
+<tr><td>type</td><td>id=email<datalist><option>id=email</option><option>name=email</option><option>//input[@id='email']</option><option>//div[@id='root']/div/div[2]/article/div[2]/div/div/input</option><option>//input</option><option>css=#email</option></datalist></td><td>d@hotmail.com</td>
 </tr>
 <tr><td>click</td><td>id=password<datalist><option>id=password</option><option>name=password</option><option>//input[@id='password']</option><option>//div[@id='root']/div/div[2]/article/div[2]/div[2]/div/input</option><option>//div[2]/div/input</option><option>css=#password</option></datalist></td><td></td>
 </tr>
 <tr><td>type</td><td>id=password<datalist><option>id=password</option><option>name=password</option><option>//input[@id='password']</option><option>//div[@id='root']/div/div[2]/article/div[2]/div[2]/div/input</option><option>//div[2]/div/input</option><option>css=#password</option></datalist></td><td>1234</td>
 </tr>
 <tr><td>click</td><td>//button[@type='submit']<datalist><option>//button[@type='submit']</option><option>//div[@id='root']/div/div[2]/article/div[2]/button</option><option>//button</option><option>css=button.MuiButtonBase-root.MuiButton-root.MuiButton-contained.makeStyles-submit-22.MuiButton-containedPrimary.MuiButton-containedSizeLarge.MuiButton-sizeLarge.MuiButton-fullWidth</option></datalist></td><td></td>
-</tr>
-<tr><td>assertText</td><td>//div[@id='root']/div/div[2]/header<datalist><option>//div[@id='root']/div/div[2]/header</option><option>//header</option><option>css=header.makeStyles-header-23.makeStyles-header-29</option></datalist></td><td>กลุ่มที่ 14ระบบแจ้งซ่อมคอมพิวเตอร์    ออกจากระบบ</td>
 </tr>
 </tbody></table>
 <table cellpadding="1" cellspacing="1" border="1">
@@ -41,39 +39,43 @@
 </tr>
 <tr><td>assertAlert</td><td>เข้าสู่ระบบไม่สำเร็จ กรุณาตรวจสอบ Email หรือ Password<datalist><option>เข้าสู่ระบบไม่สำเร็จ กรุณาตรวจสอบ Email หรือ Password</option></datalist></td><td></td>
 </tr>
-<tr><td>assertText</td><td>//div[@id='root']/div/div[2]/header<datalist><option>//div[@id='root']/div/div[2]/header</option><option>//header</option><option>css=header.makeStyles-header-24.makeStyles-header-30</option></datalist></td><td>กลุ่มที่14ระบบแจ้งซ่อมคอมพิวเตอร์</td>
-</tr>
 </tbody></table>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
 <tr><td rowspan="1" colspan="3">Success Test Case</td></tr>
 </thead>
 <tbody>
-<tr><td>open</td><td>http://localhost:3000/Productcreate<datalist><option>http://localhost:3000/Productcreate</option></datalist></td><td></td>
+<tr><td>open</td><td>http://localhost:3000/Producttables<datalist><option>http://localhost:3000/Producttables</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='root']/div/div[2]/article/div/div[2]/a[2]/span<datalist><option>//div[@id='root']/div/div[2]/article/div/div[2]/a[2]/span</option><option>//a[2]/span</option></datalist></td><td></td>
 </tr>
 <tr><td>click</td><td>id=productname<datalist><option>id=productname</option><option>//input[@id='productname']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[2]/div/input</option><option>//input</option><option>css=#productname</option></datalist></td><td></td>
 </tr>
-<tr><td>type</td><td>id=productname<datalist><option>id=productname</option><option>//input[@id='productname']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[2]/div/input</option><option>//input</option><option>css=#productname</option></datalist></td><td>Western Digital Purple 4TB</td>
+<tr><td>type</td><td>id=productname<datalist><option>id=productname</option><option>//input[@id='productname']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[2]/div/input</option><option>//input</option><option>css=#productname</option></datalist></td><td>MSI 970 GAMING</td>
 </tr>
-<tr><td>click</td><td>id=numberofproduct<datalist><option>id=numberofproduct</option><option>//input[@id='numberofproduct']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[4]/div/input</option><option>//div[4]/div/input</option><option>css=#numberofproduct</option></datalist></td><td></td>
+<tr><td>click</td><td>id=amountofproduct<datalist><option>id=amountofproduct</option><option>//input[@id='amountofproduct']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[4]/div/input</option><option>//div[4]/div/input</option><option>css=#amountofproduct</option></datalist></td><td></td>
 </tr>
-<tr><td>type</td><td>id=numberofproduct<datalist><option>id=numberofproduct</option><option>//input[@id='numberofproduct']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[4]/div/input</option><option>//div[4]/div/input</option><option>css=#numberofproduct</option></datalist></td><td>1</td>
+<tr><td>type</td><td>id=amountofproduct<datalist><option>id=amountofproduct</option><option>//input[@id='amountofproduct']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[4]/div/input</option><option>//div[4]/div/input</option><option>css=#amountofproduct</option></datalist></td><td>1</td>
 </tr>
 <tr><td>click</td><td>id=price<datalist><option>id=price</option><option>//input[@id='price']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[6]/div/input</option><option>//div[6]/div/input</option><option>css=#price</option></datalist></td><td></td>
 </tr>
-<tr><td>type</td><td>id=price<datalist><option>id=price</option><option>//input[@id='price']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[6]/div/input</option><option>//div[6]/div/input</option><option>css=#price</option></datalist></td><td>1950</td>
+<tr><td>type</td><td>id=price<datalist><option>id=price</option><option>//input[@id='price']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[6]/div/input</option><option>//div[6]/div/input</option><option>css=#price</option></datalist></td><td>2770</td>
 </tr>
 <tr><td>click</td><td>id=brand<datalist><option>//body</option><option>css=body</option><option>id=brand</option></datalist></td><td></td>
 </tr>
-<tr><td>click</td><td>//div[@id='menu-']/div[3]/ul/li[5]<datalist><option>//div[@id='menu-']/div[3]/ul/li[5]</option><option>//li[5]</option></datalist></td><td></td>
+<tr><td>click</td><td>//div[@id='menu-']/div[3]/ul/li[4]<datalist><option>//div[@id='menu-']/div[3]/ul/li[4]</option><option>//li[4]</option></datalist></td><td></td>
 </tr>
 <tr><td>click</td><td>id=typeproduct<datalist><option>//body</option><option>css=body</option><option>id=typeproduct</option></datalist></td><td></td>
 </tr>
-<tr><td>click</td><td>//div[@id='menu-']/div[3]/ul/li[4]<datalist><option>//div[@id='menu-']/div[3]/ul/li[4]</option><option>//li[4]</option></datalist></td><td></td>
+<tr><td>click</td><td>//div[@id='menu-']/div[3]/ul/li[2]<datalist><option>//div[@id='menu-']/div[3]/ul/li[2]</option><option>//li[2]</option></datalist></td><td></td>
 </tr>
 <tr><td>click</td><td>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[9]/h6/button/span<datalist><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[9]/h6/button/span</option><option>//button/span</option><option>css=button.MuiButtonBase-root.MuiButton-root.MuiButton-contained.MuiButton-containedPrimary &gt; span.MuiButton-label</option></datalist></td><td></td>
 </tr>
-<tr><td>assertText</td><td>//div[@id='root']/div/div[2]/article/div/div[2]/div[2]/div/div[2]/div<datalist><option>//div[@id='root']/div/div[2]/article/div/div[2]/div[2]/div/div[2]/div</option><option>//div[2]/div/div[2]/div</option><option>css=div.MuiTypography-root.MuiAlertTitle-root.MuiTypography-body1.MuiTypography-gutterBottom</option></datalist></td><td>บันทึกข้อมูลสำเร็จ</td>
+<tr><td>click</td><td>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[9]/h6/button/span<datalist><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[9]/h6/button/span</option><option>//button/span</option><option>css=button.MuiButtonBase-root.MuiButton-root.MuiButton-contained.MuiButton-containedPrimary &gt; span.MuiButton-label</option></datalist></td><td></td>
+</tr>
+<tr><td>doubleClick</td><td>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[9]/h6/button/span<datalist><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[9]/h6/button/span</option><option>//button/span</option><option>css=button.MuiButtonBase-root.MuiButton-root.MuiButton-contained.MuiButton-containedPrimary &gt; span.MuiButton-label</option></datalist></td><td></td>
+</tr>
+<tr><td>assertText</td><td>id=swal2-title<datalist><option>id=swal2-title</option><option>//h2[@id='swal2-title']</option><option>//h2</option><option>css=#swal2-title</option></datalist></td><td>บันทึกข้อมูลสำเร็จ</td>
 </tr>
 </tbody></table>
 <table cellpadding="1" cellspacing="1" border="1">
@@ -85,19 +87,147 @@
 </tr>
 <tr><td>click</td><td>id=productname<datalist><option>id=productname</option><option>//input[@id='productname']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[2]/div/input</option><option>//input</option><option>css=#productname</option></datalist></td><td></td>
 </tr>
+<tr><td>type</td><td>id=productname<datalist><option>id=productname</option><option>//input[@id='productname']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[2]/div/input</option><option>//input</option><option>css=#productname</option></datalist></td><td>Western Digital Purple 4 TB</td>
+</tr>
+<tr><td>click</td><td>id=amountofproduct<datalist><option>id=amountofproduct</option><option>//input[@id='amountofproduct']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[4]/div/input</option><option>//div[4]/div/input</option><option>css=#amountofproduct</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>id=amountofproduct<datalist><option>id=amountofproduct</option><option>//input[@id='amountofproduct']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[4]/div/input</option><option>//div[4]/div/input</option><option>css=#amountofproduct</option></datalist></td><td>1</td>
+</tr>
+<tr><td>click</td><td>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[6]/div<datalist><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[6]/div</option><option>//div[6]/div</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>id=price<datalist><option>id=price</option><option>//input[@id='price']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[6]/div/input</option><option>//div[6]/div/input</option><option>css=#price</option></datalist></td><td>1980</td>
+</tr>
+<tr><td>click</td><td>id=brand<datalist><option>//body</option><option>css=body</option><option>id=brand</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='menu-']/div[3]/ul/li[5]<datalist><option>//div[@id='menu-']/div[3]/ul/li[5]</option><option>//li[5]</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[9]/h6/button/span<datalist><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[9]/h6/button/span</option><option>//button/span</option><option>css=button.MuiButtonBase-root.MuiButton-root.MuiButton-contained.MuiButton-containedPrimary &gt; span.MuiButton-label</option></datalist></td><td></td>
+</tr>
+<tr><td>assertText</td><td>id=swal2-title<datalist><option>id=swal2-title</option><option>//h2[@id='swal2-title']</option><option>//h2</option><option>css=#swal2-title</option></datalist></td><td>บันทึกข้อมูลไม่สำเร็จ</td>
+</tr>
+</tbody></table>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">กรอกข้อมูลครบ</td></tr>
+</thead>
+<tbody>
+<tr><td>open</td><td>http://localhost:3000/Productcreate<datalist><option>http://localhost:3000/Productcreate</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>id=productname<datalist><option>id=productname</option><option>//input[@id='productname']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[2]/div/input</option><option>//input</option><option>css=#productname</option></datalist></td><td></td>
+</tr>
 <tr><td>type</td><td>id=productname<datalist><option>id=productname</option><option>//input[@id='productname']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[2]/div/input</option><option>//input</option><option>css=#productname</option></datalist></td><td>Kingston SSD 120GB</td>
+</tr>
+<tr><td>click</td><td>id=amountofproduct<datalist><option>id=numberofproduct</option><option>//input[@id='numberofproduct']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[4]/div/input</option><option>//div[4]/div/input</option><option>css=#numberofproduct</option><option>id=amountofproduct</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>id=amountofproduct<datalist><option>id=numberofproduct</option><option>//input[@id='numberofproduct']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[4]/div/input</option><option>//div[4]/div/input</option><option>css=#numberofproduct</option><option>id=amountofproduct</option></datalist></td><td>1</td>
 </tr>
 <tr><td>click</td><td>id=price<datalist><option>id=price</option><option>//input[@id='price']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[6]/div/input</option><option>//div[6]/div/input</option><option>css=#price</option></datalist></td><td></td>
 </tr>
-<tr><td>type</td><td>id=price<datalist><option>id=price</option><option>//input[@id='price']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[6]/div/input</option><option>//div[6]/div/input</option><option>css=#price</option></datalist></td><td>1990</td>
+<tr><td>type</td><td>id=price<datalist><option>id=price</option><option>//input[@id='price']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[6]/div/input</option><option>//div[6]/div/input</option><option>css=#price</option></datalist></td><td>2350</td>
 </tr>
 <tr><td>click</td><td>id=brand<datalist><option>//body</option><option>css=body</option><option>id=brand</option></datalist></td><td></td>
 </tr>
 <tr><td>click</td><td>//div[@id='menu-']/div[3]/ul/li[3]<datalist><option>//div[@id='menu-']/div[3]/ul/li[3]</option><option>//li[3]</option></datalist></td><td></td>
 </tr>
+<tr><td>click</td><td>id=typeproduct<datalist><option>//body</option><option>css=body</option><option>id=typeproduct</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='menu-']/div[3]/ul/li[3]<datalist><option>//div[@id='menu-']/div[3]/ul/li[3]</option><option>//li[3]</option></datalist></td><td></td>
+</tr>
 <tr><td>click</td><td>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[9]/h6/button/span<datalist><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[9]/h6/button/span</option><option>//button/span</option><option>css=button.MuiButtonBase-root.MuiButton-root.MuiButton-contained.MuiButton-containedPrimary &gt; span.MuiButton-label</option></datalist></td><td></td>
 </tr>
-<tr><td>assertText</td><td>//div[@id='root']/div/div[2]/article/div/div[2]/div[2]/div/div[2]/div<datalist><option>//div[@id='root']/div/div[2]/article/div/div[2]/div[2]/div/div[2]/div</option><option>//div[2]/div/div[2]/div</option><option>css=div.MuiTypography-root.MuiAlertTitle-root.MuiTypography-body1.MuiTypography-gutterBottom</option></datalist></td><td>ไม่สามารถบันทึกข้อมูลได้ กรุณาลองใหม่อีกครั้ง</td>
+<tr><td>click</td><td>//div[2]/div/div/div[5]/div<datalist><option>//div[2]/div/div/div[5]/div</option><option>css=div.swal2-success-circular-line-left</option></datalist></td><td></td>
+</tr>
+</tbody></table>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">ไม่กรอกชื่อสินค้า</td></tr>
+</thead>
+<tbody>
+<tr><td>open</td><td>http://localhost:3000/Productcreate<datalist><option>http://localhost:3000/Productcreate</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>id=amountofproduct<datalist><option>id=amountofproduct</option><option>//input[@id='amountofproduct']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[4]/div/input</option><option>//div[4]/div/input</option><option>css=#amountofproduct</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>id=amountofproduct<datalist><option>id=amountofproduct</option><option>//input[@id='amountofproduct']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[4]/div/input</option><option>//div[4]/div/input</option><option>css=#amountofproduct</option></datalist></td><td>1</td>
+</tr>
+<tr><td>click</td><td>id=price<datalist><option>id=price</option><option>//input[@id='price']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[6]/div/input</option><option>//div[6]/div/input</option><option>css=#price</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>id=price<datalist><option>id=price</option><option>//input[@id='price']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[6]/div/input</option><option>//div[6]/div/input</option><option>css=#price</option></datalist></td><td>2365</td>
+</tr>
+<tr><td>click</td><td>id=brand<datalist><option>//body</option><option>css=body</option><option>id=brand</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='menu-']/div[3]/ul/li<datalist><option>//div[@id='menu-']/div[3]/ul/li</option><option>//li</option><option>css=li.MuiButtonBase-root.MuiListItem-root.MuiMenuItem-root.MuiMenuItem-gutters.MuiListItem-gutters.MuiListItem-button.Mui-focusVisible.Mui-focusVisible</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>id=typeproduct<datalist><option>//body</option><option>css=body</option><option>id=typeofproduct</option><option>id=typeproduct</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='menu-']/div[3]/ul/li[5]<datalist><option>//div[@id='menu-']/div[3]/ul/li[5]</option><option>//li[5]</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[9]/h6/button/span<datalist><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[9]/h6/button/span</option><option>//button/span</option><option>css=button.MuiButtonBase-root.MuiButton-root.MuiButton-contained.MuiButton-containedPrimary &gt; span.MuiButton-label</option></datalist></td><td></td>
+</tr>
+<tr><td>assertText</td><td>id=swal2-title<datalist><option>id=swal2-title</option><option>//h2[@id='swal2-title']</option><option>//h2</option><option>css=#swal2-title</option></datalist></td><td>กรุณากรอกชื่อสินค้า</td>
+</tr>
+</tbody></table>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">กรอกจำนวนสินค้าไม่ถูกต้อง</td></tr>
+</thead>
+<tbody>
+<tr><td>open</td><td>http://localhost:3000/Productcreate<datalist><option>http://localhost:3000/Productcreate</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>id=productname<datalist><option>id=productname</option><option>//input[@id='productname']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[2]/div/input</option><option>//input</option><option>css=#productname</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>id=productname<datalist><option>id=productname</option><option>//input[@id='productname']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[2]/div/input</option><option>//input</option><option>css=#productname</option></datalist></td><td>MSI</td>
+</tr>
+<tr><td>click</td><td>id=amountofproduct<datalist><option>id=amountofproduct</option><option>//input[@id='amountofproduct']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[4]/div/input</option><option>//div[4]/div/input</option><option>css=#amountofproduct</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>id=amountofproduct<datalist><option>id=amountofproduct</option><option>//input[@id='amountofproduct']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[4]/div/input</option><option>//div[4]/div/input</option><option>css=#amountofproduct</option></datalist></td><td>-1</td>
+</tr>
+<tr><td>click</td><td>id=price<datalist><option>id=price</option><option>//input[@id='price']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[6]/div/input</option><option>//div[6]/div/input</option><option>css=#price</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>id=price<datalist><option>id=price</option><option>//input[@id='price']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[6]/div/input</option><option>//div[6]/div/input</option><option>css=#price</option></datalist></td><td>2564</td>
+</tr>
+<tr><td>click</td><td>id=brand<datalist><option>//body</option><option>css=body</option><option>id=brand</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='menu-']/div[3]/ul/li<datalist><option>//div[@id='menu-']/div[3]/ul/li</option><option>//li</option><option>css=li.MuiButtonBase-root.MuiListItem-root.MuiMenuItem-root.MuiMenuItem-gutters.MuiListItem-gutters.MuiListItem-button.Mui-focusVisible.Mui-focusVisible</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>id=typeproduct<datalist><option>//body</option><option>css=body</option><option>id=typeproduct</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='menu-']/div[3]/ul/li<datalist><option>//div[@id='menu-']/div[3]/ul/li</option><option>//li</option><option>css=li.MuiButtonBase-root.MuiListItem-root.MuiMenuItem-root.MuiMenuItem-gutters.MuiListItem-gutters.MuiListItem-button.Mui-focusVisible.Mui-focusVisible</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[9]/h6/button/span<datalist><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[9]/h6/button/span</option><option>//button/span</option><option>css=button.MuiButtonBase-root.MuiButton-root.MuiButton-contained.MuiButton-containedPrimary &gt; span.MuiButton-label</option></datalist></td><td></td>
+</tr>
+<tr><td>assertText</td><td>id=swal2-title<datalist><option>id=swal2-title</option><option>//h2[@id='swal2-title']</option><option>//h2</option><option>css=#swal2-title</option></datalist></td><td>รูปแบบของจำนวนสินค้าไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง</td>
+</tr>
+</tbody></table>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">ใส่ราคาไม่ถูกต้องตามรูปแบบ</td></tr>
+</thead>
+<tbody>
+<tr><td>open</td><td>http://localhost:3000/Productcreate<datalist><option>http://localhost:3000/Productcreate</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>id=productname<datalist><option>id=productname</option><option>//input[@id='productname']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[2]/div/input</option><option>//input</option><option>css=#productname</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>id=productname<datalist><option>id=productname</option><option>//input[@id='productname']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[2]/div/input</option><option>//input</option><option>css=#productname</option></datalist></td><td>MSI</td>
+</tr>
+<tr><td>click</td><td>id=amountofproduct<datalist><option>id=amountofproduct</option><option>//input[@id='amountofproduct']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[4]/div/input</option><option>//div[4]/div/input</option><option>css=#amountofproduct</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>id=amountofproduct<datalist><option>id=amountofproduct</option><option>//input[@id='amountofproduct']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[4]/div/input</option><option>//div[4]/div/input</option><option>css=#amountofproduct</option></datalist></td><td>1</td>
+</tr>
+<tr><td>click</td><td>id=price<datalist><option>id=price</option><option>//input[@id='price']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[6]/div/input</option><option>//div[6]/div/input</option><option>css=#price</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>id=price<datalist><option>id=price</option><option>//input[@id='price']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[6]/div/input</option><option>//div[6]/div/input</option><option>css=#price</option></datalist></td><td>-2</td>
+</tr>
+<tr><td>click</td><td>id=brand<datalist><option>//body</option><option>css=body</option><option>id=brand</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='menu-']/div[3]/ul/li[4]<datalist><option>//div[@id='menu-']/div[3]/ul/li[4]</option><option>//li[4]</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>id=typeproduct<datalist><option>//body</option><option>css=body</option><option>id=typeproduct</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='menu-']/div[3]/ul/li[6]<datalist><option>//div[@id='menu-']/div[3]/ul/li[6]</option><option>//li[6]</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[9]/h6/button/span<datalist><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[9]/h6/button/span</option><option>//button/span</option><option>css=button.MuiButtonBase-root.MuiButton-root.MuiButton-contained.MuiButton-containedPrimary &gt; span.MuiButton-label</option></datalist></td><td></td>
+</tr>
+<tr><td>assertText</td><td>id=swal2-title<datalist><option>id=swal2-title</option><option>//h2[@id='swal2-title']</option><option>//h2</option><option>css=#swal2-title</option></datalist></td><td>รูปแบบของราคาสินค้าไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง</td>
 </tr>
 </tbody></table>
 </body>

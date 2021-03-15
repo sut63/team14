@@ -14,10 +14,13 @@ import { EntProduct } from '../../api/models/EntProduct';
 import Swal from 'sweetalert2'
 import { Link as RouterLink } from 'react-router-dom';
 import moment from 'moment';
-import { Page, pageTheme, Header, Content, Link } from '@backstage/core';
+import { Page, pageTheme, Header, Content, Link, ContentHeader } from '@backstage/core';
 import { Grid, Button, TextField, Typography, FormControl } from '@material-ui/core';
 import SearchTwoToneIcon from '@material-ui/icons/SearchTwoTone';
 
+import { Alert } from '@material-ui/lab';
+import { styled } from '@material-ui/core/styles';
+import { compose, spacing, palette, sizing, shadows   } from '@material-ui/system';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -76,13 +79,15 @@ export default function ComponentsTable() {
   const api = new DefaultApi();
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState(false);
+  const [alert, setAlert] = useState(true);
+  const [status, setStatus] = useState(false);
 
   //---------------------------
   const [checkproductname, setProductnames] = useState(false);
   const [product, setProduct] = useState<EntProduct[]>([])
 
   //--------------------------
-  const [productname, setProductname] = useState(String);
+  const [piname, setpiname] = useState(String);
   const profile = { givenName: 'ระบบค้นหาข้อมูลอะไหล่คอมพิวเตอร์' };
   const alertMessage = (icon: any, title: any) => {
     Toast.fire({
@@ -92,50 +97,45 @@ export default function ComponentsTable() {
     setSearch(false);
   }
 
-  useEffect(() => {
-    const getProducts = async () => {
-      const res = await api.listProduct({ offset: 0 });
-      setLoading(false);
-      setProduct(res);
-    };
-    getProducts();
-  }, [loading]);
-
   //-------------------
   const productnamehandlehange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setSearch(false);
-    setProductnames(false);
-    setProductname(event.target.value as string);
+    setStatus(false);
+    setpiname(event.target.value as string);
 
   };
 
   const cleardata = () => {
-    setProductname("");
-    setSearch(false);
-    setProductnames(false);
-    setSearch(false);
-
+    setpiname("");
+    setStatus(false)
+    setProduct([]);
   }
+
   //---------------------
-  const checkresearch = async () => {
-    var check = false;
-    product.map(item => {
-      if (productname != "") {
-        if (item.productname?.includes(productname)) {
-          setProductnames(true);
-          alertMessage("success", "ค้นหาสำเร็จ");
-          check = true;
+  const SearchProduct = async () => {
+    setStatus(true);
+    setAlert(true);
+    const apiUrl = `http://localhost:8080/api/v1/searchproducts?product=${piname}`;
+    const requestOptions = {
+      method: 'GET',
+    };
+    fetch(apiUrl, requestOptions)
+      .then(response => response.json())
+      .then(data => {
+        console.log(data.data)
+        setStatus(true);
+        setAlert(false);
+        setProduct([]);
+        if (data.data != null) {
+          if (data.data.length >= 1) {
+            setStatus(true);
+            setAlert(true);
+            console.log(data.data)
+            setProduct(data.data);
+          }
         }
-      }
-    })
-    if (!check) {
-      alertMessage("error", "ไม่พบข้อมูลที่ค้นหา");
+      });
     }
-    console.log(checkproductname)
-    if (productname == "") {
-      alertMessage("info", "แสดงข้อมูลอะไหล่คอมพิวเตอร์ทั้งหมดในระบบ");
-    }
-  };
+
 
   return (
 
@@ -160,6 +160,22 @@ export default function ComponentsTable() {
 
       </Header>
       <Content>
+      <ContentHeader title="ค้นหาข้อมูลบุคลากร">
+          {status ? (
+              <div>
+                {alert ? (
+                  <Alert severity="success">
+                    ค้นหาสำเร็จ 
+                  </Alert>
+                )
+                  : (
+                    <Alert severity="warning" style={{ marginTop: 20 }}>
+                      ไม่พบข้อมูลที่ค้นหา
+                    </Alert>
+                  )}
+              </div>
+            ) : null}
+        </ContentHeader> 
         <Grid container item xs={12} justify="center">
           <Grid item xs={5}>
             <Paper>
@@ -185,8 +201,8 @@ export default function ComponentsTable() {
                   >
                     <div className={classes.paper}><strong>กรุณากรอกชื่อสินค้า</strong></div>
                     <TextField
-                      id="productname"
-                      value={productname}
+                      id="piname"
+                      value={piname}
                       onChange={productnamehandlehange}
                       type="string"
                       size="small"
@@ -198,8 +214,7 @@ export default function ComponentsTable() {
                 <div></div>
                 <Button
                   onClick={() => {
-                    checkresearch();
-                    setSearch(true);
+                    SearchProduct();
 
                   }}
                   
@@ -245,77 +260,38 @@ export default function ComponentsTable() {
         <Grid container justify="center">
           <Grid item xs={12} md={10}>
             <Paper>
-              {search ? (
-                <div>
-                  {  checkproductname ? (
-                    <TableContainer component={Paper}>
-                      <Table className={classes.table} aria-label="simple table">
-                        <TableHead>
-                          <TableRow>
-                            <TableCell align="center">No</TableCell>
+              <TableContainer component={Paper}>
+                <Table className={classes.table} aria-label="simple table">
+                  <TableHead>
+                    <TableRow>
+                    <TableCell align="center">No</TableCell>
                             <TableCell align="center">ชื่อสินค้า</TableCell>
                             <TableCell align="center">จำนวนสินค้า</TableCell>
                             <TableCell align="center">ราคา</TableCell>
                             <TableCell align="center">แบรนด์</TableCell>
                             <TableCell align="center">ประเภทของสินค้า</TableCell>
                             <TableCell align="center">เจ้าหน้าที่ที่ทำการบันทึก</TableCell>
-                          </TableRow>
-                        </TableHead>
-                        <TableBody>
-
-                          {product.filter((filter: any) => filter.productname.includes(productname)).map((item: any) => (
-                            <TableRow key={item.id}>
-                                <TableCell align="center">{item.id}</TableCell>
-                                <TableCell align="center">{item.productname}</TableCell>
-                                <TableCell align="center">{item.numberofproduct}</TableCell>
-                                <TableCell align="center">{item.price}</TableCell>
-                                <TableCell align="center">{item.edges?.brand?.brandname}</TableCell>
-                                <TableCell align="center">{item.edges?.typeproduct?.typeproductname}</TableCell>
-                                <TableCell align="center">{item.edges?.personal?.personalname}</TableCell>
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
-                    </TableContainer>
-                  )
-                    : productname == "" ? (
-                      <div>
-                        <TableContainer component={Paper}>
-                          <Table className={classes.table} aria-label="simple table">
-                            <TableHead>
-                              <TableRow>
-                                <TableCell align="center">No</TableCell>
-                                <TableCell align="center">ชื่อสินค้า</TableCell>
-                                <TableCell align="center">จำนวนสินค้า</TableCell>
-                                <TableCell align="center">ราคา</TableCell>
-                                <TableCell align="center">แบรนด์</TableCell>
-                                <TableCell align="center">ประเภทของสินค้า</TableCell>
-                                <TableCell align="center">เจ้าหน้าที่ที่ทำการบันทึก</TableCell>
-                              </TableRow>
-                            </TableHead>
-                            <TableBody>
-
-                              {product.map((item: any) => (
-                                <TableRow key={item.id}>
-                                    <TableCell align="center">{item.id}</TableCell>
-                                    <TableCell align="center">{item.productname}</TableCell>
-                                    <TableCell align="center">{item.numberofproduct}</TableCell>
-                                    <TableCell align="center">{item.price}</TableCell>
-                                    <TableCell align="center">{item.edges?.brand?.brandname}</TableCell>
-                                    <TableCell align="center">{item.edges?.typeproduct?.typeproductname}</TableCell>
-                                    <TableCell align="center">{item.edges?.personal?.personalname}</TableCell>
-                                </TableRow>
-                              ))}
-                            </TableBody>
-                          </Table>
-                        </TableContainer>
-
-                      </div>
-                    ) : null}
-                </div>
-              ) : null}
+                      
+                    </TableRow>
+                  </TableHead>
+                <TableBody>
+                {product.map((item: any) => (
+                  <TableRow key={item.id}>
+                    <TableCell align="center">{item.id}</TableCell>
+                                <TableCell align="center">{item.Productname}</TableCell>
+                                <TableCell align="center">{item.Amountofproduct}</TableCell>
+                                <TableCell align="center">{item.Price}</TableCell>
+                                <TableCell align="center">{item.edges?.Brand?.Brandname}</TableCell>
+                                <TableCell align="center">{item.edges?.Typeproduct?.Typeproductname}</TableCell>
+                                <TableCell align="center">{item.edges?.Personal?.Personalname}</TableCell>
+                    
+                  </TableRow>
+                ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
             </Paper>
-          </Grid>
+        </Grid>
         </Grid>
       </Content>
     </Page>

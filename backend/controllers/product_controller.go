@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"github.com/tanapon395/playlist-video/ent"
+	"github.com/tanapon395/playlist-video/ent/product"
 	"github.com/tanapon395/playlist-video/ent/brand"
 	"github.com/tanapon395/playlist-video/ent/typeproduct"
 	"github.com/tanapon395/playlist-video/ent/personal"
@@ -219,6 +220,39 @@ func (ctl *ProductController) ListProduct(c *gin.Context) {
 	c.JSON(200, products)
 }
 
+// GetProductSearch handles GET requests to retrieve a Product entity
+// @Summary Get a product entity by Search
+// @Description get product by Search
+// @ID get-product-search
+// @Produce  json
+// @Param product query string false "Product Search"
+// @Success 200 {object} ent.Product
+// @Failure 400 {object} gin.H
+// @Failure 404 {object} gin.H
+// @Failure 500 {object} gin.H
+// @Router /searchproducts [get]
+func (ctl *ProductController) GetProductSearch(c *gin.Context) {
+	pisearch := c.Query("product")
+
+	pi, err := ctl.client.Product.
+		Query().
+		WithBrand().
+		WithTypeproduct().
+		WithPersonal().
+		Where(product.ProductnameContains(pisearch)).
+		All(context.Background())
+	if err != nil {
+		c.JSON(404, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(200, gin.H{
+		"data": pi,
+	})
+}
+
 // NewProductController creates and registers handles for the product controller
 func NewProductController(router gin.IRouter, client *ent.Client) *ProductController {
 	pic := &ProductController{
@@ -234,6 +268,9 @@ func NewProductController(router gin.IRouter, client *ent.Client) *ProductContro
 
 func (ctl *ProductController) register() {
 	products := ctl.router.Group("/products")
+
+	searchproducts := ctl.router.Group("/searchproducts")
+	searchproducts.GET("", ctl.GetProductSearch)
 
 	products.POST("", ctl.CreateProduct)
 	products.GET("", ctl.ListProduct)
