@@ -2645,6 +2645,50 @@ var doc = `{
                 }
             }
         },
+        "/searchproducts": {
+            "get": {
+                "description": "get product by Search",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get a product entity by Search",
+                "operationId": "get-product-search",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Product Search",
+                        "name": "product",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.Product"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
         "/titles": {
             "get": {
                 "description": "list title entities",

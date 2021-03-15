@@ -2374,6 +2374,35 @@ paths:
           schema:
             $ref: '#/definitions/gin.H'
       summary: Get a personal entity by Search
+  /searchproducts:
+    get:
+      description: get product by Search
+      operationId: get-product-search
+      parameters:
+      - description: Product Search
+        in: query
+        name: product
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.Product'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Get a product entity by Search
   /titles:
     get:
       description: list title entities
