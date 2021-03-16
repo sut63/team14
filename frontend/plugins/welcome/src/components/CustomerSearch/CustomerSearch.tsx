@@ -269,6 +269,7 @@ export default function ComponentsTable() {
                       <TableCell align="center">เบอร์โทร</TableCell>
                       <TableCell align="center">เลขบัตรประจำตัวประชาชน</TableCell>
                       <TableCell align="center">เพศ</TableCell>
+                      <TableCell align="center">เจ้าหน้าที่แจ้งซ่อม</TableCell>
                       
                     </TableRow>
                   </TableHead>
@@ -282,7 +283,8 @@ export default function ComponentsTable() {
                     <TableCell align="center">{item.Phonenumber}</TableCell>
                     <TableCell align="center">{item.Identificationnumber}</TableCell>
                     <TableCell align="center">{item.edges?.Gender?.Gendername}</TableCell>
-                    
+                    <TableCell align="center">{item.edges?.Personal?.Personalname}</TableCell>
+
                   </TableRow>
                 ))}
                 </TableBody>
