@@ -33,16 +33,16 @@ func (ru *ReceiptUpdate) Where(ps ...predicate.Receipt) *ReceiptUpdate {
 	return ru
 }
 
-// SetAddedTime sets the added_time field.
-func (ru *ReceiptUpdate) SetAddedTime(t time.Time) *ReceiptUpdate {
-	ru.mutation.SetAddedTime(t)
+// SetDateTime sets the date_time field.
+func (ru *ReceiptUpdate) SetDateTime(t time.Time) *ReceiptUpdate {
+	ru.mutation.SetDateTime(t)
 	return ru
 }
 
-// SetNillableAddedTime sets the added_time field if the given value is not nil.
-func (ru *ReceiptUpdate) SetNillableAddedTime(t *time.Time) *ReceiptUpdate {
+// SetNillableDateTime sets the date_time field if the given value is not nil.
+func (ru *ReceiptUpdate) SetNillableDateTime(t *time.Time) *ReceiptUpdate {
 	if t != nil {
-		ru.SetAddedTime(*t)
+		ru.SetDateTime(*t)
 	}
 	return ru
 }
@@ -280,11 +280,11 @@ func (ru *ReceiptUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			}
 		}
 	}
-	if value, ok := ru.mutation.AddedTime(); ok {
+	if value, ok := ru.mutation.DateTime(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeTime,
 			Value:  value,
-			Column: receipt.FieldAddedTime,
+			Column: receipt.FieldDateTime,
 		})
 	}
 	if value, ok := ru.mutation.Address(); ok {
@@ -501,16 +501,16 @@ type ReceiptUpdateOne struct {
 	mutation *ReceiptMutation
 }
 
-// SetAddedTime sets the added_time field.
-func (ruo *ReceiptUpdateOne) SetAddedTime(t time.Time) *ReceiptUpdateOne {
-	ruo.mutation.SetAddedTime(t)
+// SetDateTime sets the date_time field.
+func (ruo *ReceiptUpdateOne) SetDateTime(t time.Time) *ReceiptUpdateOne {
+	ruo.mutation.SetDateTime(t)
 	return ruo
 }
 
-// SetNillableAddedTime sets the added_time field if the given value is not nil.
-func (ruo *ReceiptUpdateOne) SetNillableAddedTime(t *time.Time) *ReceiptUpdateOne {
+// SetNillableDateTime sets the date_time field if the given value is not nil.
+func (ruo *ReceiptUpdateOne) SetNillableDateTime(t *time.Time) *ReceiptUpdateOne {
 	if t != nil {
-		ruo.SetAddedTime(*t)
+		ruo.SetDateTime(*t)
 	}
 	return ruo
 }
@@ -746,11 +746,11 @@ func (ruo *ReceiptUpdateOne) sqlSave(ctx context.Context) (r *Receipt, err error
 		return nil, &ValidationError{Name: "ID", err: fmt.Errorf("missing Receipt.ID for update")}
 	}
 	_spec.Node.ID.Value = id
-	if value, ok := ruo.mutation.AddedTime(); ok {
+	if value, ok := ruo.mutation.DateTime(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeTime,
 			Value:  value,
-			Column: receipt.FieldAddedTime,
+			Column: receipt.FieldDateTime,
 		})
 	}
 	if value, ok := ruo.mutation.Address(); ok {

@@ -288,7 +288,7 @@ var (
 	// ReceiptsColumns holds the columns for the "receipts" table.
 	ReceiptsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
-		{Name: "added_time", Type: field.TypeTime},
+		{Name: "date_time", Type: field.TypeTime},
 		{Name: "address", Type: field.TypeString},
 		{Name: "productname", Type: field.TypeString},
 		{Name: "receiptcode", Type: field.TypeString, Size: 11},

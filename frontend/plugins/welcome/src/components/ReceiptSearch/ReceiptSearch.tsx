@@ -14,9 +14,13 @@ import { EntReceipt } from '../../api/models/EntReceipt';
 import Swal from 'sweetalert2'
 import { Link as RouterLink } from 'react-router-dom';
 import moment from 'moment';
-import { Page, pageTheme, Header, Content, Link } from '@backstage/core';
+import { Page, pageTheme, Header, Content, Link, ContentHeader } from '@backstage/core';
 import { Grid, Button, TextField, Typography, FormControl } from '@material-ui/core';
 import SearchTwoToneIcon from '@material-ui/icons/SearchTwoTone';
+
+import { Alert } from '@material-ui/lab';
+import { styled } from '@material-ui/core/styles';
+import { compose, spacing, palette, sizing, shadows   } from '@material-ui/system';
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -76,13 +80,17 @@ export default function ComponentsTable() {
   const api = new DefaultApi();
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState(false);
+  const [alert, setAlert] = useState(true);
+  const [status, setStatus] = useState(false);
 
   //---------------------------
   const [checkreceiptcode, setReceiptcodes] = useState(false);
   const [receipt, setReceipt] = useState<EntReceipt[]>([])
 
   //--------------------------
-  const [receiptcode, setReceiptcode] = useState(String);
+  const [rname, setrname] = useState(String);
+  const Box = styled('div')(compose(spacing, palette, shadows, sizing ));
+
   const profile = { givenName: 'ระบบค้นหาข้อมูลใบเสร็จ' };
   const alertMessage = (icon: any, title: any) => {
     Toast.fire({
@@ -92,50 +100,44 @@ export default function ComponentsTable() {
     setSearch(false);
   }
 
-  useEffect(() => {
-    const getReceipts = async () => {
-      const res = await api.listReceipt({ offset: 0 });
-      setLoading(false);
-      setReceipt(res);
-    };
-    getReceipts();
-  }, [loading]);
-
   //-------------------
   const receiptcodehandlehange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setSearch(false);
-    setReceiptcodes(false);
-    setReceiptcode(event.target.value as string);
+    setStatus(false);
+    setrname(event.target.value as string);
 
   };
 
   const cleardata = () => {
-    setReceiptcode("");
-    setSearch(false);
-    setReceiptcodes(false);
-    setSearch(false);
+    setrname("");
+    setStatus(false)
+    setReceipt([]);
 
   }
   //---------------------
-  const checkresearch = async () => {
-    var check = false;
-    receipt.map(item => {
-      if (receiptcode != "") {
-        if (item.receiptcode?.includes(receiptcode)) {
-          setReceiptcodes(true);
-          alertMessage("success", "พบข้อมูลที่ค้นหา");
-          check = true;
+  const SearchReceipt = async () => {
+    setStatus(true);
+    setAlert(true);
+    const apiUrl = `http://localhost:8080/api/v1/searchreceipts?receipt=${rname}`;
+    const requestOptions = {
+      method: 'GET',
+    };
+    fetch(apiUrl, requestOptions)
+      .then(response => response.json())
+      .then(data => {
+        console.log(data.data)
+        setStatus(true);
+        setAlert(false);
+        setReceipt([]);
+        if (data.data != null) {
+          if (data.data.length >= 1) {
+            setStatus(true);
+            setAlert(true);
+            console.log(data.data)
+            setReceipt(data.data);
+          }
         }
-      }
-    })
-    if (!check) {
-      alertMessage("error", "ไม่พบข้อมูลที่ค้นหา");
+      });
     }
-    console.log(checkreceiptcode)
-    if (receiptcode == "") {
-      alertMessage("info", "แสดงข้อมูลใบเสร็จทั้งหมดทั้งหมดในระบบ");
-    }
-  };
 
   return (
 
@@ -160,6 +162,22 @@ export default function ComponentsTable() {
 
       </Header>
       <Content>
+        <ContentHeader>
+        {status ? (
+              <div>
+                {alert ? (
+                  <Alert severity="success">
+                    ค้นหาสำเร็จ
+                  </Alert>
+                )
+                  : (
+                    <Alert severity="warning" style={{ marginTop: 20 }}>
+                      ค้นหาไม่สำเร็จ
+                    </Alert>
+                  )}
+              </div>
+            ) : null}
+        </ContentHeader>
         <Grid container item xs={12} justify="center">
           <Grid item xs={5}>
             <Paper>
@@ -186,7 +204,7 @@ export default function ComponentsTable() {
                     <div className={classes.paper}><strong>กรุณากรอกรหัสใบเสร็จที่ต้องการค้นหา</strong></div>
                     <TextField
                       id="receiptcode"
-                      value={receiptcode}
+                      value={rname}
                       onChange={receiptcodehandlehange}
                       type="string"
                       size="small"
@@ -198,8 +216,7 @@ export default function ComponentsTable() {
                 <div></div>
                 <Button
                   onClick={() => {
-                    checkresearch();
-                    setSearch(true);
+                    SearchReceipt();
 
                   }}
                   
@@ -245,83 +262,38 @@ export default function ComponentsTable() {
         <Grid container justify="center">
           <Grid item xs={12} md={10}>
             <Paper>
-              {search ? (
-                <div>
-                  {  checkreceiptcode ? (
-                    <TableContainer component={Paper}>
-                      <Table className={classes.table} aria-label="simple table">
-                        <TableHead>
-                          <TableRow>
-                          <TableCell align="center">No</TableCell>
-                          <TableCell align="center">รหัสใบเสร็จ</TableCell>
-                          <TableCell align="center">ชื่อ-นามสกุล</TableCell>
-                          <TableCell align="center">ที่อยู่ร้านค้า</TableCell>
-                          <TableCell align="center">ชื่อผลิตภัณฑ์</TableCell>
-                          <TableCell align="center">รายละเอียดสินค้า</TableCell>
-                          <TableCell align="center">ราคา</TableCell>
-                          <TableCell align="center">ประเภทการจ่ายเงิน</TableCell>
-                          <TableCell align="center">เจ้าหน้าที่ที่ทำการบันทึก</TableCell>
-                          </TableRow>
-                        </TableHead>
-                        <TableBody>
-
-                          {receipt.filter((filter: any) => filter.receiptcode.includes(receiptcode)).map((item: any) => (
-                            <TableRow key={item.id}>
-                              <TableCell align="center">{item.id}</TableCell>
-                              <TableCell align="center">{item.receiptcode}</TableCell>
-                              <TableCell align="center">{item.edges?.customer?.customername}</TableCell>
-                              <TableCell align="center">{item.address}</TableCell>
-                              <TableCell align="center">{item.productname}</TableCell>
-                              <TableCell align="center">{item.edges?.adminrepair?.equipmentdamate}</TableCell>
-                              <TableCell align="center">{item.edges?.product?.price}</TableCell>
-                              <TableCell align="center">{item.edges?.paymenttype?.typename}</TableCell>
-                              <TableCell align="center">{item.edges?.personal?.personalname}</TableCell>          
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
-                    </TableContainer>
-                  )
-                    : receiptcode == "" ? (
-                      <div>
-                        <TableContainer component={Paper}>
-                          <Table className={classes.table} aria-label="simple table">
-                            <TableHead>
-                              <TableRow>
-                              <TableCell align="center">No</TableCell>
-                              <TableCell align="center">รหัสใบเสร็จ</TableCell>
-                              <TableCell align="center">ชื่อ-นามสกุล</TableCell>
-                              <TableCell align="center">ที่อยู่ร้านค้า</TableCell>
-                              <TableCell align="center">ชื่อผลิตภัณฑ์</TableCell>
-                              <TableCell align="center">รายละเอียดสินค้า</TableCell>
-                              <TableCell align="center">ราคา</TableCell>
-                              <TableCell align="center">ประเภทการจ่ายเงิน</TableCell>
-                              <TableCell align="center">เจ้าหน้าที่ที่ทำการบันทึก</TableCell>
-                              </TableRow>
-                            </TableHead>
-                            <TableBody>
-
-                              {receipt.map((item: any) => (
-                                <TableRow key={item.id}>
-                                 <TableCell align="center">{item.id}</TableCell>
-                                 <TableCell align="center">{item.receiptcode}</TableCell>
-                                 <TableCell align="center">{item.edges?.customer?.customername}</TableCell>
-                                 <TableCell align="center">{item.address}</TableCell>
-                                 <TableCell align="center">{item.productname}</TableCell>
-                                 <TableCell align="center">{item.edges?.adminrepair?.equipmentdamate}</TableCell>
-                                 <TableCell align="center">{item.edges?.product?.price}</TableCell>
-                                 <TableCell align="center">{item.edges?.paymenttype?.typename}</TableCell>
-                                 <TableCell align="center">{item.edges?.personal?.personalname}</TableCell>
-                                </TableRow>
-                              ))}
-                            </TableBody>
-                          </Table>
-                        </TableContainer>
-
-                      </div>
-                    ) : null}
-                </div>
-              ) : null}
+            <TableContainer component={Paper}>
+                <Table className={classes.table} aria-label="simple table">
+                   <TableHead>
+                      <TableRow>
+                      <TableCell align="center">No</TableCell>
+           <TableCell align="center">รหัสใบเสร็จ</TableCell>
+           <TableCell align="center">ชื่อ-นามสกุล</TableCell>
+           <TableCell align="center">ที่อยู่ร้านค้า</TableCell>
+           <TableCell align="center">ชื่อผลิตภัณฑ์</TableCell>
+           <TableCell align="center">รายละเอียดสินค้า</TableCell>
+           <TableCell align="center">ราคา</TableCell>
+           <TableCell align="center">ประเภทการจ่ายเงิน</TableCell>
+           <TableCell align="center">เจ้าหน้าที่ที่ทำการบันทึก</TableCell>
+                        </TableRow>
+                      </TableHead>
+                    <TableBody>
+                    {receipt.map((item: any) => (
+                      <TableRow key={item.id}>
+                        <TableCell align="center">{item.id}</TableCell>
+             <TableCell align="center">{item.Receiptcode}</TableCell>
+             <TableCell align="center">{item.edges?.Customer?.Customername}</TableCell>
+             <TableCell align="center">{item.Address}</TableCell>
+             <TableCell align="center">{item.Productname}</TableCell>
+             <TableCell align="center">{item.edges?.Adminrepair?.equipmentdamate}</TableCell>
+             <TableCell align="center">{item.edges?.Product?.Price}</TableCell>
+             <TableCell align="center">{item.edges?.Paymenttype?.Typename}</TableCell>
+             <TableCell align="center">{item.edges?.Personal?.Personalname}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
             </Paper>
           </Grid>
         </Grid>

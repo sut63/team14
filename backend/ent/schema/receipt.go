@@ -16,7 +16,7 @@ type Receipt struct {
 // Fields of the Receipt.
 func (Receipt) Fields() []ent.Field {
 	return []ent.Field{
-		field.Time("added_time").
+		field.Time("date_time").
 			Default(time.Now),
 		field.String("Address").NotEmpty(),
 		field.String("Productname").NotEmpty(),
