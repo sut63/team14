@@ -146,6 +146,45 @@ func (ctl *AdminrepairController) GetAdminrepair(c *gin.Context) {
 	c.JSON(200, a)
 }
 
+// GetAdminrepairSearch handles GET requests to retrieve a adminrepair entity
+// @Summary Get a adminrepair entity by Search
+// @Description get adminrepair by Search
+// @ID get-adminrepair-search
+// @Produce  json
+// @Param adminrepair query string false "Adminrepair Search"
+// @Success 200 {object} ent.Adminrepair
+// @Failure 400 {object} gin.H
+// @Failure 404 {object} gin.H
+// @Failure 500 {object} gin.H
+// @Router /searchadminrepairs [get]
+func (ctl *AdminrepairController) GetAdminrepairSearch(c *gin.Context) {
+	ampsearch := c.Query("adminrepair")
+
+	if len(ampsearch) == 6 {
+		amps, err := ctl.client.Adminrepair.
+			Query().
+			WithAdminrepairPersonal().
+			WithAdminrepairFix().
+			WithAdminrepairProduct().
+			Where(adminrepair.NumberrepairContains(ampsearch)).
+			All(context.Background())
+		if err != nil {
+			c.JSON(404, gin.H{
+				"error": err.Error(),
+			})
+			return
+		}
+		c.JSON(200, gin.H{
+			"data": amps,
+		})
+	} else {
+		c.JSON(400, gin.H{
+			"error": "search failed",
+		})
+	}
+
+}
+
 // ListAdminrepair handles request to get a list of adminrepair entities
 // @Summary List adminrepair entities
 // @Description list adminrepair entities
@@ -284,4 +323,7 @@ func (ctl *AdminrepairController) register() {
 	adminrepairs.GET(":id", ctl.GetAdminrepair)
 	adminrepairs.PUT(":id", ctl.UpdateAdminrepair)
 	adminrepairs.DELETE(":id", ctl.DeleteAdminrepair)
+
+	searchadminrepairs := ctl.router.Group("/searchadminrepairs")
+	searchadminrepairs.GET("", ctl.GetAdminrepairSearch)
 }

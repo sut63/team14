@@ -2316,6 +2316,35 @@ paths:
           schema:
             $ref: '#/definitions/gin.H'
       summary: Update a receipt entity by ID
+  /searchadminrepairs:
+    get:
+      description: get adminrepair by Search
+      operationId: get-adminrepair-search
+      parameters:
+      - description: Adminrepair Search
+        in: query
+        name: adminrepair
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.Adminrepair'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Get a adminrepair entity by Search
   /searchcustomers:
     get:
       description: get customer by Search

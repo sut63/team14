@@ -2542,6 +2542,50 @@
                 }
             }
         },
+        "/searchadminrepairs": {
+            "get": {
+                "description": "get adminrepair by Search",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get a adminrepair entity by Search",
+                "operationId": "get-adminrepair-search",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Adminrepair Search",
+                        "name": "adminrepair",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.Adminrepair"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
         "/searchcustomers": {
             "get": {
                 "description": "get customer by Search",
