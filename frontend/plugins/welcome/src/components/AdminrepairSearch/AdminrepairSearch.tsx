@@ -64,7 +64,8 @@ const useStyles = makeStyles(theme => ({
     const [status , setStatus] = useState(true);
   
     const [searchadminrepair , setSearchadminrepair] = useState(false);
-    const [adminrepairs, setAdminrepairs] = useState<EntAdminrepair[]>([])
+    const [adminrepair, setAdminrepair] = useState<EntAdminrepair[]>([])
+    const [adminrepairTable, setAdminrepairTable] = useState<EntAdminrepair[]>([])
   
     const [numberrepair, setNumberrepair] = useState(String);
   
@@ -76,7 +77,7 @@ const useStyles = makeStyles(theme => ({
         const getAdminrepairs = async () => {
             const res = await api.listAdminrepair({ offset: 0 });
             setLoading(false);
-            setAdminrepairs(res);
+            setAdminrepairTable(res);
           };
           getAdminrepairs();
     },[loading]);
@@ -120,38 +121,38 @@ const useStyles = makeStyles(theme => ({
       setNumberrepair(event.target.value as string);
     }
   
-    const checkresearch = async () => {
-      var check = false;
-      adminrepairs.map(item => {
-          if(status){
-        if (numberrepair != "") {
-        if(numberrepair.match("[A]+[M]+[P]+[-]+[0-9]+[0-9]") && numberrepair.length == 6){
-          if (item.numberrepair?.includes(numberrepair)) {
-            setSearchadminrepair(true);
-            setSearchall(false);
-            setChecktext(false);
-            setStatus(false);
-            alertMessage("success", "ค้นหาหมายเลขบันทึกซ่อมแซมคอมพิวเตอร์ของพนักงาน สำเร็จ!!");
-            check = true;
-          }
-        }
-        }
-      }})
-      
-      if (!check) {
-          if(!status){
-            alertMessage("error", "อยู่ระหว่างการค้นหา ไม่สามารถค้นหาหมายเลขอื่นได้ กรุณาลบข้อมูลเก่าออกก่อน แล้วโปรลองใหม่!!");
+    const SearchAdminrepair = async () => {
+      const apiUrl = `http://localhost:8080/api/v1/searchadminrepairs?adminrepair=${numberrepair}`;
+      const requestOptions = {
+        method: 'GET',
+      };
+      fetch(apiUrl, requestOptions)
+        .then(response => response.json())
+        .then(data => {
+          console.log(data.data)
+          setAdminrepair([]);
+          if (data.data != null) {
+            if (data.data.length >= 1) {
+              setSearchadminrepair(true);
+              setSearchall(false);
+              setChecktext(false);
+              setStatus(false);
+              console.log(data.data)
+              setAdminrepair(data.data);
+              alertMessage("success", "ค้นหาหมายเลขบันทึกซ่อมแซมคอมพิวเตอร์ของพนักงาน สำเร็จ!!");
+              if(!status){
+                alertMessage("error", "อยู่ระหว่างการค้นหา ไม่สามารถค้นหาหมายเลขอื่นได้ กรุณาลบข้อมูลเก่าออกก่อน แล้วโปรลองใหม่!!");
+              }
+            }else{
+                alertMessage("error", "ค้นหาหมายเลขบันทึกซ่อมแซมคอมพิวเตอร์ของพนักงาน ไม่พบ!!");
+            }
           }else{
-            alertMessage("error", "ค้นหาหมายเลขบันทึกซ่อมแซมคอมพิวเตอร์ของพนักงาน ไม่พบ!!");
+            setSearchall(true);
+            setSearchadminrepair(false);
+            alertMessage("error", "กรุณาใส่จำนวนหมายเลขให้ถูกก่อนกดค้นหา!!");
           }
+        });
       }
-      console.log(searchadminrepair)
-      if (numberrepair == "") {
-        setSearchall(true);
-        setSearchadminrepair(false);
-        alertMessage("error", "กรุณาใส่หมายเลขก่อนกดค้นหา!!");
-      }
-    };
 
     const cleardata = () => {
         setNumberrepair("");
@@ -199,7 +200,7 @@ const useStyles = makeStyles(theme => ({
                 size="large"
                 startIcon={<SearchIcon/>}
                 onClick={() => {
-                  checkresearch();
+                  SearchAdminrepair();
                 }}
               >
                 ค้นหา
@@ -230,12 +231,12 @@ const useStyles = makeStyles(theme => ({
            </TableRow>
          </TableHead>
          <TableBody>
-           {adminrepairs.filter((filter: any) => filter.numberrepair.includes(numberrepair)).map((item: any)=> (
+            {adminrepair.map((item: any) => (
              <TableRow key={item.id}>
                <TableCell align="center">{item.numberrepair}</TableCell>
-               <TableCell align="center">{item.edges.adminrepairPersonal.personalname}</TableCell>
-               <TableCell align="center">{item.edges.adminrepairFix.queue}</TableCell>
-               <TableCell align="center">{item.edges.adminrepairProduct.productname}</TableCell>
+               <TableCell align="center">{item.edges.AdminrepairPersonal.Personalname}</TableCell>
+               <TableCell align="center">{item.edges.AdminrepairFix.Queue}</TableCell>
+               <TableCell align="center">{item.edges.AdminrepairProduct.Productname}</TableCell>
                <TableCell align="center">{item.equipmentdamate}</TableCell>
                <TableCell align="center">{item.repairinformation}</TableCell>
              </TableRow>
@@ -258,7 +259,7 @@ const useStyles = makeStyles(theme => ({
          </TableRow>
        </TableHead>
        <TableBody>
-         {adminrepairs.map((item:any )=> (
+         {adminrepairTable.map((item:any )=> (
            <TableRow key={item.id}>
              <TableCell align="center">{item.numberrepair}</TableCell>
              <TableCell align="center">{item.edges.adminrepairPersonal.personalname}</TableCell>
