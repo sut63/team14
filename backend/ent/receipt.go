@@ -21,8 +21,8 @@ type Receipt struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
-	// AddedTime holds the value of the "added_time" field.
-	AddedTime time.Time `json:"added_time,omitempty"`
+	// DateTime holds the value of the "date_time" field.
+	DateTime time.Time `json:"date_time,omitempty"`
 	// Address holds the value of the "Address" field.
 	Address string `json:"Address,omitempty"`
 	// Productname holds the value of the "Productname" field.
@@ -130,7 +130,7 @@ func (e ReceiptEdges) ProductOrErr() (*Product, error) {
 func (*Receipt) scanValues() []interface{} {
 	return []interface{}{
 		&sql.NullInt64{},  // id
-		&sql.NullTime{},   // added_time
+		&sql.NullTime{},   // date_time
 		&sql.NullString{}, // Address
 		&sql.NullString{}, // Productname
 		&sql.NullString{}, // Receiptcode
@@ -161,9 +161,9 @@ func (r *Receipt) assignValues(values ...interface{}) error {
 	r.ID = int(value.Int64)
 	values = values[1:]
 	if value, ok := values[0].(*sql.NullTime); !ok {
-		return fmt.Errorf("unexpected type %T for field added_time", values[0])
+		return fmt.Errorf("unexpected type %T for field date_time", values[0])
 	} else if value.Valid {
-		r.AddedTime = value.Time
+		r.DateTime = value.Time
 	}
 	if value, ok := values[1].(*sql.NullString); !ok {
 		return fmt.Errorf("unexpected type %T for field Address", values[1])
@@ -264,8 +264,8 @@ func (r *Receipt) String() string {
 	var builder strings.Builder
 	builder.WriteString("Receipt(")
 	builder.WriteString(fmt.Sprintf("id=%v", r.ID))
-	builder.WriteString(", added_time=")
-	builder.WriteString(r.AddedTime.Format(time.ANSIC))
+	builder.WriteString(", date_time=")
+	builder.WriteString(r.DateTime.Format(time.ANSIC))
 	builder.WriteString(", Address=")
 	builder.WriteString(r.Address)
 	builder.WriteString(", Productname=")

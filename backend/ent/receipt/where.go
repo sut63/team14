@@ -93,10 +93,10 @@ func IDLTE(id int) predicate.Receipt {
 	})
 }
 
-// AddedTime applies equality check predicate on the "added_time" field. It's identical to AddedTimeEQ.
-func AddedTime(v time.Time) predicate.Receipt {
+// DateTime applies equality check predicate on the "date_time" field. It's identical to DateTimeEQ.
+func DateTime(v time.Time) predicate.Receipt {
 	return predicate.Receipt(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldAddedTime), v))
+		s.Where(sql.EQ(s.C(FieldDateTime), v))
 	})
 }
 
@@ -121,22 +121,22 @@ func Receiptcode(v string) predicate.Receipt {
 	})
 }
 
-// AddedTimeEQ applies the EQ predicate on the "added_time" field.
-func AddedTimeEQ(v time.Time) predicate.Receipt {
+// DateTimeEQ applies the EQ predicate on the "date_time" field.
+func DateTimeEQ(v time.Time) predicate.Receipt {
 	return predicate.Receipt(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldAddedTime), v))
+		s.Where(sql.EQ(s.C(FieldDateTime), v))
 	})
 }
 
-// AddedTimeNEQ applies the NEQ predicate on the "added_time" field.
-func AddedTimeNEQ(v time.Time) predicate.Receipt {
+// DateTimeNEQ applies the NEQ predicate on the "date_time" field.
+func DateTimeNEQ(v time.Time) predicate.Receipt {
 	return predicate.Receipt(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldAddedTime), v))
+		s.Where(sql.NEQ(s.C(FieldDateTime), v))
 	})
 }
 
-// AddedTimeIn applies the In predicate on the "added_time" field.
-func AddedTimeIn(vs ...time.Time) predicate.Receipt {
+// DateTimeIn applies the In predicate on the "date_time" field.
+func DateTimeIn(vs ...time.Time) predicate.Receipt {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -148,12 +148,12 @@ func AddedTimeIn(vs ...time.Time) predicate.Receipt {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.In(s.C(FieldAddedTime), v...))
+		s.Where(sql.In(s.C(FieldDateTime), v...))
 	})
 }
 
-// AddedTimeNotIn applies the NotIn predicate on the "added_time" field.
-func AddedTimeNotIn(vs ...time.Time) predicate.Receipt {
+// DateTimeNotIn applies the NotIn predicate on the "date_time" field.
+func DateTimeNotIn(vs ...time.Time) predicate.Receipt {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -165,35 +165,35 @@ func AddedTimeNotIn(vs ...time.Time) predicate.Receipt {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.NotIn(s.C(FieldAddedTime), v...))
+		s.Where(sql.NotIn(s.C(FieldDateTime), v...))
 	})
 }
 
-// AddedTimeGT applies the GT predicate on the "added_time" field.
-func AddedTimeGT(v time.Time) predicate.Receipt {
+// DateTimeGT applies the GT predicate on the "date_time" field.
+func DateTimeGT(v time.Time) predicate.Receipt {
 	return predicate.Receipt(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldAddedTime), v))
+		s.Where(sql.GT(s.C(FieldDateTime), v))
 	})
 }
 
-// AddedTimeGTE applies the GTE predicate on the "added_time" field.
-func AddedTimeGTE(v time.Time) predicate.Receipt {
+// DateTimeGTE applies the GTE predicate on the "date_time" field.
+func DateTimeGTE(v time.Time) predicate.Receipt {
 	return predicate.Receipt(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldAddedTime), v))
+		s.Where(sql.GTE(s.C(FieldDateTime), v))
 	})
 }
 
-// AddedTimeLT applies the LT predicate on the "added_time" field.
-func AddedTimeLT(v time.Time) predicate.Receipt {
+// DateTimeLT applies the LT predicate on the "date_time" field.
+func DateTimeLT(v time.Time) predicate.Receipt {
 	return predicate.Receipt(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldAddedTime), v))
+		s.Where(sql.LT(s.C(FieldDateTime), v))
 	})
 }
 
-// AddedTimeLTE applies the LTE predicate on the "added_time" field.
-func AddedTimeLTE(v time.Time) predicate.Receipt {
+// DateTimeLTE applies the LTE predicate on the "date_time" field.
+func DateTimeLTE(v time.Time) predicate.Receipt {
 	return predicate.Receipt(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldAddedTime), v))
+		s.Where(sql.LTE(s.C(FieldDateTime), v))
 	})
 }
 

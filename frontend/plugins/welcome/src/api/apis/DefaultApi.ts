@@ -202,6 +202,10 @@ export interface GetAdminrepairRequest {
     id: number;
 }
 
+export interface GetAdminrepairSearchRequest {
+    adminrepair?: string;
+}
+
 export interface GetBrandRequest {
     id: number;
 }
@@ -246,8 +250,16 @@ export interface GetPersonalSearchRequest {
     personal?: string;
 }
 
+export interface GetProductSearchRequest {
+    product?: string;
+}
+
 export interface GetReceiptRequest {
     id: number;
+}
+
+export interface GetReceiptSearchRequest {
+    receipt?: string;
 }
 
 export interface GetTitleRequest {
@@ -1354,6 +1366,38 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
+     * get adminrepair by Search
+     * Get a adminrepair entity by Search
+     */
+    async getAdminrepairSearchRaw(requestParameters: GetAdminrepairSearchRequest): Promise<runtime.ApiResponse<EntAdminrepair>> {
+        const queryParameters: runtime.HTTPQuery = {};
+
+        if (requestParameters.adminrepair !== undefined) {
+            queryParameters['adminrepair'] = requestParameters.adminrepair;
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/searchadminrepairs`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EntAdminrepairFromJSON(jsonValue));
+    }
+
+    /**
+     * get adminrepair by Search
+     * Get a adminrepair entity by Search
+     */
+    async getAdminrepairSearch(requestParameters: GetAdminrepairSearchRequest): Promise<EntAdminrepair> {
+        const response = await this.getAdminrepairSearchRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
      * get brand by ID
      * Get a brand entity by ID
      */
@@ -1706,6 +1750,38 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
+     * get product by Search
+     * Get a product entity by Search
+     */
+    async getProductSearchRaw(requestParameters: GetProductSearchRequest): Promise<runtime.ApiResponse<EntProduct>> {
+        const queryParameters: runtime.HTTPQuery = {};
+
+        if (requestParameters.product !== undefined) {
+            queryParameters['product'] = requestParameters.product;
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/searchproducts`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EntProductFromJSON(jsonValue));
+    }
+
+    /**
+     * get product by Search
+     * Get a product entity by Search
+     */
+    async getProductSearch(requestParameters: GetProductSearchRequest): Promise<EntProduct> {
+        const response = await this.getProductSearchRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
      * get receipt by ID
      * Get a receipt entity by ID
      */
@@ -1734,6 +1810,38 @@ export class DefaultApi extends runtime.BaseAPI {
      */
     async getReceipt(requestParameters: GetReceiptRequest): Promise<EntReceipt> {
         const response = await this.getReceiptRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     * get receipt by Search
+     * Get a receipt entity by Search
+     */
+    async getReceiptSearchRaw(requestParameters: GetReceiptSearchRequest): Promise<runtime.ApiResponse<EntReceipt>> {
+        const queryParameters: runtime.HTTPQuery = {};
+
+        if (requestParameters.receipt !== undefined) {
+            queryParameters['receipt'] = requestParameters.receipt;
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/searchreceipts`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EntReceiptFromJSON(jsonValue));
+    }
+
+    /**
+     * get receipt by Search
+     * Get a receipt entity by Search
+     */
+    async getReceiptSearch(requestParameters: GetReceiptSearchRequest): Promise<EntReceipt> {
+        const response = await this.getReceiptSearchRaw(requestParameters);
         return await response.value();
     }
 

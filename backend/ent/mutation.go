@@ -6228,7 +6228,7 @@ type ReceiptMutation struct {
 	op                 Op
 	typ                string
 	id                 *int
-	added_time         *time.Time
+	date_time          *time.Time
 	_Address           *string
 	_Productname       *string
 	_Receiptcode       *string
@@ -6326,41 +6326,41 @@ func (m *ReceiptMutation) ID() (id int, exists bool) {
 	return *m.id, true
 }
 
-// SetAddedTime sets the added_time field.
-func (m *ReceiptMutation) SetAddedTime(t time.Time) {
-	m.added_time = &t
+// SetDateTime sets the date_time field.
+func (m *ReceiptMutation) SetDateTime(t time.Time) {
+	m.date_time = &t
 }
 
-// AddedTime returns the added_time value in the mutation.
-func (m *ReceiptMutation) AddedTime() (r time.Time, exists bool) {
-	v := m.added_time
+// DateTime returns the date_time value in the mutation.
+func (m *ReceiptMutation) DateTime() (r time.Time, exists bool) {
+	v := m.date_time
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldAddedTime returns the old added_time value of the Receipt.
+// OldDateTime returns the old date_time value of the Receipt.
 // If the Receipt object wasn't provided to the builder, the object is fetched
 // from the database.
 // An error is returned if the mutation operation is not UpdateOne, or database query fails.
-func (m *ReceiptMutation) OldAddedTime(ctx context.Context) (v time.Time, err error) {
+func (m *ReceiptMutation) OldDateTime(ctx context.Context) (v time.Time, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, fmt.Errorf("OldAddedTime is allowed only on UpdateOne operations")
+		return v, fmt.Errorf("OldDateTime is allowed only on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, fmt.Errorf("OldAddedTime requires an ID field in the mutation")
+		return v, fmt.Errorf("OldDateTime requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldAddedTime: %w", err)
+		return v, fmt.Errorf("querying old value for OldDateTime: %w", err)
 	}
-	return oldValue.AddedTime, nil
+	return oldValue.DateTime, nil
 }
 
-// ResetAddedTime reset all changes of the "added_time" field.
-func (m *ReceiptMutation) ResetAddedTime() {
-	m.added_time = nil
+// ResetDateTime reset all changes of the "date_time" field.
+func (m *ReceiptMutation) ResetDateTime() {
+	m.date_time = nil
 }
 
 // SetAddress sets the Address field.
@@ -6684,8 +6684,8 @@ func (m *ReceiptMutation) Type() string {
 // fields that were in/decremented, call AddedFields().
 func (m *ReceiptMutation) Fields() []string {
 	fields := make([]string, 0, 4)
-	if m.added_time != nil {
-		fields = append(fields, receipt.FieldAddedTime)
+	if m.date_time != nil {
+		fields = append(fields, receipt.FieldDateTime)
 	}
 	if m._Address != nil {
 		fields = append(fields, receipt.FieldAddress)
@@ -6704,8 +6704,8 @@ func (m *ReceiptMutation) Fields() []string {
 // not set, or was not define in the schema.
 func (m *ReceiptMutation) Field(name string) (ent.Value, bool) {
 	switch name {
-	case receipt.FieldAddedTime:
-		return m.AddedTime()
+	case receipt.FieldDateTime:
+		return m.DateTime()
 	case receipt.FieldAddress:
 		return m.Address()
 	case receipt.FieldProductname:
@@ -6721,8 +6721,8 @@ func (m *ReceiptMutation) Field(name string) (ent.Value, bool) {
 // or the query to the database was failed.
 func (m *ReceiptMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
 	switch name {
-	case receipt.FieldAddedTime:
-		return m.OldAddedTime(ctx)
+	case receipt.FieldDateTime:
+		return m.OldDateTime(ctx)
 	case receipt.FieldAddress:
 		return m.OldAddress(ctx)
 	case receipt.FieldProductname:
@@ -6738,12 +6738,12 @@ func (m *ReceiptMutation) OldField(ctx context.Context, name string) (ent.Value,
 // type mismatch the field type.
 func (m *ReceiptMutation) SetField(name string, value ent.Value) error {
 	switch name {
-	case receipt.FieldAddedTime:
+	case receipt.FieldDateTime:
 		v, ok := value.(time.Time)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetAddedTime(v)
+		m.SetDateTime(v)
 		return nil
 	case receipt.FieldAddress:
 		v, ok := value.(string)
@@ -6816,8 +6816,8 @@ func (m *ReceiptMutation) ClearField(name string) error {
 // defined in the schema.
 func (m *ReceiptMutation) ResetField(name string) error {
 	switch name {
-	case receipt.FieldAddedTime:
-		m.ResetAddedTime()
+	case receipt.FieldDateTime:
+		m.ResetDateTime()
 		return nil
 	case receipt.FieldAddress:
 		m.ResetAddress()

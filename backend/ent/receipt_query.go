@@ -394,12 +394,12 @@ func (rq *ReceiptQuery) WithProduct(opts ...func(*ProductQuery)) *ReceiptQuery {
 // Example:
 //
 //	var v []struct {
-//		AddedTime time.Time `json:"added_time,omitempty"`
+//		DateTime time.Time `json:"date_time,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
 //	client.Receipt.Query().
-//		GroupBy(receipt.FieldAddedTime).
+//		GroupBy(receipt.FieldDateTime).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 //
@@ -420,11 +420,11 @@ func (rq *ReceiptQuery) GroupBy(field string, fields ...string) *ReceiptGroupBy 
 // Example:
 //
 //	var v []struct {
-//		AddedTime time.Time `json:"added_time,omitempty"`
+//		DateTime time.Time `json:"date_time,omitempty"`
 //	}
 //
 //	client.Receipt.Query().
-//		Select(receipt.FieldAddedTime).
+//		Select(receipt.FieldDateTime).
 //		Scan(ctx, &v)
 //
 func (rq *ReceiptQuery) Select(field string, fields ...string) *ReceiptSelect {

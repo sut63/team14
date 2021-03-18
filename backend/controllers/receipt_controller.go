@@ -23,7 +23,7 @@ type ReceiptController struct {
 }
 
 type Receipt struct {
-	Added       string
+	DateTime    string
 	Address     string
 	Receiptcode string
 	Productname string
@@ -95,7 +95,7 @@ func (ctl *ReceiptController) CreateReceipt(c *gin.Context) {
 		return
 	}
 
-	pr, err := ctl.client.Product.
+	pi, err := ctl.client.Product.
 		Query().
 		Where(product.IDEQ(int(obj.Product))).
 		Only(context.Background())
@@ -106,15 +106,16 @@ func (ctl *ReceiptController) CreateReceipt(c *gin.Context) {
 		return
 	}
 
-	times, err := time.Parse(time.RFC3339, obj.Added)
+	times, err := time.Parse(time.RFC3339, obj.DateTime)
+
 	r, err := ctl.client.Receipt.
 		Create().
-		SetAddedTime(times).
+		SetDateTime(times).
 		SetCustomer(cm).
 		SetPersonal(p).
 		SetAdminrepair(a).
 		SetPaymenttype(pt).
-		SetProduct(pr).
+		SetProduct(pi).
 		SetAddress(obj.Address).
 		SetProductname(obj.Productname).
 		SetReceiptcode(obj.Receiptcode).
@@ -287,6 +288,41 @@ func (ctl *ReceiptController) UpdateReceipt(c *gin.Context) {
 	c.JSON(200, r)
 }
 
+// GetReceiptSearch handles GET requests to retrieve a Receipt entity
+// @Summary Get a receipt entity by Search
+// @Description get receipt by Search
+// @ID get-receipt-search
+// @Produce  json
+// @Param receipt query string false "Receipt Search"
+// @Success 200 {object} ent.Receipt
+// @Failure 400 {object} gin.H
+// @Failure 404 {object} gin.H
+// @Failure 500 {object} gin.H
+// @Router /searchreceipts [get]
+func (ctl *ReceiptController) GetReceiptSearch(c *gin.Context) {
+	rsearch := c.Query("receipt")
+
+	rs, err := ctl.client.Receipt.
+		Query().
+		WithPaymenttype().
+		WithPersonal().
+		WithAdminrepair().
+		WithCustomer().
+		WithProduct().
+		Where(receipt.ReceiptcodeContains(rsearch)).
+		All(context.Background())
+	if err != nil {
+		c.JSON(404, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(200, gin.H{
+		"data": rs,
+	})
+}
+
 // NewReceiptController creates and registers handles for the receipt controller
 func NewReceiptController(router gin.IRouter, client *ent.Client) *ReceiptController {
 	rc := &ReceiptController{
@@ -308,4 +344,7 @@ func (ctl *ReceiptController) register() {
 	receipts.GET(":id", ctl.GetReceipt)
 	receipts.PUT(":id", ctl.UpdateReceipt)
 	receipts.DELETE(":id", ctl.DeleteReceipt)
+
+	searchreceipts := ctl.router.Group("/searchreceipts")
+	searchreceipts.GET("", ctl.GetReceiptSearch)
 }

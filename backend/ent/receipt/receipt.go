@@ -11,8 +11,8 @@ const (
 	Label = "receipt"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
-	// FieldAddedTime holds the string denoting the added_time field in the database.
-	FieldAddedTime = "added_time"
+	// FieldDateTime holds the string denoting the date_time field in the database.
+	FieldDateTime = "date_time"
 	// FieldAddress holds the string denoting the address field in the database.
 	FieldAddress = "address"
 	// FieldProductname holds the string denoting the productname field in the database.
@@ -73,7 +73,7 @@ const (
 // Columns holds all SQL columns for receipt fields.
 var Columns = []string{
 	FieldID,
-	FieldAddedTime,
+	FieldDateTime,
 	FieldAddress,
 	FieldProductname,
 	FieldReceiptcode,
@@ -89,8 +89,8 @@ var ForeignKeys = []string{
 }
 
 var (
-	// DefaultAddedTime holds the default value on creation for the added_time field.
-	DefaultAddedTime func() time.Time
+	// DefaultDateTime holds the default value on creation for the date_time field.
+	DefaultDateTime func() time.Time
 	// AddressValidator is a validator for the "Address" field. It is called by the builders before save.
 	AddressValidator func(string) error
 	// ProductnameValidator is a validator for the "Productname" field. It is called by the builders before save.

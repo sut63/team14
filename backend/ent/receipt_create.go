@@ -25,16 +25,16 @@ type ReceiptCreate struct {
 	hooks    []Hook
 }
 
-// SetAddedTime sets the added_time field.
-func (rc *ReceiptCreate) SetAddedTime(t time.Time) *ReceiptCreate {
-	rc.mutation.SetAddedTime(t)
+// SetDateTime sets the date_time field.
+func (rc *ReceiptCreate) SetDateTime(t time.Time) *ReceiptCreate {
+	rc.mutation.SetDateTime(t)
 	return rc
 }
 
-// SetNillableAddedTime sets the added_time field if the given value is not nil.
-func (rc *ReceiptCreate) SetNillableAddedTime(t *time.Time) *ReceiptCreate {
+// SetNillableDateTime sets the date_time field if the given value is not nil.
+func (rc *ReceiptCreate) SetNillableDateTime(t *time.Time) *ReceiptCreate {
 	if t != nil {
-		rc.SetAddedTime(*t)
+		rc.SetDateTime(*t)
 	}
 	return rc
 }
@@ -159,9 +159,9 @@ func (rc *ReceiptCreate) Mutation() *ReceiptMutation {
 
 // Save creates the Receipt in the database.
 func (rc *ReceiptCreate) Save(ctx context.Context) (*Receipt, error) {
-	if _, ok := rc.mutation.AddedTime(); !ok {
-		v := receipt.DefaultAddedTime()
-		rc.mutation.SetAddedTime(v)
+	if _, ok := rc.mutation.DateTime(); !ok {
+		v := receipt.DefaultDateTime()
+		rc.mutation.SetDateTime(v)
 	}
 	if _, ok := rc.mutation.Address(); !ok {
 		return nil, &ValidationError{Name: "Address", err: errors.New("ent: missing required field \"Address\"")}
@@ -247,13 +247,13 @@ func (rc *ReceiptCreate) createSpec() (*Receipt, *sqlgraph.CreateSpec) {
 			},
 		}
 	)
-	if value, ok := rc.mutation.AddedTime(); ok {
+	if value, ok := rc.mutation.DateTime(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeTime,
 			Value:  value,
-			Column: receipt.FieldAddedTime,
+			Column: receipt.FieldDateTime,
 		})
-		r.AddedTime = value
+		r.DateTime = value
 	}
 	if value, ok := rc.mutation.Address(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{

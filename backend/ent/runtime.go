@@ -220,10 +220,10 @@ func init() {
 	product.PriceValidator = productDescPrice.Validators[0].(func(int) error)
 	receiptFields := schema.Receipt{}.Fields()
 	_ = receiptFields
-	// receiptDescAddedTime is the schema descriptor for added_time field.
-	receiptDescAddedTime := receiptFields[0].Descriptor()
-	// receipt.DefaultAddedTime holds the default value on creation for the added_time field.
-	receipt.DefaultAddedTime = receiptDescAddedTime.Default.(func() time.Time)
+	// receiptDescDateTime is the schema descriptor for date_time field.
+	receiptDescDateTime := receiptFields[0].Descriptor()
+	// receipt.DefaultDateTime holds the default value on creation for the date_time field.
+	receipt.DefaultDateTime = receiptDescDateTime.Default.(func() time.Time)
 	// receiptDescAddress is the schema descriptor for Address field.
 	receiptDescAddress := receiptFields[1].Descriptor()
 	// receipt.AddressValidator is a validator for the "Address" field. It is called by the builders before save.

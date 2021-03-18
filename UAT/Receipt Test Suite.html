@@ -8,6 +8,44 @@
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
+<tr><td rowspan="1" colspan="3">Login Success</td></tr>
+</thead>
+<tbody>
+<tr><td>open</td><td>http://localhost:3000/<datalist><option>http://localhost:3000/</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>id=email<datalist><option>id=email</option><option>name=email</option><option>//input[@id='email']</option><option>//div[@id='root']/div/div[2]/article/div[2]/div/div/input</option><option>//input</option><option>css=#email</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>id=email<datalist><option>id=email</option><option>name=email</option><option>//input[@id='email']</option><option>//div[@id='root']/div/div[2]/article/div[2]/div/div/input</option><option>//input</option><option>css=#email</option></datalist></td><td>c@hotmail.com</td>
+</tr>
+<tr><td>click</td><td>id=password<datalist><option>id=password</option><option>name=password</option><option>//input[@id='password']</option><option>//div[@id='root']/div/div[2]/article/div[2]/div[2]/div/input</option><option>//div[2]/div/input</option><option>css=#password</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>id=password<datalist><option>id=password</option><option>name=password</option><option>//input[@id='password']</option><option>//div[@id='root']/div/div[2]/article/div[2]/div[2]/div/input</option><option>//div[2]/div/input</option><option>css=#password</option></datalist></td><td>1234</td>
+</tr>
+<tr><td>click</td><td>//div[@id='root']/div/div[2]/article/div[2]/button/span<datalist><option>//div[@id='root']/div/div[2]/article/div[2]/button/span</option><option>//button/span</option><option>css=span.MuiButton-label</option></datalist></td><td></td>
+</tr>
+</tbody></table>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Login fail</td></tr>
+</thead>
+<tbody>
+<tr><td>open</td><td>http://localhost:3000/<datalist><option>http://localhost:3000/</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>id=email<datalist><option>id=email</option><option>name=email</option><option>//input[@id='email']</option><option>//div[@id='root']/div/div[2]/article/div[2]/div/div/input</option><option>//input</option><option>css=#email</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>id=email<datalist><option>id=email</option><option>name=email</option><option>//input[@id='email']</option><option>//div[@id='root']/div/div[2]/article/div[2]/div/div/input</option><option>//input</option><option>css=#email</option></datalist></td><td>c@hotmail.com</td>
+</tr>
+<tr><td>click</td><td>id=password<datalist><option>id=password</option><option>name=password</option><option>//input[@id='password']</option><option>//div[@id='root']/div/div[2]/article/div[2]/div[2]/div/input</option><option>//div[2]/div/input</option><option>css=#password</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>id=password<datalist><option>id=password</option><option>name=password</option><option>//input[@id='password']</option><option>//div[@id='root']/div/div[2]/article/div[2]/div[2]/div/input</option><option>//div[2]/div/input</option><option>css=#password</option></datalist></td><td>1</td>
+</tr>
+<tr><td>click</td><td>//div[@id='root']/div/div[2]/article/div[2]/button/span<datalist><option>//div[@id='root']/div/div[2]/article/div[2]/button/span</option><option>//button/span</option><option>css=span.MuiButton-label</option></datalist></td><td></td>
+</tr>
+<tr><td>assertAlert</td><td>เข้าสู่ระบบไม่สำเร็จ กรุณาตรวจสอบ Email หรือ Password<datalist><option>เข้าสู่ระบบไม่สำเร็จ กรุณาตรวจสอบ Email หรือ Password</option></datalist></td><td></td>
+</tr>
+</tbody></table>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
 <tr><td rowspan="1" colspan="3">Success Test Case</td></tr>
 </thead>
 <tbody>
@@ -41,13 +79,139 @@
 </tr>
 <tr><td>click</td><td>//div[@id='menu-']/div[3]/ul/li[2]<datalist><option>//div[@id='menu-']/div[3]/ul/li[2]</option><option>//li[2]</option></datalist></td><td></td>
 </tr>
-<tr><td>click</td><td>id=date<datalist><option>id=date</option><option>//input[@id='date']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[16]/div/input</option><option>//div[16]/div/input</option><option>css=#date</option></datalist></td><td></td>
+<tr><td>click</td><td>id=datetime<datalist><option>id=date</option><option>//input[@id='date']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[16]/div/input</option><option>//div[16]/div/input</option><option>css=#date</option><option>id=datetime</option></datalist></td><td></td>
 </tr>
-<tr><td>type</td><td>id=date<datalist><option>id=date</option><option>//input[@id='date']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[16]/div/input</option><option>//div[16]/div/input</option><option>css=#date</option></datalist></td><td>2021-02-14</td>
+<tr><td>setText</td><td>id=datetime<datalist><option>id=date</option><option>//input[@id='date']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[16]/div/input</option><option>//div[16]/div/input</option><option>css=#date</option><option>id=datetime</option></datalist></td><td>2021-03-19T01:49</td>
 </tr>
 <tr><td>click</td><td>//div[@id='root']/div/div[2]/article/div/div[2]/button/span<datalist><option>//div[@id='root']/div/div[2]/article/div/div[2]/button/span</option><option>//button/span</option><option>css=button.MuiButtonBase-root.MuiButton-root.MuiButton-contained.MuiButton-containedPrimary &gt; span.MuiButton-label</option></datalist></td><td></td>
 </tr>
 <tr><td>assertText</td><td>id=swal2-title<datalist><option>id=swal2-title</option><option>//h2[@id='swal2-title']</option><option>//h2</option><option>css=#swal2-title</option></datalist></td><td>บันทึกข้อมูลสำเร็จ</td>
+</tr>
+</tbody></table>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Receipt Savecase 1 Fail</td></tr>
+</thead>
+<tbody>
+<tr><td>open</td><td>http://localhost:3000/createreceipt<datalist><option>http://localhost:3000/createreceipt</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>id=serviceprovider<datalist><option>id=serviceprovider</option><option>//input[@id='serviceprovider']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[2]/div/input</option><option>//input</option><option>css=#serviceprovider</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>id=namecustomer<datalist><option>//body</option><option>css=body</option><option>id=namecustomer</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='menu-']/div[3]/ul/li<datalist><option>//div[@id='menu-']/div[3]/ul/li</option><option>//li</option><option>css=li.MuiButtonBase-root.MuiListItem-root.MuiMenuItem-root.MuiMenuItem-gutters.MuiListItem-gutters.MuiListItem-button</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>id=address<datalist><option>id=address</option><option>//input[@id='address']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[6]/div/input</option><option>//div[6]/div/input</option><option>css=#address</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>id=address<datalist><option>id=address</option><option>//input[@id='address']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[6]/div/input</option><option>//div[6]/div/input</option><option>css=#address</option></datalist></td><td>กรุงเทพ</td>
+</tr>
+<tr><td>click</td><td>id=nameproduct<datalist><option>id=nameproduct</option><option>//input[@id='nameproduct']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[8]/div/input</option><option>//div[8]/div/input</option><option>css=#nameproduct</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>id=nameproduct<datalist><option>id=nameproduct</option><option>//input[@id='nameproduct']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[8]/div/input</option><option>//div[8]/div/input</option><option>css=#nameproduct</option></datalist></td><td>PC</td>
+</tr>
+<tr><td>click</td><td>id=adminrepair<datalist><option>//body</option><option>css=body</option><option>id=adminrepair</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='menu-']/div[3]/ul/li<datalist><option>//div[@id='menu-']/div[3]/ul/li</option><option>//li</option><option>css=li.MuiButtonBase-root.MuiListItem-root.MuiMenuItem-root.MuiMenuItem-gutters.MuiListItem-gutters.MuiListItem-button.Mui-focusVisible.Mui-focusVisible</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>id=price<datalist><option>//body</option><option>css=body</option><option>id=price</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='menu-']/div[3]/ul/li<datalist><option>//div[@id='menu-']/div[3]/ul/li</option><option>//li</option><option>css=li.MuiButtonBase-root.MuiListItem-root.MuiMenuItem-root.MuiMenuItem-gutters.MuiListItem-gutters.MuiListItem-button.Mui-focusVisible.Mui-focusVisible</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>id=paymenttype<datalist><option>//body</option><option>css=body</option><option>id=paymenttype</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='menu-']/div[3]/ul/li[2]<datalist><option>//div[@id='menu-']/div[3]/ul/li[2]</option><option>//li[2]</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>id=datetime<datalist><option>id=datetime</option><option>//input[@id='datetime']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[16]/div/input</option><option>//div[16]/div/input</option><option>css=#datetime</option></datalist></td><td></td>
+</tr>
+<tr><td>setText</td><td>id=datetime<datalist><option>id=datetime</option><option>//input[@id='datetime']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[16]/div/input</option><option>//div[16]/div/input</option><option>css=#datetime</option></datalist></td><td>2021-03-19T01:49</td>
+</tr>
+<tr><td>click</td><td>//div[@id='root']/div/div[2]/article/div/div[2]/button/span<datalist><option>//div[@id='root']/div/div[2]/article/div/div[2]/button/span</option><option>//button/span</option><option>css=button.MuiButtonBase-root.MuiButton-root.MuiButton-contained.MuiButton-containedPrimary &gt; span.MuiButton-label</option></datalist></td><td></td>
+</tr>
+<tr><td>assertText</td><td>id=swal2-title<datalist><option>id=swal2-title</option><option>//h2[@id='swal2-title']</option><option>//h2</option><option>css=#swal2-title</option></datalist></td><td>กรุณากรอกรหัสใบเสร็จ</td>
+</tr>
+</tbody></table>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Receipt Savecase 2 Fail</td></tr>
+</thead>
+<tbody>
+<tr><td>open</td><td>http://localhost:3000/createreceipt<datalist><option>http://localhost:3000/createreceipt</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>id=serviceprovider<datalist><option>id=serviceprovider</option><option>//input[@id='serviceprovider']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[2]/div/input</option><option>//input</option><option>css=#serviceprovider</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>id=serviceprovider<datalist><option>id=serviceprovider</option><option>//input[@id='serviceprovider']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[2]/div/input</option><option>//input</option><option>css=#serviceprovider</option></datalist></td><td>12345678901</td>
+</tr>
+<tr><td>click</td><td>id=namecustomer<datalist><option>id=namecustomer</option><option>//body</option><option>css=body</option><option>id=customerid</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='menu-']/div[3]/ul/li<datalist><option>//div[@id='menu-']/div[3]/ul/li</option><option>//li</option><option>css=li.MuiButtonBase-root.MuiListItem-root.MuiMenuItem-root.MuiMenuItem-gutters.MuiListItem-gutters.MuiListItem-button.Mui-focusVisible.Mui-focusVisible</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>id=address<datalist><option>id=address</option><option>//input[@id='address']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[10]/div/input</option><option>//div[10]/div/input</option><option>css=#address</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>id=nameproduct<datalist><option>id=nameproduct</option><option>//input[@id='nameproduct']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[12]/div/input</option><option>//div[12]/div/input</option><option>css=#nameproduct</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>id=nameproduct<datalist><option>id=nameproduct</option><option>//input[@id='nameproduct']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[12]/div/input</option><option>//div[12]/div/input</option><option>css=#nameproduct</option></datalist></td><td>PC</td>
+</tr>
+<tr><td>click</td><td>id=adminrepair<datalist><option>id=adminrepair</option><option>//body</option><option>css=body</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='menu-']/div[3]/ul/li<datalist><option>//div[@id='menu-']/div[3]/ul/li</option><option>//li</option><option>css=li.MuiButtonBase-root.MuiListItem-root.MuiMenuItem-root.MuiMenuItem-gutters.MuiListItem-gutters.MuiListItem-button.Mui-focusVisible.Mui-focusVisible</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>id=price<datalist><option>id=price</option><option>//body</option><option>css=body</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='menu-']/div[3]/ul/li<datalist><option>//div[@id='menu-']/div[3]/ul/li</option><option>//li</option><option>css=li.MuiButtonBase-root.MuiListItem-root.MuiMenuItem-root.MuiMenuItem-gutters.MuiListItem-gutters.MuiListItem-button.Mui-focusVisible.Mui-focusVisible</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>id=paymenttype<datalist><option>id=paymenttype</option><option>//body</option><option>css=body</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='menu-']/div[3]/ul/li[4]<datalist><option>//div[@id='menu-']/div[3]/ul/li[4]</option><option>//li[4]</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>id=datetime<datalist><option>id=datetime</option><option>id=date</option><option>//input[@id='date']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[20]/div/input</option><option>//div[20]/div/input</option><option>css=#date</option></datalist></td><td></td>
+</tr>
+<tr><td>setText</td><td>id=datetime<datalist><option>id=datetime</option><option>id=date</option><option>//input[@id='date']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[20]/div/input</option><option>//div[20]/div/input</option><option>css=#date</option></datalist></td><td>2021-03-19T01:49</td>
+</tr>
+<tr><td>click</td><td>//div[@id='root']/div/div[2]/article/div/div[2]/button/span<datalist><option>//div[@id='root']/div/div[2]/article/div/div[2]/button/span</option><option>//button/span</option><option>css=button.MuiButtonBase-root.MuiButton-root.MuiButton-contained.MuiButton-containedPrimary &gt; span.MuiButton-label</option></datalist></td><td></td>
+</tr>
+<tr><td>assertText</td><td>id=swal2-title<datalist><option>id=swal2-title</option><option>//h2[@id='swal2-title']</option><option>//h2</option><option>css=#swal2-title</option></datalist></td><td>กรุณากรอกที่อยู่ร้านค้า</td>
+</tr>
+</tbody></table>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Receipt Savecase 3 Fail</td></tr>
+</thead>
+<tbody>
+<tr><td>open</td><td>http://localhost:3000/createreceipt<datalist><option>http://localhost:3000/createreceipt</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>id=serviceprovider<datalist><option>id=serviceprovider</option><option>//input[@id='serviceprovider']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[2]/div/input</option><option>//input</option><option>css=#serviceprovider</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>id=serviceprovider<datalist><option>id=serviceprovider</option><option>//input[@id='serviceprovider']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[2]/div/input</option><option>//input</option><option>css=#serviceprovider</option></datalist></td><td>12345678901</td>
+</tr>
+<tr><td>click</td><td>id=namecustomer<datalist><option>id=namecustomer</option><option>//body</option><option>css=body</option><option>id=customerid</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='menu-']/div[3]/ul/li<datalist><option>//div[@id='menu-']/div[3]/ul/li</option><option>//li</option><option>css=li.MuiButtonBase-root.MuiListItem-root.MuiMenuItem-root.MuiMenuItem-gutters.MuiListItem-gutters.MuiListItem-button.Mui-focusVisible.Mui-focusVisible</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>id=address<datalist><option>id=address</option><option>//input[@id='address']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[10]/div/input</option><option>//div[10]/div/input</option><option>css=#address</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>id=address<datalist><option>id=address</option><option>//input[@id='address']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[10]/div/input</option><option>//div[10]/div/input</option><option>css=#address</option></datalist></td><td>กรุงเทพ</td>
+</tr>
+<tr><td>click</td><td>id=nameproduct<datalist><option>id=nameproduct</option><option>//input[@id='nameproduct']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[12]/div/input</option><option>//div[12]/div/input</option><option>css=#nameproduct</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>id=adminrepair<datalist><option>id=adminrepair</option><option>//body</option><option>css=body</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='menu-']/div[3]/ul/li<datalist><option>//div[@id='menu-']/div[3]/ul/li</option><option>//li</option><option>css=li.MuiButtonBase-root.MuiListItem-root.MuiMenuItem-root.MuiMenuItem-gutters.MuiListItem-gutters.MuiListItem-button.Mui-focusVisible.Mui-focusVisible</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>id=price<datalist><option>id=price</option><option>//body</option><option>css=body</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='menu-']/div[3]/ul/li<datalist><option>//div[@id='menu-']/div[3]/ul/li</option><option>//li</option><option>css=li.MuiButtonBase-root.MuiListItem-root.MuiMenuItem-root.MuiMenuItem-gutters.MuiListItem-gutters.MuiListItem-button.Mui-focusVisible.Mui-focusVisible</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>id=paymenttype<datalist><option>id=paymenttype</option><option>//body</option><option>css=body</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='menu-']/div[3]/ul/li[4]<datalist><option>//div[@id='menu-']/div[3]/ul/li[4]</option><option>//li[4]</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>id=datetime<datalist><option>id=datetime</option><option>id=date</option><option>//input[@id='date']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[20]/div/input</option><option>//div[20]/div/input</option><option>css=#date</option></datalist></td><td></td>
+</tr>
+<tr><td>setText</td><td>id=datetime<datalist><option>id=datetime</option><option>id=date</option><option>//input[@id='date']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[20]/div/input</option><option>//div[20]/div/input</option><option>css=#date</option></datalist></td><td>2021-03-19T01:49</td>
+</tr>
+<tr><td>click</td><td>//div[@id='root']/div/div[2]/article/div/div[2]/button/span<datalist><option>//div[@id='root']/div/div[2]/article/div/div[2]/button/span</option><option>//button/span</option><option>css=button.MuiButtonBase-root.MuiButton-root.MuiButton-contained.MuiButton-containedPrimary &gt; span.MuiButton-label</option></datalist></td><td></td>
+</tr>
+<tr><td>assertText</td><td>id=swal2-title<datalist><option>id=swal2-title</option><option>//h2[@id='swal2-title']</option><option>//h2</option><option>css=#swal2-title</option></datalist></td><td>กรุณากรอกชื่อผลิตภัณฑ์</td>
 </tr>
 </tbody></table>
 <table cellpadding="1" cellspacing="1" border="1">
@@ -81,51 +245,13 @@
 </tr>
 <tr><td>click</td><td>//div[@id='menu-']/div[3]/ul/li[3]<datalist><option>//div[@id='menu-']/div[3]/ul/li[3]</option><option>//li[3]</option></datalist></td><td></td>
 </tr>
-<tr><td>click</td><td>id=date<datalist><option>id=date</option><option>//input[@id='date']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[16]/div/input</option><option>//div[16]/div/input</option><option>css=#date</option></datalist></td><td></td>
+<tr><td>click</td><td>id=datetime<datalist><option>id=date</option><option>//input[@id='date']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[16]/div/input</option><option>//div[16]/div/input</option><option>css=#date</option><option>id=datetime</option></datalist></td><td></td>
 </tr>
-<tr><td>type</td><td>id=date<datalist><option>id=date</option><option>//input[@id='date']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[16]/div/input</option><option>//div[16]/div/input</option><option>css=#date</option></datalist></td><td>2021-02-14</td>
+<tr><td>setText</td><td>id=datetime<datalist><option>id=date</option><option>//input[@id='date']</option><option>//div[@id='root']/div/div[2]/article/div[2]/form/div/div[16]/div/input</option><option>//div[16]/div/input</option><option>css=#date</option><option>id=datetime</option></datalist></td><td>2021-03-19T01:49</td>
 </tr>
 <tr><td>click</td><td>//div[@id='root']/div/div[2]/article/div/div[2]/button/span<datalist><option>//div[@id='root']/div/div[2]/article/div/div[2]/button/span</option><option>//button/span</option><option>css=button.MuiButtonBase-root.MuiButton-root.MuiButton-contained.MuiButton-containedPrimary &gt; span.MuiButton-label</option></datalist></td><td></td>
 </tr>
 <tr><td>assertText</td><td>id=swal2-title<datalist><option>id=swal2-title</option><option>//h2[@id='swal2-title']</option><option>//h2</option><option>css=#swal2-title</option></datalist></td><td>บันทึกข้อมูลไม่สำเร็จ</td>
-</tr>
-</tbody></table>
-<table cellpadding="1" cellspacing="1" border="1">
-<thead>
-<tr><td rowspan="1" colspan="3">Login Success</td></tr>
-</thead>
-<tbody>
-<tr><td>open</td><td>http://localhost:3000/<datalist><option>http://localhost:3000/</option></datalist></td><td></td>
-</tr>
-<tr><td>click</td><td>id=email<datalist><option>id=email</option><option>name=email</option><option>//input[@id='email']</option><option>//div[@id='root']/div/div[2]/article/div[2]/div/div/input</option><option>//input</option><option>css=#email</option></datalist></td><td></td>
-</tr>
-<tr><td>type</td><td>id=email<datalist><option>id=email</option><option>name=email</option><option>//input[@id='email']</option><option>//div[@id='root']/div/div[2]/article/div[2]/div/div/input</option><option>//input</option><option>css=#email</option></datalist></td><td>c@hotmail.com</td>
-</tr>
-<tr><td>click</td><td>id=password<datalist><option>id=password</option><option>name=password</option><option>//input[@id='password']</option><option>//div[@id='root']/div/div[2]/article/div[2]/div[2]/div/input</option><option>//div[2]/div/input</option><option>css=#password</option></datalist></td><td></td>
-</tr>
-<tr><td>type</td><td>id=password<datalist><option>id=password</option><option>name=password</option><option>//input[@id='password']</option><option>//div[@id='root']/div/div[2]/article/div[2]/div[2]/div/input</option><option>//div[2]/div/input</option><option>css=#password</option></datalist></td><td>1234</td>
-</tr>
-<tr><td>click</td><td>//button[@type='submit']<datalist><option>//button[@type='submit']</option><option>//div[@id='root']/div/div[2]/article/div[2]/button</option><option>//button</option><option>css=button.MuiButtonBase-root.MuiButton-root.MuiButton-contained.makeStyles-submit-22.MuiButton-containedPrimary.MuiButton-containedSizeLarge.MuiButton-sizeLarge.MuiButton-fullWidth</option></datalist></td><td></td>
-</tr>
-</tbody></table>
-<table cellpadding="1" cellspacing="1" border="1">
-<thead>
-<tr><td rowspan="1" colspan="3">Login fail</td></tr>
-</thead>
-<tbody>
-<tr><td>open</td><td>http://localhost:3000/<datalist><option>http://localhost:3000/</option></datalist></td><td></td>
-</tr>
-<tr><td>click</td><td>id=email<datalist><option>id=email</option><option>name=email</option><option>//input[@id='email']</option><option>//div[@id='root']/div/div[2]/article/div[2]/div/div/input</option><option>//input</option><option>css=#email</option></datalist></td><td></td>
-</tr>
-<tr><td>type</td><td>id=email<datalist><option>id=email</option><option>name=email</option><option>//input[@id='email']</option><option>//div[@id='root']/div/div[2]/article/div[2]/div/div/input</option><option>//input</option><option>css=#email</option></datalist></td><td>c@hotmail.com</td>
-</tr>
-<tr><td>click</td><td>id=password<datalist><option>id=password</option><option>name=password</option><option>//input[@id='password']</option><option>//div[@id='root']/div/div[2]/article/div[2]/div[2]/div/input</option><option>//div[2]/div/input</option><option>css=#password</option></datalist></td><td></td>
-</tr>
-<tr><td>type</td><td>id=password<datalist><option>id=password</option><option>name=password</option><option>//input[@id='password']</option><option>//div[@id='root']/div/div[2]/article/div[2]/div[2]/div/input</option><option>//div[2]/div/input</option><option>css=#password</option></datalist></td><td>1</td>
-</tr>
-<tr><td>click</td><td>//div[@id='root']/div/div[2]/article/div[2]/button/span<datalist><option>//div[@id='root']/div/div[2]/article/div[2]/button/span</option><option>//button/span</option><option>css=span.MuiButton-label</option></datalist></td><td></td>
-</tr>
-<tr><td>assertAlert</td><td>เข้าสู่ระบบไม่สำเร็จ กรุณาตรวจสอบ Email หรือ Password<datalist><option>เข้าสู่ระบบไม่สำเร็จ กรุณาตรวจสอบ Email หรือ Password</option></datalist></td><td></td>
 </tr>
 </tbody></table>
 </body>

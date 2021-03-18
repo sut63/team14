@@ -2733,6 +2733,50 @@ var doc = `{
                 }
             }
         },
+        "/searchreceipts": {
+            "get": {
+                "description": "get receipt by Search",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get a receipt entity by Search",
+                "operationId": "get-receipt-search",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Receipt Search",
+                        "name": "receipt",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.Receipt"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
         "/titles": {
             "get": {
                 "description": "list title entities",
@@ -3291,9 +3335,6 @@ var doc = `{
         "controllers.Receipt": {
             "type": "object",
             "properties": {
-                "added": {
-                    "type": "string"
-                },
                 "address": {
                     "type": "string"
                 },
@@ -3302,6 +3343,9 @@ var doc = `{
                 },
                 "customer": {
                     "type": "integer"
+                },
+                "dateTime": {
+                    "type": "string"
                 },
                 "paymentType": {
                     "type": "integer"
@@ -3852,8 +3896,8 @@ var doc = `{
                     "description": "Receiptcode holds the value of the \"Receiptcode\" field.",
                     "type": "string"
                 },
-                "added_time": {
-                    "description": "AddedTime holds the value of the \"added_time\" field.",
+                "date_time": {
+                    "description": "DateTime holds the value of the \"date_time\" field.",
                     "type": "string"
                 },
                 "edges": {

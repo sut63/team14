@@ -98,7 +98,7 @@ export default function Personalpage() {
   const [customer, setCustomer] = useState(Number);
   const [product, setProduct] = useState(Number);
 
-  const [addedTime, setAddedTime] = useState(String);
+  const [datetime, setDateTime] = useState(String);
   const [address, setAddress] = useState(String);
   const [productname, setProductname] = useState(String);
   const [receiptcode, setReceiptcode] = useState(String);
@@ -146,8 +146,8 @@ export default function Personalpage() {
 
 }, [loading]);
 
-  const addedTimeChange = (event: any) => {
-    setAddedTime(event.target.value as string);
+  const datetimeChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    setDateTime(event.target.value as string);
   };
   
   const personalChange = (event: React.ChangeEvent<{ value: unknown }>) => {
@@ -194,7 +194,7 @@ export default function Personalpage() {
     adminrepair: adminrepair,
     paymentType: paymenttype,
     product: product,
-    added : addedTime + ":00+07:00", 
+    datetime : datetime + ":00+07:00", 
   };
 
   const alertMessage = (icon: any, title: any) => {
@@ -424,20 +424,16 @@ return (
             <div className={classes.paper}><strong>วันที่รับแจ้งซ่อม</strong></div>
             <TextField 
             className={classes.textField}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <AddCircleTwoToneIcon />
-                </InputAdornment>
-              ),
-            }}
-              id="date"
+              id="datetime"
               variant="standard"
               color="secondary"
-              type="date"
+              type="datetime-local"
               size="medium"
-              value={addedTime}
-              onChange={addedTimeChange}
+              value={datetime}
+              onChange={datetimeChange}
+              InputLabelProps={{
+                shrink: true,
+                }}
             />
             
           </FormControl>

@@ -24,12 +24,6 @@ export interface ControllersReceipt {
      * @type {string}
      * @memberof ControllersReceipt
      */
-    added?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ControllersReceipt
-     */
     address?: string;
     /**
      * 
@@ -43,6 +37,12 @@ export interface ControllersReceipt {
      * @memberof ControllersReceipt
      */
     customer?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ControllersReceipt
+     */
+    dateTime?: string;
     /**
      * 
      * @type {number}
@@ -85,10 +85,10 @@ export function ControllersReceiptFromJSONTyped(json: any, ignoreDiscriminator: 
     }
     return {
         
-        'added': !exists(json, 'added') ? undefined : json['added'],
         'address': !exists(json, 'address') ? undefined : json['address'],
         'adminrepair': !exists(json, 'adminrepair') ? undefined : json['adminrepair'],
         'customer': !exists(json, 'customer') ? undefined : json['customer'],
+        'dateTime': !exists(json, 'dateTime') ? undefined : json['dateTime'],
         'paymentType': !exists(json, 'paymentType') ? undefined : json['paymentType'],
         'personal': !exists(json, 'personal') ? undefined : json['personal'],
         'product': !exists(json, 'product') ? undefined : json['product'],
@@ -106,10 +106,10 @@ export function ControllersReceiptToJSON(value?: ControllersReceipt | null): any
     }
     return {
         
-        'added': value.added,
         'address': value.address,
         'adminrepair': value.adminrepair,
         'customer': value.customer,
+        'dateTime': value.dateTime,
         'paymentType': value.paymentType,
         'personal': value.personal,
         'product': value.product,
