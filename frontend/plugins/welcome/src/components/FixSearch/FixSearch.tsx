@@ -74,29 +74,15 @@ const Toast = Swal.mixin({
 
 
 export default function FixSearch() {
-
-    //--------------------------
-    ;
-
   const classes = useStyles();
   const api = new DefaultApi();
+  const [fix, setFix] = useState<EntFix[]>([])
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState(false);
-
-  //---------------------------
-  const [checkqueue, setQueues] = useState(false);
-  const [fix, setFix] = useState<EntFix[]>([])
-
-  //--------------------------
+  const [checkqueue, setCheckQueue] = useState(false);
   const [queue, setQueue] = useState(String);
+
   const profile = { givenName: 'ยินดีต้อนรับสู่ ระบบค้นหาข้อมูลบันทึกการแจ้งซ่อมสินค้า' };
-  const alertMessage = (icon: any, title: any) => {
-    Toast.fire({
-      icon: icon,
-      title: title,
-    });
-    setSearch(false);
-  }
 
   useEffect(() => {
     const getFixs = async () => {
@@ -107,30 +93,39 @@ export default function FixSearch() {
     getFixs();
   }, [loading]);
 
-  //-------------------
+  const alertMessage = (icon: any, title: any) => {
+    Toast.fire({
+      icon: icon,
+      title: title,
+    });
+    setSearch(false);
+  }
+
   const queuehandlehange = (event: React.ChangeEvent<{ value: unknown }>) => {
     setSearch(false);
-    setQueues(false);
+    setCheckQueue(false);
     setQueue(event.target.value as string);
-
+    if (event.target.value == "") {
+      cleardata();
+    }
   };
 
-  const cleardata = () => {
-    setQueue("");
-    setSearch(false);
-    setQueues(false);
-    setSearch(false);
-
+  const cleardata = async () => {
+    const res = await api.listFix({ offset: 0 });
+    setLoading(false);
+    setFix(res);
   }
-  //---------------------
+  
   const checkresearch = async () => {
     var check = false;
     fix.map(item => {
       if (queue != "") {
         if (item.queue?.includes(queue)) {
-            setQueues(true);
+            setCheckQueue(true);
           alertMessage("success", "ค้นหาข้อมูลสำเร็จ");
           check = true;
+          fix.splice(0, fix.length);
+          fix.push(item);
         }
       }
     })
@@ -139,7 +134,7 @@ export default function FixSearch() {
     }
     console.log(checkqueue)
     if (queue == "") {
-      alertMessage("info", "แสดงข้อมูลการแจ้งซ่อมสินค้าทั้งหมดในระบบ");
+      alertMessage("info", "กรุณากรอกเลขที่คิวเพื่อทำการค้นหา");
     }
   };
 
@@ -226,25 +221,6 @@ export default function FixSearch() {
                     ค้นหาข้อมูล
             </h3>
                 </Button>
-                <Button
-                  onClick={() => {
-                    cleardata();
-
-                  }}
-                  className={classes.margins}
-                  variant="contained"
-                  style={{ background: "#DD0000", height: 40 }}>
-                  <h3
-                    style={
-                      {
-                        color: "#FFFFFF",
-                        padding: '0 25px',
-
-                      }
-                    }>
-                    ลบ
-            </h3>
-                </Button>
               </Typography>
             </Paper>
           </Grid>
@@ -254,9 +230,6 @@ export default function FixSearch() {
         <Grid container justify="center">
           <Grid item xs={12} md={10}>
             <Paper>
-              {search ? (
-                <div>
-                  {  checkqueue ? (
                     <TableContainer component={Paper}>
                       <Table className={classes.table} aria-label="simple table">
                         <TableHead>
@@ -274,7 +247,7 @@ export default function FixSearch() {
                         </TableHead>
                         <TableBody>
 
-                          {fix.filter((filter: any) => filter.queue.includes(queue)).map((item: any) => (
+                        {fix.map((item: any) => (
                             <TableRow key={item.id}>
                                 <TableCell align="center">{item.id}</TableCell>
                                 <TableCell align="center">{item.edges?.personal?.personalname}</TableCell>
@@ -290,50 +263,9 @@ export default function FixSearch() {
                         </TableBody>
                       </Table>
                     </TableContainer>
-                  )
-                    : queue == "" ? (
-                      <div>
-                        <TableContainer component={Paper}>
-                          <Table className={classes.table} aria-label="simple table">
-                            <TableHead>
-                              <TableRow>
-                                <TableCell align="center">No</TableCell>
-                                <TableCell align="center">แอดมิน</TableCell>
-                                <TableCell align="center">ชื่อลูกค้า</TableCell>
-                                <TableCell align="center">ประเภทคอมพิวเตอร์</TableCell>
-                                <TableCell align="center">แบรนด์</TableCell>
-                                <TableCell align="center">หมายเลขผลิตภัณฑ์</TableCell>
-                                <TableCell align="center">วันที่รับแจ้งซ่อม</TableCell>
-                                <TableCell align="center">รายละเอียดการแจ้งซ่อม/ปัญา</TableCell>
-                                <TableCell align="center">ลำดับคิว</TableCell>
-                              </TableRow>
-                            </TableHead>
-                            <TableBody>
-
-                              {fix.map((item: any) => (
-                                <TableRow key={item.id}>
-                                    <TableCell align="center">{item.id}</TableCell>
-                                    <TableCell align="center">{item.edges?.personal?.personalname}</TableCell>
-                                    <TableCell align="center">{item.edges?.customer?.customername}</TableCell>
-                                    <TableCell align="center">{item.edges?.fixcomtype?.fixcomtypename}</TableCell>
-                                    <TableCell align="center">{item.edges?.fixbrand?.fixbrandname}</TableCell>
-                                    <TableCell align="center">{item.productnumber}</TableCell>
-                                    <TableCell align="center">{moment(item.date).format("DD/MM/YYYY HH.mm น.")}</TableCell>
-                                    <TableCell align="center">{item.problemtype}</TableCell>
-                                    <TableCell align="center">{item.queue}</TableCell>
-                                </TableRow>
-                              ))}
-                            </TableBody>
-                          </Table>
-                        </TableContainer>
-
-                      </div>
-                    ) : null}
-                </div>
-              ) : null}
-            </Paper>
-          </Grid>
-        </Grid>
+              </Paper>
+            </Grid>
+         </Grid>
       </Content>
     </Page>
   );
